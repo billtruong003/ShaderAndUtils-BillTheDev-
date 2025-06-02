@@ -187,7 +187,7 @@ public class CurvedLayoutGroup : LayoutGroup
         for (int i = 0; i < childCount; i++)
         {
             RectTransform child = childRects[i];
-            float t = childCount > 1 ? i / (childCount - 1f) : 0f;
+            float t = childCount > 1 ? i / (childCount) : 0f;
             float extra = useAnimationCurve ? curve.Evaluate(t * curveScale) : 1f;
             float angle = StartAngle + i * angleStep;
             float radAngle = angle * Mathf.Deg2Rad;
@@ -198,7 +198,7 @@ public class CurvedLayoutGroup : LayoutGroup
 
             if (rotateTowards)
             {
-                child.rotation = Quaternion.Euler(0, 0, angle + rotateOffset - 90); // Đã ở độ, không cần đổi lại
+                child.rotation = Quaternion.Euler(0, 0, angle + rotateOffset - 90);
             }
             else
             {

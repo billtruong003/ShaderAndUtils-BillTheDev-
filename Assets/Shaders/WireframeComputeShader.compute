@@ -1,0 +1,90 @@
+#pragma kernel ComputeWireframeDistances
+
+// Cấu trúc cho một đỉnh
+struct VertexData {
+    float3 positionOS;  // Vị trí trong world space (từ bakedMesh)
+    float2 uv;
+    float3 normal;
+};
+
+// Cấu trúc cho một tam giác (index của 3 đỉnh)
+struct TriangleData {
+    uint3 indices;
+};
+
+// Buffer chứa dữ liệu đỉnh
+StructuredBuffer<VertexData> _VertexBuffer;
+// Buffer chứa dữ liệu tam giác
+StructuredBuffer<TriangleData> _TriangleBuffer;
+// Buffer chứa tọa độ clip space (tính toán trong C# script)
+StructuredBuffer<float4> _ClipSpacePositions;
+// Buffer đầu ra chứa khoảng cách đến các cạnh
+RWStructuredBuffer<float3> _EdgeDistances;
+
+// Các thông số
+float _WireThickness;
+
+// Hàm tính khoảng cách từ một điểm đến một cạnh
+float DistanceToEdge(float2 p, float2 edgeStart, float2 edgeEnd) {
+    float2 edge = edgeEnd - edgeStart;
+    float2 pointToStart = p - edgeStart;
+    float edgeLength = length(edge);
+    if (edgeLength == 0) return 0;
+    float t = clamp(dot(pointToStart, edge) / (edgeLength * edgeLength), 0, 1);
+    float2 projection = edgeStart + t * edge;
+    return length(pointToStart - projection);
+}
+
+[numthreads(64, 1, 1)]
+void ComputeWireframeDistances(uint3 id : SV_DispatchThreadID) {
+    uint vertexIndex = id.x;
+    uint vertexCount, dummy;
+    _VertexBuffer.GetDimensions(vertexCount, dummy);
+
+    if (vertexIndex >= vertexCount) return;
+
+    // Lấy tọa độ clip space của đỉnh
+    float4 clipPos = _ClipSpacePositions[vertexIndex];
+    float2 screenPos = clipPos.xy / clipPos.w;
+
+    // Tìm tất cả các tam giác chứa đỉnh này
+    float3 minDistances = float3(1e10, 1e10, 1e10);
+    uint triangleCount;
+    _TriangleBuffer.GetDimensions(triangleCount, dummy);
+
+    for (uint t = 0; t < triangleCount; t++) {
+        TriangleData triangle = _TriangleBuffer[t];
+        uint3 indices = triangle.indices;
+
+        // Kiểm tra xem đỉnh có nằm trong tam giác này không
+        if (indices.x == vertexIndex || indices.y == vertexIndex || indices.z == vertexIndex) {
+            // Lấy 3 đỉnh của tam giác
+            float4 clipPos0 = _ClipSpacePositions[indices.x];
+            float4 clipPos1 = _ClipSpacePositions[indices.y];
+            float4 clipPos2 = _ClipSpacePositions[indices.z];
+
+            float2 p0 = clipPos0.xy / clipPos0.w;
+            float2 p1 = clipPos1.xy / clipPos1.w;
+            float2 p2 = clipPos2.xy / clipPos2.w;
+
+            // Tính khoảng cách đến từng cạnh
+            float dist0 = DistanceToEdge(screenPos, p1, p2); // Cạnh đối diện với p0
+            float dist1 = DistanceToEdge(screenPos, p0, p2); // Cạnh đối diện với p1
+            float dist2 = DistanceToEdge(screenPos, p0, p1); // Cạnh đối diện với p2
+
+            // Lưu khoảng cách nhỏ nhất cho từng cạnh
+            if (indices.x == vertexIndex) {
+                minDistances.x = min(minDistances.x, dist0 * clipPos.w * _WireThickness);
+            }
+            if (indices.y == vertexIndex) {
+                minDistances.y = min(minDistances.y, dist1 * clipPos.w * _WireThickness);
+            }
+            if (indices.z == vertexIndex) {
+                minDistances.z = min(minDistances.z, dist2 * clipPos.w * _WireThickness);
+            }
+        }
+    }
+
+    // Lưu kết quả vào buffer
+    _EdgeDistances[vertexIndex] = minDistances;
+}
