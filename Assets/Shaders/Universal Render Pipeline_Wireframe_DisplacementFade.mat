@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Universal Render Pipeline_Wireframe_DisplacementFade
-  m_Shader: {fileID: 4800000, guid: d275e419b3871453c8c859f6cd2ae861, type: 3}
+  m_Shader: {fileID: 4800000, guid: 392be1068130649f38d697031bbe2b16, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -35,12 +35,12 @@ Material:
     m_Ints: []
     m_Floats:
     - _ClipOffset: -1
-    - _Extrude: 1.06
+    - _Extrude: -0.1
     - _INVERT: 1
-    - _MovingSlider: 7.03
-    - _WireFrameStay: 0.097
-    - _WireThickness: 141
+    - _MovingSlider: 4.36
+    - _WireFrameStay: -0.64
+    - _WireThickness: 63
     m_Colors:
-    - _WireColor: {r: 0, g: 0.92215115, b: 0.92215115, a: 1}
+    - _WireColor: {r: 0, g: 18.164822, b: 18.164822, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

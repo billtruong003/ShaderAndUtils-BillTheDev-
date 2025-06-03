@@ -5,7 +5,7 @@ Shader "Custom/URP/ToonShader"
         _MainTex ("Base Texture", 2D) = "white" {}
         _ToonRampSmoothness ("Toon Ramp Smoothness", Range(0,1)) = 0.1
         _ToonRampOffset ("Toon Ramp Offset", Range(0,1)) = 0.5
-        _ToonRampTinting ("Toon Ramp Tinting", Color) = (1,1,1,1)
+        [HDR] _ToonRampTinting ("Toon Ramp Tinting", Color) = (1,1,1,1)
         _AmbientColor ("Ambient Color", Color) = (0.2, 0.2, 0.2, 1)
     }
 

@@ -8,12 +8,14 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Universal Render Pipeline_Wireframe_DisplacementFadeFakeWireFrame
-  m_Shader: {fileID: 4800000, guid: f46470c20694a3b4589049f5d661c07f, type: 3}
+  m_Shader: {fileID: 4800000, guid: e58bc07075e7dab43b708e70979120ec, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
+  m_ValidKeywords: []
+  m_InvalidKeywords:
   - INVERT
-  m_InvalidKeywords: []
+  - _USETIMEANIMATION_ON
+  - _ZWRITE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -28,18 +30,39 @@ Material:
         m_Texture: {fileID: 2800000, guid: f2c64b486d86abf40a4219ba99833de5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 511cac0820c41448ca536cf0791bfca2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _WireTex:
-        m_Texture: {fileID: 2800000, guid: 048214d7d6a12460faadff4f1673f6e9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5c5945bccbb54465884ae649e5354ba8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _DissolveThreshold: -2.5
+    - _DissolveType: 1
+    - _EdgeWidth: 0.05
     - _Extrude: -0.1
     - _INVERT: 1
-    - _MovingSlider: 0.45
-    - _WireFrameStay: -0.77
-    - _WireThickness: 0.03
+    - _LocalSpace: 0
+    - _MovingSlider: -0.14
+    - _NoiseStrength: 0.5
+    - _PatternFrequency: 10
+    - _PatternType: 2
+    - _TimeScale: 2
+    - _ToonRampOffset: 0.579
+    - _ToonRampSmoothness: 0
+    - _UseTimeAnimation: 1
+    - _VertexDisplacement: 0.5
+    - _WireFrameStay: -0.57
+    - _WireThickness: 0.0786
+    - _ZWrite: 1
     m_Colors:
+    - _AmbientColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Direction: {r: 0, g: 0, b: 1, a: 0}
+    - _EdgeColor: {r: 18.379171, g: 9.189586, b: 0, a: 1}
+    - _ToonRampTinting: {r: 1, g: 1, b: 1, a: 1}
     - _WireColor: {r: 0, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -18,8 +18,8 @@ Shader "Custom/URP/AdvancedDissolveToonShader"
         _ToonRampOffset ("Toon Ramp Offset", Range(0,1)) = 0.5
         _ToonRampTinting ("Toon Ramp Tinting", Color) = (1,1,1,1)
         [Toggle(LOCAL)] _LocalSpace ("Use Local Space", Float) = 0
-        _NoiseStrength ("Noise Strength", Range(0,1)) = 0.1
-        _VertexDisplacement ("Vertex Displacement", Range(0,1)) = 0
+        _NoiseStrength ("Noise Strength", Range(0,2)) = 0.1
+        _VertexDisplacement ("Vertex Displacement", Range(-10,10)) = 0
         _AmbientColor ("Ambient Color", Color) = (0.2, 0.2, 0.2, 1)
     }
 
@@ -123,10 +123,20 @@ Shader "Custom/URP/AdvancedDissolveToonShader"
                 float threshold = _DissolveThreshold + timeAnim;
                 float perturbedDissolveValue = dissolveValue + (noise - 0.5) * _NoiseStrength;
 
-                // Vertex displacement based on dissolve edge
+                // Compute edge factor
                 float edgeFactor = smoothstep(threshold - _EdgeWidth, threshold, perturbedDissolveValue);
-                float displacement = edgeFactor * (1.0 - edgeFactor) * _VertexDisplacement; // Peaks at the edge
-                input.positionOS.xyz += input.normalOS * displacement;
+
+                // Improved displacement calculation
+                float timeOscillation = sin(_Time.y * _TimeScale * 2.0 + input.positionOS.x * 5.0) * 0.5 + 0.5;
+                float spatialVariation = 0.5 + noise * 0.5;
+                float displacementMagnitude = edgeFactor * (1.0 - edgeFactor) * _VertexDisplacement * (timeOscillation * 0.3 + spatialVariation * 0.7);
+
+                // Add slight randomness to displacement direction
+                float3 displacementDir = input.normalOS + float3(noise - 0.5, noise - 0.5, noise - 0.5) * 0.1;
+                displacementDir = normalize(displacementDir);
+
+                // Apply displacement
+                input.positionOS.xyz += displacementDir * displacementMagnitude;
 
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
                 output.uv = TRANSFORM_TEX(input.uv, _MainTex);
