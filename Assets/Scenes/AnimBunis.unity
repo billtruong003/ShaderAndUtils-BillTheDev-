@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &76828529
 Light:
   m_ObjectHideFlags: 0
@@ -474,10 +474,75 @@ PrefabInstance:
     - target: {fileID: 6985031781371819887, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: ba49a23d6f2c940ca9dd740b241b3506, type: 2}
+      objectReference: {fileID: 2100000, guid: 2911aeb3bd52a404c853ec3f4ba3c810, type: 2}
     - target: {fileID: 8449509643136471086, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
       propertyPath: m_Name
       value: Fire_Lv1_Bunis (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8449509643136471086, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081896691905546900, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081896691905546900, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081896691905546900, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081896691905546900, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081896691905546900, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081896691905546900, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081896691905546900, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081896691905546900, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081896691905546900, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081896691905546900, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+--- !u!1001 &946059341
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6985031781371819887, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b920a897a65d7b04888ae40a991232bf, type: 2}
+    - target: {fileID: 8449509643136471086, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      propertyPath: m_Name
+      value: Fire_Lv1_Bunis (5)
       objectReference: {fileID: 0}
     - target: {fileID: 8449509643136471086, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
       propertyPath: m_IsActive
@@ -526,28 +591,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3757399805898647781, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 681385140}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
---- !u!1 &681385136 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3757399805898647781, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
-  m_PrefabInstance: {fileID: 681385135}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &681385140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 681385136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4641fff388b0465a8c1859b3d5bf937, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1146414248
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -559,7 +604,7 @@ PrefabInstance:
     - target: {fileID: 6985031781371819887, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 63711b4f8d01650439c3f0ced5fd9cdb, type: 2}
+      objectReference: {fileID: 2100000, guid: ba49a23d6f2c940ca9dd740b241b3506, type: 2}
     - target: {fileID: 8449509643136471086, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
       propertyPath: m_Name
       value: Fire_Lv1_Bunis (1)
@@ -611,7 +656,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3757399805898647781, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2037127595}
   m_SourcePrefab: {fileID: 100100000, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
 --- !u!1 &1372873498
 GameObject:
@@ -1195,7 +1243,7 @@ PrefabInstance:
     - target: {fileID: 6985031781371819887, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 9476dff8b5a3e42328e82f7e1d1f74d6, type: 2}
+      objectReference: {fileID: 2100000, guid: 1a1f30f6331864072b2fe7a3004e3a31, type: 2}
     - target: {fileID: 8449509643136471086, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
       propertyPath: m_Name
       value: Fire_Lv1_Bunis (2)
@@ -1408,6 +1456,23 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &2037127592 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3757399805898647781, guid: d09a91ba8deba48efad0d9655ddf29fd, type: 3}
+  m_PrefabInstance: {fileID: 1146414248}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2037127595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037127592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4641fff388b0465a8c1859b3d5bf937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &226553800102638632
 Transform:
   m_ObjectHideFlags: 0
@@ -3519,6 +3584,7 @@ SceneRoots:
   - {fileID: 1372873499}
   - {fileID: 1897458211}
   - {fileID: 1146414248}
+  - {fileID: 946059341}
   - {fileID: 1972810528}
   - {fileID: 681385135}
   - {fileID: 1703961426}

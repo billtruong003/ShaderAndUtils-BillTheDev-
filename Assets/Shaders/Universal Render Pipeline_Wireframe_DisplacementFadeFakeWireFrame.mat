@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Universal Render Pipeline_Wireframe_DisplacementFade-SimpleLit
-  m_Shader: {fileID: 4800000, guid: 4c5c20c900aa54c64bb584e43ad98795, type: 3}
+  m_Name: Universal Render Pipeline_Wireframe_DisplacementFadeFakeWireFrame
+  m_Shader: {fileID: 4800000, guid: f46470c20694a3b4589049f5d661c07f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -28,19 +28,18 @@ Material:
         m_Texture: {fileID: 2800000, guid: f2c64b486d86abf40a4219ba99833de5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Normal:
-        m_Texture: {fileID: 0}
+    - _WireTex:
+        m_Texture: {fileID: 2800000, guid: 048214d7d6a12460faadff4f1673f6e9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ClipOffset: 0.2
     - _Extrude: -0.1
     - _INVERT: 1
-    - _MovingSlider: -0
-    - _WireFrameStay: 0.521
-    - _WireThickness: 339
+    - _MovingSlider: 0.45
+    - _WireFrameStay: -0.77
+    - _WireThickness: 0.03
     m_Colors:
-    - _WireColor: {r: 1, g: 0.04241266, b: 0, a: 1}
+    - _WireColor: {r: 0, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

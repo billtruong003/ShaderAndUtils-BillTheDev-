@@ -17,7 +17,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -30,12 +30,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Extrude: 5.1
+    - _Extrude: -0.1
     - _INVERT: 1
-    - _MovingSlider: 3.2
-    - _WireFrameStay: 2.4
+    - _MovingSlider: 10
+    - _WireFrameStay: -0.5
     - _WireThickness: 0.01
     m_Colors:
-    - _WireColor: {r: 0, g: 1, b: 1, a: 1}
+    - _WireColor: {r: 25.992073, g: 1.835202, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -7,17 +7,16 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Universal Render Pipeline_Wireframe_DisplacementFade-SimpleLit
-  m_Shader: {fileID: 4800000, guid: 4c5c20c900aa54c64bb584e43ad98795, type: 3}
+  m_Name: Custom_URP_ToonShader
+  m_Shader: {fileID: 4800000, guid: 4ac9eb3641c220a4692606e15b5b2b67, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - INVERT
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -28,19 +27,12 @@ Material:
         m_Texture: {fileID: 2800000, guid: f2c64b486d86abf40a4219ba99833de5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Normal:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ClipOffset: 0.2
-    - _Extrude: -0.1
-    - _INVERT: 1
-    - _MovingSlider: -0
-    - _WireFrameStay: 0.521
-    - _WireThickness: 339
+    - _ToonRampOffset: 0.462
+    - _ToonRampSmoothness: 0.071
     m_Colors:
-    - _WireColor: {r: 1, g: 0.04241266, b: 0, a: 1}
+    - _AmbientColor: {r: 0.09433961, g: 0.09433961, b: 0.09433961, a: 1}
+    - _ToonRampTinting: {r: 1, g: 0.71691275, b: 0.5235849, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
