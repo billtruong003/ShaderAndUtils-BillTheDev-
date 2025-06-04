@@ -12,7 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _FLICKERENABLED_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -24,14 +25,17 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _NoiseTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 490a3f447aa8a4d46974fb2196c45d1c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Emission: 2.702
     - _FillMode: 0
-    - _NoiseScale: 3.86
+    - _FlickerEnabled: 1
+    - _FlickerIntensity: 0.05
+    - _FlickerSpeed: 3
+    - _NoiseScale: 8.53
     - _Thickness: 0.042
     m_Colors:
     - _InnerColor: {r: 1, g: 1, b: 1, a: 0}
