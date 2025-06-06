@@ -9,9 +9,9 @@ public class ThirdPersonCharacterController : CharacterStats
     [SerializeField] private CharacterController controller;
     [SerializeField] private Transform attackPoint;
     [SerializeField] private Transform skillPoint;
-    public float attackRange = 2f; // Phạm vi SphereCast cho attack
-    public float skillRange = 3f; // Phạm vi SphereCast cho skill
-    public LayerMask enemyLayer; // Layer của enemy
+    public float attackRange = 2f;
+    public float skillRange = 3f;
+    public LayerMask enemyLayer;
 
     private bool isAttacking = false;
     private bool isUsingSkill = false;

@@ -11,7 +11,7 @@ Shader "Custom/CircleShaderURP"
         _NoiseScale ("Noise Scale", Range(0.0, 10.0)) = 1.0 // Tỷ lệ noise
         [Toggle] _FlickerEnabled ("Enable Flicker", Float) = 0 // Bật tắt hiệu ứng flicker
         _FlickerSpeed ("Flicker Speed", Range(0.0, 10.0)) = 1.0 // Tốc độ flicker
-        _FlickerIntensity ("Flicker Intensity", Range(0.0, 0.1)) = 0.05 // Cường độ flicker tại viền
+        _FlickerIntensity ("Flicker Intensity", Range(0.0, 1)) = 0.05 // Cường độ flicker tại viền
     }
 
     HLSLINCLUDE

@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom_URP_AdvancedDissolveShader 1
+  m_Shader: {fileID: 4800000, guid: e58bc07075e7dab43b708e70979120ec, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _DISSOLVETYPEENUM_PATTERN
+  - _PATTERNTYPEENUM_CHECKER
+  - _USETIMEANIMATION_ON
+  - _ZWRITE_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: f2c64b486d86abf40a4219ba99833de5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 194d007fa9f6248acb60ed68838ba0af, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaFadeRange: 0.498
+    - _DissolveThreshold: -1.5
+    - _DissolveType: 5
+    - _DissolveTypeEnum: 3
+    - _EdgeWidth: 0.2
+    - _LocalSpace: 0
+    - _NoiseStrength: 2
+    - _PatternFrequency: -0.04
+    - _PatternType: 2
+    - _PatternTypeEnum: 1
+    - _ShatterLiftSpeed: 0.06
+    - _ShatterMagnitude: 0
+    - _ShatterNoiseScale: 10.67
+    - _ShatterOffsetStrength: -0.21
+    - _ShatterRandomness: 0.378
+    - _ShatterStrength: 0.08
+    - _ShatterTriggerRange: 1
+    - _ShatterUpLift: 0
+    - _ShatterUpwardsBias: 0.824
+    - _TimeScale: 1
+    - _ToonRampOffset: 0.619
+    - _ToonRampSmoothness: 0
+    - _UseAlphaBlend: 0
+    - _UseTimeAnimation: 1
+    - _VertexDisplacement: 1.4
+    - _ZWrite: 1
+    m_Colors:
+    - _AmbientColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Direction: {r: 0, g: 1, b: -1, a: 0}
+    - _EdgeColor: {r: 60.418774, g: 16.132761, b: 0, a: 1}
+    - _ToonRampTinting: {r: 1.4980394, g: 1.4980394, b: 1.4980394, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
