@@ -3,7 +3,7 @@ Shader "Custom/URP Lightweight Outline"
     Properties
     {
         [HDR]_OutlineColor ("Outline Color", Color) = (1,1,1,1)
-        _OutlineThickness ("Outline Thickness", Range(-10, 10)) = 0.01 // Đổi lại về range hợp lý hơn
+        _OutlineThickness ("Outline Thickness", Range(-10, 100)) = 0.01 // Đổi lại về range hợp lý hơn
         [Toggle(_ENABLE_OUTLINE)] _EnableOutline ("Enable Outline", Float) = 1 // Thêm thuộc tính bật/tắt
 
         _BaseColor ("Base Color", Color) = (1,1,1,1)
