@@ -1,0 +1,238 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: N00_000_00_EyeIris_00_EYE (Instance) 5
+  m_Shader: {fileID: 4800000, guid: 5ddcbbb85ce37844a95b2c366cd88162, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _BLING_ENABLED
+  - _SPECIAL_PATTERN_ENABLED
+  m_InvalidKeywords:
+  - _EMISSION
+  - _NORMALMAP
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: 3001
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 8de707301ba668d47949d19439c77124, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BlingTexture:
+        m_Texture: {fileID: 2800000, guid: 9df0b28d50ad14e668b4ebcc0bfea90c, type: 3}
+        m_Scale: {x: 10, y: 10}
+        m_Offset: {x: 0, y: 0}
+    - _BrowMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 358c48f9356282b4ab7590d8de8e62de, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 2800000, guid: 5b7d2fae6f2aee34c82bd6ffbdf2308d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LidMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: efbeed6523182d04a9faea84bdbb9777, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseDepthTexture:
+        m_Texture: {fileID: 2800000, guid: b13f69a63ab664dd6a0a5f109582f770, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTexture:
+        m_Texture: {fileID: 2800000, guid: 9096d900cbd764699b502c641edf33d2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OuterIrisMask:
+        m_Texture: {fileID: 2800000, guid: 8de707301ba668d47949d19439c77124, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PulseNoiseTexture:
+        m_Texture: {fileID: 2800000, guid: 67f39919eb43e4c7ebcea6020ea35dbb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PupilMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecialPatternInfluenceMask:
+        m_Texture: {fileID: 2800000, guid: 8de707301ba668d47949d19439c77124, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecialPatternTexture:
+        m_Texture: {fileID: 2800000, guid: c8d6eb692391c48689babdd491e47472, type: 3}
+        m_Scale: {x: 2, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecularMask:
+        m_Texture: {fileID: 2800000, guid: bd1c2dd2841e3d64c92ae46689606c3a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AddPrecomputedVelocity: 0
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 0
+    - _BlendModePreserveSpecular: 1
+    - _BlingEnabled: 1
+    - _BlingRotationSpeed: 0
+    - _BlingScale: 1
+    - _BlingStrength: 0
+    - _BumpScale: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DetailAlbedoMapScale: 1
+    - _DetailNormalMapScale: 1
+    - _DistortionSpeed: 0
+    - _DistortionStrength: 0.1
+    - _DstBlend: 0
+    - _DstBlendAlpha: 0
+    - _EnvironmentReflections: 1
+    - _EyeOutlineWidth: 0.05
+    - _EyeRadius: 0.491
+    - _FadeEndDistance: 0.15
+    - _FadeStartDistance: 0.16
+    - _GlossMapScale: 1
+    - _Glossiness: 0
+    - _GlossyReflections: 1
+    - _IrisRadius: 0.269
+    - _Metallic: 0
+    - _Mode: 0
+    - _NoiseDepthBlendMode: 0
+    - _NoiseDepthEnabled: 0
+    - _NoiseDepthScale: 1
+    - _NoiseDepthSpeed: 1
+    - _NoiseDepthStrength: 1
+    - _NoiseScale: 1
+    - _OcclusionStrength: 1
+    - _OuterIrisSmoothness: 0.072
+    - _OuterIrisThreshold: 0.94
+    - _OutlinePower: 10
+    - _OutlineWidth: 0
+    - _Parallax: 0.02
+    - _PulseNoiseScale: 10
+    - _PulseSpeed: 0.01
+    - _PulseStrength: 0.011
+    - _PupilSize: 0.524
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _Shininess: 1
+    - _Smoothness: 0
+    - _SmoothnessTextureChannel: 0
+    - _SpecialPatternEnabled: 1
+    - _SpecialPatternRotationSpeed: 0
+    - _SpecialPatternScale: 3
+    - _SpecialPatternSpeed: 0
+    - _SpecialPatternStrength: 0.412
+    - _SpecularFresnelPower: 0
+    - _SpecularHighlights: 1
+    - _SpecularStrength: 0.23
+    - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
+    - _Surface: 0
+    - _ToonOverallStrength: 2
+    - _ToonSmoothness: 0.5
+    - _ToonThreshold: 0.187
+    - _UVSec: 0
+    - _WorkflowMode: 1
+    - _ZWrite: 1
+    m_Colors:
+    - _AmbientColor: {r: 0, g: 0, b: 0, a: 1}
+    - _BaseColor: {r: 1, g: 0, b: 0, a: 1}
+    - _BlingColor: {r: 0.0007314645, g: 0.0000068128415, b: 0, a: 1}
+    - _BlingOffset: {r: 0, g: 1, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EyeOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _IrisColor: {r: 0.5, g: 0.19999996, b: 0.09999997, a: 1}
+    - _NoiseDepthColor: {r: 4, g: 0, b: 0.07600403, a: 1}
+    - _NoiseDepthSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - _OuterIrisColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 1}
+    - _PulseColor: {r: 1, g: 0.5019608, b: 0, a: 1}
+    - _PupilColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _SpecialPatternCenterOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecialPatternColor: {r: 0.4716981, g: 0.054803442, b: 0, a: 1}
+    - _SpecialPatternSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecularColor: {r: 21.613321, g: 0, b: 0, a: 1}
+    - _ToonLitColor: {r: 1, g: 0, b: 0, a: 1}
+    - _ToonShadowColor: {r: 0.4056604, g: 0.4056604, b: 0.4056604, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!114 &3823374539407557878
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 9

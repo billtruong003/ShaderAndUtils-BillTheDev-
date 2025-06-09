@@ -5,6 +5,7 @@ Shader "Custom/URP/LightweightToon"
         [Header(Base Properties)]
         _BaseMap ("Base Map", 2D) = "white" {}
         _BaseColor ("Base Color", Color) = (1,1,1,1)
+        _Cutoff ("Alpha Cutoff", Range(0,1)) = 0.5
 
         [Header(Toon Shading)]
         _ToonThreshold ("Toon Threshold", Range(0,1)) = 0.5 // Ngưỡng chuyển đổi từ bóng sang sáng
@@ -15,7 +16,7 @@ Shader "Custom/URP/LightweightToon"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalPipeline" "Queue"="Geometry" }
+        Tags { "RenderType"="TransparentCutout" "RenderPipeline"="UniversalPipeline" "Queue"="AlphaTest" }
         LOD 100
 
         Pass
@@ -51,6 +52,7 @@ Shader "Custom/URP/LightweightToon"
                 TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
                 float4 _BaseMap_ST;
                 float4 _BaseColor;
+                float _Cutoff;
                 float _ToonThreshold;
                 float _ToonSmoothness;
                 float4 _ToonLitColor;
@@ -71,6 +73,8 @@ Shader "Custom/URP/LightweightToon"
             float4 frag(Varyings input) : SV_Target
             {
                 float4 baseColor = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.uv) * _BaseColor;
+                clip(baseColor.a - _Cutoff); // Discard pixels with alpha below _Cutoff
+
                 float3 normalWS = normalize(input.normalWS);
 
                 // Lấy thông tin ánh sáng chính (Main Light)
@@ -80,9 +84,6 @@ Shader "Custom/URP/LightweightToon"
                 float NdotL = saturate(dot(normalWS, mainLight.direction));
 
                 // Áp dụng Toon Shading bằng smoothstep
-                // toonFactor = 0 (bóng) khi NdotL <= _ToonThreshold
-                // toonFactor = 1 (sáng) khi NdotL >= _ToonThreshold + _ToonSmoothness
-                // Có một khoảng chuyển đổi mượt giữa 0 và 1
                 float toonFactor = smoothstep(_ToonThreshold, _ToonThreshold + _ToonSmoothness, NdotL);
 
                 // Áp dụng đổ bóng (shadows) từ ánh sáng chính
