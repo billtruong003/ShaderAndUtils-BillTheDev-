@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom_PortalShader 1
+  m_Shader: {fileID: 4800000, guid: 7bda58cda20ed4d13a7a8a070ff3df20, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _USETEXTURENOISE_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: _DistortionColor
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DestinationTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 34df45895d0864caf90cc6bd2e505999, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTexture:
+        m_Texture: {fileID: 2800000, guid: 490a3f447aa8a4d46974fb2196c45d1c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BumpAmt: 10
+    - _ColorGradientBlend: 0
+    - _ColorGradientPower: 1
+    - _ColorStrength: 1
+    - _CoreGlowIntensity: 2
+    - _CoreGlowMultiplier: 6.35
+    - _CoreRadius: 0
+    - _DestinationAlpha: 0.5
+    - _EdgeGlowIntensity: 2
+    - _EdgeNoiseAmplitude: 1
+    - _EdgeThickness: -15
+    - _FadeEdge: 0.66
+    - _GlowIntensity: 37.6
+    - _GlowPower: 78.57
+    - _Intensity: 6.22
+    - _NoiseAmount: 0.004
+    - _NoiseScale: 15
+    - _NoiseSpeed: 0
+    - _OffsetAmount: 1.06
+    - _OverallBrightness: 0.5
+    - _PortalRadius: 0.182
+    - _PortalSize: 0.366
+    - _PortalSoftness: 1.15
+    - _PortalType: 0
+    - _Power: 0.47
+    - _Radius: 0.33
+    - _RotationSpeed: 1
+    - _ScrollSpeed1: 1
+    - _ScrollSpeed2: 1
+    - _StarBrightness: 0
+    - _StarDensity: 0.9
+    - _SwirlIntensity: 0.68
+    - _SwirlSpeed: 1
+    - _SwirlStrength: 0.538
+    - _SwirlTightness: 10.4
+    - _TextureNoiseScale: 1
+    - _TextureNoiseStrength: 50
+    - _VignetteStrength: 0
+    - _WaveAmplitude: 0.05
+    - _WaveFrequency: 10
+    - _WaveSpeed: 1
+    - _WobbleAmount: 0.29
+    m_Colors:
+    - _Color: {r: 0, g: 0.4453579, b: 1.174064, a: 1}
+    - _CoreColor: {r: 1, g: 0.8, b: 0.5, a: 1}
+    - _DistortionColor: {r: 0.0009765625, g: 0.00037693063, b: 0, a: 0.9}
+    - _GlowColor: {r: 1, g: 0.6034184, b: 0, a: 1}
+    - _MainColor: {r: 0.98833734, g: 0.36248687, b: 0, a: 1}
+    - _SecondaryColor: {r: 0.35782075, g: 1, b: 0, a: 1}
+    - _TextureNoiseSpeed: {r: 0.1, g: 0.1, b: 0.1, a: 0.1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

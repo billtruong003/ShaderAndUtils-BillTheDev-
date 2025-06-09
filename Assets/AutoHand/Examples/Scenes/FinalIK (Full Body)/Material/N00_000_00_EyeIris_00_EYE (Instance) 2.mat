@@ -14,7 +14,7 @@ Material:
   m_ValidKeywords:
   - _BLOOD_VESSELS_DISTORTION
   - _BLOOD_VESSELS_ENABLED
-  - _BLOOD_VESSELS_LAYER2_ENABLED
+  - _IRIS_OCCLUSION_SHADOW_ENABLED
   m_InvalidKeywords:
   - _EMISSION
   m_LightmapFlags: 1
@@ -42,7 +42,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _BloodVesselTexture1:
         m_Texture: {fileID: 2800000, guid: 1b390ed40061ae645a64834da3b2a2c4, type: 3}
-        m_Scale: {x: 2, y: 1}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BloodVesselTexture2:
         m_Texture: {fileID: 2800000, guid: 1b390ed40061ae645a64834da3b2a2c4, type: 3}
@@ -70,7 +70,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DistortionTexture:
         m_Texture: {fileID: 2800000, guid: 6b3fcf35267fc425d8bbc7896c7730bd, type: 3}
-        m_Scale: {x: 2, y: 1}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 2800000, guid: 5b7d2fae6f2aee34c82bd6ffbdf2308d, type: 3}
@@ -135,12 +135,13 @@ Material:
     - _BlingEnabled: 1
     - _BlingRotationSpeed: 10
     - _BlingStrength: 0.003
+    - _BloodVesselAlphaThreshold: 0.47
     - _BloodVesselDistortionEnabled: 1
     - _BloodVesselEnabled: 1
-    - _BloodVesselLayer2Enabled: 1
-    - _BloodVesselOverallStrength: 0.975
+    - _BloodVesselLayer2Enabled: 0
+    - _BloodVesselOverallStrength: 0.371
     - _BloodVesselStrength: 1
-    - _BloodVesselStrength1: 1
+    - _BloodVesselStrength1: 0.455
     - _BloodVesselStrength2: 0.014
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -151,7 +152,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DistortionScale: 1
     - _DistortionSpeed: 0
-    - _DistortionStrength: 0.005
+    - _DistortionStrength: 0
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
@@ -160,6 +161,10 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
+    - _IrisOcclusionRadius: 0.5
+    - _IrisOcclusionShadowEnabled: 1
+    - _IrisOcclusionSoftness: 0.2
+    - _IrisOcclusionStrength: 1
     - _Metallic: 0
     - _Mode: 0
     - _NoiseScale: 1
@@ -184,25 +189,26 @@ Material:
     - _Surface: 0
     - _ToonOverallStrength: 2
     - _ToonSmoothness: 0.5
-    - _ToonThreshold: 0.247
+    - _ToonThreshold: 0.417
     - _UVSec: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _AmbientColor: {r: 0, g: 0, b: 0, a: 1}
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
     - _BlingColor: {r: 0.5386424, g: 0, b: 6.0628657, a: 1}
     - _BlingOffset: {r: 0, g: 0, b: 0, a: 0}
     - _BloodVesselColor: {r: 0.5, g: 0, b: 0, a: 1}
     - _BloodVesselColor1: {r: 0.5, g: 0, b: 0, a: 1}
     - _BloodVesselColor2: {r: 23.96863, g: 0, b: 0, a: 1}
-    - _BloodVesselScale1: {r: 2, g: 1, b: 0, a: 0}
+    - _BloodVesselScale1: {r: 1, g: 1, b: 0, a: 0}
     - _BloodVesselScale2: {r: 2, g: 1, b: 0, a: 0}
     - _BloodVesselSpeed1: {r: 0, g: 0, b: 0, a: 0}
     - _BloodVesselSpeed2: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DistortionSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _IrisOcclusionColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 1}
     - _PulseColor: {r: 1, g: 0.5019608, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
