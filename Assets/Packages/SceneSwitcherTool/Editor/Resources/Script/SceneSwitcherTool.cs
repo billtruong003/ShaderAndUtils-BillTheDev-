@@ -4,12 +4,6 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEditor.SceneManagement;
 
-public class SceneListSO : ScriptableObject
-{
-    public List<SceneAsset> scenes = new List<SceneAsset>();
-    public List<SceneAsset> bookmarkedScenes = new List<SceneAsset>();
-}
-
 public class SceneSwitcherTool : EditorWindow
 {
     private SceneListSO sceneList;

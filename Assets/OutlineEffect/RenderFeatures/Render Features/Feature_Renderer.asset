@@ -45,9 +45,9 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
-  m_RenderingMode: 2
+  m_RenderingMode: 0
   m_DepthPrimingMode: 1
-  m_CopyDepthMode: 1
+  m_CopyDepthMode: 0
   m_DepthAttachmentFormat: 0
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd6e526a1bb489a8df34cbfcfca6bfc, type: 3}
   m_Name: OutlineRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   FeatureSettings:
     RenderPassEvent: 550
     LayerMask:
