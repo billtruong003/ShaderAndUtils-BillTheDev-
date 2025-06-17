@@ -30,22 +30,27 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: 4e697934b01e94695a79c02c4475648d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 4931d31dee91b4c1d9a132f68ee03897, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FogAlpha: 0.5
-    - _FogDensity: 1
-    - _FogEnd: -10
+    - _Cull: 1
+    - _DstBlend: 10
+    - _FogAlpha: 1
+    - _FogDensity: 100
+    - _FogEnd: 0
     - _FogMode: 0
     - _FogStart: 100
     - _FogType: 1
     - _NoiseIntensity: 0.1
     - _NoiseScale: 10000
     - _NoiseSpeed: 0.1
+    - _SrcBlend: 5
+    - _ZTest: 4
+    - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _FogColor: {r: 0, g: 0, b: 0, a: 0.24705882}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

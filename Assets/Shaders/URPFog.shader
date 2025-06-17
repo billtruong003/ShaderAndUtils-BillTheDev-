@@ -13,13 +13,22 @@ Shader "Custom/URPObjectFog"
         _FogEnd ("Fog End", Float) = 100.0
         _FogDensity ("Fog Density", Float) = 0.01
         _FogAlpha ("Fog Alpha", Range(0,1)) = 0.5
+        [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Source Blend", Float) = 5 // SrcAlpha
+        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Destination Blend", Float) = 10 // OneMinusSrcAlpha
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull Mode", Float) = 2 // Back
+        [Enum(Off, 0, On, 1)] _ZWrite ("ZWrite", Float) = 1 // On
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest ("ZTest", Float) = 4 // LEqual
     }
     SubShader
     {
         Tags { "RenderType"="Transparent" "RenderPipeline"="UniversalPipeline" }
         Pass
         {
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend [_SrcBlend] [_DstBlend]
+            Cull [_Cull]
+            ZWrite [_ZWrite]
+            ZTest [_ZTest]
+
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -56,6 +65,11 @@ Shader "Custom/URPObjectFog"
                 float _FogAlpha;
                 float _NoiseSpeed;
                 float _NoiseScale;
+                float _SrcBlend;
+                float _DstBlend;
+                float _Cull;
+                float _ZWrite;
+                float _ZTest;
             CBUFFER_END
 
             Varyings vert (Attributes IN)

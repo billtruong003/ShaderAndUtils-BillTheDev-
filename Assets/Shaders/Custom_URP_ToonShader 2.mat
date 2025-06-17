@@ -7,16 +7,16 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit_Hole
-  m_Shader: {fileID: 4800000, guid: 40899dd9b97b9404ea008a4062644dc5, type: 3}
+  m_Name: Custom_URP_ToonShader 2
+  m_Shader: {fileID: 4800000, guid: 4ac9eb3641c220a4692606e15b5b2b67, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3002
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: 3003
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -24,12 +24,15 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: f2c64b486d86abf40a4219ba99833de5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _ToonRampOffset: 0.5
+    - _ToonRampSmoothness: 0.1
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 0.7372549}
+    - _AmbientColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _ToonRampTinting: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
