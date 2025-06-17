@@ -2,6 +2,7 @@ Shader "Custom/ProgressBarURP"
 {
     Properties
     {
+        _MainTex ("Texture", 2D) = "white" {}
         _ColorStart ("Start Color", Color) = (1, 0, 0, 1) // Màu bắt đầu (đỏ)
         _ColorEnd ("End Color", Color) = (0, 1, 0, 1) // Màu kết thúc (xanh)
         _InsideTex ("Inside (RGBA)", 2D) = "white" {}

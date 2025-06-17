@@ -27,12 +27,16 @@ Shader "Universal Render Pipeline/Wireframe/DisplacementFade-SimpleLit"
        
          float _WireThickness;
          float4 _WireColor;
-         sampler2D _MainTex;
          float _MovingSlider;
          float _Extrude;
          float _WireFrameStay;
-         sampler2D _Normal;
          CBUFFER_END
+
+         TEXTURE2D(_MainTex);
+         SAMPLER(sampler_MainTex);
+         TEXTURE2D(_Normal);
+         SAMPLER(sampler_Normal);
+
          struct Attributes
          {
              float4 positionOS       : POSITION;
@@ -158,16 +162,15 @@ Shader "Universal Render Pipeline/Wireframe/DisplacementFade-SimpleLit"
 }
 
 
-         half4 frag(v2f i) : SV_Target
+         half4 frag(g2f i) : SV_Target
         {
-            // Lấy khoảng cách đến các cạnh từ compute shader
-            float3 edgeDistances = _EdgeDistances[i.vertexID];
-            float minDistanceToEdge = min(min(edgeDistances.x, edgeDistances.y), edgeDistances.z);
+            // Lấy khoảng cách đến các cạnh từ geometry shader
+            float minDistanceToEdge = min(min(i.dist.x, i.dist.y), i.dist.z);
 
             // Xử lý normal map và ánh sáng
-            float3 normal = UnpackNormal(tex2D(_Normal, i.uv));
+            float3 normal = UnpackNormal(SAMPLE_TEXTURE2D(_Normal, sampler_Normal, i.uv.xy));
             #if SHADOWS_SCREEN
-                half4 shadowCoord = ComputeScreenPos(i.positionCS);
+                half4 shadowCoord = ComputeScreenPos(i.projectionSpaceVertex);
             #else
                 half4 shadowCoord = TransformWorldToShadowCoord(i.worldSpacePosition.xyz);
             #endif 
@@ -177,7 +180,7 @@ Shader "Universal Render Pipeline/Wireframe/DisplacementFade-SimpleLit"
                 Light light = GetMainLight();
             #endif
 
-            float3 lightCol = Lambert(light.color.rgb * unity_LightData.z, light.direction, Unity_NormalBlend(normal, i.worldNormal)) * light.shadowAttenuation;
+            float3 lightCol = Lambert(light.color.rgb, light.direction, Unity_NormalBlend(normal, i.worldNormal)) * light.shadowAttenuation;
 
             int lightsCount = GetAdditionalLightsCount();
             for (int j = 0; j < lightsCount; j++)
@@ -186,7 +189,7 @@ Shader "Universal Render Pipeline/Wireframe/DisplacementFade-SimpleLit"
                 lightCol += Lambert(lightAdd.color * (lightAdd.distanceAttenuation * lightAdd.shadowAttenuation), lightAdd.direction, Unity_NormalBlend(normal, i.normal));
             }
 
-            float4 mainTex = tex2D(_MainTex, i.uv);
+            float4 mainTex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv.xy);
             float3 combinedAmbient = SampleSH(i.worldNormal);
             mainTex.rgb *= lightCol + combinedAmbient;
 

@@ -69,18 +69,18 @@ MonoBehaviour:
     RenderPassEvent: 550
     LayerMask:
       serializedVersion: 2
-      m_Bits: 192
+      m_Bits: 64
     RenderingLayerMask:
       serializedVersion: 0
       m_Bits: 3
     OverrideMaterial: {fileID: -876546973899608171, guid: 4f3bc6b888d3080448e0c3bb6fc9deb0, type: 3}
-    BlitMaterial: {fileID: 2100000, guid: bf0fd0e42783b5147ad2ace31852ca55, type: 2}
+    BlitMaterial: {fileID: -876546973899608171, guid: 6c897a44b62e6d84e9b0f6d5238a158e, type: 3}
     ClearDepth: 0
   MaterialSettings:
-    OutlineScale: 1
+    OutlineScale: 0.35
     RobertsCrossMultiplier: 100
     DepthThreshold: 100
-    NormalThreshold: 1
+    NormalThreshold: 0.5
     SteepAngleThreshold: 25
     SteepAngleMultiplier: 25
     OutlineColor: {r: 0, g: 0, b: 0, a: 1}

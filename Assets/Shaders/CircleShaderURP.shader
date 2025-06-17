@@ -2,6 +2,7 @@ Shader "Custom/CircleShaderURP"
 {
     Properties
     {
+        _MainTex ("Texture", 2D) = "white" {}
         [HDR] _InnerColor ("Inner Color (HDR)", Color) = (1, 1, 1, 1) // Màu bên trong
         [HDR] _OuterColor ("Outer Color (HDR)", Color) = (1, 1, 1, 1) // Màu viền
         _Thickness ("Thickness", Range(0.0, 0.5)) = 0.1 // Độ dày viền
