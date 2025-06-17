@@ -11,7 +11,8 @@ Material:
   m_Shader: {fileID: 4800000, guid: 40899dd9b97b9404ea008a4062644dc5, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _TEXTURETYPE_CUBEMAP
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -23,13 +24,18 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _CubeTex:
+        m_Texture: {fileID: 8900000, guid: 198d3837407e54437b19f875caaccbe8, type: 3}
+        m_Scale: {x: 10, y: 10}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: fc11b503aaa244024b2c0f98b6585000, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _TextureType: 1
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 0.7372549}
+    - _Color: {r: 8, g: 1.6753926, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
