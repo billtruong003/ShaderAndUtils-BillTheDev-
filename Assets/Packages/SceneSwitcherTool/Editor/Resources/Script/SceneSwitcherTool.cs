@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEditor.SceneManagement;
 
+
 public class SceneSwitcherTool : EditorWindow
 {
     private SceneListSO sceneList;

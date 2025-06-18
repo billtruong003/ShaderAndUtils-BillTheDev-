@@ -14,7 +14,7 @@ Shader "Custom/Stencil Decal"
 		
 		[Header(Shape)]
 		_ShapeTex("Shape Texture", 2D) = "white" {}
-		_ShapeTexIntensity("Shape tex intensity", Range(0,6)) = 0.5
+		_ShapeTexIntensity("Shape tex intensity", Range(0,100)) = 0.5
 		
 		[Header(Gradient Coloring)]
 		_Gradient("Gradient Texture", 2D) = "white" {}

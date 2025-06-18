@@ -24,11 +24,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Gradient:
-        m_Texture: {fileID: 2800000, guid: 307f3328e788a4ae084e8d975e387088, type: 3}
+        m_Texture: {fileID: 2800000, guid: ea016aace236841fa96b388e2395ec0f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MovingTex:
-        m_Texture: {fileID: 2800000, guid: 76da52d01f82a48e1809c49afb2f8597, type: 3}
+        m_Texture: {fileID: 2800000, guid: 117818e938dbf4e079f55f654b552e38, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShapeTex:
@@ -37,16 +37,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cutoff: 0
-    - _Intensity: 6.44
-    - _LengthScale: 2
+    - _Cutoff: 0.542
+    - _Intensity: 10
+    - _LengthScale: 10
     - _Multiply: 10
-    - _Offset: 10
-    - _RadialScale: 4
-    - _ShapeTexIntensity: 4
+    - _Offset: 4.59
+    - _RadialScale: 1
+    - _ShapeTexIntensity: 10
     - _Smoothness: 1
-    - _SpeedX: -2.5
-    - _SpeedY: 2.5
+    - _SpeedX: -5
+    - _SpeedY: 5
     - _Stretch: 10
     m_Colors: []
   m_BuildTextureStacks: []
