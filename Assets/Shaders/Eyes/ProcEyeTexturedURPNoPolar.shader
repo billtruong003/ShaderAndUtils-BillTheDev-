@@ -62,6 +62,7 @@ Shader "Custom/ProcEyeTexturedURPNoPolar"
     SubShader
     {
         Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Opaque" "Queue"="Geometry" }
+        Cull Back
         LOD 200
 
         Pass

@@ -3,7 +3,8 @@ Shader "Custom/URP Lightweight Outline"
     Properties
     {
         [HDR]_OutlineColor ("Outline Color", Color) = (1,1,1,1)
-        _OutlineThickness ("Outline Thickness", Range(-10, 10)) = 0.01
+        _OutlineThickness ("Outline Thickness", Range(0, 0.1)) = 0.01
+        _OutlineOpacity ("Outline Opacity", Range(0, 1)) = 1.0
         [Toggle(_ENABLE_OUTLINE)] _EnableOutline ("Enable Outline", Float) = 1
 
         _BaseColor ("Base Color", Color) = (1,1,1,1)
@@ -15,13 +16,13 @@ Shader "Custom/URP Lightweight Outline"
     {
         Tags { "RenderPipeline"="UniversalPipeline" "Queue"="Geometry" }
 
-        // Pass 1: Đánh dấu mesh vào Stencil Buffer
+        // Pass 1: Stencil Write
         Pass
         {
             Name "StencilWrite"
             Tags { "LightMode" = "UniversalForward" }
             ZWrite On
-            ColorMask 0 // Không ghi màu, chỉ ghi stencil
+            ColorMask 0
             Stencil
             {
                 Ref 1
@@ -53,12 +54,12 @@ Shader "Custom/URP Lightweight Outline"
 
             half4 StencilFrag (StencilVaryings input) : SV_Target
             {
-                return half4(0, 0, 0, 0); // Không cần ghi màu
+                return half4(0, 0, 0, 0);
             }
             ENDHLSL
         }
 
-        // Pass 2: Vẽ outline sử dụng Stencil Buffer
+        // Pass 2: Outline
         Pass
         {
             Name "Outline"
@@ -69,14 +70,13 @@ Shader "Custom/URP Lightweight Outline"
             Stencil
             {
                 Ref 1
-                Comp NotEqual // Chỉ vẽ ở các pixel không thuộc mesh
+                Comp NotEqual
             }
 
             HLSLPROGRAM
             #pragma vertex OutlineVert
             #pragma fragment OutlineFrag
             #pragma multi_compile_local _ _ENABLE_OUTLINE
-
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             struct OutlineAppData
@@ -93,21 +93,38 @@ Shader "Custom/URP Lightweight Outline"
             CBUFFER_START(UnityPerMaterial)
                 float4 _OutlineColor;
                 float _OutlineThickness;
+                float _OutlineOpacity;
                 float _EnableOutline;
             CBUFFER_END
 
             OutlineVaryings OutlineVert (OutlineAppData input)
             {
                 OutlineVaryings output;
-                float3 extrudedPos = input.vertex.xyz + input.normal * _OutlineThickness;
-                output.positionCS = TransformObjectToHClip(extrudedPos);
+
+                // Transform to world space
+                float3 worldPos = TransformObjectToWorld(input.vertex.xyz);
+                float3 worldNormal = TransformObjectToWorldNormal(input.normal);
+
+                // Transform to view space
+                float3 viewPos = mul(UNITY_MATRIX_V, float4(worldPos, 1.0)).xyz;
+                float3 viewNormal = normalize(mul(UNITY_MATRIX_V, float4(worldNormal, 0.0)).xyz);
+
+                // Calculate distance from camera
+                float distance = -viewPos.z;
+
+                // Extrude in view space, scale by distance
+                float3 extrudedViewPos = viewPos + viewNormal * (_OutlineThickness * distance);
+
+                // Transform to clip space
+                output.positionCS = mul(UNITY_MATRIX_P, float4(extrudedViewPos, 1.0));
+
                 return output;
             }
 
             half4 OutlineFrag (OutlineVaryings input) : SV_Target
             {
                 #if defined(_ENABLE_OUTLINE)
-                    return _OutlineColor;
+                    return half4(_OutlineColor.rgb, _OutlineColor.a * _OutlineOpacity);
                 #else
                     discard;
                     return half4(0,0,0,0);
@@ -116,7 +133,7 @@ Shader "Custom/URP Lightweight Outline"
             ENDHLSL
         }
 
-        // Pass 3: MainLit - Render vật liệu chính
+        // Pass 3: MainLit
         Pass
         {
             Name "MainLit"
@@ -124,13 +141,12 @@ Shader "Custom/URP Lightweight Outline"
             Stencil
             {
                 Ref 1
-                Comp Equal // Chỉ vẽ trên các pixel đã đánh dấu
+                Comp Equal
             }
 
             HLSLPROGRAM
             #pragma vertex LitVert
             #pragma fragment LitFrag
-
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
