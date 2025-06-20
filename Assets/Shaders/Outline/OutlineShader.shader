@@ -6,6 +6,9 @@ Shader "Custom/URP Lightweight Outline"
         _OutlineThickness ("Outline Thickness", Range(0, 0.1)) = 0.01
         _OutlineOpacity ("Outline Opacity", Range(0, 1)) = 1.0
         [Toggle(_ENABLE_OUTLINE)] _EnableOutline ("Enable Outline", Float) = 1
+        _DepthOffset ("Depth Offset", Range(0, 0.01)) = 0.001
+        _StencilComp ("Stencil Comparison", Float) = 8 // Always
+        _StencilOp ("Stencil Operation", Float) = 2   // Replace
 
         _BaseColor ("Base Color", Color) = (1,1,1,1)
         _BaseMap ("Base Map", 2D) = "white" {}
@@ -26,8 +29,8 @@ Shader "Custom/URP Lightweight Outline"
             Stencil
             {
                 Ref 1
-                Comp Always
-                Pass Replace
+                Comp [_StencilComp]
+                Pass [_StencilOp]
             }
 
             HLSLPROGRAM
@@ -67,6 +70,7 @@ Shader "Custom/URP Lightweight Outline"
             Cull Front
             ZWrite Off
             ZTest LEqual
+            Offset [_DepthOffset], [_DepthOffset]
             Stencil
             {
                 Ref 1
@@ -95,29 +99,17 @@ Shader "Custom/URP Lightweight Outline"
                 float _OutlineThickness;
                 float _OutlineOpacity;
                 float _EnableOutline;
+                float _DepthOffset;
             CBUFFER_END
 
             OutlineVaryings OutlineVert (OutlineAppData input)
             {
                 OutlineVaryings output;
-
-                // Transform to world space
                 float3 worldPos = TransformObjectToWorld(input.vertex.xyz);
-                float3 worldNormal = TransformObjectToWorldNormal(input.normal);
-
-                // Transform to view space
-                float3 viewPos = mul(UNITY_MATRIX_V, float4(worldPos, 1.0)).xyz;
-                float3 viewNormal = normalize(mul(UNITY_MATRIX_V, float4(worldNormal, 0.0)).xyz);
-
-                // Calculate distance from camera
-                float distance = -viewPos.z;
-
-                // Extrude in view space, scale by distance
-                float3 extrudedViewPos = viewPos + viewNormal * (_OutlineThickness * distance);
-
-                // Transform to clip space
-                output.positionCS = mul(UNITY_MATRIX_P, float4(extrudedViewPos, 1.0));
-
+                float3 worldNormal = normalize(TransformObjectToWorldNormal(input.normal));
+                float thickness = max(0, _OutlineThickness); // Prevent negative thickness
+                worldPos += worldNormal * thickness;
+                output.positionCS = TransformWorldToHClip(worldPos);
                 return output;
             }
 
@@ -184,7 +176,7 @@ Shader "Custom/URP Lightweight Outline"
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
                 output.positionCS = vertexInput.positionCS;
                 output.positionWS = vertexInput.positionWS;
-                output.normalWS = TransformObjectToWorldNormal(input.normalOS);
+                output.normalWS = normalize(TransformObjectToWorldNormal(input.normalOS));
                 output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 return output;
             }
@@ -198,27 +190,17 @@ Shader "Custom/URP Lightweight Outline"
                 inputData.normalWS = normalize(input.normalWS);
                 inputData.viewDirectionWS = GetViewDirectionWS(input.positionWS);
                 inputData.shadowCoord = TransformWorldToShadowCoord(input.positionWS);
-                inputData.bakedGI = half3(0, 0, 0);
-                inputData.fogCoord = 0.0;
-                inputData.vertexLighting = half3(0, 0, 0);
-                inputData.normalizedScreenSpaceUV = float2(0, 0);
-                inputData.shadowMask = half4(0, 0, 0, 0);
-                inputData.tangentToWorld = half3x3(0, 0, 0, 0, 0, 0, 0, 0, 0);
 
                 SurfaceData surfaceData;
                 surfaceData.albedo = baseColor.rgb;
-                surfaceData.specular = half3(0, 0, 0);
                 surfaceData.metallic = _Metallic;
                 surfaceData.smoothness = _Smoothness;
                 surfaceData.normalTS = half3(0, 0, 1);
                 surfaceData.emission = half3(0, 0, 0);
                 surfaceData.occlusion = 1.0;
                 surfaceData.alpha = baseColor.a;
-                surfaceData.clearCoatMask = 0.0;
-                surfaceData.clearCoatSmoothness = 0.0;
 
-                half4 color = UniversalFragmentPBR(inputData, surfaceData);
-                return color;
+                return UniversalFragmentPBR(inputData, surfaceData);
             }
             ENDHLSL
         }
