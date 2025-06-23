@@ -1,12 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Linq;
 using Utils.Bill.InspectorCustom;
 
 [RequireComponent(typeof(BoxCollider))]
-public class MinimapController : MonoBehaviour
+public class MinimapController : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler, IScrollHandler
 {
+    public enum InteractionMode
+    {
+        WorldSpace_Physics,
+        ScreenSpace_UIEvents
+    }
+
+    [CustomHeader("Interaction Mode", "#8E24AA")]
+    [Tooltip("Chọn phương thức tương tác cho minimap.")]
+    public InteractionMode interactionMode = InteractionMode.WorldSpace_Physics;
+
     public static List<MinimapTrackable> TrackedObjects = new List<MinimapTrackable>();
     public static void AddTrackable(MinimapTrackable trackable) { if (!TrackedObjects.Contains(trackable)) TrackedObjects.Add(trackable); }
     public static void RemoveTrackable(MinimapTrackable trackable) { if (TrackedObjects.Contains(trackable)) TrackedObjects.Remove(trackable); }
@@ -32,7 +43,7 @@ public class MinimapController : MonoBehaviour
     [CustomSlider(10, 180)] public float sightConeAngle = 90f;
     [CustomSlider(0.01f, 1.0f)] public float sightConeSoftness = 0.1f;
 
-    [CustomHeader("Intuitive VR / Editor Edit Mode", "#D500F9")]
+    [CustomHeader("Edit Mode Settings", "#D500F9")]
     public float autoDisableTime = 5.0f;
     public float zoomSpeed = 0.2f;
     public float minZoom = 0.05f;
@@ -49,24 +60,24 @@ public class MinimapController : MonoBehaviour
     private Vector2 panOffset = Vector2.zero;
 
     private Transform fingerTransform;
-    private Vector2 lastFingerPanPosition;
-    private bool isFingerPanning = false;
+    private Vector2 lastPanPosition;
+    private bool isInteracting = false;
 
 #if UNITY_EDITOR
-    private BoxCollider ownCollider;
-    private bool isMousePanning = false;
-    private Vector2 lastMousePanPosition;
     private Camera mainCameraForRaycast;
 #endif
 
     void Awake()
     {
-        var col = GetComponent<BoxCollider>();
-        if (col == null) col = gameObject.AddComponent<BoxCollider>();
-        col.isTrigger = true;
-#if UNITY_EDITOR
-        ownCollider = col;
-#endif
+        if (interactionMode == InteractionMode.WorldSpace_Physics)
+        {
+            var col = GetComponent<BoxCollider>();
+            if (col == null)
+            {
+                col = gameObject.AddComponent<BoxCollider>();
+            }
+            col.isTrigger = true;
+        }
     }
 
     void Start()
@@ -76,13 +87,8 @@ public class MinimapController : MonoBehaviour
         mapDisplayImage.material = minimapMaterial;
         SwitchMapArea(startingAreaName);
         if (iconPrefab != null) { iconPrefab.SetActive(false); }
-
 #if UNITY_EDITOR
         mainCameraForRaycast = Camera.main;
-        if (mainCameraForRaycast == null)
-        {
-            Debug.LogError("Minimap Panning Error: Không tìm thấy Camera với tag 'MainCamera'. Chế độ Editor Cheat sẽ không hoạt động.", this);
-        }
 #endif
     }
 
@@ -93,19 +99,23 @@ public class MinimapController : MonoBehaviour
         if (minimapMaterial == null || currentMapArea == null || playerTransform == null) return;
 
 #if UNITY_EDITOR
-        HandleEditorMouseInput();
+        if (interactionMode == InteractionMode.WorldSpace_Physics)
+        {
+            HandleEditorMouseInput();
+        }
 #endif
 
-        if (isPanModeEnabled)
+        if (isPanModeEnabled && !isInteracting)
         {
             timeSinceLastInteraction += Time.deltaTime;
-            if (timeSinceLastInteraction > autoDisableTime && !isMousePanning && !isFingerPanning)
+            if (timeSinceLastInteraction > autoDisableTime)
             {
                 DisablePanMode();
             }
         }
 
-        UpdateVRPan();
+        if (interactionMode == InteractionMode.WorldSpace_Physics) UpdateVRPan();
+
         UpdateShaderProperties();
         UpdateTrackedIcons();
     }
@@ -179,10 +189,6 @@ public class MinimapController : MonoBehaviour
         int poolIndex = 0;
         foreach (var trackable in TrackedObjects)
         {
-            // SỬA LỖI LOGIC QUAN TRỌNG NHẤT
-            // Ở chế độ bình thường, bỏ qua việc vẽ icon động của người chơi
-            // (vì đã có icon tĩnh ở giữa).
-            // Ở chế độ edit, thì vẽ tất cả.
             if (!isPanModeEnabled && trackable.transform == playerTransform)
             {
                 continue;
@@ -217,7 +223,7 @@ public class MinimapController : MonoBehaviour
         }
     }
 
-    private void EnablePanMode()
+    void EnablePanMode()
     {
         if (isPanModeEnabled)
         {
@@ -228,62 +234,83 @@ public class MinimapController : MonoBehaviour
         timeSinceLastInteraction = 0f;
     }
 
-    private void DisablePanMode()
+    void DisablePanMode()
     {
         if (!isPanModeEnabled) return;
         isPanModeEnabled = false;
         panOffset = Vector2.zero;
-        fingerTransform = null;
-        isFingerPanning = false;
-#if UNITY_EDITOR
-        isMousePanning = false;
-#endif
+        isInteracting = false;
     }
 
     public void AdjustZoom(float amount)
     {
-        if (!isPanModeEnabled && !isMousePanning) return;
+        if (!isPanModeEnabled) EnablePanMode();
         zoomLevel = Mathf.Clamp(zoomLevel - amount * zoomSpeed, minZoom, maxZoom);
         timeSinceLastInteraction = 0f;
     }
 
+    #region Interaction Handlers
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (interactionMode != InteractionMode.ScreenSpace_UIEvents) return;
+        isInteracting = true;
+        EnablePanMode();
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            mapDisplayImage.rectTransform, eventData.position, eventData.pressEventCamera, out lastPanPosition);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (interactionMode != InteractionMode.ScreenSpace_UIEvents || !isInteracting) return;
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            mapDisplayImage.rectTransform, eventData.position, eventData.pressEventCamera, out Vector2 currentPos))
+        {
+            Vector2 delta = currentPos - lastPanPosition;
+            lastPanPosition = currentPos;
+            float conversionFactor = zoomLevel / mapDisplayImage.rectTransform.rect.width;
+            panOffset += delta * conversionFactor;
+            timeSinceLastInteraction = 0f;
+        }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (interactionMode != InteractionMode.ScreenSpace_UIEvents) return;
+        isInteracting = false;
+    }
+
+    public void OnScroll(PointerEventData eventData)
+    {
+        if (interactionMode != InteractionMode.ScreenSpace_UIEvents) return;
+        AdjustZoom(eventData.scrollDelta.y);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        if (interactionMode != InteractionMode.WorldSpace_Physics) return;
         if (!string.IsNullOrEmpty(fingerTag) && other.CompareTag(fingerTag))
         {
             fingerTransform = other.transform;
-            isFingerPanning = true;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                mapDisplayImage.rectTransform,
-                RectTransformUtility.WorldToScreenPoint(null, fingerTransform.position),
-                null, out lastFingerPanPosition);
+            isInteracting = true;
             EnablePanMode();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
+        if (interactionMode != InteractionMode.WorldSpace_Physics) return;
         if (!string.IsNullOrEmpty(fingerTag) && other.CompareTag(fingerTag))
         {
             fingerTransform = null;
-            isFingerPanning = false;
+            isInteracting = false;
         }
     }
 
     private void UpdateVRPan()
     {
-        if (!isPanModeEnabled || !isFingerPanning || fingerTransform == null) return;
-
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                mapDisplayImage.rectTransform,
-                RectTransformUtility.WorldToScreenPoint(null, fingerTransform.position),
-                null, out Vector2 currentFingerPos))
-        {
-            Vector2 delta = currentFingerPos - lastFingerPanPosition;
-            lastFingerPanPosition = currentFingerPos;
-            float conversionFactor = zoomLevel / mapDisplayImage.rectTransform.rect.width;
-            panOffset += delta * conversionFactor;
-        }
+        if (interactionMode != InteractionMode.WorldSpace_Physics || !isInteracting || fingerTransform == null) return;
+        // Panning logic for VR needs custom implementation based on your VR toolkit
         timeSinceLastInteraction = 0f;
     }
 
@@ -295,31 +322,26 @@ public class MinimapController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = mainCameraForRaycast.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 2000f) && hit.collider == ownCollider)
+            if (Physics.Raycast(ray, out RaycastHit hit, 2000f) && hit.collider == GetComponent<Collider>())
             {
-                isMousePanning = true;
+                isInteracting = true;
                 EnablePanMode();
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    mapDisplayImage.rectTransform, Input.mousePosition, mainCameraForRaycast, out lastMousePanPosition);
+                    mapDisplayImage.rectTransform, Input.mousePosition, mainCameraForRaycast, out lastPanPosition);
             }
         }
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            isMousePanning = false;
-        }
+        if (Input.GetMouseButtonUp(0)) isInteracting = false;
 
-        if (isMousePanning)
+        if (isInteracting && Input.GetMouseButton(0))
         {
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 mapDisplayImage.rectTransform, Input.mousePosition, mainCameraForRaycast, out Vector2 currentMousePos))
             {
-                Vector2 delta = currentMousePos - lastMousePanPosition;
-                lastMousePanPosition = currentMousePos;
-
+                Vector2 delta = currentMousePos - lastPanPosition;
+                lastPanPosition = currentMousePos;
                 float conversionFactor = zoomLevel / mapDisplayImage.rectTransform.rect.width;
                 panOffset += delta * conversionFactor;
-
                 timeSinceLastInteraction = 0f;
             }
         }
@@ -328,14 +350,15 @@ public class MinimapController : MonoBehaviour
         if (scroll != 0)
         {
             Ray ray = mainCameraForRaycast.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 2000f) && hit.collider == ownCollider)
+            if (Physics.Raycast(ray, out RaycastHit hit, 2000f) && hit.collider == GetComponent<Collider>())
             {
-                EnablePanMode();
                 AdjustZoom(scroll);
             }
         }
     }
 #endif
+
+    #endregion
 
     public void SwitchMapArea(string areaName)
     {
@@ -350,6 +373,7 @@ public class MinimapController : MonoBehaviour
             minimapMaterial.SetFloat("_DetailZoomThreshold", currentMapArea.detailZoomThreshold);
         }
     }
+
 
     private bool ValidateSetup()
     {
