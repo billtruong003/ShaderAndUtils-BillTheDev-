@@ -1,5 +1,26 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5457076824657212328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1614fc811f8f184697d9bee70ab9fe5, type: 3}
+  m_Name: DecalRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  m_Settings:
+    technique: 0
+    maxDrawDistance: 1000
+    decalLayers: 0
+    dBufferSettings:
+      surfaceData: 2
+    screenSpaceSettings:
+      normalBlend: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26,7 +47,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
   - {fileID: 3742361536663684561}
-  m_RendererFeatureMap: d185ec5dfd89ef33
+  - {fileID: -5457076824657212328}
+  m_RendererFeatureMap: d185ec5dfd89ef33584c4a728a9144b4
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -46,7 +68,7 @@ MonoBehaviour:
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
   m_RenderingMode: 0
-  m_DepthPrimingMode: 1
+  m_DepthPrimingMode: 0
   m_CopyDepthMode: 0
   m_DepthAttachmentFormat: 0
   m_DepthTextureFormat: 0
@@ -66,10 +88,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   FeatureSettings:
-    RenderPassEvent: 550
+    RenderPassEvent: 600
     LayerMask:
       serializedVersion: 2
-      m_Bits: 64
+      m_Bits: 4096
     RenderingLayerMask:
       serializedVersion: 0
       m_Bits: 3
@@ -77,10 +99,10 @@ MonoBehaviour:
     BlitMaterial: {fileID: -876546973899608171, guid: 6c897a44b62e6d84e9b0f6d5238a158e, type: 3}
     ClearDepth: 0
   MaterialSettings:
-    OutlineScale: 0.35
+    OutlineScale: 0.2
     RobertsCrossMultiplier: 100
     DepthThreshold: 100
-    NormalThreshold: 0.5
+    NormalThreshold: 0.19
     SteepAngleThreshold: 25
     SteepAngleMultiplier: 25
     OutlineColor: {r: 0, g: 0, b: 0, a: 1}

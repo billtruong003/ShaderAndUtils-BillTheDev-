@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        if (player == null) player = FindObjectOfType<ThirdPersonCharacterController>();
+        if (player == null) player = FindFirstObjectByType<ThirdPersonCharacterController>();
         if (healthBar != null) healthBar.material.SetFloat("_Progress", 1f);
         if (rageBar != null) rageBar.material.SetFloat("_Progress", 0f);
         if (characterNameText != null) characterNameText.text = player.GetCharacterName();

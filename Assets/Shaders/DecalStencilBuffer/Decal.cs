@@ -48,7 +48,7 @@ public class Decal : MonoBehaviour
             }
             props.SetTexture("_Gradient", gradientTexture);
         }
-        else if (m_Material.HasProperty("_Gradient"))
+        else if (m_Material != null && m_Material.HasProperty("_Gradient"))
         {
             props.SetTexture("_Gradient", m_Material.GetTexture("_Gradient"));
         }
@@ -69,12 +69,17 @@ public class Decal : MonoBehaviour
 
         if (saveGradientTexture)
         {
-            SaveGradientTexture(); // Call parameterless method
+            // FIX: This call must be wrapped because the method it calls is editor-only
+#if UNITY_EDITOR
+            SaveGradientTexture();
+#endif
         }
 
         return tex;
     }
 
+    // FIX: This entire method and its button attribute must be wrapped in #if UNITY_EDITOR
+#if UNITY_EDITOR
     [Button("Save Gradient Texture")]
     private void SaveGradientTexture()
     {
@@ -107,6 +112,7 @@ public class Decal : MonoBehaviour
             Debug.Log($"Gradient texture saved at: {path}");
         }
     }
+#endif
 
     private void OnValidate()
     {
@@ -117,9 +123,13 @@ public class Decal : MonoBehaviour
     {
         SetPropertyBlockSettings();
         m_CubeMesh = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
-        m_renderParams = new(m_Material) { matProps = props, receiveShadows = false };
+        if (m_Material != null)
+        {
+            m_renderParams = new(m_Material) { matProps = props, receiveShadows = false };
+        }
     }
 
+    // The rest of your editor code is already correctly wrapped.
 #if UNITY_EDITOR
     [CustomEditor(typeof(Decal))]
     public class DecalEditor : Editor
@@ -172,6 +182,9 @@ public class Decal : MonoBehaviour
 
     void Update()
     {
-        Graphics.RenderMesh(m_renderParams, m_CubeMesh, 0, transform.localToWorldMatrix);
+        if (m_Material != null && m_CubeMesh != null)
+        {
+            Graphics.RenderMesh(m_renderParams, m_CubeMesh, 0, transform.localToWorldMatrix);
+        }
     }
 }

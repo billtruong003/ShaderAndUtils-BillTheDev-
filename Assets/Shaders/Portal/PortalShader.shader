@@ -17,16 +17,14 @@ Shader "Custom/SwirlPortalShader"
         _TextureNoiseSpeed ("Texture Noise Speed (XY)", Vector) = (0.1, 0.0, 0,0)
         _TextureNoiseStrength ("Texture Noise Strength (Inner)", Float) = 1.0
 
+        // Gradient Texture
+        [NoScaleOffset] _GradientTexture ("Gradient Texture", 2D) = "white" {}
+
         // Edge Noise Properties
         _EdgeNoiseAmplitude ("Edge Noise Amplitude", Range(0.0, 1.0)) = 0.2
 
-        // Gradient Color Properties
-        [HDR] _GradientColor1 ("Gradient Color 1 (Center)", Color) = (0,0,1,0.7)
-        [HDR] _GradientColor2 ("Gradient Color 2", Color) = (0,1,1,0.7)
-        [HDR] _GradientColor3 ("Gradient Color 3 (Edge)", Color) = (1,0,1,0.7)
-        [HDR] _GlowColor ("Glow Color", Color) = (1,1,1,1)
-        
         // Edge Glow Properties
+        [HDR] _GlowColor ("Glow Color", Color) = (1,1,1,1)
         _EdgeThickness ("Edge Thickness", Float) = 0.1
         _GlowIntensity ("Glow Intensity", Float) = 5.0
     }
@@ -55,15 +53,13 @@ Shader "Custom/SwirlPortalShader"
                 float _SwirlTightness;
                 float _SwirlStrength;
 
-                TEXTURE2D(_NoiseTexture); SAMPLER(sampler_NoiseTexture); 
+                TEXTURE2D(_NoiseTexture); SAMPLER(sampler_NoiseTexture);
+                TEXTURE2D(_GradientTexture); SAMPLER(sampler_GradientTexture);
                 float _TextureNoiseScale;
                 float2 _TextureNoiseSpeed;
                 float _TextureNoiseStrength;
                 float _EdgeNoiseAmplitude;
 
-                float4 _GradientColor1;
-                float4 _GradientColor2;
-                float4 _GradientColor3;
                 float4 _GlowColor;
                 float _EdgeThickness;
                 float _GlowIntensity;
@@ -89,14 +85,21 @@ Shader "Custom/SwirlPortalShader"
                 return output;
             }
 
-            float2 ComputeNoiseUV(float2 uv, float time)
+            float2 ComputePolarSwirlUV(float2 uv, float time)
             {
+                // Convert to polar coordinates
                 float2 centeredUV = uv - float2(0.5, 0.5);
-                float distFromCenter = length(centeredUV);
+                float radius = length(centeredUV); // Radial length
                 float angle = atan2(centeredUV.y, centeredUV.x);
-                angle += time * _SwirlSpeed + distFromCenter * _SwirlTightness;
-                float2 swirledCenteredUV = float2(cos(angle), sin(angle)) * distFromCenter;
-                return lerp(centeredUV, swirledCenteredUV, _SwirlStrength) + float2(0.5, 0.5);
+                
+                // Apply swirl by modifying angle based on radius and time
+                float swirledAngle = angle + _SwirlSpeed * time * (1.0 + _SwirlTightness * radius);
+                
+                // Preserve original radius, only modify angle for swirl
+                float2 swirledUV = float2(cos(swirledAngle), sin(swirledAngle)) * radius;
+                
+                // Blend between original and swirled UV
+                return lerp(centeredUV, swirledUV, _SwirlStrength) + float2(0.5, 0.5);
             }
 
             float ComputeEdgeNoise(float sampledNoise)
@@ -109,8 +112,8 @@ Shader "Custom/SwirlPortalShader"
                 float2 uv = input.uv;
                 float time = _Time.y;
 
-                // Calculate noise UV for Swirl
-                float2 noiseUV = ComputeNoiseUV(uv, time);
+                // Calculate noise UV with polar swirl
+                float2 noiseUV = ComputePolarSwirlUV(uv, time);
 
                 // Sample noise texture
                 float2 textureSampleUV = noiseUV * _TextureNoiseScale + _TextureNoiseSpeed * time;
@@ -121,7 +124,7 @@ Shader "Custom/SwirlPortalShader"
 
                 // Calculate portal mask
                 float2 centeredUV = uv - float2(0.5, 0.5);
-                float distFromCenter = length(centeredUV);
+                float distFromCenter = length(centeredUV); // Radial length for mask
                 float rawMask = distFromCenter / _PortalSize;
                 float oneMinusRawMask = 1.0 - rawMask + edgeNoise;
                 float portalAlphaMask = pow(saturate(oneMinusRawMask), _PortalSoftness);
@@ -130,17 +133,9 @@ Shader "Custom/SwirlPortalShader"
                 // Combine noise for inner effect
                 float finalCombinedNoise = saturate(sampledNoise * _TextureNoiseStrength);
 
-                // Calculate three-color gradient
+                // Sample gradient texture based on radial distance
                 float gradientFactor = saturate(distFromCenter / _PortalSize);
-                float4 gradientColor;
-                if (gradientFactor < 0.5)
-                {
-                    gradientColor = lerp(_GradientColor1, _GradientColor2, gradientFactor / 0.5);
-                }
-                else
-                {
-                    gradientColor = lerp(_GradientColor2, _GradientColor3, (gradientFactor - 0.5) / 0.5);
-                }
+                float4 gradientColor = SAMPLE_TEXTURE2D(_GradientTexture, sampler_GradientTexture, float2(gradientFactor, 0.5));
                 gradientColor = lerp(gradientColor, gradientColor + finalCombinedNoise, 0.2); // Subtle noise influence
 
                 // Edge glow effect

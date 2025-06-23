@@ -25,7 +25,7 @@ Shader "Custom/PortalShader"
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue"="Transparent" "RenderPipeline"="UniversalPipeline" }
+        Tags { "RenderType"="Opaque" "Queue"="Opaque" "RenderPipeline"="UniversalPipeline" }
         Pass
         {
             Blend SrcAlpha OneMinusSrcAlpha

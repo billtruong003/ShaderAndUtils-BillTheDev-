@@ -1,3 +1,4 @@
+// Shader "Custom/URP Lightweight Outline"
 Shader "Custom/URP Lightweight Outline"
 {
     Properties
@@ -22,7 +23,9 @@ Shader "Custom/URP Lightweight Outline"
         // Pass 1: Stencil Write
         Pass
         {
-            Name "StencilWrite"
+            Name "StencilWrite" 
+
+            
             Tags { "LightMode" = "UniversalForward" }
             ZWrite On
             ColorMask 0
@@ -107,7 +110,7 @@ Shader "Custom/URP Lightweight Outline"
                 OutlineVaryings output;
                 float3 worldPos = TransformObjectToWorld(input.vertex.xyz);
                 float3 worldNormal = normalize(TransformObjectToWorldNormal(input.normal));
-                float thickness = max(0, _OutlineThickness); // Prevent negative thickness
+                float thickness = max(0, _OutlineThickness);
                 worldPos += worldNormal * thickness;
                 output.positionCS = TransformWorldToHClip(worldPos);
                 return output;
@@ -193,6 +196,7 @@ Shader "Custom/URP Lightweight Outline"
 
                 SurfaceData surfaceData;
                 surfaceData.albedo = baseColor.rgb;
+                surfaceData.specular = half3(0,0,0); // Sửa lỗi: Khởi tạo specular
                 surfaceData.metallic = _Metallic;
                 surfaceData.smoothness = _Smoothness;
                 surfaceData.normalTS = half3(0, 0, 1);

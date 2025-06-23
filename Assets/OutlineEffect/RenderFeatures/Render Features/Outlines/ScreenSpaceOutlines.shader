@@ -1,15 +1,16 @@
-Shader "Hidden/ScreenSpaceOutlines"
+// Tái tạo shader "Hidden/S_ScreenSpaceOutlines" từ mã biên dịch
+// *** ĐÃ SỬA LỖI SAMPLER ***
+Shader "Hidden/S_ScreenSpaceOutlines"
 {
     Properties
     {
-        _OutlineScale ("Outline Scale", Float) = 1.0
-        _RobertsCrossMultiplier ("Roberts Cross Multiplier", Float) = 100.0
-        _DepthThreshold ("Depth Threshold", Float) = 10.0
-        _NormalThreshold ("Normal Threshold", Float) = 0.4
-        _SteepAngleThreshold ("Steep Angle Threshold", Float) = 0.2
-        _SteepAngleMultiplier ("Steep Angle Multiplier", Float) = 25.0
-        _OutlineColor ("Outline Color", Color) = (0, 0.888169, 1, 1)
-        [ToggleUI] _UseNormalOutline ("Use Normal Outline", Float) = 0.0
+        _OutlineScale ("OutlineScale", Float) = 1.0
+        _RobertsCrossMultiplier ("RobertsCrossMultiplier", Float) = 100.0
+        _DepthThreshold ("DepthThreshold", Float) = 10.0
+        _NormalThreshold ("NormalThreshold", Float) = 0.4
+        _SteepAngleThreshold ("SteepAngleThreshold", Float) = 0.2
+        _SteepAngleMultiplier ("SteepAngleMultiplier", Float) = 25.0
+        _OutlineColor ("OutlineColor", Color) = (0.0, 0.888, 1.0, 1.0)
     }
 
     SubShader
@@ -18,10 +19,9 @@ Shader "Hidden/ScreenSpaceOutlines"
         
         Pass
         {
-            Name "DrawProcedural"
-            ZWrite Off
-            Cull Off
-            Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
+            Name "OutlineFinal"
+            ZWrite Off Cull Off
+            Blend SrcAlpha OneMinusSrcAlpha
 
             HLSLPROGRAM
             #pragma vertex Vert
@@ -39,17 +39,15 @@ Shader "Hidden/ScreenSpaceOutlines"
                 float _SteepAngleThreshold;
                 float _SteepAngleMultiplier;
                 float4 _OutlineColor;
-                float _UseNormalOutline;
             CBUFFER_END
 
+            // Texture chứa màu sắc của scene
             TEXTURE2D(_BlitTexture);
-            SAMPLER(sampler_BlitTexture_PointClamp);
-
-            struct Attributes
-            {
-                uint vertexID : SV_VertexID;
-                float4 position : POSITION;
-            };
+            // Texture chứa normal của các vật thể được lọc ra
+            TEXTURE2D(_OutlineFilterTex);
+            // Khai báo sampler theo đúng quy ước của URP
+            // Tên sampler phải khớp với tên texture
+            SAMPLER(sampler_OutlineFilterTex);
 
             struct Varyings
             {
@@ -58,98 +56,64 @@ Shader "Hidden/ScreenSpaceOutlines"
                 float3 viewDir : TEXCOORD1;
             };
 
-            Varyings Vert(Attributes input)
+            Varyings Vert(uint vertexID : SV_VertexID)
             {
                 Varyings output;
-                
-                // Generate fullscreen triangle
-                float2 uv = float2(input.vertexID & 1, input.vertexID >> 1);
-                output.positionCS = float4(uv * 2.0 - 1.0, 0.0, 1.0);
-                output.uv = uv;
-                
-                // Compute view direction
-                float4 worldPos = mul(unity_MatrixInvVP, output.positionCS);
-                worldPos.xyz /= worldPos.w;
-                output.viewDir = worldPos.xyz - _WorldSpaceCameraPos;
-                
-                // Use a simpler approach for view direction in perspective/ortho
-                output.viewDir = normalize(output.viewDir);
-                
+                output.uv = float2((vertexID << 1) & 2, vertexID & 2);
+                output.positionCS = float4(output.uv * 2.0 - 1.0, 0.0, 1.0);
+                #if UNITY_UV_STARTS_AT_TOP
+                output.uv.y = 1.0 - output.uv.y;
+                #endif
+                output.viewDir = GetWorldSpaceViewDir(mul(unity_MatrixInvVP, float4(output.positionCS.xy, 1, 1)).xyz);
                 return output;
             }
 
             float4 Frag(Varyings input) : SV_TARGET
             {
-                float2 uv = input.uv;
-                float4 normalSample = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture_PointClamp, uv);
-                if (normalSample.a < 0.5) // Fallback to scene normals if _BlitTexture is not set correctly
+                float sceneDepth = SampleSceneDepth(input.uv);
+                float3 sceneNormalWS = SampleSceneNormals(input.uv);
+                
+                // Sử dụng sampler đã khai báo đúng: sampler_OutlineFilterTex
+                float4 filterNormalSample = SAMPLE_TEXTURE2D(_OutlineFilterTex, sampler_OutlineFilterTex, input.uv);
+
+                if (filterNormalSample.a < 0.5)
                 {
-                    normalSample.rgb = SampleSceneNormals(uv);
+                    return SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, input.uv);
                 }
-                float3 normal = normalSample.rgb * 2.0 - 1.0;
                 
-                float3 viewDir = normalize(input.viewDir);
-                float depth = SampleSceneDepth(uv);
-                float linearDepth = LinearEyeDepth(depth, _ZBufferParams);
-                float viewDepth = linearDepth;
-                
-                float3 worldPos = viewDir * viewDepth + _WorldSpaceCameraPos;
-                float3 viewNormal = mul((float3x3)UNITY_MATRIX_V, worldPos);
-                viewNormal = mul((float3x3)UNITY_MATRIX_I_V, viewNormal) * 2.0 - 1.0;
-                
-                float normalDiff = dot(normal, viewNormal);
-                normalDiff = 1.0 - normalDiff - _NormalThreshold;
-                float normalRange = 2.0 - _NormalThreshold;
-                float normalFactor = saturate(normalDiff * normalRange);
-                normalFactor = normalFactor * normalFactor * (3.0 - 2.0 * normalFactor);
-                normalFactor = 1.0 + _SteepAngleMultiplier * normalFactor;
-                depth *= normalFactor;
-                
+                float NdotV = 1.0 - saturate(dot(sceneNormalWS, normalize(input.viewDir)));
+                float steepAngleFactor = smoothstep(_SteepAngleThreshold, 1.0, NdotV);
+                float steepAngleDepth = sceneDepth + steepAngleFactor * _SteepAngleMultiplier * 0.001;
+
                 float2 texelSize = _ScreenParams.zw - 1.0;
-                float2 offsets[4];
-                offsets[0] = uv + _OutlineScale * float2(-texelSize.x * 0.5, texelSize.y * 0.5);
-                offsets[1] = uv + _OutlineScale * float2(texelSize.x * 0.5, texelSize.y * 0.5);
-                offsets[2] = uv + _OutlineScale * float2(texelSize.x * 0.5, -texelSize.y * 0.5);
-                offsets[3] = uv + _OutlineScale * float2(-texelSize.x * 0.5, -texelSize.y * 0.5);
+                float2 offset = texelSize * _OutlineScale;
+
+                float d1 = SampleSceneDepth(input.uv + offset);
+                float3 n1 = SampleSceneNormals(input.uv + offset);
+                float d2 = SampleSceneDepth(input.uv + float2(offset.x, -offset.y));
+                float3 n2 = SampleSceneNormals(input.uv + float2(offset.x, -offset.y));
+                float d3 = SampleSceneDepth(input.uv + float2(-offset.x, offset.y));
+                float3 n3 = SampleSceneNormals(input.uv + float2(-offset.x, offset.y));
+
+                float depthGrad1 = d1 - steepAngleDepth;
+                float depthGrad2 = d2 - d3;
+                float depthEdge = sqrt(depthGrad1 * depthGrad1 + depthGrad2 * depthGrad2) * _RobertsCrossMultiplier;
                 
-                float depthSamples[4];
-                for (int i = 0; i < 4; i++)
-                {
-                    depthSamples[i] = SampleSceneDepth(offsets[i]);
-                }
+                float3 normalGrad1 = n1 - sceneNormalWS;
+                float3 normalGrad2 = n2 - n3;
+                float normalEdge = sqrt(dot(normalGrad1, normalGrad1) + dot(normalGrad2, normalGrad2));
+
+                float depthFactor = step(_DepthThreshold * 0.0001, depthEdge);
+                float normalFactor = step(_NormalThreshold, normalEdge);
+
+                float edgeFactor = max(depthFactor, normalFactor);
                 
-                float depthDiff1 = depthSamples[1] - depthSamples[0];
-                float depthDiff2 = depthSamples[2] - depthSamples[3];
-                float depthEdge = sqrt(depthDiff1 * depthDiff1 + depthDiff2 * depthDiff2);
-                depthEdge *= _RobertsCrossMultiplier;
+                half4 originalColor = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, input.uv);
                 
-                float depthEdgeFactor = depthEdge >= _DepthThreshold;
-                
-                float4 normalSamples[4];
-                for (i = 0; i < 4; i++)
-                {
-                    normalSamples[i] = SAMPLE_TEXTURE2D(_BlitTexture, sampler_BlitTexture_PointClamp, offsets[i]);
-                    if (normalSamples[i].a < 0.5) // Fallback to scene normals
-                    {
-                        normalSamples[i].rgb = SampleSceneNormals(offsets[i]);
-                    }
-                }
-                
-                float3 normalDiff1 = normalSamples[1].rgb - normalSamples[0].rgb;
-                float3 normalDiff2 = normalSamples[2].rgb - normalSamples[3].rgb;
-                float normalEdge = dot(normalDiff1, normalDiff1) + dot(normalDiff2, normalDiff2);
-                normalEdge = sqrt(normalEdge);
-                
-                float normalEdgeFactor = normalEdge >= _NormalThreshold && _UseNormalOutline > 0.5;
-                
-                float edgeFactor = max(depthEdgeFactor, normalEdgeFactor) * _OutlineColor.a;
-                
-                return edgeFactor * _OutlineColor;
+                return lerp(originalColor, _OutlineColor, edgeFactor * _OutlineColor.a);
             }
             ENDHLSL
         }
     }
-    
-    CustomEditor "UnityEditor.Rendering.Fullscreen.ShaderGraph.FullscreenShaderGUI"
     Fallback "Hidden/Shader Graph/FallbackError"
-} 
+}
