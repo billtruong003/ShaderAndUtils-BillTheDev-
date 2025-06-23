@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Material
-  m_Shader: {fileID: 4800000, guid: 44fb06221d7deb649b58ba9b31b92cf8, type: 3}
+  m_Shader: {fileID: 4800000, guid: 8766bb065604b1a4d9dd8c42ecb4f077, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -53,7 +53,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DissolveNoiseTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 4bf42cc457a14400495c7d7f55298b6e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -127,11 +127,11 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EdgeWidth: 0.02
-    - _EnableOutline: 0
+    - _EnableOutline: 1.1
     - _EnvironmentReflections: 1
     - _FadeEndDistance: 0.1
     - _FadeStartDistance: 1
-    - _FlashAmount: 0
+    - _FlashAmount: 0.022
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -140,7 +140,7 @@ Material:
     - _Mode: 0
     - _NoiseStrength: 0.1
     - _OcclusionStrength: 1
-    - _OutlineWidth: 0
+    - _OutlineWidth: 0.1
     - _Parallax: 0.02
     - _PatternFrequency: 10
     - _PatternType: 0
@@ -174,17 +174,17 @@ Material:
     - Toon_Ramp_Tint: {r: 0.49056596, g: 0.49056596, b: 0.49056596, a: 1}
     - _AmbientColor: {r: 0, g: 0, b: 0, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 2, g: 2, b: 2, a: 1}
     - _Direction: {r: 0, g: 1, b: 0, a: 0}
     - _DissolveEdgeColor: {r: 1, g: 0.04412794, b: 0, a: 1}
     - _EdgeColor: {r: 1, g: 0.5, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
-    - _FlashColor: {r: 12.996038, g: 8.770319, b: 0, a: 1}
+    - _FlashColor: {r: 11.949089, g: 11.949089, b: 11.949089, a: 1}
     - _LightColor: {r: 2, g: 2, b: 2, a: 1}
-    - _OutlineColor: {r: 1, g: 0.8, b: 0, a: 1}
-    - _RimColor: {r: 7.4713173, g: 7.4713173, b: 7.4713173, a: 1}
+    - _OutlineColor: {r: 1, g: 0.43921572, b: 0, a: 1}
+    - _RimColor: {r: 102.75574, g: 102.75574, b: 102.75574, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ShadowTint: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+    - _ShadowTint: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
     - _ToonLitColor: {r: 1, g: 1, b: 1, a: 1}

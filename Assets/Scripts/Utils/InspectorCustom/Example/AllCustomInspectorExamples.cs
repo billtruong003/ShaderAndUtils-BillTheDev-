@@ -1,0 +1,306 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+namespace Utils.Bill.InspectorCustom.Example
+{
+
+    // =================================================================================================
+    // CÁC VÍ DỤ MONOBEHAVIOUR
+    // =================================================================================================
+#if UNITY_EDITOR
+    public class HeaderExample : MonoBehaviour
+    {
+        [CustomHeader("Game State", "Current state of the game", "#28B463", FontStyle.Bold)]
+        public string gameState = "Running";
+
+        [CustomHeader("Player Info", "Details about the player", "#3498DB", FontStyle.Italic)]
+        public string playerName = "Hero";
+        public int playerLevel = 1;
+
+        [CustomHeader("Debugging Options", "Various debug flags", "#E74C3C")]
+        public bool enableLogs = true;
+        public bool showGizmos = false;
+    }
+
+    public class ButtonExample : MonoBehaviour
+    {
+        [CustomHeader("Actions", "Perform various actions", "#AF7AC5")]
+        public int counter = 0;
+
+        [CustomButton("Increment Counter", "Adds 1 to counter", "#2ECC71")]
+        private void Increment()
+        {
+            counter++;
+            Debug.Log($"Counter incremented to: {counter}");
+            EditorUtility.SetDirty(this);
+        }
+
+        [CustomButton("Decrement Counter", "Subtracts 1 from counter", "#E74C3C")]
+        private void Decrement()
+        {
+            counter--;
+            Debug.Log($"Counter decremented to: {counter}");
+            EditorUtility.SetDirty(this);
+        }
+
+        [CustomButton("Reset Counter", "Resets counter to zero", "#F39C12")]
+        private void ResetCounter()
+        {
+            counter = 0;
+            Debug.Log("Counter reset.");
+            EditorUtility.SetDirty(this);
+        }
+    }
+
+    public class ReadOnlyExample : MonoBehaviour
+    {
+        [CustomHeader("Read-Only Fields", "Fields that cannot be edited", "#F1C40F")]
+        [ReadOnly("#D5F5E3")]
+        public string uniqueID;
+
+        [ReadOnly("#EAECEE")]
+        public float gameVersion = 1.25f;
+
+        [ReadOnly]
+        public Vector3 initialPosition = Vector3.zero;
+
+        [SerializeField, ReadOnly("#FADBD8")]
+        private int sceneBuildIndex = 0;
+
+        void Awake()
+        {
+            uniqueID = Guid.NewGuid().ToString();
+            sceneBuildIndex = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
+        }
+    }
+
+    public class MinValueExample : MonoBehaviour
+    {
+        [CustomHeader("Value Constraints", "Applying min/max values", "#1ABC9C")]
+        [MinValue(0, 100, "#E8F8F5")]
+        public int health = 75;
+
+        [MinValue(-10.5f, 10.5f, "#D6EAF8")]
+        public float speed = 5.0f;
+
+        [MinValue(1, float.MaxValue, "#FCF3CF")]
+        public int minLevel = 1;
+
+        [MinValue(0)]
+        public float rawScore = 0.0f;
+    }
+
+    public class DictionaryExample : MonoBehaviour
+    {
+        [CustomHeader("Dictionary Display (Serializable)", "Demonstrates a serializable Dictionary with direct editing in Inspector.", "#9B59B6")]
+
+        public StringFloatDictionary itemPrices = new StringFloatDictionary();
+
+        public IntStringDictionary playerNames = new IntStringDictionary();
+        void Awake()
+        {
+            if (itemPrices.Count == 0)
+            {
+                itemPrices.Add("Sword", 100.5f);
+                itemPrices.Add("Shield", 75.0f);
+                itemPrices.Add("Potion", 10.0f);
+            }
+            if (playerNames.Count == 0)
+            {
+                playerNames.Add(1, "Alice");
+                playerNames.Add(2, "Bob");
+                playerNames.Add(3, "Charlie");
+            }
+        }
+
+        [CustomButton("Add Random Item", "Adds a new random item to itemPrices", "#5DADE2")]
+        private void AddRandomItem()
+        {
+            string newItem = "Item" + UnityEngine.Random.Range(100, 999);
+            float newPrice = UnityEngine.Random.Range(10.0f, 200.0f);
+            if (!itemPrices.ContainsKey(newItem))
+            {
+                itemPrices.Add(newItem, newPrice);
+                Debug.Log($"Added {newItem}: {newPrice}");
+            }
+            else
+            {
+                Debug.Log($"Item {newItem} already exists, trying again.");
+            }
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+
+        [CustomButton("Clear Item Prices", "Clears the itemPrices dictionary", "#E74C3C")]
+        private void ClearItemPrices()
+        {
+            itemPrices.Clear();
+            Debug.Log("Item prices cleared.");
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+    }
+
+    public class SerializeGUIDExample : MonoBehaviour
+    {
+        [CustomHeader("GUID Management", "Handling GUIDs", "#AAB7B8")]
+        [SerializeGUID("#F0F8FF", false)]
+        public string editableGUID;
+
+        [SerializeField, SerializeGUID("#E0E0E0", true)]
+        private string autoGeneratedGUID;
+
+        [CustomButton("Generate New GUID", "Generates a new GUID for the editable field", "#27AE60")]
+        private void GenerateEditableGUID()
+        {
+            editableGUID = Guid.NewGuid().ToString();
+            Debug.Log($"New editable GUID: {editableGUID}");
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+
+        void Awake()
+        {
+            if (string.IsNullOrEmpty(autoGeneratedGUID))
+            {
+                autoGeneratedGUID = Guid.NewGuid().ToString();
+            }
+        }
+    }
+
+    // =================================================================================================
+    // CÁC VÍ DỤ MỚI
+    // =================================================================================================
+
+    public class ProgressBarExample : MonoBehaviour
+    {
+        [CustomHeader("Progress Display", "Visualizing progress with a bar", "#8E44AD")]
+        [ProgressBar("Current Progress", 100f, "#28B463")]
+        [SerializeField] private float currentProgress = 50f;
+
+        [ProgressBar("Loading Status", 1000f, "#3498DB")]
+        [SerializeField] private int loadingAmount = 750;
+
+        [CustomButton("Increase Progress", "Increase current progress by 10/50", "#2ECC71")]
+        private void IncreaseProgress()
+        {
+            currentProgress += 10f;
+            currentProgress = Mathf.Clamp(currentProgress, 0, 100f);
+            loadingAmount += 50;
+            loadingAmount = Mathf.Clamp(loadingAmount, 0, 1000);
+            Debug.Log($"Progress: {currentProgress:F1}% | Loading: {loadingAmount}");
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+
+        [CustomButton("Reset Progress", "Reset all progress", "#E74C3C")]
+        private void ResetProgress()
+        {
+            currentProgress = 0f;
+            loadingAmount = 0;
+            Debug.Log("Progress reset.");
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+    }
+
+    public class SliderExample : MonoBehaviour
+    {
+        [CustomHeader("Custom Sliders", "Enhanced slider controls", "#F39C12")]
+        [CustomSlider(0f, 10f, "Control character speed.")]
+        public float characterSpeed = 5.0f;
+
+        [CustomSlider(1, 5, "Adjust difficulty level.")]
+        public int difficultyLevel = 3;
+
+        [Range(0f, 100f)]
+        public float unitySliderValue = 50f;
+    }
+
+    public class LayoutExample : MonoBehaviour
+    {
+        [CustomHeader("Grouping & Visibility", "Demonstrating custom layout and foldouts in editor", "#5DADE2")]
+        public bool showBasicSettings = true;
+        public string objectName = "My Object";
+        public float objectScale = 1.0f;
+
+        public bool showAdvancedSettings = false;
+        public Vector3 offset = Vector3.zero;
+        public Quaternion rotation = Quaternion.identity;
+
+        public List<string> tagList = new List<string> { "Tag1", "Tag2" };
+    }
+
+    // Ví dụ về Custom Grid (sẽ cần Custom Editor để vẽ grid)
+    public class GridExample : MonoBehaviour
+    {
+        [CustomHeader("Custom Grid View", "Visualizing data in a grid structure", "#7D3C98")]
+        [SerializeField] private int gridSizeX = 3;
+        [SerializeField] private int gridSizeY = 3;
+        [SerializeField] private List<int> gridData = new List<int>();
+
+        void OnEnable()
+        {
+            if (gridData == null || gridData.Count != gridSizeX * gridSizeY)
+            {
+                InitializeGridData();
+            }
+        }
+
+        public void InitializeGridData()
+        {
+            gridData = new List<int>();
+            for (int i = 0; i < gridSizeX * gridSizeY; i++)
+            {
+                gridData.Add(0); // Initialize with default value
+            }
+            // Không gọi SetDirty trong OnEnable hoặc Awake cho Monobehaviour
+            // vì nó có thể gây ra vấn đề với prefab hoặc cảnh.
+            // Chỉ gọi khi có thay đổi thủ công hoặc từ button.
+        }
+
+        public int GetGridValue(int x, int y)
+        {
+            if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY)
+            {
+                return gridData[y * gridSizeX + x];
+            }
+            return -1;
+        }
+
+        public void SetGridValue(int x, int y, int value)
+        {
+            if (x >= 0 && x < gridSizeX && y >= 0 && y < gridSizeY)
+            {
+                gridData[y * gridSizeX + x] = value;
+                UnityEditor.EditorUtility.SetDirty(this);
+            }
+        }
+
+        [CustomButton("Reset Grid", "Resets all grid values to 0", "#E74C3C")]
+        private void ResetGrid()
+        {
+            InitializeGridData();
+            Debug.Log("Grid reset.");
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+    }
+    public class SerializeIfExample : MonoBehaviour
+    {
+        [CustomHeader("Conditional Serialization", "Demonstrates conditional field display", "#9B59B6")]
+        public bool enableFeature = false;
+
+        [SerializeIf("enableFeature", true)]
+        [SerializeField]
+        private string featureName = "New Feature";
+
+        [SerializeIf("enableFeature", true)]
+        [SerializeField]
+        private int featureLevel = 1;
+
+        [CustomButton("Toggle Feature", "Toggles the enableFeature flag", "#3498DB")]
+        private void ToggleFeature()
+        {
+            enableFeature = !enableFeature;
+            Debug.Log($"Feature enabled: {enableFeature}");
+            EditorUtility.SetDirty(this);
+        }
+    }
+#endif
+}

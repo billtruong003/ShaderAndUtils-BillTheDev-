@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit_MinimapShader
+  m_Shader: {fileID: 4800000, guid: 127049e009c2e4117b62b957971129d8, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DetailTex:
+        m_Texture: {fileID: 2800000, guid: 827643247c5396045ab168f4d32a7e92, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: c9bbbf1bdbae9624080588e1e0be2b78, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BorderFadeStart: 0.5
+    - _BorderSize: 0.1
+    - _DetailFadeRange: 0.0701
+    - _DetailZoomThreshold: 0
+    - _EdgeFadeDistance: 0.2
+    - _EdgeThickness: 0
+    - _IconSize: 0
+    - _MapRotation: 0
+    - _SightConeAngle: 180
+    - _SightConeSoftness: 0.505
+    - _WalkableEdgeThickness: 10
+    - _ZoomLevel: 1
+    m_Colors:
+    - _BorderColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EdgeColor: {r: 0, g: 1, b: 1, a: 1}
+    - _IconColor: {r: 0, g: 4, b: 2.4754343, a: 1}
+    - _PlayerForward: {r: 0, g: 1, b: 0, a: 0}
+    - _PlayerPosUV: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _SightConeColor: {r: 1, g: 1, b: 1, a: 0.25}
+    - _WalkableEdgeColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

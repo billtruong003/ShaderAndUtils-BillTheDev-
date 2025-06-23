@@ -25,7 +25,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _TEXTURETYPE_TEXTURE2D
+  - _TEXTURETYPE_CUBEMAP
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -43,12 +43,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: fc11b503aaa244024b2c0f98b6585000, type: 3}
-        m_Scale: {x: 10, y: 10}
+        m_Scale: {x: 2, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _TextureType: 0
+    - _TextureType: 1
     m_Colors:
-    - _Color: {r: 23.96863, g: 5.019608, b: 0, a: 1}
+    - _Color: {r: 30.209375, g: 8.155888, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

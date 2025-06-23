@@ -1,6 +1,6 @@
 // Tái tạo shader "Hidden/S_ScreenSpaceOutlines" từ mã biên dịch
 // *** ĐÃ SỬA LỖI SAMPLER ***
-Shader "Hidden/S_ScreenSpaceOutlines"
+Shader "Hidden/Hidden_ScreenSpaceOutlines"
 {
     Properties
     {

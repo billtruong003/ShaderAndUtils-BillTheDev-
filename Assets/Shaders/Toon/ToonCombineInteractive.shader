@@ -6,7 +6,7 @@ Shader "Custom/URP/ToonShaderInteractive_URP_Modern"
     {
         [Header(Toon Shading)]
         _MainTex("Base Texture", 2D) = "white" {}
-        _Color("Base Color", Color) = (1,1,1,1)
+        [HDR] _Color("Base Color", Color) = (1,1,1,1)
         _ToonRampSmoothness("Shadow Smoothness", Range(0.001, 1)) = 0.05
         _ShadowTint("Shadow Tint", Color) = (0.6, 0.6, 0.8, 1)
 

@@ -16,7 +16,7 @@ MonoBehaviour:
   m_Settings:
     technique: 0
     maxDrawDistance: 1000
-    decalLayers: 0
+    decalLayers: 1
     dBufferSettings:
       surfaceData: 2
     screenSpaceSettings:
@@ -72,7 +72,7 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_DepthAttachmentFormat: 0
   m_DepthTextureFormat: 0
-  m_AccurateGbufferNormals: 0
+  m_AccurateGbufferNormals: 1
   m_IntermediateTextureMode: 1
 --- !u!114 &3742361536663684561
 MonoBehaviour:
@@ -91,7 +91,7 @@ MonoBehaviour:
     RenderPassEvent: 600
     LayerMask:
       serializedVersion: 2
-      m_Bits: 4096
+      m_Bits: 4160
     RenderingLayerMask:
       serializedVersion: 0
       m_Bits: 3
@@ -99,10 +99,10 @@ MonoBehaviour:
     BlitMaterial: {fileID: -876546973899608171, guid: 6c897a44b62e6d84e9b0f6d5238a158e, type: 3}
     ClearDepth: 0
   MaterialSettings:
-    OutlineScale: 0.2
+    OutlineScale: 0.5
     RobertsCrossMultiplier: 100
     DepthThreshold: 100
-    NormalThreshold: 0.19
-    SteepAngleThreshold: 25
-    SteepAngleMultiplier: 25
+    NormalThreshold: 0.7
+    SteepAngleThreshold: 325
+    SteepAngleMultiplier: 66
     OutlineColor: {r: 0, g: 0, b: 0, a: 1}

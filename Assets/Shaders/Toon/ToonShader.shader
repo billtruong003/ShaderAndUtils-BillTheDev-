@@ -7,6 +7,7 @@ Shader "Custom/URP/ToonShader"
         _ToonRampOffset ("Toon Ramp Offset", Range(0,1)) = 0.5
         [HDR] _ToonRampTinting ("Toon Ramp Tinting", Color) = (1,1,1,1)
         _AmbientColor ("Ambient Color", Color) = (0.2, 0.2, 0.2, 1)
+        [IntRange] _RenderingLayerMask ("Rendering Layer Mask", Range(0, 31)) = 0 // Support for rendering layer mask
     }
 
     SubShader
@@ -18,6 +19,7 @@ Shader "Custom/URP/ToonShader"
         {
             Name "ForwardLit"
             Tags { "LightMode"="UniversalForward" }
+
 
             HLSLPROGRAM
             #pragma vertex vert
@@ -87,21 +89,21 @@ Shader "Custom/URP/ToonShader"
                     Direction = light.direction;
 
                     // Fallback for no light
-                    if (dot(light.color, light.color) == 0) // If no main light
+                    if (dot(light.color, light.color) == 0)
                     {
-                        ToonRampOutput = float3(1, 1, 1); // Use a default white light
+                        ToonRampOutput = float3(1, 1, 1);
                     }
                 #endif
             }
 
-            float4 frag(Varyings input) : SV_Target
+            float4 frag(Varyings input) : SV_TARGET
             {
                 float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
                 float3 toonRampOutput;
                 float3 lightDirection;
                 ToonShading_float(input.normalWS, _ToonRampSmoothness, input.positionCS.xyz, input.positionWS, _ToonRampTinting, _ToonRampOffset, toonRampOutput, lightDirection);
                 color.rgb *= toonRampOutput;
-                color.rgb += _AmbientColor.rgb; // Add ambient lighting
+                color.rgb += _AmbientColor.rgb;
                 return color;
             }
 
