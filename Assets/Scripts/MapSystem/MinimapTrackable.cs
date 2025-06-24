@@ -68,10 +68,10 @@ public class MinimapTrackable : MonoBehaviour
         {
             // Gán tham chiếu
             this.controller = foundController;
-
+#if UNITY_EDITOR
             // Đánh dấu đối tượng này đã bị thay đổi để Unity lưu lại (quan trọng cho Prefab)
             UnityEditor.EditorUtility.SetDirty(this);
-
+#endif
             Debug.Log($"[Minimap] Đã gán thành công '{foundController.gameObject.name}' cho '{this.gameObject.name}'.", this.gameObject);
         }
         else

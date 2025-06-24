@@ -6229,17 +6229,18 @@ MonoBehaviour:
     detailMapTexture: {fileID: 2800000, guid: 827643247c5396045ab168f4d32a7e92, type: 3}
     worldMinBounds: {x: -500, y: -500}
     worldMaxBounds: {x: 500, y: 500}
-    detailZoomThreshold: 0.2
+    detailZoomThreshold: 0.25
   startingAreaName: Dynamic
   zoomLevel: 0.5
   defaultZoomLevel: 0.5
+  reversePanDirection: 1
   sightConeColor: {r: 1.8880861, g: 1.8880861, b: 1.8880861, a: 0.19607843}
   sightConeAngle: 180
   sightConeSoftness: 0.5
   autoDisableTime: 5
-  zoomSpeed: 0.2
-  buttonZoomStep: 0.1
-  minZoom: 0.05
+  zoomSpeed: 0.05
+  buttonZoomStep: 0.05
+  minZoom: 0.1
   maxZoom: 1
   fingerTag: PlayerFinger
 --- !u!65 &1659198843
