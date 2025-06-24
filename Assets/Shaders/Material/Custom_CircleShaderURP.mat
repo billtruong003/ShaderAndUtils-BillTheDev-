@@ -12,7 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _FLICKERENABLED_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -28,21 +29,21 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 07b42c53d8a944ed3a57ef8d82fb5c60, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Emission: 1
     - _FillMode: 0
-    - _FlickerEnabled: 0
-    - _FlickerIntensity: 0.05
-    - _FlickerSpeed: 3
-    - _NoiseScale: 0
-    - _Thickness: 0.109
+    - _FlickerEnabled: 1
+    - _FlickerIntensity: 0.058
+    - _FlickerSpeed: 0.07
+    - _NoiseScale: 0.85
+    - _Thickness: 0.05
     m_Colors:
     - _InnerColor: {r: 1, g: 1, b: 1, a: 0}
-    - _OuterColor: {r: 0, g: 2.996078, b: 0.1416212, a: 1}
+    - _OuterColor: {r: 0, g: 8, b: 0.41884804, a: 1}
     - _Outer_Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
