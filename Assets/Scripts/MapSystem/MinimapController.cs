@@ -32,6 +32,9 @@ public class MinimapController : MonoBehaviour, IPointerDownHandler, IDragHandle
     public Transform playerTransform;
     public RawImage mapDisplayImage;
     public RectTransform playerIcon;
+    // <== CODE MỚI: Thêm tham chiếu tới Slider
+    [Tooltip("Kéo và thả UI Slider điều khiển zoom vào đây.")]
+    public Slider zoomSlider;
 
     [CustomHeader("Object Tracking & Pooling", "#00E676")]
     public RectTransform iconsContainer;
@@ -92,6 +95,32 @@ public class MinimapController : MonoBehaviour, IPointerDownHandler, IDragHandle
     public void ZoomIn() { AdjustZoomByAmount(-buttonZoomStep); }
     public void ZoomOut() { AdjustZoomByAmount(buttonZoomStep); }
     public void ResetView() { DisablePanMode(); }
+
+    public void PanWithJoystick(Vector2 joystickAxis)
+    {
+        EnablePanMode();
+        float panSpeed = 0.15f;
+        Vector2 panDelta = joystickAxis * panSpeed * zoomLevel * Time.deltaTime;
+        panOffset += panDelta;
+        timeSinceLastInteraction = 0f;
+        ClampPanOffset();
+    }
+
+    // <== CODE MỚI: Phương thức để Slider gọi
+    /// <summary>
+    /// Thiết lập mức zoom trực tiếp dựa trên giá trị của Slider (thường là từ 0.0 đến 1.0).
+    /// </summary>
+    /// <param name="sliderValue">Giá trị từ Slider.</param>
+    public void SetZoom(float sliderValue)
+    {
+        if (!isPanModeEnabled) EnablePanMode();
+
+        // Chuyển đổi giá trị của slider (0-1) thành mức zoom thực tế (minZoom - maxZoom)
+        zoomLevel = Mathf.Lerp(minZoom, maxZoom, sliderValue);
+
+        timeSinceLastInteraction = 0f;
+        ClampPanOffset();
+    }
     #endregion
 
     #region Unity Lifecycle
@@ -115,6 +144,15 @@ public class MinimapController : MonoBehaviour, IPointerDownHandler, IDragHandle
         SwitchMapArea(startingAreaName);
         if (iconPrefab != null) { iconPrefab.SetActive(false); }
         mainCameraForRaycast = Camera.main;
+
+        // <== CODE MỚI: Cập nhật giá trị ban đầu cho Slider
+        if (zoomSlider != null)
+        {
+            // Thiết lập giá trị cho slider dựa trên mức zoom mặc định
+            // Chuyển đổi ngược từ zoomLevel (minZoom-maxZoom) về giá trị slider (0-1)
+            float initialSliderValue = Mathf.InverseLerp(minZoom, maxZoom, defaultZoomLevel);
+            zoomSlider.value = initialSliderValue;
+        }
     }
 
     void OnDisable() { DisablePanMode(); }
@@ -122,6 +160,16 @@ public class MinimapController : MonoBehaviour, IPointerDownHandler, IDragHandle
     void LateUpdate()
     {
         if (minimapMaterial == null || currentMapArea == null || playerTransform == null) return;
+
+        // <== CODE MỚI: Cập nhật slider nếu zoom thay đổi bằng cách khác (nút, cuộn chuột)
+        if (zoomSlider != null)
+        {
+            float currentSliderValue = Mathf.InverseLerp(minZoom, maxZoom, zoomLevel);
+            if (Mathf.Abs(zoomSlider.value - currentSliderValue) > 0.001f)
+            {
+                zoomSlider.value = currentSliderValue;
+            }
+        }
 
 #if UNITY_EDITOR
         if (interactionMode == InteractionMode.WorldSpace_Physics)
@@ -133,7 +181,7 @@ public class MinimapController : MonoBehaviour, IPointerDownHandler, IDragHandle
         if (isPanModeEnabled && !isInteracting)
         {
             timeSinceLastInteraction += Time.deltaTime;
-            if (timeSinceLastInteraction > autoDisableTime) isPanModeEnabled = false; // Chỉ tắt mode, không reset
+            if (timeSinceLastInteraction > autoDisableTime) isPanModeEnabled = false;
         }
 
         if (interactionMode == InteractionMode.WorldSpace_Physics && isInteracting && fingerTransform != null)
@@ -146,6 +194,10 @@ public class MinimapController : MonoBehaviour, IPointerDownHandler, IDragHandle
     }
     #endregion
 
+    // ... (Toàn bộ các phương thức còn lại không thay đổi) ...
+    // ... UpdateAllIcons, UpdateShaderProperties, EnablePanMode, DisablePanMode, ...
+    // ... AdjustZoomByAmount, OnPointerDown, OnDrag, etc. ...
+    // ... Bạn chỉ cần copy và paste toàn bộ phần trên, các phần dưới đây đã có sẵn ...
     #region Core Logic (Unchanged)
     void UpdateAllIcons()
     {
