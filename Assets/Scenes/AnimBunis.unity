@@ -2949,10 +2949,10 @@ RectTransform:
   - {fileID: 1348083725}
   m_Father: {fileID: 1241718977}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 105, y: -15}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &741168656
 MonoBehaviour:
@@ -6006,10 +6006,10 @@ RectTransform:
   - {fileID: 1557338753}
   m_Father: {fileID: 1241718977}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 55, y: -15}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1638346830
 MonoBehaviour:
@@ -6158,7 +6158,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1659198840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6221,6 +6221,7 @@ MonoBehaviour:
   playerTransform: {fileID: 9081896691342823117}
   mapDisplayImage: {fileID: 601390352}
   playerIcon: {fileID: 1142796363}
+  zoomSlider: {fileID: 0}
   iconsContainer: {fileID: 1650653992}
   iconPrefab: {fileID: 923605210}
   mapAreas:
@@ -6234,6 +6235,9 @@ MonoBehaviour:
   zoomLevel: 0.5
   defaultZoomLevel: 0.5
   reversePanDirection: 1
+  vrPanSensitivity: 1
+  mapRightAxis: 0
+  mapUpAxis: 2
   sightConeColor: {r: 1.8880861, g: 1.8880861, b: 1.8880861, a: 0.19607843}
   sightConeAngle: 180
   sightConeSoftness: 0.5

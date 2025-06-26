@@ -27,19 +27,11 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _MaskTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _NoiseTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PulseGradient:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _PulseTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -49,21 +41,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EmissionIntensity: 1.21
+    - _EmissionIntensity: 1
     - _NoiseScale: 1
     - _PulseCount: 0
-    - _PulseFalloff: 0.528
     - _PulseFeather: 0.01
     - _PulseScale: 1
-    - _PulseSpeed: 1
-    - _PulseWidth: 0.759
-    - _WorldScale: 0.4
     m_Colors:
-    - _BaseColor: {r: 0, g: 0, b: 0, a: 0.7921569}
     - _ObjectDirection: {r: 0, g: 1, b: 0, a: 0}
-    - _PulseColor: {r: 0, g: 0.5, b: 0.5, a: 1}
-    - _PulseDirection: {r: 0, g: 1, b: 0, a: 0}
-    - _WireColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _WireColorTint: {r: 0, g: 0, b: 0, a: 1}
+    - _WireColorTint: {r: 0.009433985, g: 0.008588486, b: 0.008588486, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

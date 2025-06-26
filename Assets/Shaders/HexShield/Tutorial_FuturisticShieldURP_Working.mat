@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Tutorial_FuturisticShieldURP_Working
+  m_Shader: {fileID: 4800000, guid: e02d475139332864d840d8ef43e3eb5e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _USEBIGSCANLINE_ON
+  - _USECOLLISIONRIPPLES_ON
+  - _USEEDGEGLOW_ON
+  - _USEHEXAGONGLOW_ON
+  - _USEINTERSECTION_ON
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _HexagonTexture:
+        m_Texture: {fileID: 2800000, guid: b7888bbb1faf43b4fb01106abc192dfa, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _ScanlineTexture:
+        m_Texture: {fileID: 2800000, guid: db05b00121b554e8ab48a5949f3e7081, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AspectRatio: 0.5
+    - _BigScanlineSpeed: 1
+    - _BigScanlineStrength: 0.42
+    - _BigScanlineThickness: 1
+    - _EdgeGlowStrength: 5
+    - _GlowNoiseScale: 5
+    - _GlowSpeed: 0.5
+    - _HeightmapStrength: 0.05
+    - _IntersectionStrength: 2.35
+    - _IntersectionThickness: 2
+    - _Metallic: 0
+    - _RippleSpeed: 2
+    - _RippleThickness: 0.1
+    - _RippleTime: -10
+    - _ScanlineStrength: 0
+    - _Smoothness: 0
+    - _UseBigScanline: 1
+    - _UseCollisionRipples: 1
+    - _UseEdgeGlow: 1
+    - _UseHeightmap: 0
+    - _UseHexagonGlow: 1
+    - _UseIntersection: 1
+    - _UseScanlines: 0
+    m_Colors:
+    - _BaseColor: {r: 0, g: 0.08610773, b: 1, a: 0.34901962}
+    - _EdgeGlowThickness: {r: 0.1, g: 0.2, b: 0, a: 0}
+    - _EmissiveColor: {r: 0, g: 0.27225113, b: 4, a: 1}
+    - _GlowStrengthMinMax: {r: 10, g: 10, b: 0, a: 0}
+    - _HexagonTiling: {r: 1.7, g: 1, b: 0, a: 0}
+    - _RippleOrigin: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _ScanlineVelocity: {r: 0, g: 0.2, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

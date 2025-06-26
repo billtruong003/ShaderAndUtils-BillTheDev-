@@ -1,4 +1,4 @@
-Shader "Stylized/True ObjectSpace Multi-Pulse (Corrected)"
+Shader "Stylized/TrueObjectSpace_MultiPulse_Improved"
 {
     Properties
     {
@@ -43,7 +43,10 @@ Shader "Stylized/True ObjectSpace Multi-Pulse (Corrected)"
                 float4 _ObjectDirection;
                 float _PulseScale, _NoiseScale;
                 int _PulseCount;
+                // Dữ liệu cho mỗi pulse
                 float _PulseWidths[MAX_PULSES], _PulseSpeeds[MAX_PULSES], _TimeOffsets[MAX_PULSES];
+                // <-- CẢI TIẾN: Thêm mảng cho hiệu ứng nhấp nháy
+                float _FlickerStrengths[MAX_PULSES], _FlickerFrequencies[MAX_PULSES];
             CBUFFER_END
 
             TEXTURE2D(_BaseMap);       SAMPLER(sampler_BaseMap);
@@ -71,8 +74,12 @@ Shader "Stylized/True ObjectSpace Multi-Pulse (Corrected)"
                 half3 totalEmissionColor = half3(0, 0, 0);
                 half totalPulsePresence = 0;
 
-                for (int j = 0; j < _PulseCount; j++)
+                // <-- CẢI TIẾN: Vòng lặp for với số lần lặp cố định
+                for (int j = 0; j < MAX_PULSES; j++)
                 {
+                    // Chỉ tính toán nếu đây là một pulse hợp lệ
+                    if (j >= _PulseCount) break;
+
                     float pulseWidth = _PulseWidths[j];
                     float pulseSpeed = _PulseSpeeds[j];
                     float timeOffset = _TimeOffsets[j];
@@ -80,21 +87,14 @@ Shader "Stylized/True ObjectSpace Multi-Pulse (Corrected)"
                     float tailPos = headPos - pulseWidth;
 
                     half inPulse;
-                    // [SỬA LỖI QUAN TRỌNG NHẤT]
                     if (tailPos < 0.0)
                     {
-                        // Tính phần đuôi (chạy từ tailPos+1 đến 1.0)
                         half pulse_tail_part = smoothstep(tailPos + 1.0, tailPos + 1.0 + _PulseFeather, pulseV);
-                        // Tính phần đầu (chạy từ 0.0 đến headPos)
                         half pulse_head_part = 1.0 - smoothstep(headPos - _PulseFeather, headPos, pulseV);
-
-                        // Dùng phép CỘNG (toán tử OR) để kết hợp hai phần.
-                        // saturate() đảm bảo giá trị không vượt quá 1 ở vùng feather chồng lấn.
                         inPulse = saturate(pulse_tail_part + pulse_head_part);
                     }
                     else
                     {
-                        // Logic này vẫn đúng khi pulse không bị tách
                         inPulse = smoothstep(tailPos, tailPos + _PulseFeather, pulseV) - smoothstep(headPos - _PulseFeather, headPos, pulseV);
                     }
                     
@@ -106,9 +106,18 @@ Shader "Stylized/True ObjectSpace Multi-Pulse (Corrected)"
                         } else {
                             pulseT = (pulseV - tailPos) / pulseWidth;
                         }
+
+                        // <-- CẢI TIẾN: Tính toán hiệu ứng nhấp nháy
+                        half flicker = 1.0;
+                        float flickerFreq = _FlickerFrequencies[j];
+                        if (flickerFreq > 0) {
+                            // Tạo một giá trị giả ngẫu nhiên dựa trên thời gian và tần số
+                            half randomWave = frac(sin(j * 13.37 + _Time.y * flickerFreq) * 43758.5453);
+                            flicker = lerp(1.0 - _FlickerStrengths[j], 1.0, randomWave);
+                        }
                         
-                        totalEmissionColor += SAMPLE_TEXTURE2D(_PulseGradient, sampler_PulseGradient, float2(saturate(pulseT), 0.5)).rgb * inPulse;
-                        totalPulsePresence += inPulse;
+                        totalEmissionColor += SAMPLE_TEXTURE2D(_PulseGradient, sampler_PulseGradient, float2(saturate(pulseT), 0.5)).rgb * inPulse * flicker;
+                        totalPulsePresence += inPulse * flicker;
                     }
                 }
                 
