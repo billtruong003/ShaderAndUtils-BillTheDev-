@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Tutorial_SimpleHologram
-  m_Shader: {fileID: 4800000, guid: ba48f9c5d91a5984688cc2a22a8c7721, type: 3}
+  m_Shader: {fileID: 4800000, guid: b623810cfd35742a2a50ab0629b9a8ee, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -25,12 +25,14 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _FresnelPower: 0.5
+    - _Fade: 1000
+    - _FresnelPower: 10
     - _ScanlineSpeed: 0.5
-    - _ScanlineStrength: 0.2
-    - _ScanlineTiling: 0.05
+    - _ScanlineStrength: 1
+    - _ScanlineTiling: 0.1
     m_Colors:
-    - _BaseColor: {r: 0, g: 0.75, b: 1, a: 0.19607843}
-    - _FresnelColor: {r: 0, g: 0.23233283, b: 2.1131215, a: 1}
+    - _BaseColor: {r: 0, g: 0.3371575, b: 1, a: 0.19607843}
+    - _FresnelColor: {r: 0, g: 0.32495335, b: 2.8211832, a: 1}
+    - _GlowColor: {r: 0, g: 0.076692864, b: 1.6603773, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

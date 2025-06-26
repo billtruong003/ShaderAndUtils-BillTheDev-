@@ -10,6 +10,7 @@ Shader "Stylized/TrueObjectSpace_MultiPulse_Improved"
         [Header(Pulse Appearance)]
         [NoScaleOffset] _PulseGradient("Pulse Color (RGB)", 2D) = "white" {}
         [NoScaleOffset] _NoiseTex("Pulse Noise Mask", 2D) = "gray" {}
+        _NoiseStrength("Noise Strength", Range(0, 1)) = 1.0
         _NoiseScale("Noise Tiling", Float) = 1.0
 
         [Header(Global Shape Animation)]
@@ -19,14 +20,19 @@ Shader "Stylized/TrueObjectSpace_MultiPulse_Improved"
         [HDR] _EmissionIntensity("Global Emission Intensity", Float) = 1.0
         
         [HideInInspector] _PulseCount ("Pulse Count", Int) = 0
+        [Enum(UnityEngine.Rendering.BlendMode)] _BlendSrc ("Blend Source", Float) = 1  // Nguồn blend
+        [Enum(UnityEngine.Rendering.BlendMode)] _BlendDst ("Blend Destination", Float) = 0  // Đích blend
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest ("ZTest Mode", Float) = 4  // Chế độ kiểm tra depth
+        [Toggle] _ZWrite ("ZWrite On/Off", Float) = 1  // Bật/tắt ghi depth
     }
 
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue"="Transparent" }
-        Blend SrcAlpha OneMinusSrcAlpha
-        ZWrite Off
-
+        Tags { "RenderType"="Opaque" "Queue"="Geometry" }  // Tags cơ bản
+        ZWrite [_ZWrite]  // Sử dụng giá trị từ Properties
+        ZTest [_ZTest]    // Sử dụng giá trị từ Properties
+        Blend [_BlendSrc] [_BlendDst]  // Sử dụng giá trị từ Properties
+        
         Pass
         {
             HLSLPROGRAM
@@ -41,7 +47,7 @@ Shader "Stylized/TrueObjectSpace_MultiPulse_Improved"
                 half4 _WireColorTint;
                 half _EmissionIntensity, _PulseFeather;
                 float4 _ObjectDirection;
-                float _PulseScale, _NoiseScale;
+                float _PulseScale, _NoiseScale, _NoiseStrength;
                 int _PulseCount;
                 // Dữ liệu cho mỗi pulse
                 float _PulseWidths[MAX_PULSES], _PulseSpeeds[MAX_PULSES], _TimeOffsets[MAX_PULSES];
@@ -74,60 +80,39 @@ Shader "Stylized/TrueObjectSpace_MultiPulse_Improved"
                 half3 totalEmissionColor = half3(0, 0, 0);
                 half totalPulsePresence = 0;
 
-                // <-- CẢI TIẾN: Vòng lặp for với số lần lặp cố định
-                for (int j = 0; j < MAX_PULSES; j++)
+                for (int j = 0; j < _PulseCount; j++)
                 {
-                    // Chỉ tính toán nếu đây là một pulse hợp lệ
-                    if (j >= _PulseCount) break;
-
                     float pulseWidth = _PulseWidths[j];
                     float pulseSpeed = _PulseSpeeds[j];
                     float timeOffset = _TimeOffsets[j];
                     float headPos = frac(-_Time.y * pulseSpeed + timeOffset);
                     float tailPos = headPos - pulseWidth;
+                    float dist = pulseV - tailPos;
 
-                    half inPulse;
-                    if (tailPos < 0.0)
-                    {
-                        half pulse_tail_part = smoothstep(tailPos + 1.0, tailPos + 1.0 + _PulseFeather, pulseV);
-                        half pulse_head_part = 1.0 - smoothstep(headPos - _PulseFeather, headPos, pulseV);
-                        inPulse = saturate(pulse_tail_part + pulse_head_part);
-                    }
-                    else
-                    {
-                        inPulse = smoothstep(tailPos, tailPos + _PulseFeather, pulseV) - smoothstep(headPos - _PulseFeather, headPos, pulseV);
-                    }
-                    
+                    half inPulse = smoothstep(0, _PulseFeather, dist) - smoothstep(pulseWidth - _PulseFeather, pulseWidth, dist);
                     if (inPulse > 0.001) {
-                        half pulseT;
-                        if (tailPos < 0.0) {
-                            float remappedV = pulseV < headPos ? pulseV + 1.0 : pulseV;
-                            pulseT = (remappedV - (tailPos + 1.0)) / pulseWidth;
-                        } else {
-                            pulseT = (pulseV - tailPos) / pulseWidth;
-                        }
+                        half pulseT = saturate(dist / pulseWidth);
 
-                        // <-- CẢI TIẾN: Tính toán hiệu ứng nhấp nháy
                         half flicker = 1.0;
                         float flickerFreq = _FlickerFrequencies[j];
                         if (flickerFreq > 0) {
-                            // Tạo một giá trị giả ngẫu nhiên dựa trên thời gian và tần số
-                            half randomWave = frac(sin(j * 13.37 + _Time.y * flickerFreq) * 43758.5453);
-                            flicker = lerp(1.0 - _FlickerStrengths[j], 1.0, randomWave);
+                            float seed = j + _Time.y * flickerFreq;
+                            half random = frac(sin(seed) * 43758.5453);
+                            flicker = lerp(1.0 - _FlickerStrengths[j], 1.0, random);
                         }
-                        
-                        totalEmissionColor += SAMPLE_TEXTURE2D(_PulseGradient, sampler_PulseGradient, float2(saturate(pulseT), 0.5)).rgb * inPulse * flicker;
+
+                        totalEmissionColor += SAMPLE_TEXTURE2D(_PulseGradient, sampler_PulseGradient, float2(pulseT, 0.5)).rgb * inPulse * flicker;
                         totalPulsePresence += inPulse * flicker;
                     }
                 }
-                
+
                 totalPulsePresence = saturate(totalPulsePresence);
                 float2 noiseUV = i.uv * _NoiseScale;
                 half noiseMask = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, noiseUV).r;
-                totalPulsePresence *= noiseMask;
+                totalPulsePresence *= lerp(1.0, noiseMask, _NoiseStrength);
 
                 half3 finalBaseColor = baseMaterialColor * (1.0 - totalPulsePresence);
-                half3 finalEmission = totalEmissionColor * totalPulsePresence * _EmissionIntensity;
+                half3 finalEmission = totalEmissionColor * totalPulsePresence * saturate(_EmissionIntensity);
                 half3 finalColor = finalBaseColor + finalEmission;
 
                 return half4(finalColor, wireAlpha);

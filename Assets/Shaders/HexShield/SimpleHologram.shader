@@ -6,11 +6,19 @@ Shader "Tutorial/SimpleHologram"
         _BaseColor("Base Color (RGBA)", Color) = (0.2, 0.8, 1, 0.1) // Màu chính và độ trong suốt gốc
         [HDR] _FresnelColor("Fresnel (Edge) Color", Color) = (0.5, 0.9, 1, 1) // Màu của viền sáng
         _FresnelPower("Fresnel Power", Range(0.1, 10.0)) = 2.5 // Độ dày của viền sáng
+        [MainTexture] _BaseTexture("Base Texture", 2D) = "white" {} // Texture nền
+        _TextureStrength("Texture Strength", Range(0, 1)) = 0.5 // Cường độ texture
         
         [Header(Scanline Properties)]
         _ScanlineTiling("Scanline Tiling", Float) = 10.0 // Mật độ của các đường sọc
         _ScanlineSpeed("Scanline Speed", Float) = -2.0 // Tốc độ và hướng di chuyển
         _ScanlineStrength("Scanline Strength", Range(0, 1)) = 0.5 // Độ đậm nhạt của đường sọc
+        
+        [Header(Glitch and Flicker)]
+        _FlickerSpeed("Flicker Speed", Range(0, 20)) = 5.0 // Tốc độ nhấp nháy
+        _FlickerIntensity("Flicker Intensity", Range(0, 1)) = 0.3 // Cường độ nhấp nháy
+        _GlitchIntensity("Glitch Intensity", Range(0, 1)) = 0.05 // Cường độ nhiễu
+        _GlitchSpeed("Glitch Speed", Range(0, 50)) = 10.0 // Tốc độ nhiễu
     }
     SubShader
     {
@@ -23,11 +31,8 @@ Shader "Tutorial/SimpleHologram"
 
         Pass
         {
-            // Thiết lập chế độ blending cho vật thể trong suốt
             Blend SrcAlpha OneMinusSrcAlpha 
-            // Không cull mặt sau, để hologram hiển thị cả mặt trong
             Cull Off
-            // Không ghi vào Z-buffer để các vật thể trong suốt khác có thể vẽ chồng lên
             ZWrite Off
 
             HLSLPROGRAM
@@ -40,7 +45,7 @@ Shader "Tutorial/SimpleHologram"
             {
                 float4 positionOS   : POSITION;
                 float3 normalOS     : NORMAL;
-                float2 uv           : TEXCOORD0; // Giữ lại uvเผื่อ cần dùng sau
+                float2 uv           : TEXCOORD0;
             };
 
             struct Varyings
@@ -48,9 +53,9 @@ Shader "Tutorial/SimpleHologram"
                 float4 positionCS   : SV_POSITION;
                 float3 positionWS   : TEXCOORD0;
                 float3 normalWS     : TEXCOORD1;
+                float2 uv           : TEXCOORD2;
             };
 
-            // Khai báo các thuộc tính từ Properties
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseColor;
                 float4 _FresnelColor;
@@ -58,48 +63,65 @@ Shader "Tutorial/SimpleHologram"
                 float _ScanlineTiling;
                 float _ScanlineSpeed;
                 float _ScanlineStrength;
+                float _FlickerSpeed;
+                float _FlickerIntensity;
+                float _GlitchIntensity;
+                float _GlitchSpeed;
+                float _TextureStrength;
             CBUFFER_END
+
+            // Khai báo texture
+            TEXTURE2D(_BaseTexture);
+            SAMPLER(sampler_BaseTexture);
+
+            // Hàm tạo nhiễu đơn giản
+            float random(float2 input)
+            {
+                return frac(sin(dot(input, float2(12.9898, 78.233))) * 43758.5453);
+            }
 
             Varyings vert(Attributes v)
             {
                 Varyings o;
+                // Thêm hiệu ứng nhiễu vào vị trí đỉnh
+                float glitch = _GlitchIntensity * sin(_Time.y * _GlitchSpeed + v.positionOS.y);
+                v.positionOS.x += glitch * step(0.5, random(float2(v.positionOS.y, _Time.y)));
+                
                 o.positionCS = TransformObjectToHClip(v.positionOS.xyz);
                 o.positionWS = TransformObjectToWorld(v.positionOS.xyz);
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
+                o.uv = v.uv;
                 return o;
             }
 
             float4 frag(Varyings i) : SV_Target
             {
-                // --- 1. Tính toán hiệu ứng Fresnel (Viền sáng) ---
-                // Lấy hướng nhìn từ camera đến điểm ảnh trên bề mặt
+                // --- 1. Lấy mẫu texture ---
+                float4 texColor = SAMPLE_TEXTURE2D(_BaseTexture, sampler_BaseTexture, i.uv);
+                float3 baseTextureColor = texColor.rgb * _TextureStrength;
+
+                // --- 2. Tính toán hiệu ứng Fresnel ---
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.positionWS);
-                // Chuẩn hóa vector pháp tuyến của bề mặt
                 float3 normalDirection = normalize(i.normalWS);
-                
-                // Tích vô hướng để xác định góc nhìn
-                // dot product gần 0 khi nhìn vào cạnh, gần 1 khi nhìn trực diện
                 float fresnelDot = dot(viewDirection, normalDirection);
-                // Dùng 1 trừ đi để đảo ngược, làm cho cạnh sáng lên
                 float fresnelTerm = 1.0 - saturate(fresnelDot);
-                // Dùng hàm pow để kiểm soát độ dày và sắc nét của viền
                 float fresnel = pow(fresnelTerm, _FresnelPower);
 
-                // --- 2. Tính toán hiệu ứng Scanline (Quét dòng) ---
-                // Tạo tọa độ cho các dòng quét dựa trên vị trí thế giới (world position)
-                // Nhân với _Time để làm chúng di chuyển
+                // --- 3. Tính toán hiệu ứng Scanline ---
                 float scanlineCoord = i.positionWS.y * _ScanlineTiling + _Time.y * _ScanlineSpeed;
-                // Dùng sin để tạo ra các dải sóng mềm mại, sau đó dùng pow để làm chúng sắc nét hơn
-                float scanlineWave = pow(abs(sin(scanlineCoord)), 40.0) * _ScanlineStrength;
+                float scanlineWave = pow(abs(sin(scanlineCoord)), 20.0) * _ScanlineStrength;
 
-                // --- 3. Kết hợp màu sắc và độ trong suốt ---
-                // Màu phát sáng (emission) là sự kết hợp của màu viền và màu sọc
-                float3 emissionColor = fresnel * _FresnelColor.rgb + scanlineWave * _BaseColor.rgb * 2.0;
+                // --- 4. Tính toán hiệu ứng nhấp nháy ---
+                float flicker = 1.0 - _FlickerIntensity * (0.5 + 0.5 * sin(_Time.y * _FlickerSpeed + random(i.uv)));
 
-                // Độ trong suốt (alpha) được quyết định bởi màu gốc, và tăng lên ở các viền và sọc
-                float finalAlpha = saturate(_BaseColor.a + fresnel + scanlineWave);
-                
-                // Kết quả cuối cùng: Màu phát sáng và độ trong suốt
+                // --- 5. Kết hợp màu sắc và độ trong suốt ---
+                // Kết hợp texture với màu cơ bản
+                float3 baseColor = baseTextureColor * _BaseColor.rgb;
+                float3 emissionColor = fresnel * _FresnelColor.rgb + scanlineWave * baseColor * 2.0;
+                emissionColor *= flicker; // Áp dụng nhấp nháy
+
+                float finalAlpha = saturate(_BaseColor.a + fresnel + scanlineWave) * flicker * texColor.a;
+
                 return float4(emissionColor, finalAlpha);
             }
             ENDHLSL
