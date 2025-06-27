@@ -1,0 +1,1625 @@
+{
+  "ParentCharacter": "Character",
+  "BodyBranchName": "Body",
+  "BoneBranchName": "Bone",
+  "BoneReferenceName": "QuickRigCharacter2_Reference",
+  "PartsBranchName": "Parts",
+  "BodySubName": "Body_4",
+  "BoneHierarchy": [
+    {
+      "BoneName": "QuickRigCharacter2_Hips",
+      "Type": "Hips",
+      "Children": [
+        { "BoneName": "QuickRigCharacter2_LeftUpLeg", "Type": "LeftUpLeg" },
+        { "BoneName": "QuickRigCharacter2_RightUpLeg", "Type": "RightUpLeg" },
+        { "BoneName": "QuickRigCharacter2_Spine", "Type": "Other" }
+        ]
+    }
+  ],
+  "BodyData": {
+    "Id": "Body_4",
+    "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+    "MeshName": "Body_4"
+  },
+  "HipsBone": {
+    "BoneName": "QuickRigCharacter2_Hips",
+    "Type": "Hips"
+  },
+  "PartCategories": [
+    {
+      "Id": "Bag_10",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_1"
+    },
+    {
+      "Id": "Bag_21",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_2"
+    },
+    {
+      "Id": "Bag_32",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_3"
+    },
+    {
+      "Id": "Bag_43",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_4"
+    },
+    {
+      "Id": "Bag_54",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_5"
+    },
+    {
+      "Id": "Bag_65",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_6"
+    },
+    {
+      "Id": "Bag_76",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_7"
+    },
+    {
+      "Id": "Bag_87",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_8"
+    },
+    {
+      "Id": "Bag_98",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_9"
+    },
+    {
+      "Id": "Bag_109",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_10"
+    },
+    {
+      "Id": "Bag_1110",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_11"
+    },
+    {
+      "Id": "Bag_1211",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_12"
+    },
+    {
+      "Id": "Bag_1312",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_13"
+    },
+    {
+      "Id": "Bag_1413",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_14"
+    },
+    {
+      "Id": "Bag_1514",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_15"
+    },
+    {
+      "Id": "Bag_1615",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_16"
+    },
+    {
+      "Id": "Bag_1716",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bag_17"
+    },
+    {
+      "Id": "Bottom_10",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_1"
+    },
+    {
+      "Id": "Bottom_21",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_2"
+    },
+    {
+      "Id": "Bottom_32",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_3"
+    },
+    {
+      "Id": "Bottom_43",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_4"
+    },
+    {
+      "Id": "Bottom_54",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_5"
+    },
+    {
+      "Id": "Bottom_65",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_6"
+    },
+    {
+      "Id": "Bottom_76",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_7"
+    },
+    {
+      "Id": "Bottom_87",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_8"
+    },
+    {
+      "Id": "Bottom_98",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_9"
+    },
+    {
+      "Id": "Bottom_109",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_10"
+    },
+    {
+      "Id": "Bottom_1110",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_11"
+    },
+    {
+      "Id": "Bottom_1211",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_12"
+    },
+    {
+      "Id": "Bottom_1312",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_13"
+    },
+    {
+      "Id": "Bottom_1413",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_14"
+    },
+    {
+      "Id": "Bottom_1514",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_15"
+    },
+    {
+      "Id": "Bottom_1615",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_16"
+    },
+    {
+      "Id": "Bottom_1716",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_17"
+    },
+    {
+      "Id": "Bottom_1817",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_18"
+    },
+    {
+      "Id": "Bottom_1918",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_19"
+    },
+    {
+      "Id": "Bottom_2019",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_20"
+    },
+    {
+      "Id": "Bottom_2120",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_21"
+    },
+    {
+      "Id": "Bottom_2221",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_22"
+    },
+    {
+      "Id": "Bottom_2322",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_23"
+    },
+    {
+      "Id": "Bottom_2423",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_24"
+    },
+    {
+      "Id": "Bottom_2524",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_25"
+    },
+    {
+      "Id": "Bottom_2625",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_26"
+    },
+    {
+      "Id": "Bottom_2726",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_27"
+    },
+    {
+      "Id": "Bottom_2827",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_28"
+    },
+    {
+      "Id": "Bottom_2928",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_29"
+    },
+    {
+      "Id": "Bottom_3029",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_30"
+    },
+    {
+      "Id": "Bottom_3130",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_31"
+    },
+    {
+      "Id": "Bottom_3231",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_32"
+    },
+    {
+      "Id": "Bottom_3332",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_33"
+    },
+    {
+      "Id": "Bottom_3433",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_34"
+    },
+    {
+      "Id": "Bottom_3534",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_35"
+    },
+    {
+      "Id": "Bottom_3635",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_36"
+    },
+    {
+      "Id": "Bottom_3736",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_37"
+    },
+    {
+      "Id": "Bottom_3837",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_38"
+    },
+    {
+      "Id": "Bottom_3938",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_39"
+    },
+    {
+      "Id": "Bottom_4039",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_40"
+    },
+    {
+      "Id": "Bottom_4140",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_41"
+    },
+    {
+      "Id": "Bottom_4241",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_42"
+    },
+    {
+      "Id": "Bottom_4342",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_43"
+    },
+    {
+      "Id": "Bottom_4443",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_44"
+    },
+    {
+      "Id": "Bottom_4544",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_45"
+    },
+    {
+      "Id": "Bottom_4645",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_46"
+    },
+    {
+      "Id": "Bottom_4746",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_47"
+    },
+    {
+      "Id": "Bottom_4847",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_48"
+    },
+    {
+      "Id": "Bottom_4948",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_49"
+    },
+    {
+      "Id": "Bottom_5049",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_50"
+    },
+    {
+      "Id": "Bottom_5150",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_51"
+    },
+    {
+      "Id": "Bottom_5251",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_52"
+    },
+    {
+      "Id": "Bottom_5352",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_53"
+    },
+    {
+      "Id": "Bottom_5453",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_54"
+    },
+    {
+      "Id": "Bottom_5554",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_55"
+    },
+    {
+      "Id": "Bottom_5655",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_56"
+    },
+    {
+      "Id": "Bottom_5756",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_57"
+    },
+    {
+      "Id": "Bottom_5857",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_58"
+    },
+    {
+      "Id": "Bottom_5958",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_59"
+    },
+    {
+      "Id": "Bottom_6059",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_60"
+    },
+    {
+      "Id": "Bottom_6160",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_61"
+    },
+    {
+      "Id": "Bottom_6261",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_62"
+    },
+    {
+      "Id": "Bottom_6362",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_63"
+    },
+    {
+      "Id": "Bottom_6463",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_64"
+    },
+    {
+      "Id": "Bottom_6564",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_65"
+    },
+    {
+      "Id": "Bottom_6665",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_66"
+    },
+    {
+      "Id": "Bottom_6766",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Bottom_67"
+    },
+    {
+      "Id": "Eyewear_10",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_1"
+    },
+    {
+      "Id": "Eyewear_21",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_2"
+    },
+    {
+      "Id": "Eyewear_32",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_3"
+    },
+    {
+      "Id": "Eyewear_43",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_4"
+    },
+    {
+      "Id": "Eyewear_54",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_5"
+    },
+    {
+      "Id": "Eyewear_65",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_6"
+    },
+    {
+      "Id": "Eyewear_76",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_7"
+    },
+    {
+      "Id": "Eyewear_87",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_8"
+    },
+    {
+      "Id": "Eyewear_98",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_9"
+    },
+    {
+      "Id": "Eyewear_109",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_10"
+    },
+    {
+      "Id": "Eyewear_1110",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_11"
+    },
+    {
+      "Id": "Eyewear_1211",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_12"
+    },
+    {
+      "Id": "Eyewear_1312",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_13"
+    },
+    {
+      "Id": "Eyewear_1413",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1",
+      "MeshName": "Eyewear_14"
+    },
+    {
+      "Id": "Eyewear_1514",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_15"
+    },
+    {
+      "Id": "Eyewear_1615",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_16"
+    },
+    {
+      "Id": "Eyewear_1716",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_17"
+    },
+    {
+      "Id": "Eyewear_1817",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_18"
+    },
+    {
+      "Id": "Eyewear_1918",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_19"
+    },
+    {
+      "Id": "Eyewear_2019",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Eyewear_20"
+    },
+    {
+      "Id": "Face_A10",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_Neck",
+      "MeshName": "Face_A1"
+    },
+    {
+      "Id": "Face_A21",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_Neck",
+      "MeshName": "Face_A2"
+    },
+    {
+      "Id": "Face_A32",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_Neck",
+      "MeshName": "Face_A3"
+    },
+    {
+      "Id": "Face_A43",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_Neck",
+      "MeshName": "Face_A4"
+    },
+    {
+      "Id": "Face_A54",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Face_A5"
+    },
+    {
+      "Id": "Face_B15",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_Neck",
+      "MeshName": "Face_B1"
+    },
+    {
+      "Id": "Face_B26",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_Neck",
+      "MeshName": "Face_B2"
+    },
+    {
+      "Id": "Face_B37",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_Neck",
+      "MeshName": "Face_B3"
+    },
+    {
+      "Id": "Face_B48",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_Neck",
+      "MeshName": "Face_B4"
+    },
+    {
+      "Id": "Face_B59",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Face_B5"
+    },
+    {
+      "Id": "Glove_10",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_RightShoulder/QuickRigCharacter2_RightArm/QuickRigCharacter2_RightForeArm",
+      "MeshName": "Glove_1"
+    },
+    {
+      "Id": "Glove_21",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_2"
+    },
+    {
+      "Id": "Glove_32",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_3"
+    },
+    {
+      "Id": "Glove_43",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_4"
+    },
+    {
+      "Id": "Glove_54",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_5"
+    },
+    {
+      "Id": "Glove_65",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_6"
+    },
+    {
+      "Id": "Glove_76",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_RightShoulder/QuickRigCharacter2_RightArm/QuickRigCharacter2_RightForeArm",
+      "MeshName": "Glove_7"
+    },
+    {
+      "Id": "Glove_87",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_8"
+    },
+    {
+      "Id": "Glove_98",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_9"
+    },
+    {
+      "Id": "Glove_109",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2/QuickRigCharacter2_RightShoulder/QuickRigCharacter2_RightArm/QuickRigCharacter2_RightForeArm",
+      "MeshName": "Glove_10"
+    },
+    {
+      "Id": "Glove_1110",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_11"
+    },
+    {
+      "Id": "Glove_1211",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_12"
+    },
+    {
+      "Id": "Glove_1312",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_13"
+    },
+    {
+      "Id": "Glove_1413",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_14"
+    },
+    {
+      "Id": "Glove_1514",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_15"
+    },
+    {
+      "Id": "Glove_1615",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_16"
+    },
+    {
+      "Id": "Glove_1716",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_17"
+    },
+    {
+      "Id": "Glove_1817",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_18"
+    },
+    {
+      "Id": "Glove_1918",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_19"
+    },
+    {
+      "Id": "Glove_2019",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_20"
+    },
+    {
+      "Id": "Glove_2120",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Glove_21"
+    },
+    {
+      "Id": "Hair_10",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Hair_1"
+    },
+    {
+      "Id": "Hair_21",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Hair_2"
+    },
+    {
+      "Id": "Hair_32",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Hair_3"
+    },
+    {
+      "Id": "Hair_43",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Hair_4"
+    },
+    {
+      "Id": "Hair_54",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Hair_5"
+    },
+    {
+      "Id": "Hair_65",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Hair_6"
+    },
+    {
+      "Id": "Hair_76",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1",
+      "MeshName": "Hair_7"
+    },
+    {
+      "Id": "Headgear_10",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_1"
+    },
+    {
+      "Id": "Headgear_21",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_2"
+    },
+    {
+      "Id": "Headgear_32",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_3"
+    },
+    {
+      "Id": "Headgear_43",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_4"
+    },
+    {
+      "Id": "Headgear_54",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_5"
+    },
+    {
+      "Id": "Headgear_65",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_6"
+    },
+    {
+      "Id": "Headgear_76",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_7"
+    },
+    {
+      "Id": "Headgear_87",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_8"
+    },
+    {
+      "Id": "Headgear_98",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_9"
+    },
+    {
+      "Id": "Headgear_109",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_10"
+    },
+    {
+      "Id": "Headgear_1110",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_11"
+    },
+    {
+      "Id": "Headgear_1211",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_12"
+    },
+    {
+      "Id": "Headgear_1312",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_13"
+    },
+    {
+      "Id": "Headgear_1413",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_14"
+    },
+    {
+      "Id": "Headgear_1514",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_15"
+    },
+    {
+      "Id": "Headgear_1615",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_16"
+    },
+    {
+      "Id": "Headgear_1716",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_17"
+    },
+    {
+      "Id": "Headgear_1817",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_18"
+    },
+    {
+      "Id": "Headgear_1918",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_19"
+    },
+    {
+      "Id": "Headgear_2019",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_20"
+    },
+    {
+      "Id": "Headgear_2120",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_21"
+    },
+    {
+      "Id": "Headgear_2221",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_22"
+    },
+    {
+      "Id": "Headgear_2322",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_23"
+    },
+    {
+      "Id": "Headgear_2423",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_24"
+    },
+    {
+      "Id": "Headgear_2524",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_25"
+    },
+    {
+      "Id": "Headgear_2625",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1",
+      "MeshName": "Headgear_26"
+    },
+    {
+      "Id": "Headgear_2726",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_27"
+    },
+    {
+      "Id": "Headgear_2827",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1",
+      "MeshName": "Headgear_28"
+    },
+    {
+      "Id": "Headgear_2928",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_29"
+    },
+    {
+      "Id": "Headgear_3029",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_30"
+    },
+    {
+      "Id": "Headgear_3130",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_31"
+    },
+    {
+      "Id": "Headgear_3231",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_32"
+    },
+    {
+      "Id": "Headgear_3332",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_33"
+    },
+    {
+      "Id": "Headgear_3433",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_34"
+    },
+    {
+      "Id": "Headgear_3534",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_35"
+    },
+    {
+      "Id": "Headgear_3635",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_36"
+    },
+    {
+      "Id": "Headgear_3736",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_37"
+    },
+    {
+      "Id": "Headgear_3837",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_38"
+    },
+    {
+      "Id": "Headgear_3938",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_39"
+    },
+    {
+      "Id": "Headgear_4039",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_40"
+    },
+    {
+      "Id": "Headgear_4140",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_41"
+    },
+    {
+      "Id": "Headgear_4241",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_42"
+    },
+    {
+      "Id": "Headgear_4342",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine",
+      "MeshName": "Headgear_43"
+    },
+    {
+      "Id": "Headgear_4443",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine",
+      "MeshName": "Headgear_44"
+    },
+    {
+      "Id": "Headgear_4544",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_45"
+    },
+    {
+      "Id": "Headgear_4645",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_46"
+    },
+    {
+      "Id": "Headgear_4746",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1",
+      "MeshName": "Headgear_47"
+    },
+    {
+      "Id": "Headgear_4847",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_48"
+    },
+    {
+      "Id": "Headgear_4948",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_49"
+    },
+    {
+      "Id": "Headgear_5049",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine",
+      "MeshName": "Headgear_50"
+    },
+    {
+      "Id": "Headgear_5150",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_51"
+    },
+    {
+      "Id": "Headgear_5251",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_52"
+    },
+    {
+      "Id": "Headgear_5352",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_53"
+    },
+    {
+      "Id": "Headgear_5453",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_54"
+    },
+    {
+      "Id": "Headgear_5554",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_55"
+    },
+    {
+      "Id": "Headgear_5655",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_56"
+    },
+    {
+      "Id": "Headgear_5756",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_57"
+    },
+    {
+      "Id": "Headgear_5857",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_Spine/QuickRigCharacter2_Spine1/QuickRigCharacter2_Spine2",
+      "MeshName": "Headgear_58"
+    },
+    {
+      "Id": "Shoes_10",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_1"
+    },
+    {
+      "Id": "Shoes_21",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_2"
+    },
+    {
+      "Id": "Shoes_32",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_3"
+    },
+    {
+      "Id": "Shoes_43",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_4"
+    },
+    {
+      "Id": "Shoes_54",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_5"
+    },
+    {
+      "Id": "Shoes_65",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_6"
+    },
+    {
+      "Id": "Shoes_76",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_7"
+    },
+    {
+      "Id": "Shoes_87",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_8"
+    },
+    {
+      "Id": "Shoes_98",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_9"
+    },
+    {
+      "Id": "Shoes_109",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg/QuickRigCharacter2_RightLeg",
+      "MeshName": "Shoes_10"
+    },
+    {
+      "Id": "Shoes_1110",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_11"
+    },
+    {
+      "Id": "Shoes_1211",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_12"
+    },
+    {
+      "Id": "Shoes_1312",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_13"
+    },
+    {
+      "Id": "Shoes_1413",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg/QuickRigCharacter2_RightLeg",
+      "MeshName": "Shoes_14"
+    },
+    {
+      "Id": "Shoes_1514",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_15"
+    },
+    {
+      "Id": "Shoes_1615",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_16"
+    },
+    {
+      "Id": "Shoes_1716",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_17"
+    },
+    {
+      "Id": "Shoes_1817",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg/QuickRigCharacter2_RightLeg",
+      "MeshName": "Shoes_18"
+    },
+    {
+      "Id": "Shoes_1918",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_19"
+    },
+    {
+      "Id": "Shoes_2019",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_20"
+    },
+    {
+      "Id": "Shoes_2120",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg/QuickRigCharacter2_RightLeg",
+      "MeshName": "Shoes_21"
+    },
+    {
+      "Id": "Shoes_2221",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_22"
+    },
+    {
+      "Id": "Shoes_2322",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_23"
+    },
+    {
+      "Id": "Shoes_2423",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_24"
+    },
+    {
+      "Id": "Shoes_2524",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_25"
+    },
+    {
+      "Id": "Shoes_2625",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg/QuickRigCharacter2_RightLeg",
+      "MeshName": "Shoes_26"
+    },
+    {
+      "Id": "Shoes_2726",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_27"
+    },
+    {
+      "Id": "Shoes_2827",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_28"
+    },
+    {
+      "Id": "Shoes_2928",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_29"
+    },
+    {
+      "Id": "Shoes_3029",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_30"
+    },
+    {
+      "Id": "Shoes_3130",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_31"
+    },
+    {
+      "Id": "Shoes_3231",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_32"
+    },
+    {
+      "Id": "Shoes_3332",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_33"
+    },
+    {
+      "Id": "Shoes_3433",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_34"
+    },
+    {
+      "Id": "Shoes_3534",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_35"
+    },
+    {
+      "Id": "Shoes_3635",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg/QuickRigCharacter2_RightLeg",
+      "MeshName": "Shoes_36"
+    },
+    {
+      "Id": "Shoes_3736",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_37"
+    },
+    {
+      "Id": "Shoes_3837",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_38"
+    },
+    {
+      "Id": "Shoes_3938",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_39"
+    },
+    {
+      "Id": "Shoes_4039",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_40"
+    },
+    {
+      "Id": "Shoes_4140",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_41"
+    },
+    {
+      "Id": "Shoes_4241",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips/QuickRigCharacter2_RightUpLeg",
+      "MeshName": "Shoes_42"
+    },
+    {
+      "Id": "Shoes_4342",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_43"
+    },
+    {
+      "Id": "Shoes_4443",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_44"
+    },
+    {
+      "Id": "Shoes_4544",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Shoes_45"
+    },
+    {
+      "Id": "Top_10",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_1"
+    },
+    {
+      "Id": "Top_21",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_2"
+    },
+    {
+      "Id": "Top_32",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_3"
+    },
+    {
+      "Id": "Top_43",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_4"
+    },
+    {
+      "Id": "Top_54",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_5"
+    },
+    {
+      "Id": "Top_65",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_6"
+    },
+    {
+      "Id": "Top_76",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_7"
+    },
+    {
+      "Id": "Top_87",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_8"
+    },
+    {
+      "Id": "Top_98",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_9"
+    },
+    {
+      "Id": "Top_109",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_10"
+    },
+    {
+      "Id": "Top_1110",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_11"
+    },
+    {
+      "Id": "Top_1211",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_12"
+    },
+    {
+      "Id": "Top_1312",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_13"
+    },
+    {
+      "Id": "Top_1413",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_14"
+    },
+    {
+      "Id": "Top_1514",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_15"
+    },
+    {
+      "Id": "Top_1615",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_16"
+    },
+    {
+      "Id": "Top_1716",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_17"
+    },
+    {
+      "Id": "Top_1817",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_18"
+    },
+    {
+      "Id": "Top_1918",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_19"
+    },
+    {
+      "Id": "Top_2019",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_20"
+    },
+    {
+      "Id": "Top_2120",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_21"
+    },
+    {
+      "Id": "Top_2221",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_22"
+    },
+    {
+      "Id": "Top_2322",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_23"
+    },
+    {
+      "Id": "Top_2423",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_24"
+    },
+    {
+      "Id": "Top_2524",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_25"
+    },
+    {
+      "Id": "Top_2625",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_26"
+    },
+    {
+      "Id": "Top_2726",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_27"
+    },
+    {
+      "Id": "Top_2827",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_28"
+    },
+    {
+      "Id": "Top_2928",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_29"
+    },
+    {
+      "Id": "Top_3029",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_30"
+    },
+    {
+      "Id": "Top_3130",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_31"
+    },
+    {
+      "Id": "Top_3231",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_32"
+    },
+    {
+      "Id": "Top_3332",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_33"
+    },
+    {
+      "Id": "Top_3433",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_34"
+    },
+    {
+      "Id": "Top_3534",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_35"
+    },
+    {
+      "Id": "Top_3635",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_36"
+    },
+    {
+      "Id": "Top_3736",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_37"
+    },
+    {
+      "Id": "Top_3837",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_38"
+    },
+    {
+      "Id": "Top_3938",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_39"
+    },
+    {
+      "Id": "Top_4039",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_40"
+    },
+    {
+      "Id": "Top_4140",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_41"
+    },
+    {
+      "Id": "Top_4241",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_42"
+    },
+    {
+      "Id": "Top_4342",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_43"
+    },
+    {
+      "Id": "Top_4443",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_44"
+    },
+    {
+      "Id": "Top_4544",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_45"
+    },
+    {
+      "Id": "Top_4645",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_46"
+    },
+    {
+      "Id": "Top_4746",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_47"
+    },
+    {
+      "Id": "Top_4847",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_48"
+    },
+    {
+      "Id": "Top_4948",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_49"
+    },
+    {
+      "Id": "Top_5049",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_50"
+    },
+    {
+      "Id": "Top_5150",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_51"
+    },
+    {
+      "Id": "Top_5251",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_52"
+    },
+    {
+      "Id": "Top_5352",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_53"
+    },
+    {
+      "Id": "Top_5453",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_54"
+    },
+    {
+      "Id": "Top_5554",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_55"
+    },
+    {
+      "Id": "Top_5655",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_56"
+    },
+    {
+      "Id": "Top_5756",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_57"
+    },
+    {
+      "Id": "Top_5857",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_58"
+    },
+    {
+      "Id": "Top_5958",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_59"
+    },
+    {
+      "Id": "Top_6059",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_60"
+    },
+    {
+      "Id": "Top_6160",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_61"
+    },
+    {
+      "Id": "Top_6261",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_62"
+    },
+    {
+      "Id": "Top_6362",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_63"
+    },
+    {
+      "Id": "Top_6463",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_64"
+    },
+    {
+      "Id": "Top_6564",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_65"
+    },
+    {
+      "Id": "Top_6665",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_66"
+    },
+    {
+      "Id": "Top_6766",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_67"
+    },
+    {
+      "Id": "Top_6867",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_68"
+    },
+    {
+      "Id": "Top_6968",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_69"
+    },
+    {
+      "Id": "Top_7069",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_70"
+    },
+    {
+      "Id": "Top_7170",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_71"
+    },
+    {
+      "Id": "Top_7271",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_72"
+    },
+    {
+      "Id": "Top_7372",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_73"
+    },
+    {
+      "Id": "Top_7473",
+      "RootBonePath": "Character/Bone/QuickRigCharacter2_Reference/QuickRigCharacter2_Hips",
+      "MeshName": "Top_74"
+    }
+  ]
+}
