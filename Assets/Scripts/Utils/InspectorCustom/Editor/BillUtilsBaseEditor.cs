@@ -30,6 +30,20 @@ namespace Utils.Bill.InspectorCustom
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+
+            // Gọi các hàm vẽ tách biệt
+            DrawDefaultProperties();
+            DrawCustomButtons();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        /// <summary>
+        /// Vẽ tất cả các thuộc tính có thể serialize, trừ m_Script.
+        /// Lớp con có thể override hàm này để có hành vi vẽ tùy chỉnh.
+        /// </summary>
+        protected virtual void DrawDefaultProperties()
+        {
             SerializedProperty iterator = serializedObject.GetIterator();
             bool enterChildren = true;
             while (iterator.NextVisible(enterChildren))
@@ -41,7 +55,14 @@ namespace Utils.Bill.InspectorCustom
                 EditorGUILayout.PropertyField(iterator, true);
                 enterChildren = false;
             }
+        }
 
+        /// <summary>
+        /// Vẽ các nút bấm được định nghĩa bằng [CustomButton].
+        /// Lớp con có thể gọi hàm này trực tiếp.
+        /// </summary>
+        protected virtual void DrawCustomButtons()
+        {
             foreach (var (method, buttonAttr) in buttonMethods)
             {
                 string buttonText = string.IsNullOrEmpty(buttonAttr.ButtonText) ? method.Name : buttonAttr.ButtonText;
@@ -50,7 +71,6 @@ namespace Utils.Bill.InspectorCustom
                 {
                     try
                     {
-                        // Đã kiểm tra parameters.Length == 0 ở OnEnable, nên ở đây an toàn để gọi.
                         method.Invoke(target, null);
                     }
                     catch (System.Exception ex)
@@ -60,8 +80,6 @@ namespace Utils.Bill.InspectorCustom
                 }
                 GUI.backgroundColor = Color.white;
             }
-
-            serializedObject.ApplyModifiedProperties();
         }
     }
 }

@@ -138,6 +138,29 @@ namespace Utils.Bill.InspectorCustom
         }
     }
 
+    public enum PreviewAlignment { Left, Center, Right }
+
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public class ShowAssetPreviewAttribute : PropertyAttribute
+    {
+        public int Width { get; }
+        public int Height { get; }
+        public PreviewAlignment Alignment { get; }
+
+        /// <summary>
+        /// Hiển thị bản xem trước của một asset (Object) trong Inspector.
+        /// </summary>
+        /// <param name="width">Chiều rộng của khung xem trước.</param>
+        /// <param name="height">Chiều cao của khung xem trước.</param>
+        /// <param name="alignment">Căn lề của khung xem trước.</param>
+        public ShowAssetPreviewAttribute(int width = 100, int height = 100, PreviewAlignment alignment = PreviewAlignment.Center)
+        {
+            Width = width;
+            Height = height;
+            Alignment = alignment;
+        }
+    }
+
     // =================================================================================================
     // PROPERTY DRAWERS: PHẢI NẰM TRONG #if UNITY_EDITOR
     // =================================================================================================
@@ -564,5 +587,88 @@ namespace Utils.Bill.InspectorCustom
         }
     }
 
-#endif 
+    [CustomPropertyDrawer(typeof(ShowAssetPreviewAttribute))]
+    public class ShowAssetPreviewDrawer : PropertyDrawer
+    {
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            var attr = attribute as ShowAssetPreviewAttribute;
+
+            // Bắt đầu vẽ property
+            EditorGUI.BeginProperty(position, label, property);
+
+            // Chỉ hoạt động với các trường tham chiếu đến Object
+            if (property.propertyType == SerializedPropertyType.ObjectReference)
+            {
+                // Vẽ trường thuộc tính mặc định
+                Rect propertyRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
+                EditorGUI.PropertyField(propertyRect, property, label, true);
+
+                // Nếu có asset được gán
+                if (property.objectReferenceValue != null)
+                {
+                    // Lấy texture xem trước từ cache của Unity
+                    Texture2D previewTexture = AssetPreview.GetAssetPreview(property.objectReferenceValue);
+
+                    if (previewTexture != null)
+                    {
+                        // Tính toán vị trí cho khung xem trước
+                        Rect previewRect = new Rect(position.x,
+                                                    position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing,
+                                                    attr.Width,
+                                                    attr.Height);
+
+                        // Căn lề cho khung xem trước
+                        switch (attr.Alignment)
+                        {
+                            case PreviewAlignment.Center:
+                                previewRect.x = position.x + (position.width - attr.Width) / 2;
+                                break;
+                            case PreviewAlignment.Right:
+                                previewRect.x = position.x + position.width - attr.Width;
+                                break;
+                            case PreviewAlignment.Left:
+                            default:
+                                // Vị trí x đã đúng, không cần thay đổi
+                                break;
+                        }
+
+                        // Vẽ texture xem trước
+                        GUI.DrawTexture(previewRect, previewTexture, ScaleMode.ScaleToFit);
+                    }
+                    else
+                    {
+                        // Nếu preview chưa được tạo, yêu cầu editor repaint để thử lại ở frame sau
+                        // Điều này hữu ích khi asset mới được gán.
+                        HandleUtility.Repaint();
+                    }
+                }
+            }
+            else
+            {
+                EditorGUI.HelpBox(position, "ShowAssetPreview only works on Object reference fields.", MessageType.Warning);
+            }
+
+            EditorGUI.EndProperty();
+        }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            var attr = attribute as ShowAssetPreviewAttribute;
+
+            // Chiều cao cơ bản của một property field
+            float baseHeight = EditorGUI.GetPropertyHeight(property, label, true);
+
+            // Nếu có asset được gán, cộng thêm chiều cao của preview và khoảng cách
+            if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue != null)
+            {
+                return baseHeight + attr.Height + EditorGUIUtility.standardVerticalSpacing;
+            }
+
+            // Nếu không, trả về chiều cao mặc định
+            return baseHeight;
+        }
+    }
+
+#endif
 }

@@ -20,7 +20,7 @@ Shader "Example/WaterDepthFade"
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Assets/Shaders/Includes/DepthFadeLogic.hlslinc"
+            #include "Assets/Shaders/Includes/DepthFadeLogic.hlsl"
 
             struct Attributes
             {

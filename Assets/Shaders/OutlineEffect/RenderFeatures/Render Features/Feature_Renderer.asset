@@ -41,9 +41,9 @@ MonoBehaviour:
       RenderQueueType: 0
       LayerMask:
         serializedVersion: 2
-        m_Bits: 4294967295
+        m_Bits: 64
       PassNames: []
-    overrideMaterial: {fileID: 2100000, guid: 4a46ecdcc3202154e9f7766acc168c94, type: 2}
+    overrideMaterial: {fileID: 2100000, guid: e260a684f72584acdac6f9aac98646f9, type: 2}
     overrideMaterialPassIndex: 1
     overrideShader: {fileID: 0}
     overrideShaderPassIndex: 0
@@ -52,7 +52,7 @@ MonoBehaviour:
     depthCompareFunction: 3
     enableWrite: 1
     stencilSettings:
-      overrideStencilState: 0
+      overrideStencilState: 1
       stencilReference: 1
       stencilCompareFunction: 8
       passOperation: 2
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd6e526a1bb489a8df34cbfcfca6bfc, type: 3}
   m_Name: OutlineRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   FeatureSettings:
     RenderPassEvent: 600
     LayerMask:
@@ -142,10 +142,10 @@ MonoBehaviour:
     BlitMaterial: {fileID: -876546973899608171, guid: 6c897a44b62e6d84e9b0f6d5238a158e, type: 3}
     ClearDepth: 0
   MaterialSettings:
-    OutlineScale: 0.4
-    RobertsCrossMultiplier: 100
-    DepthThreshold: 100
-    NormalThreshold: 0.45
+    OutlineScale: 0.3
+    RobertsCrossMultiplier: 50
+    DepthThreshold: 50
+    NormalThreshold: 1.1
     SteepAngleThreshold: 25
     SteepAngleMultiplier: 25
-    OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    OutlineColor: {r: 0.122641504, g: 0.122641504, b: 0.122641504, a: 1}

@@ -1,26 +1,19 @@
 using UnityEngine;
-using Utils.Bill.InspectorCustom;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
 using UnityEditor;
-
+using Utils.Bill.InspectorCustom;
 [CreateAssetMenu(fileName = "BoneData", menuName = "ModularAsset/BoneData", order = 1)]
 public class BoneDataSO : ScriptableObject
 {
+    // --- CÁC LỚP DỮ LIỆU ---
+
     [System.Serializable]
     public class BoneInfo
     {
-        public Transform bone;
-        public enum BoneType
-        {
-            Hips, Spine1, Spine2,
-            LeftUpLeg, LeftFoot, RightUpLeg, RightFoot,
-            LeftShoulder, LeftArm, LeftForeArm, LeftHand,
-            RightShoulder, RightArm, RightForeArm, RightHand,
-            Head, Neck,
-            Other
-        }
+        public string boneName;
+        public string bonePath; // Lưu đường dẫn tương đối để có thể tìm lại
         public BoneType type;
         public BoneInfo[] children;
     }
@@ -28,270 +21,23 @@ public class BoneDataSO : ScriptableObject
     [System.Serializable]
     public class SkinMeshData
     {
-        public SkinnedMeshRenderer renderer;
-        public string rootBonePath;
-        public Mesh mesh;
         public string id;
+        [ShowAssetPreview(80, 80, PreviewAlignment.Left)]
+        public Mesh mesh;
+        public string rootBonePath;
+        // QUAN TRỌNG: Lưu đường dẫn của tất cả các xương ảnh hưởng đến mesh này
+        public string[] bonePaths;
+        // QUAN TRỌNG: Lưu đường dẫn đến các file material trong project
+        public string[] materialPaths;
     }
 
-    [Tooltip("GameObject cha chứa toàn bộ character")]
-    public GameObject parentCharacter;
-
-    [Tooltip("Tên nhánh chứa body (ví dụ: 'Body')")]
-    public string bodyBranchName = "Body";
-
-    [Tooltip("Tên nhánh chứa bone (ví dụ: 'Bone')")]
-    public string boneBranchName = "Bone";
-
-    [Tooltip("Tên nhánh gốc của xương (ví dụ: 'QuickRigCharacter2_Reference' hoặc 'References')")]
-    public string boneReferenceName = "QuickRigCharacter2_Reference";
-
-    [Tooltip("Tên nhánh chứa parts (ví dụ: 'Parts')")]
-    public string partsBranchName = "Parts";
-
-    [Tooltip("Tên con của body (ví dụ: 'Body4')")]
-    public string bodySubName = "Body4";
-
-    public BoneInfo[] boneHierarchy;
-    public SkinMeshData bodyData;
-    public BoneInfo hipsBone;
-    public System.Collections.Generic.List<SkinMeshData> partCategories;
-
-    [CustomButton]
-    public void PopulateData()
+    [System.Serializable]
+    public class PartCategory
     {
-        if (parentCharacter != null)
-        {
-            Transform characterTransform = parentCharacter.transform;
-            boneHierarchy = null;
-            bodyData = null;
-            hipsBone = null;
-            partCategories = new System.Collections.Generic.List<SkinMeshData>();
-
-            foreach (Transform child in characterTransform)
-            {
-                if (child.name.ToLower() == bodyBranchName.ToLower())
-                {
-                    Transform bodySub = child.Find(bodySubName);
-                    if (bodySub != null)
-                    {
-                        SkinnedMeshRenderer bodyRenderer = bodySub.GetComponent<SkinnedMeshRenderer>();
-                        if (bodyRenderer != null)
-                        {
-                            bodyData = new SkinMeshData
-                            {
-                                renderer = bodyRenderer,
-                                rootBonePath = bodyRenderer.rootBone != null ? GetTransformPath(bodyRenderer.rootBone) : null,
-                                mesh = bodyRenderer.sharedMesh,
-                                id = $"{bodySubName}"
-                            };
-                            Debug.Log($"Body - RootBone: {bodyRenderer.rootBone?.name}, RootBonePath: {bodyData.rootBonePath}, Bones: {string.Join(", ", bodyRenderer.bones?.Select(b => b?.name) ?? new string[] { "None" })}");
-                        }
-                    }
-                }
-                else if (child.name.ToLower() == boneBranchName.ToLower())
-                {
-                    Transform references = child.Find(boneReferenceName);
-                    if (references == null && boneReferenceName.ToLower() != "quickrigcharacter2_reference")
-                    {
-                        references = child.Find("References");
-                    }
-                    if (references != null)
-                    {
-                        Debug.Log($"Tìm thấy {boneReferenceName}: {references.name}");
-                        boneHierarchy = BuildBoneHierarchy(references);
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Không tìm thấy {boneReferenceName} dưới {child.name}");
-                    }
-                }
-                else if (child.name.ToLower() == partsBranchName.ToLower())
-                {
-                    foreach (Transform category in child)
-                    {
-                        int meshIndex = 0;
-                        foreach (SkinnedMeshRenderer renderer in category.GetComponentsInChildren<SkinnedMeshRenderer>())
-                        {
-                            var data = new SkinMeshData
-                            {
-                                renderer = renderer,
-                                rootBonePath = renderer.rootBone != null ? GetTransformPath(renderer.rootBone) : null,
-                                mesh = renderer.sharedMesh,
-                                id = $"{renderer.sharedMesh.name}{meshIndex++}"
-                            };
-                            partCategories.Add(data);
-                            Debug.Log($"Part {data.id} - RootBone: {renderer.rootBone?.name}, RootBonePath: {data.rootBonePath}, Bones: {string.Join(", ", renderer.bones?.Select(b => b?.name) ?? new string[] { "None" })}");
-                        }
-                    }
-                }
-            }
-        }
+        public string categoryName;
+        public List<SkinMeshData> parts = new List<SkinMeshData>();
     }
 
-    [CustomButton]
-    public void ClearAll()
-    {
-        boneHierarchy = null;
-        bodyData = null;
-        hipsBone = null;
-        if (partCategories != null) partCategories.Clear();
-    }
-
-    [CustomButton]
-    public Transform GetRootBoneTransform(SkinMeshData data)
-    {
-        if (data == null || string.IsNullOrEmpty(data.rootBonePath) || parentCharacter == null) return null;
-        return parentCharacter.transform.Find(data.rootBonePath);
-    }
-
-    [CustomButton]
-    public void PrintToJson()
-    {
-        var sb = new StringBuilder();
-        sb.AppendLine("{");
-        // FIXED: Wrapped ternary operator in parentheses
-        sb.AppendLine($"  \"ParentCharacter\": \"{(parentCharacter != null ? parentCharacter.name : "None")}\",");
-        sb.AppendLine($"  \"BodyBranchName\": \"{bodyBranchName}\",");
-        sb.AppendLine($"  \"BoneBranchName\": \"{boneBranchName}\",");
-        sb.AppendLine($"  \"BoneReferenceName\": \"{boneReferenceName}\",");
-        sb.AppendLine($"  \"PartsBranchName\": \"{partsBranchName}\",");
-        sb.AppendLine($"  \"BodySubName\": \"{bodySubName}\",");
-
-        // BoneHierarchy
-        sb.AppendLine("  \"BoneHierarchy\": [");
-        if (boneHierarchy != null)
-        {
-            for (int i = 0; i < boneHierarchy.Length; i++)
-            {
-                var b = boneHierarchy[i];
-                sb.AppendLine($"    {{");
-                // FIXED: Wrapped ternary operator in parentheses
-                sb.AppendLine($"      \"BoneName\": \"{(b.bone != null ? b.bone.name : "None")}\",");
-                sb.AppendLine($"      \"Type\": \"{b.type}\",");
-                sb.AppendLine($"      \"Children\": [");
-                if (b.children != null)
-                {
-                    for (int j = 0; j < b.children.Length; j++)
-                    {
-                        var c = b.children[j];
-                        // FIXED: Wrapped ternary operators in parentheses
-                        sb.AppendLine($"        {{ \"BoneName\": \"{(c.bone != null ? c.bone.name : "None")}\", \"Type\": \"{c.type}\" }}{(j < b.children.Length - 1 ? "," : "")}");
-                    }
-                }
-                sb.AppendLine("        ]");
-                // FIXED: Wrapped ternary operator in parentheses
-                sb.AppendLine($"    }}{(i < boneHierarchy.Length - 1 ? "," : "")}");
-            }
-        }
-        sb.AppendLine("  ],");
-
-        // BodyData
-        sb.AppendLine("  \"BodyData\": {");
-        // FIXED & SIMPLIFIED: Used ?. and ?? operators which are cleaner and avoid the issue
-        sb.AppendLine($"    \"Id\": \"{(bodyData?.id ?? "None")}\",");
-        sb.AppendLine($"    \"RootBonePath\": \"{(bodyData?.rootBonePath ?? "None")}\",");
-        sb.AppendLine($"    \"MeshName\": \"{(bodyData?.mesh?.name ?? "None")}\"");
-        sb.AppendLine("  },");
-
-        // HipsBone
-        sb.AppendLine("  \"HipsBone\": {");
-        // FIXED: Used ?. operator and wrapped the other ternary
-        sb.AppendLine($"    \"BoneName\": \"{(hipsBone?.bone?.name ?? "None")}\",");
-        sb.AppendLine($"    \"Type\": \"{(hipsBone != null ? hipsBone.type.ToString() : "None")}\"");
-        sb.AppendLine("  },");
-
-        // PartCategories
-        sb.AppendLine("  \"PartCategories\": [");
-        if (partCategories != null)
-        {
-            for (int i = 0; i < partCategories.Count; i++)
-            {
-                var p = partCategories[i];
-                sb.AppendLine($"    {{");
-                // FIXED & SIMPLIFIED: Corrected 'None' to "None" and used ?. and ?? operators
-                sb.AppendLine($"      \"Id\": \"{(p?.id ?? "None")}\",");
-                sb.AppendLine($"      \"RootBonePath\": \"{(p?.rootBonePath ?? "None")}\",");
-                sb.AppendLine($"      \"MeshName\": \"{(p?.mesh?.name ?? "None")}\"");
-                // FIXED: Wrapped ternary operator in parentheses
-                sb.AppendLine($"    }}{(i < partCategories.Count - 1 ? "," : "")}");
-            }
-        }
-        sb.AppendLine("  ]");
-        sb.AppendLine("}");
-
-        string json = sb.ToString();
-        Debug.Log("BoneDataSO JSON:\n" + json);
-
-#if UNITY_EDITOR
-        string path = EditorUtility.SaveFilePanel("Save BoneDataSO JSON", "Assets", "BoneData_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".json", "json");
-        if (!string.IsNullOrEmpty(path))
-        {
-            System.IO.File.WriteAllText(path, json);
-            AssetDatabase.Refresh();
-            Debug.Log($"JSON saved to: {path}");
-        }
-#endif
-    }
-
-    private string GetTransformPath(Transform transform)
-    {
-        if (transform == null) return null;
-        string path = transform.name;
-        Transform current = transform.parent;
-        while (current != null)
-        {
-            path = current.name + "/" + path;
-            current = current.parent;
-        }
-        return path;
-    }
-
-    private BoneInfo[] BuildBoneHierarchy(Transform parent)
-    {
-        var bones = new System.Collections.Generic.List<BoneInfo>();
-        foreach (Transform child in parent)
-        {
-            var info = new BoneInfo
-            {
-                bone = child,
-                type = AssignBoneType(child.name),
-                children = child.childCount > 0 ? BuildBoneHierarchy(child) : null
-            };
-            bones.Add(info);
-            if (child.name.ToLower().Contains("hips")) hipsBone = info;
-        }
-        return bones.ToArray();
-    }
-
-    private BoneInfo.BoneType AssignBoneType(string name)
-    {
-        name = name.ToLower();
-        if (name.Contains("hips")) return BoneInfo.BoneType.Hips;
-        if (name.Contains("spine1")) return BoneInfo.BoneType.Spine1;
-        if (name.Contains("spine2")) return BoneInfo.BoneType.Spine2;
-        if (name.Contains("leftupleg")) return BoneInfo.BoneType.LeftUpLeg;
-        if (name.Contains("leftfoot")) return BoneInfo.BoneType.LeftFoot;
-        if (name.Contains("rightupleg")) return BoneInfo.BoneType.RightUpLeg;
-        if (name.Contains("rightfoot")) return BoneInfo.BoneType.RightFoot;
-        if (name.Contains("leftshoulder")) return BoneInfo.BoneType.LeftShoulder;
-        if (name.Contains("leftarm")) return BoneInfo.BoneType.LeftArm;
-        if (name.Contains("leftforearm")) return BoneInfo.BoneType.LeftForeArm;
-        if (name.Contains("lefthand")) return BoneInfo.BoneType.LeftHand;
-        if (name.Contains("rightshoulder")) return BoneInfo.BoneType.RightShoulder;
-        if (name.Contains("rightarm")) return BoneInfo.BoneType.RightArm;
-        if (name.Contains("rightforearm")) return BoneInfo.BoneType.RightForeArm;
-        if (name.Contains("righthand")) return BoneInfo.BoneType.RightHand;
-        if (name.Contains("head")) return BoneInfo.BoneType.Head;
-        if (name.Contains("neck")) return BoneInfo.BoneType.Neck;
-        return BoneInfo.BoneType.Other;
-    }
-}
-
-[System.Serializable]
-public class BoneInfo
-{
-    public Transform bone;
     public enum BoneType
     {
         Hips, Spine1, Spine2,
@@ -301,15 +47,226 @@ public class BoneInfo
         Head, Neck,
         Other
     }
-    public BoneType type;
-    public BoneInfo[] children;
-}
 
-[System.Serializable]
-public class SkinMeshData
-{
-    public SkinnedMeshRenderer renderer;
-    public string rootBonePath;
-    public Mesh mesh;
-    public string id;
+    // --- CÁC TRƯỜNG DỮ LIỆU CỦA SCRIPTABLEOBJECT ---
+
+    [Header("Cấu hình Hierarchy")]
+    [Tooltip("GameObject cha chứa toàn bộ character")]
+    [ShowAssetPreview(100, 100)]
+    public GameObject parentCharacter;
+
+    [Tooltip("Tên nhánh chứa body (ví dụ: 'Body')")]
+    public string bodyBranchName = "Body";
+    [Tooltip("Tên con của body (ví dụ: 'Body4')")]
+    public string bodySubName = "Body4";
+
+    [Tooltip("Tên nhánh chứa bộ xương (ví dụ: 'Bone')")]
+    public string boneBranchName = "Bone";
+    [Tooltip("Tên node gốc của bộ xương (ví dụ: 'QuickRigCharacter2_Reference' hoặc 'Hips')")]
+    public string boneRootName = "Hips";
+
+    [Tooltip("Tên nhánh chứa các bộ phận trang phục (ví dụ: 'Parts')")]
+    public string partsBranchName = "Parts";
+
+    [Header("Dữ liệu đã trích xuất")]
+    [Tooltip("Cấu trúc phân cấp của bộ xương")]
+    public BoneInfo boneHierarchy;
+
+    [Tooltip("Thông tin mesh của Body")]
+    public SkinMeshData bodyData;
+
+    [Tooltip("Danh sách các bộ phận được phân loại")]
+    public List<PartCategory> partCategories = new List<PartCategory>();
+
+    // --- CÁC PHƯƠNG THỨC ---
+
+    [Utils.Bill.InspectorCustom.CustomButton]
+    public void PopulateData()
+    {
+        if (parentCharacter == null)
+        {
+            Debug.LogError("Vui lòng gán 'Parent Character' trước khi Populate Data!");
+            return;
+        }
+
+        ClearAll();
+
+        Transform characterTransform = parentCharacter.transform;
+
+        // 1. Tìm và xử lý bộ xương (Bone)
+        Transform boneRootParent = characterTransform.Find(boneBranchName);
+        if (boneRootParent == null)
+        {
+            Debug.LogWarning($"Không tìm thấy nhánh xương '{boneBranchName}'.");
+            return;
+        }
+
+        Transform boneRoot = FindDeepChild(boneRootParent, boneRootName);
+        if (boneRoot != null)
+        {
+            Debug.Log($"Tìm thấy gốc xương '{boneRootName}' tại đường dẫn: {GetRelativeTransformPath(boneRoot, characterTransform)}");
+            boneHierarchy = BuildBoneHierarchy(boneRoot, characterTransform);
+        }
+        else
+        {
+            Debug.LogError($"Không thể tìm thấy gốc xương '{boneRootName}' bên trong '{boneBranchName}'. Vui lòng kiểm tra lại cấu hình.");
+            return;
+        }
+
+        // 2. Tìm và xử lý Body
+        Transform bodyBranch = characterTransform.Find(bodyBranchName);
+        if (bodyBranch != null)
+        {
+            Transform bodySub = bodyBranch.Find(bodySubName);
+            if (bodySub != null)
+            {
+                SkinnedMeshRenderer bodyRenderer = bodySub.GetComponent<SkinnedMeshRenderer>();
+                if (bodyRenderer != null)
+                {
+                    bodyData = CreateSkinMeshData(bodyRenderer, $"{bodySubName}", characterTransform);
+                    Debug.Log($"Đã xử lý Body: {bodyData.id}. Xương: {bodyData.bonePaths.Length}, Materials: {bodyData.materialPaths.Length}");
+                }
+            }
+        }
+
+        // 3. Tìm và xử lý các bộ phận (Parts) theo danh mục
+        Transform partsBranch = characterTransform.Find(partsBranchName);
+        if (partsBranch != null)
+        {
+            foreach (Transform categoryTransform in partsBranch)
+            {
+                PartCategory newCategory = new PartCategory { categoryName = categoryTransform.name };
+                foreach (SkinnedMeshRenderer renderer in categoryTransform.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+                {
+                    string partId = $"{categoryTransform.name}_{renderer.gameObject.name}";
+                    SkinMeshData partData = CreateSkinMeshData(renderer, partId, characterTransform);
+                    newCategory.parts.Add(partData);
+                }
+
+                if (newCategory.parts.Count > 0)
+                {
+                    partCategories.Add(newCategory);
+                    Debug.Log($"Đã xử lý danh mục '{newCategory.categoryName}' với {newCategory.parts.Count} bộ phận.");
+                }
+            }
+        }
+
+        Debug.Log("PopulateData hoàn tất!");
+#if UNITY_EDITOR
+        EditorUtility.SetDirty(this);
+#endif
+    }
+
+    [Utils.Bill.InspectorCustom.CustomButton]
+    public void ClearAll()
+    {
+        boneHierarchy = null;
+        bodyData = null;
+        partCategories.Clear();
+        Debug.Log("Đã xóa tất cả dữ liệu.");
+#if UNITY_EDITOR
+        EditorUtility.SetDirty(this);
+#endif
+    }
+
+    // --- CÁC HÀM HỖ TRỢ ---
+
+    private SkinMeshData CreateSkinMeshData(SkinnedMeshRenderer renderer, string id, Transform root)
+    {
+        if (renderer == null) return null;
+
+        string[] bonePaths = renderer.bones
+            .Select(b => GetRelativeTransformPath(b, root))
+            .ToArray();
+
+        string[] materialPaths = new string[0];
+#if UNITY_EDITOR
+        materialPaths = renderer.sharedMaterials
+            .Select(mat => mat != null ? AssetDatabase.GetAssetPath(mat) : null)
+            .ToArray();
+#endif
+
+        return new SkinMeshData
+        {
+            id = id,
+            mesh = renderer.sharedMesh,
+            rootBonePath = GetRelativeTransformPath(renderer.rootBone, root),
+            bonePaths = bonePaths,
+            materialPaths = materialPaths
+        };
+    }
+
+    private BoneInfo BuildBoneHierarchy(Transform currentBone, Transform characterRoot)
+    {
+        if (currentBone == null) return null;
+
+        var info = new BoneInfo
+        {
+            boneName = currentBone.name,
+            bonePath = GetRelativeTransformPath(currentBone, characterRoot),
+            type = AssignBoneType(currentBone.name),
+            children = new BoneInfo[currentBone.childCount]
+        };
+
+        for (int i = 0; i < currentBone.childCount; i++)
+        {
+            info.children[i] = BuildBoneHierarchy(currentBone.GetChild(i), characterRoot);
+        }
+
+        return info;
+    }
+
+    private string GetRelativeTransformPath(Transform target, Transform root)
+    {
+        if (target == null || root == null) return null;
+        if (target == root) return "";
+
+        var pathParts = new List<string>();
+        Transform current = target;
+
+        while (current != null && current != root)
+        {
+            pathParts.Add(current.name);
+            current = current.parent;
+        }
+
+        if (current == null) return target.name;
+
+        pathParts.Reverse();
+        return string.Join("/", pathParts);
+    }
+
+    public static Transform FindDeepChild(Transform parent, string name)
+    {
+        if (parent.name.Equals(name, System.StringComparison.OrdinalIgnoreCase)) return parent;
+        foreach (Transform child in parent)
+        {
+            Transform result = FindDeepChild(child, name);
+            if (result != null) return result;
+        }
+        return null;
+    }
+
+    private BoneType AssignBoneType(string name)
+    {
+        name = name.ToLower();
+        if (name.Contains("hips")) return BoneType.Hips;
+        if (name.Contains("spine1")) return BoneType.Spine1;
+        if (name.Contains("spine2")) return BoneType.Spine2;
+        if (name.Contains("leftupleg")) return BoneType.LeftUpLeg;
+        if (name.Contains("leftfoot")) return BoneType.LeftFoot;
+        if (name.Contains("rightupleg")) return BoneType.RightUpLeg;
+        if (name.Contains("rightfoot")) return BoneType.RightFoot;
+        if (name.Contains("leftshoulder")) return BoneType.LeftShoulder;
+        if (name.Contains("leftarm")) return BoneType.LeftArm;
+        if (name.Contains("leftforearm")) return BoneType.LeftForeArm;
+        if (name.Contains("lefthand")) return BoneType.LeftHand;
+        if (name.Contains("rightshoulder")) return BoneType.RightShoulder;
+        if (name.Contains("rightarm")) return BoneType.RightArm;
+        if (name.Contains("rightforearm")) return BoneType.RightForeArm;
+        if (name.Contains("righthand")) return BoneType.RightHand;
+        if (name.Contains("head")) return BoneType.Head;
+        if (name.Contains("neck")) return BoneType.Neck;
+        return BoneType.Other;
+    }
 }

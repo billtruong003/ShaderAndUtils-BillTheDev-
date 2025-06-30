@@ -1,123 +1,132 @@
-// Đặt tại: Assets/Editor/ModularCharacterEditor.cs
+// File: Assets/Scripts/ModularSystem/Editor/ModularCharacterEditor.cs
+// (Phải nằm trong một thư mục có tên "Editor")
+
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
+using Utils.Bill.InspectorCustom;
 
 [CustomEditor(typeof(ModularCharacter))]
-public class ModularCharacterEditor : Editor
+public class ModularCharacterEditor : BillUtilsBaseEditor
 {
     private ModularCharacter _target;
-    private SerializedProperty _characterDataProp;
-    private SerializedProperty _equippedPartsProp;
-
     private Dictionary<string, List<BoneDataSO.SkinMeshData>> _partsByCategory;
-    private List<string> _categories;
+    private List<string> _allCategories;
+    private SerializedProperty _characterDataProp;
+    private SerializedProperty _chanceForNoneProp;
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         _target = (ModularCharacter)target;
+
         _characterDataProp = serializedObject.FindProperty("characterData");
-        _equippedPartsProp = serializedObject.FindProperty("equippedParts");
+        _chanceForNoneProp = serializedObject.FindProperty("chanceForNone");
 
         CachePartData();
-    }
-
-    private void CachePartData()
-    {
-        _partsByCategory = new Dictionary<string, List<BoneDataSO.SkinMeshData>>();
-        _categories = new List<string>();
-
-        if (_target.characterData == null) return;
-
-        _categories = _target.GetCategoriesFromData();
-
-        foreach (var categoryName in _categories)
-        {
-            if (categoryName == "Body")
-            {
-                // Xử lý Body như một trường hợp đặc biệt
-                _partsByCategory[categoryName] = new List<BoneDataSO.SkinMeshData> { _target.characterData.bodyData };
-                continue;
-            }
-
-            var parts = _target.characterData.partCategories
-                .Where(p => p.renderer != null && p.renderer.transform.parent != null && p.renderer.transform.parent.name == categoryName)
-                .ToList();
-            _partsByCategory[categoryName] = parts;
-        }
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        EditorGUILayout.LabelField("1. Configuration", EditorStyles.boldLabel);
         EditorGUI.BeginChangeCheck();
-        EditorGUILayout.PropertyField(_characterDataProp);
-        if (EditorGUI.EndChangeCheck() || (_target.characterData != null && _categories.Count == 0))
+
+        // ====================================================================
+        // === THAY ĐỔI QUAN TRỌNG Ở ĐÂY ===
+        // Sử dụng overload có tham số `includeChildren` để đảm bảo PropertyDrawer được kích hoạt đúng.
+        EditorGUILayout.PropertyField(_characterDataProp, true);
+        EditorGUILayout.PropertyField(_chanceForNoneProp, true);
+        // ====================================================================
+
+        if (EditorGUI.EndChangeCheck())
         {
             serializedObject.ApplyModifiedProperties();
             CachePartData();
+        }
+
+        DrawEquipmentSelector();
+
+        EditorGUILayout.Space();
+        base.DrawCustomButtons();
+    }
+
+    private void DrawEquipmentSelector()
+    {
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Equipment Selector", EditorStyles.boldLabel);
+
+        if (_target.characterData == null || _allCategories == null || _allCategories.Count == 0)
+        {
+            EditorGUILayout.HelpBox("Gán Character Data và nhấn 'Rebuild Character'.", MessageType.Info);
             return;
         }
 
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("2. Build Controls", EditorStyles.boldLabel);
-        if (GUILayout.Button("Rebuild Character", GUILayout.Height(30)))
+        if (_target.GetCategoriesFromData().Count + 1 != _allCategories.Count)
         {
-            _target.RebuildCharacter();
+            CachePartData();
         }
 
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("3. Equipment", EditorStyles.boldLabel);
-
-        if (_target.characterData == null || _categories == null || _categories.Count == 0)
-        {
-            EditorGUILayout.HelpBox("Assign Character Data and press 'Rebuild Character'.", MessageType.Info);
-            serializedObject.ApplyModifiedProperties();
-            return;
-        }
-
-        foreach (var category in _categories)
+        foreach (var category in _allCategories)
         {
             DrawCategoryPopup(category);
         }
+    }
 
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Debug Data (Read-only)", EditorStyles.boldLabel);
-        using (new EditorGUI.DisabledScope(true))
+    private void CachePartData()
+    {
+        _partsByCategory = new Dictionary<string, List<BoneDataSO.SkinMeshData>>();
+        _allCategories = new List<string>();
+
+        if (_target.characterData == null) return;
+
+        _allCategories.Add("Body");
+        if (_target.characterData.bodyData != null && _target.characterData.bodyData.mesh != null)
         {
-            EditorGUILayout.PropertyField(_equippedPartsProp, true);
+            _partsByCategory["Body"] = new List<BoneDataSO.SkinMeshData> { _target.characterData.bodyData };
         }
 
-        serializedObject.ApplyModifiedProperties();
+        foreach (var category in _target.characterData.partCategories)
+        {
+            _allCategories.Add(category.categoryName);
+            _partsByCategory[category.categoryName] = category.parts;
+        }
+
+        _allCategories = _allCategories.Distinct().OrderBy(c => c == "Body" ? 0 : 1).ThenBy(c => c).ToList();
     }
 
     private void DrawCategoryPopup(string category)
     {
-        if (!_partsByCategory.TryGetValue(category, out var partsList)) return;
+        _partsByCategory.TryGetValue(category, out var partsList);
+        partsList = partsList ?? new List<BoneDataSO.SkinMeshData>();
 
-        // Tạo danh sách ID và tên hiển thị
-        var partIds = partsList.Select(p => p.id).ToList();
         var displayNames = new List<string> { "None" };
-        displayNames.AddRange(partsList.Select(p => p.id)); // Hiển thị ID gốc vì nó không có cấu trúc đẹp
+        displayNames.AddRange(partsList.Select(p => p.id));
 
-        // Tìm lựa chọn hiện tại
         var currentEntry = _target.equippedParts.FirstOrDefault(e => e.category == category);
-        int currentIndex = 0;
+        string currentPartId = currentEntry?.partId ?? "None";
+        int currentIndex = displayNames.IndexOf(currentPartId);
+        if (currentIndex == -1) currentIndex = 0;
 
-        if (currentEntry != null && !string.IsNullOrEmpty(currentEntry.partId) && !currentEntry.partId.Equals("None"))
+        bool isBodyCategory = category.Equals("Body", System.StringComparison.OrdinalIgnoreCase);
+        if (isBodyCategory)
         {
-            currentIndex = partIds.IndexOf(currentEntry.partId) + 1;
+            EditorGUI.BeginDisabledGroup(true);
         }
 
         EditorGUI.BeginChangeCheck();
         int newIndex = EditorGUILayout.Popup(category, currentIndex, displayNames.ToArray());
 
+        if (isBodyCategory)
+        {
+            EditorGUI.EndDisabledGroup();
+        }
+
         if (EditorGUI.EndChangeCheck())
         {
-            string newPartId = (newIndex == 0) ? "None" : partIds[newIndex - 1];
+            string newPartId = displayNames[newIndex];
 
             if (currentEntry == null)
             {
@@ -132,3 +141,4 @@ public class ModularCharacterEditor : Editor
         }
     }
 }
+#endif

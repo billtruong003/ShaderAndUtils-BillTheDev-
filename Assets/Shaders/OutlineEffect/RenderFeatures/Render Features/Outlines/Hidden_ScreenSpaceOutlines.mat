@@ -25,12 +25,12 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _DepthThreshold: 10
-    - _NormalThreshold: 0.4
+    - _DepthThreshold: 100
+    - _NormalThreshold: 0.45
     - _OutlineScale: 0.4
     - _RobertsCrossMultiplier: 100
     - _SteepAngleMultiplier: 25
-    - _SteepAngleThreshold: 0.2
+    - _SteepAngleThreshold: 25
     - _UseNormalOutline: 0
     m_Colors:
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}

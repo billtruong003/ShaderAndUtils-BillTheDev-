@@ -3,7 +3,7 @@ Shader "Example/OptimizedFakeVolumetricFog"
     Properties
     {
         _FogColor ("Fog Color", Color) = (0.5, 0.5, 0.5, 0.5)
-        _Density ("Fog Density", Range(0, 1)) = 0.2
+        _Density ("Fog Density", Range(0, 100)) = 0.2
         _NoiseTex ("Noise Texture", 2D) = "white" {}
         _NoiseScale ("Noise Scale", Float) = 1.0
         _NoiseSpeed ("Noise Speed", Float) = 0.05
@@ -27,6 +27,7 @@ Shader "Example/OptimizedFakeVolumetricFog"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Assets/Shaders/Includes/DepthFadeLogic.hlsl"
 
             struct Attributes
             {
@@ -43,7 +44,6 @@ Shader "Example/OptimizedFakeVolumetricFog"
             };
 
             TEXTURE2D(_NoiseTex); SAMPLER(sampler_NoiseTex);
-            TEXTURE2D(_CameraDepthTexture); SAMPLER(sampler_CameraDepthTexture);
 
             CBUFFER_START(UnityPerMaterial)
                 half4 _FogColor;
@@ -67,11 +67,8 @@ Shader "Example/OptimizedFakeVolumetricFog"
 
             half4 frag(Varyings IN) : SV_Target
             {
-                // Depth-based distance calculation
-                float2 screenUV = IN.screenPos.xy / IN.screenPos.w;
-                float depth = SAMPLE_TEXTURE2D(_CameraDepthTexture, sampler_CameraDepthTexture, screenUV).r;
-                float linearDepth = LinearEyeDepth(depth, _ZBufferParams);
-                float depthFadeFactor = saturate(linearDepth / _MaxDistance);
+                // Tính depth fade sử dụng DepthFadeLogic
+                float depthFadeFactor = CalculateDepthFade(IN.positionCS, IN.screenPos, _MaxDistance);
 
                 // Height-based fog
                 float heightFactor = saturate(1.0 - (IN.worldPos.y - _WorldSpaceCameraPos.y) / _HeightFade);
@@ -98,4 +95,5 @@ Shader "Example/OptimizedFakeVolumetricFog"
             ENDHLSL
         }
     }
+    FallBack "Hidden/Universal Render Pipeline/FallbackError"
 }

@@ -2,34 +2,53 @@ Shader "Custom/PortalShader"
 {
     Properties
     {
+        [Header(Portal View)]
         _MainTex ("Render Texture", 2D) = "white" {}
-        _NoiseTex ("Distort Noise Texture", 2D) = "white" {}
-        _EdgeNoiseTex ("Edge Noise Texture", 2D) = "white" {}
+        _TintColor ("Tint Color", Color) = (1,1,1,1)
+
+        [Header(Portal Shape Edge)]
         _PortalSize ("Portal Size", Range(0,1)) = 0.5
         _Softness ("Softness", Range(0,0.1)) = 0.01
+        _EdgeNoiseTex ("Edge Noise Texture", 2D) = "white" {}
         _EdgeNoiseStrength ("Edge Noise Strength", Range(0,0.1)) = 0.01
         _EdgeNoiseScale ("Edge Noise Scale", Float) = 1.0
+
+        [Header(View Distortion)]
+        _NoiseTex ("Distort Noise Texture", 2D) = "white" {}
         _NoiseDistortStrength ("Noise Distort Strength", Range(0,0.1)) = 0.01
         _DistortNoiseScale ("Distort Noise Scale", Float) = 1.0
+
+        [Header(Animation)]
         _NoiseAnimSpeed ("Noise Animation Speed", Float) = 0.5
         _NoiseAnimDirection ("Noise Animation Direction", Vector) = (1,0,0,0)
+
+        [Header(Edge Glow)]
         _GlowColor ("Glow Color", Color) = (1,1,1,1)
         _EdgeGradientColor ("Edge Gradient Color", Color) = (0.5,0.5,1,1)
         _GlowIntensity ("Glow Intensity", Range(0,1)) = 0.5
-        _TintColor ("Tint Color", Color) = (1,1,1,1)
+
+        [Header(Depth Pattern)]
         _DepthPatternColor ("Depth Pattern Color", Color) = (0.7,0.9,1,1)
+        _DepthPatternDistance ("Depth Pattern Distance", Range(1,50)) = 20.0
         [Toggle] _MovePatternDepth ("Move Pattern Depth", Float) = 0
         _DepthPatternSpeed ("Depth Pattern Speed", Float) = 1.0
         _DepthPatternNoiseStrength ("Depth Pattern Noise Strength", Range(0,1)) = 0.1
-        _DepthPatternDistance ("Depth Pattern Distance", Range(1,50)) = 20.0
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "Queue"="Opaque" "RenderPipeline"="UniversalPipeline" }
+        // CORRECTED TAGS:
+        // RenderType should be "Transparent" to work correctly with systems like screen space effects.
+        // Queue must be "Transparent" because the shader uses alpha blending (Blend SrcAlpha...)
+        // and should be rendered after opaque objects.
+        Tags { "RenderType"="Transparent" "Queue"="Transparent" "RenderPipeline"="UniversalPipeline" }
+
         Pass
         {
+            // Blending enabled for transparency.
             Blend SrcAlpha OneMinusSrcAlpha
+            // Turn off depth writing so objects behind the portal can be seen.
             ZWrite Off
+
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -47,13 +66,12 @@ Shader "Custom/PortalShader"
                 float2 uv : TEXCOORD0;
             };
 
-            TEXTURE2D(_MainTex);
-            SAMPLER(sampler_MainTex);
-            TEXTURE2D(_NoiseTex);
-            SAMPLER(sampler_NoiseTex);
-            TEXTURE2D(_EdgeNoiseTex);
-            SAMPLER(sampler_EdgeNoiseTex);
+            // Texture and Sampler declarations
+            TEXTURE2D(_MainTex);         SAMPLER(sampler_MainTex);
+            TEXTURE2D(_NoiseTex);        SAMPLER(sampler_NoiseTex);
+            TEXTURE2D(_EdgeNoiseTex);    SAMPLER(sampler_EdgeNoiseTex);
 
+            // Property variables
             float _PortalSize;
             float _Softness;
             float _EdgeNoiseStrength;
@@ -84,38 +102,48 @@ Shader "Custom/PortalShader"
             {
                 float2 uv = IN.uv;
                 float2 center = float2(0.5, 0.5);
+
+                // --- 1. Create the Portal Mask ---
+                // Calculate distance from center to create the basic circle shape.
                 float dist = distance(uv, center);
 
-                // Tính toán UV riêng cho edge noise và distort noise
+                // Animate UVs for the edge noise texture.
                 float2 edgeNoiseUV = uv * _EdgeNoiseScale + _NoiseAnimDirection * _Time.y * _NoiseAnimSpeed;
-                float2 distortNoiseUV = uv * _DistortNoiseScale + _NoiseAnimDirection * _Time.y * _NoiseAnimSpeed;
-
-                // Sample noise cho nhiễu động cạnh từ _EdgeNoiseTex
                 float edgeNoise = SAMPLE_TEXTURE2D(_EdgeNoiseTex, sampler_EdgeNoiseTex, edgeNoiseUV).r;
+
+                // Add noise to the distance to create a wobbly, unstable edge.
+                // (edgeNoise - 0.5) remaps the noise from [0, 1] to [-0.5, 0.5].
                 float noisyDist = dist + (edgeNoise - 0.5) * _EdgeNoiseStrength;
 
-                // Tính mask cổng với độ mềm
+                // Use smoothstep to create a soft-edged mask.
+                // The result is 1 inside the portal, 0 outside, with a smooth transition.
                 float mask = 1.0 - smoothstep(_PortalSize - _Softness, _PortalSize, noisyDist);
+                mask = saturate(mask); // Ensure mask is between 0 and 1.
 
-                // Tăng cường biến dạng gần rìa cho noise distort từ _NoiseTex
+                // --- 2. Create the View Distortion ---
+                // Animate UVs for the distortion noise texture.
+                float2 distortNoiseUV = uv * _DistortNoiseScale + _NoiseAnimDirection * _Time.y * _NoiseAnimSpeed;
+
+                // Sample the noise texture twice with offsets to get 2D distortion.
                 float noiseX = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, distortNoiseUV + float2(0.1, 0.2)).r - 0.5;
                 float noiseY = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, distortNoiseUV + float2(0.3, 0.4)).r - 0.5;
+
+                // Increase distortion strength near the portal's edge for a more dynamic effect.
                 float distortFactor = smoothstep(_PortalSize - _Softness, _PortalSize, dist);
                 float2 noiseDistort = float2(noiseX, noiseY) * _NoiseDistortStrength * (1.0 + distortFactor * 5.0);
 
-                // UV cuối cùng để lấy mẫu render texture
+                // Apply the distortion to the UVs used for sampling the main render texture.
                 float2 finalUV = uv + noiseDistort;
-
-                // Lấy mẫu màu cổng từ render texture
                 float4 portalColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, finalUV);
 
-                // Áp dụng màu nhuộm
+                // Apply the tint color.
                 portalColor *= _TintColor;
 
-                // Tính toán hoa văn chiều sâu cố định theo rìa
+                // --- 3. Add the Depth Pattern ---
+                // Create concentric rings using a sine wave based on distance from the center.
                 float depthPattern = 0.5 + 0.5 * sin(dist * _DepthPatternDistance);
 
-                // Nếu bật chế độ di chuyển, thêm chuyển động và nhiễu từ _NoiseTex
+                // If toggled, add movement and noise to the pattern to make it feel more alive.
                 if (_MovePatternDepth > 0.5)
                 {
                     float2 depthNoiseUV = uv * 2.0 + _Time.y * 0.1;
@@ -123,19 +151,25 @@ Shader "Custom/PortalShader"
                     float movement = _Time.y * _DepthPatternSpeed + depthNoise * _DepthPatternNoiseStrength;
                     depthPattern = 0.5 + 0.5 * sin(dist * _DepthPatternDistance + movement);
                 }
+                
+                // Blend the depth pattern color into the portal view.
+                portalColor.rgb = lerp(portalColor.rgb, _DepthPatternColor.rgb, depthPattern * _DepthPatternColor.a);
 
-                // Áp dụng hoa văn chiều sâu với màu
-                portalColor.rgb *= lerp(float3(1,1,1), _DepthPatternColor.rgb, depthPattern);
 
-                // Tính ánh sáng rìa với gradient
+                // --- 4. Calculate the Edge Glow ---
+                // This clever trick creates a glow only in the soft transition area of the mask.
+                // (1-x)*x gives a curve that peaks at x=0.5. Multiplying by 4 normalizes the peak to 1.
                 float glow = (1.0 - mask) * mask * 4.0 * _GlowIntensity;
-                float4 edgeColor = lerp(_GlowColor, _EdgeGradientColor, dist / _PortalSize);
 
-                // Kết hợp màu cổng và ánh sáng rìa
+                // Create a color gradient for the glow, from the inner glow color to the outer edge color.
+                float4 edgeColor = lerp(_GlowColor, _EdgeGradientColor, saturate(dist / _PortalSize));
+
+                // --- 5. Final Composition ---
+                // Combine the portal view (visible only where mask > 0) with the edge glow.
                 float4 finalColor = portalColor * mask + edgeColor * glow;
 
-                // Đặt alpha
-                float finalAlpha = min(mask + glow, 1.0);
+                // The final alpha is the mask's alpha plus the glow's alpha, clamped at 1.
+                float finalAlpha = saturate(mask + glow);
 
                 return float4(finalColor.rgb, finalAlpha);
             }
