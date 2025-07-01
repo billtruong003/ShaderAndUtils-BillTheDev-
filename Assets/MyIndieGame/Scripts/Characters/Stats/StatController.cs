@@ -1,165 +1,339 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector; // Giả sử bạn vẫn dùng Odin
 
-public class StatController : MonoBehaviour
+public class StatController : SerializedMonoBehaviour
 {
-    // Dùng Dictionary để truy cập chỉ số nhanh chóng bằng StatType
+    [Title("Character Stats")]
     public Dictionary<StatType, CharacterStat> Stats = new Dictionary<StatType, CharacterStat>();
 
-    // Sự kiện để thông báo cho các hệ thống khác (UI, Combat...) khi có thay đổi
-    public event Action<StatType, float> OnStatChanged; // Gửi đi loại stat và giá trị mới
-    public event Action OnLevelUp;
+    [Title("Character Vitals")]
+    public int Level = 1;
+    // Dòng 'public int StatPoints = 5;' thừa thãi đã được XÓA.
+    public float Experience = 0;
 
-    // Các chỉ số mà người chơi có thể phân phối điểm vào
-    private List<StatType> distributableStats = new List<StatType>
+    [ShowInInspector, ReadOnly]
+    public float ExpToNextLevel => GetExpNeededForLevel(Level);
+
+    #region Events
+    public event Action<StatType, float> OnStatChanged;
+    public event Action OnLevelUp;
+    public event Action<int> OnStatPointsChanged;
+    public event Action<float, float> OnExperienceChanged;
+
+    public float CurrentHealth { get; private set; }
+    public float CurrentMana { get; private set; }
+    public float CurrentStamina { get; private set; }
+
+    public event Action<float, float> OnHealthChanged; // current, max
+    public event Action<float, float> OnManaChanged;
+    public event Action<float, float> OnStaminaChanged;
+    #endregion
+
+    // GIỜ ĐÂY CHỈ CÓ MỘT NGUỒN DUY NHẤT CHO STAT POINTS
+    [ShowInInspector] // Hiển thị giá trị hiện tại trong Inspector (nhờ Odin)
+    public int StatPoints { get; private set; } = 5; // Khởi tạo giá trị mặc định tại đây
+
+    private readonly List<StatType> distributableStats = new List<StatType>
     {
-        StatType.Strength, StatType.Intelligence, StatType.Vitality, StatType.Agility, StatType.Dexterity
+        StatType.Strength, StatType.Intelligence, StatType.Vitality, StatType.Agility, StatType.Dexterity,
     };
 
-    // Ví dụ về dữ liệu nhân vật
-    public int Level = 1;
-    public int StatPoints = 5;
-
+    #region Unity Lifecycle
     void Awake()
     {
+        // Mình đã bỏ việc gán `_statPoints` ở đây vì đã gán giá trị mặc định ở trên
         InitializeStats();
-        // Gắn các hàm tính toán vào sự kiện thay đổi của các chỉ số cơ bản
         LinkDerivedStats();
     }
 
+    void Start()
+    {
+        foreach (var pair in Stats)
+        {
+            OnStatChanged?.Invoke(pair.Key, pair.Value.Value);
+        }
+        OnStatPointsChanged?.Invoke(StatPoints);
+        OnExperienceChanged?.Invoke(Experience, ExpToNextLevel);
+    }
+    #endregion
+
+    #region Initialization
     private void InitializeStats()
     {
-        // Khởi tạo tất cả các chỉ số cơ bản với giá trị ban đầu (ví dụ: 5)
+        foreach (StatType type in Enum.GetValues(typeof(StatType)))
+        {
+            if (Stats.ContainsKey(type) == false)
+            {
+                Stats.Add(type, new CharacterStat());
+            }
+        }
         foreach (StatType type in distributableStats)
         {
-            Stats.Add(type, new CharacterStat(5));
+            Stats[type].BaseValue = 5;
         }
-
-        // Khởi tạo các chỉ số phụ
-        Stats.Add(StatType.MaxHealth, new CharacterStat());
-        Stats.Add(StatType.MaxMana, new CharacterStat());
-        // ... thêm các chỉ số phụ khác
-
-        // Tính toán lại tất cả các chỉ số phụ lần đầu
         RecalculateAllDerivedStats();
     }
 
-    // Đây là phần "Observer Pattern"
     private void LinkDerivedStats()
     {
-        // Khi STR hoặc Level thay đổi, tính lại CarryWeight
         OnStatChanged += (type, value) =>
         {
-            if (type == StatType.Strength) RecalculateCarryWeight();
+            switch (type)
+            {
+                case StatType.Vitality:
+                    RecalculateMaxHealth();
+                    RecalculateMaxStamina();
+                    RecalculateHealthRegen();
+                    break;
+                case StatType.Strength:
+                    RecalculateMaxHealth();
+                    RecalculatePhysicalDamageBonus();
+                    RecalculateCarryWeight();
+                    break;
+                case StatType.Intelligence:
+                    RecalculateMaxMana();
+                    RecalculateMagicalDamageBonus();
+                    break;
+                case StatType.Agility:
+                    RecalculateMaxStamina();
+                    RecalculateStaminaRegen();
+                    RecalculateAttackSpeed();
+                    RecalculateDodgeChance();
+                    break;
+                case StatType.Wisdom:
+                    RecalculateMaxMana();
+                    RecalculateManaRegen();
+                    break;
+                case StatType.Dexterity:
+                    RecalculateCritChance();
+                    RecalculateCritDamage();
+                    break;
+                case StatType.Luck:
+                    RecalculateCritChance();
+                    break;
+            }
         };
 
-        // Khi VIT hoặc Level thay đổi, tính lại MaxHealth
-        OnStatChanged += (type, value) =>
+        OnLevelUp += () =>
         {
-            if (type == StatType.Vitality) RecalculateMaxHealth();
+            StatPoints += 5;
+            RecalculateAllDerivedStats();
         };
-
-        OnLevelUp += RecalculateAllDerivedStats; // Khi lên cấp, tính lại hết cho chắc
     }
+    #endregion
 
+    #region Calculation Methods
     public void RecalculateAllDerivedStats()
     {
         RecalculateMaxHealth();
         RecalculateMaxMana();
+        RecalculateMaxStamina();
+        RecalculateHealthRegen();
+        RecalculateManaRegen();
+        RecalculateStaminaRegen();
+        RecalculatePhysicalDamageBonus();
+        RecalculateMagicalDamageBonus();
+        RecalculateCritChance();
+        RecalculateCritDamage();
+        RecalculateAttackSpeed();
+        RecalculateDodgeChance();
         RecalculateCarryWeight();
-        // ... gọi các hàm tính toán khác
     }
 
-    #region Calculation Methods (Nơi hiện thực hóa công thức của bạn)
-
+    // Các hàm tính toán mới dựa trên bảng công thức của bạn
     private void RecalculateMaxHealth()
     {
         float vit = GetStatValue(StatType.Vitality);
-        // Công thức: (VIT * 15) + (Level * 10)
-        float newMaxHealth = (vit * 15) + (Level * 10);
-        SetStatBaseValue(StatType.MaxHealth, newMaxHealth);
+        float newValue = (vit * 15) + (Level * 10);
+        SetStatBaseValueSilent(StatType.MaxHealth, newValue);
     }
-
     private void RecalculateMaxMana()
     {
         float intel = GetStatValue(StatType.Intelligence);
-        // Giả sử Wisdom chưa mở khóa, nên tạm thời = 0
-        float wis = Stats.ContainsKey(StatType.Wisdom) ? GetStatValue(StatType.Wisdom) : 0;
-        // Công thức: (INT * 10) + (WIS * 5) + (Level * 5)
-        float newMaxMana = (intel * 10) + (wis * 5) + (Level * 5);
-        SetStatBaseValue(StatType.MaxMana, newMaxMana);
+        float wis = GetStatValue(StatType.Wisdom);
+        float newValue = (intel * 10) + (wis * 5) + (Level * 5);
+        SetStatBaseValueSilent(StatType.MaxMana, newValue);
     }
-
+    private void RecalculateMaxStamina()
+    {
+        float vit = GetStatValue(StatType.Vitality);
+        float agi = GetStatValue(StatType.Agility);
+        float newValue = 100 + (vit * 2) + (agi * 3);
+        SetStatBaseValueSilent(StatType.MaxStamina, newValue);
+    }
+    private void RecalculateHealthRegen()
+    {
+        float vit = GetStatValue(StatType.Vitality);
+        float newValue = vit * 0.1f;
+        SetStatBaseValueSilent(StatType.HealthRegen, newValue);
+    }
+    private void RecalculateManaRegen()
+    {
+        float wis = GetStatValue(StatType.Wisdom);
+        float newValue = wis * 0.2f;
+        SetStatBaseValueSilent(StatType.ManaRegen, newValue);
+    }
+    private void RecalculateStaminaRegen()
+    {
+        float agi = GetStatValue(StatType.Agility);
+        float newValue = 15 + (agi * 0.1f);
+        SetStatBaseValueSilent(StatType.StaminaRegen, newValue);
+    }
+    private void RecalculatePhysicalDamageBonus()
+    {
+        float str = GetStatValue(StatType.Strength);
+        float newValue = str * 0.5f;
+        SetStatBaseValueSilent(StatType.PhysicalDamageBonus, newValue);
+    }
+    private void RecalculateMagicalDamageBonus()
+    {
+        float intel = GetStatValue(StatType.Intelligence);
+        float newValue = intel * 0.5f;
+        SetStatBaseValueSilent(StatType.MagicalDamageBonus, newValue);
+    }
+    private void RecalculateCritChance()
+    {
+        float dex = GetStatValue(StatType.Dexterity);
+        float luk = GetStatValue(StatType.Luck);
+        float newValue = 5 + (dex * 0.08f) + (luk * 0.04f);
+        SetStatBaseValueSilent(StatType.CritChance, newValue);
+    }
+    private void RecalculateCritDamage()
+    {
+        float dex = GetStatValue(StatType.Dexterity);
+        float newValue = 150 + (dex * 0.15f);
+        SetStatBaseValueSilent(StatType.CritDamage, newValue);
+    }
+    private void RecalculateAttackSpeed()
+    {
+        float agi = GetStatValue(StatType.Agility);
+        float newValue = agi * 0.2f;
+        SetStatBaseValueSilent(StatType.AttackSpeed, newValue);
+    }
+    private void RecalculateDodgeChance()
+    {
+        float agi = GetStatValue(StatType.Agility);
+        float newValue = agi * 0.05f;
+        SetStatBaseValueSilent(StatType.DodgeChance, newValue);
+    }
     private void RecalculateCarryWeight()
     {
         float str = GetStatValue(StatType.Strength);
-        // Công thức: 50 + (STR * 2.5)
-        float newCarryWeight = 50 + (str * 2.5f);
-        SetStatBaseValue(StatType.CarryWeight, newCarryWeight);
+        float newValue = 50 + (str * 2.5f);
+        SetStatBaseValueSilent(StatType.CarryWeight, newValue);
     }
 
     #endregion
 
-    #region Public Helper Methods (Các hàm để bên ngoài gọi)
-
+    #region Public API
     public CharacterStat GetStat(StatType type)
     {
-        return Stats.ContainsKey(type) ? Stats[type] : null;
+        Stats.TryGetValue(type, out CharacterStat stat);
+        return stat;
     }
 
     public float GetStatValue(StatType type)
     {
-        return Stats.ContainsKey(type) ? Stats[type].Value : 0;
+        return GetStat(type)?.Value ?? 0;
     }
 
-    // Dùng để cộng điểm chỉ số
+    // --- LOGIC MỚI: TÍNH TOÁN CHI PHÍ VÀ CỘNG ĐIỂM ---
+    public int GetCostToIncreaseStat(StatType type)
+    {
+        if (!distributableStats.Contains(type)) return int.MaxValue; // Không thể cộng điểm
+
+        float currentBaseValue = GetStat(type).BaseValue;
+        if (currentBaseValue <= 50) return 1;
+        if (currentBaseValue <= 100) return 2;
+        if (currentBaseValue <= 150) return 3;
+        return 4;
+    }
+
     public bool DistributeStatPoint(StatType type, int amount = 1)
     {
-        if (StatPoints >= amount && distributableStats.Contains(type))
+        int cost = GetCostToIncreaseStat(type);
+        if (StatPoints >= cost && distributableStats.Contains(type))
         {
-            StatPoints -= amount;
+            StatPoints -= cost;
             Stats[type].BaseValue += amount;
-            // Phát sự kiện
             OnStatChanged?.Invoke(type, Stats[type].Value);
             return true;
         }
         return false;
     }
 
-    // Dùng để trang bị/tháo trang bị
+    // --- LOGIC MỚI: KINH NGHIỆM VÀ LÊN CẤP ---
+    public float GetExpNeededForLevel(int level)
+    {
+        return Mathf.Round(100 * Mathf.Pow(level, 1.5f));
+    }
+
+    public void AddExperience(float amount)
+    {
+        Experience += amount;
+        float expNeeded = ExpToNextLevel;
+        while (Experience >= expNeeded)
+        {
+            Experience -= expNeeded;
+            Level++;
+            OnLevelUp?.Invoke();
+            expNeeded = ExpToNextLevel;
+        }
+        OnExperienceChanged?.Invoke(Experience, expNeeded);
+    }
+
+    // ... (các hàm Add/Remove Modifier giữ nguyên) ...
     public void AddStatModifier(StatType type, StatModifier modifier)
     {
-        if (Stats.ContainsKey(type))
+        if (GetStat(type) != null)
         {
-            Stats[type].AddModifier(modifier);
-            OnStatChanged?.Invoke(type, Stats[type].Value);
+            GetStat(type).AddModifier(modifier);
+            OnStatChanged?.Invoke(type, GetStat(type).Value);
         }
     }
 
     public void RemoveStatModifiersFromSource(object source)
     {
-        foreach (var stat in Stats.Values)
+        var changedStats = new HashSet<StatType>();
+        foreach (var pair in Stats)
         {
-            if (stat.RemoveAllModifiersFromSource(source))
+            if (pair.Value.RemoveAllModifiersFromSource(source))
             {
-                // Nếu có sự thay đổi, phát sự kiện tương ứng
-                // (Cần có cách map ngược từ CharacterStat về StatType)
-                // Cách đơn giản là duyệt lại dictionary và phát sự kiện
+                changedStats.Add(pair.Key);
             }
         }
-        RecalculateAllDerivedStats(); // An toàn nhất là tính lại hết
-    }
-
-    // Hàm nội bộ để thay đổi giá trị gốc của chỉ số phụ
-    private void SetStatBaseValue(StatType type, float value)
-    {
-        if (Stats.ContainsKey(type))
+        foreach (var type in changedStats)
         {
-            Stats[type].BaseValue = value;
             OnStatChanged?.Invoke(type, Stats[type].Value);
         }
     }
 
+    // --- CÁC HÀM HELPER "IM LẶNG" VÀ "ỒN ÀO" ---
+    private void SetStatBaseValueSilent(StatType type, float value)
+    {
+        if (GetStat(type) != null)
+        {
+            GetStat(type).BaseValue = value;
+        }
+    }
+
+    private void SetStatBaseValue(StatType type, float value)
+    {
+        SetStatBaseValueSilent(type, value);
+        OnStatChanged?.Invoke(type, GetStat(type).Value);
+    }
     #endregion
+
+    public bool ConsumeStamina(float amount)
+    {
+        if (CurrentStamina >= amount)
+        {
+            CurrentStamina -= amount;
+            OnStaminaChanged?.Invoke(CurrentStamina, GetStatValue(StatType.MaxStamina));
+            return true;
+        }
+        return false;
+    }
 }
