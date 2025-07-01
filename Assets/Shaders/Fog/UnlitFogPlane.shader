@@ -1,104 +1,134 @@
-Shader "Custom/Unlit Fog Plane URP (With Noise)"
+Shader "Custom/LightweightVolumetricNoiseFog"
 {
     Properties
     {
-        [MainColor] _FogColor ("Fog Color", Color) = (0.5, 0.5, 0.5, 1)
-        _FogDensity ("Fog Density", Range(0.0, 5.0)) = 1.0
+        _FogColor ("Fog Color", Color) = (0.5, 0.6, 0.7, 1.0)
+        _FogDensity ("Fog Density", Range(0, 2)) = 0.1
+        
+        [Header(Height Fog)]
+        _FogHeight ("Fog Height Level", Float) = 0.0
+        _FogHeightFalloff ("Height Falloff", Range(0.01, 1)) = 0.2
 
-        // --- Các thuộc tính mới cho hiệu ứng Noise ---
         [Header(Noise Settings)]
-        _NoiseTex ("Noise Texture (Seamless)", 2D) = "white" {}
+        _NoiseTex ("Noise Texture (Grayscale)", 2D) = "white" {}
         _NoiseScale ("Noise Scale", Float) = 1.0
-        _NoiseSpeedX ("Noise Scroll Speed X", Float) = 0.1
-        _NoiseSpeedY ("Noise Scroll Speed Y", Float) = 0.1
+        _NoiseSpeedX ("Noise Speed X", Float) = 0.1
+        _NoiseSpeedY ("Noise Speed Y", Float) = 0.1
+        _NoiseInfluence ("Noise Influence", Range(0, 1)) = 0.5
     }
-
     SubShader
     {
-        Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Transparent" "Queue"="Transparent" }
+        Tags { "Queue"="Transparent" "RenderType"="Transparent" "IgnoreProjector"="True" }
+        LOD 100
 
         Pass
         {
-            Blend SrcAlpha OneMinusSrcAlpha
-            ZWrite Off
-            Cull Off
+            // --- Cài đặt trạng thái render ---
+            Blend SrcAlpha OneMinusSrcAlpha // Alpha blending tiêu chuẩn
+            Cull Off                       // Không cull mặt sau (quan trọng cho các object bao quanh camera)
+            ZWrite Off                     // Không ghi vào depth buffer
+            ZTest LEqual                   // Render nếu ở phía trước hoặc tại cùng một điểm
 
-            HLSLPROGRAM
+            CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            // Thư viện CG của Unity
+            #include "UnityCG.cginc"
 
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            // --- Khai báo các biến từ Properties ---
+            fixed4 _FogColor;
+            float _FogDensity;
+            float _FogHeight;
+            float _FogHeightFalloff;
+            
+            sampler2D _NoiseTex;
+            float4 _NoiseTex_ST; // Hỗ trợ tiling và offset cho texture
+            float _NoiseScale;
+            float _NoiseSpeedX;
+            float _NoiseSpeedY;
+            float _NoiseInfluence;
 
-            TEXTURE2D_X(_CameraDepthTexture);
-            SAMPLER(sampler_CameraDepthTexture);
+            // Texture chứa độ sâu của cảnh (Unity tự cung cấp)
+            sampler2D _CameraDepthTexture;
 
-            // --- Khai báo các biến mới cho Noise ---
-            TEXTURE2D(_NoiseTex);
-            SAMPLER(sampler_NoiseTex);
-
-            CBUFFER_START(UnityPerMaterial)
-                half4 _FogColor;
-                float _FogDensity;
-                // --- Khai báo các biến mới cho Noise ---
-                float4 _NoiseTex_ST; // Dùng cho Tiling/Offset của texture
-                float _NoiseScale;
-                float _NoiseSpeedX;
-                float _NoiseSpeedY;
-            CBUFFER_END
-
-            struct Attributes
+            // --- Struct cho vertex shader input và output ---
+            struct appdata
             {
-                float4 positionOS   : POSITION;
+                float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
             };
 
-            struct Varyings
+            struct v2f
             {
-                float4 positionCS   : SV_POSITION;
-                // --- Thêm vị trí thế giới để tính UV cho noise ---
-                float3 worldPos     : TEXCOORD0;
+                float4 pos : SV_POSITION;       // Vị trí clip space
+                float2 uv : TEXCOORD0;          // Tọa độ UV cho noise
+                float4 screenPos : TEXCOORD1;   // Vị trí màn hình để lấy depth
+                float3 worldPos : TEXCOORD2;    // Vị trí thế giới của vertex
             };
 
-            Varyings vert(Attributes IN)
+            // --- Vertex Shader ---
+            // Tính toán các giá trị cần thiết và chuyển cho fragment shader
+            v2f vert (appdata v)
             {
-                Varyings OUT;
-                OUT.positionCS = TransformObjectToHClip(IN.positionOS.xyz);
-                // --- Tính toán vị trí thế giới của đỉnh ---
-                OUT.worldPos = TransformObjectToWorld(IN.positionOS.xyz);
-                return OUT;
+                v2f o;
+                // Chuyển vị trí vertex từ local space sang clip space
+                o.pos = UnityObjectToClipPos(v.vertex);
+                // Chuyển vị trí vertex từ local space sang world space
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+                // Tính toán vị trí trên màn hình để lấy depth
+                o.screenPos = ComputeScreenPos(o.pos);
+                // Chuyển tọa độ UV cho noise texture
+                o.uv = TRANSFORM_TEX(v.uv, _NoiseTex);
+                return o;
             }
 
-            half4 frag(Varyings IN) : SV_Target
+            // --- Fragment Shader ---
+            // Tính toán màu sắc cuối cùng của từng pixel
+            fixed4 frag (v2f i) : SV_Target
             {
-                // --- Phần tính toán độ sâu sương mù (giữ nguyên) ---
-                float planeDepth = IN.positionCS.w;
-                float2 screenUV = IN.positionCS.xy / _ScreenParams.xy;
-                float rawSceneDepth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, screenUV).r;
-                float sceneDepth = LinearEyeDepth(rawSceneDepth, _ZBufferParams);
-                float depthDifference = sceneDepth - planeDepth;
+                // 1. Lấy độ sâu của cảnh vật phía sau pixel sương mù hiện tại
+                // Tọa độ màn hình chuẩn hóa (0-1)
+                float2 screenUV = i.screenPos.xy / i.screenPos.w;
+                // Lấy giá trị depth từ texture (giá trị này không tuyến tính)
+                float sceneRawDepth = tex2D(_CameraDepthTexture, screenUV).r;
+                // Tuyến tính hóa giá trị depth để có khoảng cách thực từ camera
+                float sceneLinearEyeDepth = LinearEyeDepth(sceneRawDepth);
 
-                // --- Phần tính toán Noise ---
-                // 1. Tạo UV cho noise từ vị trí thế giới (dùng xz cho mặt phẳng nằm ngang)
-                float2 noiseUV = IN.worldPos.xz * _NoiseScale;
+                // 2. Tính toán hệ số sương mù dựa trên khoảng cách (Distance Fog)
+                // Công thức sương mù theo hàm mũ (exponential fog)
+                // Khoảng cách càng xa, sương mù càng dày
+                float distanceFactor = exp(-sceneLinearEyeDepth * _FogDensity);
 
-                // 2. Làm cho noise di chuyển theo thời gian
-                float2 noiseSpeed = float2(_NoiseSpeedX, _NoiseSpeedY);
-                noiseUV += _Time.y * noiseSpeed;
+                // 3. Tính toán hệ số sương mù dựa trên chiều cao (Height Fog)
+                // Tái tạo lại vị trí thế giới của pixel trên cảnh vật
+                float3 viewDir = normalize(i.worldPos - _WorldSpaceCameraPos.xyz);
+                float3 sceneWorldPos = _WorldSpaceCameraPos.xyz + viewDir * sceneLinearEyeDepth;
+                
+                // Tính toán độ dày sương mù dựa trên chiều cao so với _FogHeight
+                // Càng ở dưới _FogHeight, sương mù càng dày. Càng lên cao, sương mù càng mỏng đi.
+                float heightDifference = _FogHeight - sceneWorldPos.y;
+                float heightFactor = saturate(heightDifference / _FogHeightFalloff);
+                
+                // 4. Lấy giá trị noise
+                // Làm cho UV của noise di chuyển theo thời gian để tạo hiệu ứng cuộn
+                float2 noiseUV = i.uv * _NoiseScale + _Time.y * float2(_NoiseSpeedX, _NoiseSpeedY);
+                float noiseValue = tex2D(_NoiseTex, noiseUV).r; // Chỉ cần kênh R vì noise là grayscale
 
-                // 3. Lấy giá trị từ noise texture (chỉ cần kênh R là đủ)
-                float noiseValue = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, noiseUV).r;
+                // 5. Kết hợp các yếu tố
+                // Tổng hợp độ dày sương mù từ khoảng cách và chiều cao
+                float combinedFogFactor = saturate(heightFactor * (1.0 - distanceFactor));
 
-                // --- Điều chỉnh hệ số sương mù với Noise ---
-                // Nhân hệ số sương mù gốc với giá trị noise
-                // Kết quả là sương mù sẽ dày hơn ở những vùng noise sáng và ngược lại
-                float fogFactor = saturate(depthDifference * _FogDensity * noiseValue);
+                // Điều chỉnh độ dày sương mù bằng noise
+                // Lerp giữa giá trị không có noise (1) và có noise (noiseValue)
+                float noiseModulation = lerp(1.0, noiseValue, _NoiseInfluence);
+                float finalFogAlpha = combinedFogFactor * noiseModulation;
 
-                // --- Kết hợp màu sắc (giữ nguyên) ---
-                half3 finalColor = _FogColor.rgb;
-                half finalAlpha = _FogColor.a * fogFactor;
-
-                return half4(finalColor, finalAlpha);
+                // 6. Trả về màu sắc cuối cùng
+                // Màu sương mù với độ trong suốt (alpha) đã được tính toán
+                return fixed4(_FogColor.rgb, _FogColor.a * finalFogAlpha);
             }
-            ENDHLSL
+            ENDCG
         }
     }
+    FallBack "Transparent/VertexLit"
 }
