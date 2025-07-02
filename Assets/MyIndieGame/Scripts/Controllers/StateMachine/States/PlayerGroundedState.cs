@@ -2,9 +2,15 @@ public class PlayerGroundedState : PlayerState
 {
     public PlayerGroundedState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
+    public override void Enter()
+    {
+        animator.PlayTargetAnimation("GroundedMovement", 0.1f);
+    }
+
+    public override void Exit() { }
+
     public override void Tick(float deltaTime)
     {
-        // Ưu tiên các hành động có tính "ngắt quãng" (interrupting)
         if (input.DashInput)
         {
             stateMachine.SwitchState(new PlayerDashState(stateMachine));
@@ -23,32 +29,36 @@ public class PlayerGroundedState : PlayerState
             return;
         }
 
-        // --- LOGIC TẤN CÔNG ĐÃ ĐƯỢC SỬA ---
         if (input.AttackInput)
         {
-            if (equipment.IsWeaponDrawn)
+            // Lấy thông tin xem người chơi có đang trang bị vũ khí "xịn" hay không
+            bool hasRealWeaponEquipped = equipment.CurrentWeapon != equipment.UnarmedWeaponData;
+
+            // Kịch bản 1: Người chơi đang dùng tay không, hoặc vũ khí đã được rút ra rồi
+            if (!hasRealWeaponEquipped || equipment.IsWeaponDrawn)
             {
-                // Nếu đã rút vũ khí, tấn công ngay
                 stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
             }
-            else
+            // Kịch bản 2: Có vũ khí "xịn" VÀ nó đang được cất đi
+            else // (hasRealWeaponEquipped && !equipment.IsWeaponDrawn)
             {
-                // Nếu chưa, chuyển sang trạng thái rút vũ khí
                 stateMachine.SwitchState(new PlayerDrawWeaponState(stateMachine));
             }
-            return; // Luôn return sau khi chuyển state
+            return;
         }
 
-        // --- LOGIC ĐỔI STANCE VẪN GIỮ NGUYÊN ---
         if (input.StanceChangeInput)
         {
             input.ConsumeStanceChangeInput();
-            equipment.ToggleWeaponStance();
-            // Nếu cất vũ khí, logic sẽ tự động xử lý
+            // Chỉ cho phép rút/cất khi có vũ khí thật
+            if (equipment.CurrentWeapon != equipment.UnarmedWeaponData)
+            {
+                equipment.ToggleWeaponStance();
+            }
         }
 
-        // Nếu không có hành động, xử lý di chuyển
-        locomotion.HandleGroundedMovement(input.MoveInput, input.IsRunning);
+        // Truyền mục tiêu vào hàm di chuyển
+        locomotion.HandleGroundedMovement(input.MoveInput, input.IsRunning, stateMachine.Targeting?.CurrentTarget);
         animator.UpdateMoveSpeed(locomotion.GetCurrentSpeed());
     }
 }

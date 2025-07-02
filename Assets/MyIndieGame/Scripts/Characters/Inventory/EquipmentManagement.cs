@@ -3,21 +3,20 @@ using UnityEngine;
 public class EquipmentManager : MonoBehaviour
 {
     [Header("Component References")]
-    // Giữ lại PlayerAnimator để gọi các hàm tùy chỉnh như SetWeaponDrawn
     [SerializeField] private PlayerAnimator playerAnimator;
-    // Thêm tham chiếu trực tiếp đến Animator để thay đổi Controller
     [SerializeField] private Animator animator;
 
     [Header("Default State")]
     [Tooltip("Dữ liệu cho trạng thái Tay không. Đây là trạng thái mặc định và không thể bỏ trống.")]
     [SerializeField] private WeaponData unarmedWeaponData;
 
+    // --- CÁC THUỘC TÍNH CÔNG KHAI ĐƯỢC THÊM VÀO ĐÂY ---
     public bool IsWeaponDrawn { get; private set; }
-    private WeaponData currentWeapon;
+    public WeaponData CurrentWeapon { get; private set; }
+    public WeaponData UnarmedWeaponData => unarmedWeaponData; // Thuộc tính chỉ đọc để truy cập an toàn
 
     void Awake()
     {
-        // Kiểm tra lỗi sớm
         if (unarmedWeaponData == null)
         {
             Debug.LogError("Unarmed Weapon Data is not set on the EquipmentManager!", this);
@@ -33,25 +32,21 @@ public class EquipmentManager : MonoBehaviour
 
         // Khởi đầu với trạng thái tay không
         EquipWeapon(unarmedWeaponData);
+        IsWeaponDrawn = false; // Đảm bảo trạng thái ban đầu là cất vũ khí
     }
 
     public void ToggleWeaponStance()
     {
         IsWeaponDrawn = !IsWeaponDrawn;
-        // Dùng PlayerAnimator cho các hàm tùy chỉnh
         playerAnimator.SetWeaponDrawn(IsWeaponDrawn);
     }
 
     public void EquipWeapon(WeaponData newWeapon)
     {
-        currentWeapon = newWeapon != null ? newWeapon : unarmedWeaponData;
+        CurrentWeapon = newWeapon != null ? newWeapon : unarmedWeaponData;
 
-        // --- ĐÂY LÀ DÒNG ĐÃ SỬA ---
-        // Dùng Animator thật để thay đổi runtimeAnimatorController
-        animator.runtimeAnimatorController = currentWeapon.AnimatorOverride;
-
-        // Dùng PlayerAnimator cho các hàm tùy chỉnh
-        playerAnimator.SetWeaponType(currentWeapon.WeaponTypeID);
+        animator.runtimeAnimatorController = CurrentWeapon.AnimatorOverride;
+        playerAnimator.SetWeaponType(CurrentWeapon.WeaponTypeID);
     }
 
     public void UnequipWeapon()
@@ -65,11 +60,12 @@ public class EquipmentManager : MonoBehaviour
 
     public AttackData GetCurrentAttackData(int comboIndex)
     {
-        if (currentWeapon != null && comboIndex < currentWeapon.AttackCombo.Length)
+        if (CurrentWeapon != null && comboIndex < CurrentWeapon.AttackCombo.Length)
         {
-            return currentWeapon.AttackCombo[comboIndex];
+            return CurrentWeapon.AttackCombo[comboIndex];
         }
 
+        // Dòng này để phòng trường hợp CurrentWeapon là null, nhưng logic ở trên đã xử lý
         if (unarmedWeaponData != null && comboIndex < unarmedWeaponData.AttackCombo.Length)
         {
             return unarmedWeaponData.AttackCombo[comboIndex];

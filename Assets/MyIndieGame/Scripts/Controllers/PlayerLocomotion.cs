@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerLocomotion : MonoBehaviour
 {
     [Header("Settings")]
+    public float airControlSpeed = 5f;
     public float rotationSpeed = 15f;
     public float gravity = -20.0f;
 
@@ -11,44 +12,67 @@ public class PlayerLocomotion : MonoBehaviour
     private Transform camTransform;
     private Vector3 playerVelocity;
 
-    // --- THAY ĐỔI Ở ĐÂY ---
-    // Tạo một thuộc tính công khai để các script khác có thể đọc giá trị của playerVelocity
-    // Dấu "=>" là một cách viết tắt cho một property chỉ có getter.
     public Vector3 PlayerVelocity => playerVelocity;
 
-    // Stat-driven values
     private float currentSpeed;
     private float walkSpeed = 3f;
     private float runSpeed = 7f;
 
-    // ... (phần còn lại của file giữ nguyên không đổi) ...
-    // ...
     void Awake()
     {
         controller = GetComponent<CharacterController>();
         camTransform = Camera.main.transform;
     }
 
-    public void HandleGroundedMovement(Vector2 moveInput, bool isRunning)
+    // --- SỬA ĐỔI HÀM NÀY ĐỂ NHẬN THAM SỐ THỨ 3 ---
+    public void HandleGroundedMovement(Vector2 moveInput, bool isRunning, Transform target)
     {
-        HandleGravity();
-
         if (moveInput.magnitude < 0.1f)
         {
             currentSpeed = 0f;
-            return;
+        }
+        else
+        {
+            currentSpeed = isRunning ? runSpeed : walkSpeed;
         }
 
         Vector3 moveDirection = CalculateMoveDirection(moveInput);
-        RotatePlayer(moveDirection);
+        Vector3 horizontalVelocity = moveDirection * currentSpeed;
 
-        currentSpeed = isRunning ? runSpeed : walkSpeed;
-        controller.Move(moveDirection * currentSpeed * Time.deltaTime);
+        HandleGravity();
+
+        Vector3 finalVelocity = horizontalVelocity;
+        finalVelocity.y = playerVelocity.y;
+
+        // Gọi hàm xoay người đã có sẵn, truyền vào cả input và target
+        HandleRotation(moveInput, target);
+
+        controller.Move(finalVelocity * Time.deltaTime);
     }
 
-    public void HandleAirborneMovement()
+    public void HandleAttackMovement(float speed)
     {
+        Vector3 forwardVelocity = transform.forward * speed;
         HandleGravity();
+        forwardVelocity.y = playerVelocity.y;
+        controller.Move(forwardVelocity * Time.deltaTime);
+    }
+
+    // --- SỬA ĐỔI HÀM NÀY ĐỂ NHẬN THAM SỐ THỨ 2 ---
+    public void HandleAirborneMovement(Vector2 moveInput, Transform target)
+    {
+        Vector3 moveDirection = CalculateMoveDirection(moveInput);
+        Vector3 horizontalVelocity = moveDirection * airControlSpeed;
+
+        HandleGravity();
+
+        Vector3 finalVelocity = horizontalVelocity;
+        finalVelocity.y = playerVelocity.y;
+
+        // Gọi hàm xoay người đã có sẵn, truyền vào cả input và target
+        HandleRotation(moveInput, target);
+
+        controller.Move(finalVelocity * Time.deltaTime);
     }
 
     public void HandleJump(float jumpHeight)
@@ -62,7 +86,9 @@ public class PlayerLocomotion : MonoBehaviour
     public void HandleDash(float dashSpeed)
     {
         Vector3 dashDirection = transform.forward;
-        controller.Move(dashDirection * dashSpeed * Time.deltaTime);
+        Vector3 dashVelocity = dashDirection * dashSpeed;
+        dashVelocity.y = playerVelocity.y;
+        controller.Move(dashVelocity * Time.deltaTime);
     }
 
     private void HandleGravity()
@@ -71,8 +97,8 @@ public class PlayerLocomotion : MonoBehaviour
         {
             playerVelocity.y = -2f;
         }
+
         playerVelocity.y += gravity * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
     }
 
     private Vector3 CalculateMoveDirection(Vector2 moveInput)
@@ -88,16 +114,49 @@ public class PlayerLocomotion : MonoBehaviour
     {
         if (moveDirection != Vector3.zero)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDirection), Time.deltaTime * rotationSpeed);
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
     }
 
-    public bool IsFalling()
+    public void HandleRotation(Vector2 moveInput, Transform target)
     {
-        return !controller.isGrounded && playerVelocity.y < 0f;
+        // Ưu tiên xoay theo mục tiêu nếu có
+        if (target != null)
+        {
+            Vector3 directionToTarget = (target.position - transform.position).normalized;
+            directionToTarget.y = 0;
+            if (directionToTarget != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed * 2f); // Xoay nhanh hơn khi có target
+            }
+        }
+        // Nếu không có mục tiêu, xoay theo hướng di chuyển của người chơi
+        else
+        {
+            Vector3 moveDirection = CalculateMoveDirection(moveInput);
+            if (moveDirection != Vector3.zero)
+            {
+                RotatePlayer(moveDirection);
+            }
+        }
+    }
+
+    public void ForceLookAtTarget(Transform target)
+    {
+        if (target == null) return;
+
+        Vector3 directionToTarget = (target.position - transform.position).normalized;
+        directionToTarget.y = 0;
+        if (directionToTarget != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(directionToTarget);
+        }
     }
 
     public bool IsGrounded() => controller.isGrounded;
+
     public float GetCurrentSpeed() => currentSpeed;
 
     public void UpdateMovementSpeeds(float newWalkSpeed, float newRunSpeed)

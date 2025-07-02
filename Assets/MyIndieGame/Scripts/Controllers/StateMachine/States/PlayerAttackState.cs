@@ -1,19 +1,29 @@
+// File: Assets/MyIndieGame/Scripts/Controllers/StateMachine/States/PlayerAttackState.cs (ĐÃ SỬA LỖI)
+using UnityEngine;
+using System.Collections.Generic;
+
 public class PlayerAttackState : PlayerState
 {
     private int comboIndex;
     private float timer;
     private AttackData attackData;
-    private bool canCombo;
-    private bool nextAttackExists;
+    private bool isNextAttackQueued;
+    private float moveTimer;
+    private HashSet<Collider> hitColliders;
+
+    public AttackData CurrentAttackData => attackData;
+    public float TimeSinceEntered => attackData != null ? attackData.Duration - timer : 0f;
 
     public PlayerAttackState(PlayerStateMachine stateMachine, int comboIndex) : base(stateMachine)
     {
         this.comboIndex = comboIndex;
+        this.hitColliders = new HashSet<Collider>();
     }
 
     public override void Enter()
     {
         input.ConsumeAttackInput();
+        isNextAttackQueued = false;
         attackData = equipment.GetCurrentAttackData(comboIndex);
 
         if (attackData == null)
@@ -22,38 +32,103 @@ public class PlayerAttackState : PlayerState
             return;
         }
 
-        // Kiểm tra trước xem có đòn đánh tiếp theo không
-        nextAttackExists = equipment.GetCurrentAttackData(comboIndex + 1) != null;
+        if (stateMachine.Stats.CurrentStamina < attackData.staminaCost)
+        {
+            stateMachine.SwitchState(new PlayerGroundedState(stateMachine));
+            return;
+        }
+        stateMachine.Stats.ConsumeStamina(attackData.staminaCost);
+
+        // --- THAY ĐỔI QUAN TRỌNG ---
+        // Xoay người về phía mục tiêu NGAY LẬP TỨC khi bắt đầu tấn công
+        locomotion.ForceLookAtTarget(stateMachine.Targeting?.CurrentTarget);
+        // -------------------------
 
         timer = attackData.Duration;
         animator.PlayAction(attackData.AttackID);
+        moveTimer = attackData.moveDuration;
+        hitColliders.Clear();
     }
 
     public override void Tick(float deltaTime)
     {
-        timer -= deltaTime;
-
-        if (timer <= attackData.ComboWindowStartTime)
+        if (input.DashInput)
         {
-            canCombo = true;
-        }
-
-        if (canCombo && input.AttackInput)
-        {
-            // Chỉ chuyển sang đòn tiếp theo NẾU nó tồn tại
-            if (nextAttackExists)
-            {
-                stateMachine.SwitchState(new PlayerAttackState(stateMachine, comboIndex + 1));
-            }
-            // Nếu không có đòn tiếp theo, ta có thể chọn không làm gì,
-            // hoặc bắt đầu lại chuỗi combo từ đầu ngay lập tức
-            // Ở đây tôi chọn không làm gì và để timer chạy hết
+            stateMachine.SwitchState(new PlayerDashState(stateMachine));
             return;
         }
 
-        if (timer <= 0)
+        timer -= deltaTime;
+
+        // --- THAY ĐỔI QUAN TRỌNG ---
+        // XÓA DÒNG GỌI HandleRotation() Ở ĐÂY ĐỂ KHÓA HƯỚNG KHI ĐANG TẤN CÔNG
+        // locomotion.HandleRotation(input.MoveInput, stateMachine.Targeting?.CurrentTarget); // <-- DÒNG NÀY ĐÃ BỊ XÓA/VÔ HIỆU HÓA
+
+        HandleMovement(deltaTime);
+
+        bool isHitboxActive = TimeSinceEntered >= attackData.hitboxStartTime && TimeSinceEntered <= attackData.hitboxEndTime;
+        if (isHitboxActive)
         {
-            // Khi hết thời gian, luôn quay về GroundedState
+            HandleHitDetection();
+        }
+
+        HandleQueuing();
+
+        if (timer <= 0f)
+        {
+            PerformQueuedAttack();
+        }
+    }
+
+    private void HandleMovement(float deltaTime)
+    {
+        if (moveTimer > 0)
+        {
+            moveTimer -= deltaTime;
+            locomotion.HandleAttackMovement(attackData.moveForwardSpeed);
+        }
+    }
+
+    private void HandleHitDetection()
+    {
+        Vector3 hitboxCenter = stateMachine.transform.position + stateMachine.transform.forward * 1.0f;
+        Collider[] colliders = Physics.OverlapSphere(hitboxCenter, attackData.hitboxRadius);
+
+        foreach (var collider in colliders)
+        {
+            if (collider.transform == stateMachine.transform || hitColliders.Contains(collider)) continue;
+
+            if (collider.TryGetComponent<Health>(out Health targetHealth))
+            {
+                hitColliders.Add(collider);
+                float baseDamage = stateMachine.Stats.GetStatValue(StatType.PhysicalDamageBonus);
+                float finalDamage = baseDamage * attackData.damageMultiplier;
+                Vector3 hitPoint = collider.ClosestPoint(stateMachine.transform.position);
+                targetHealth.TakeDamage(finalDamage, hitPoint);
+            }
+        }
+    }
+
+    private void HandleQueuing()
+    {
+        if (input.AttackInput && !isNextAttackQueued)
+        {
+            input.ConsumeAttackInput();
+            if (equipment.GetCurrentAttackData(comboIndex + 1) != null)
+            {
+                isNextAttackQueued = true;
+            }
+        }
+    }
+
+    private void PerformQueuedAttack()
+    {
+        if (isNextAttackQueued)
+        {
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine, comboIndex + 1));
+        }
+        else
+        {
             stateMachine.SwitchState(new PlayerGroundedState(stateMachine));
         }
     }

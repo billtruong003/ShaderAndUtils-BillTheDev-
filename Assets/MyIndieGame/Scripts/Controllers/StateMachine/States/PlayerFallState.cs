@@ -1,3 +1,5 @@
+// File: Assets/MyIndieGame/Scripts/Controllers/StateMachine/States/PlayerFallState.cs
+
 public class PlayerFallState : PlayerState
 {
     public PlayerFallState(PlayerStateMachine stateMachine) : base(stateMachine) { }
@@ -5,21 +7,23 @@ public class PlayerFallState : PlayerState
     public override void Enter()
     {
         animator.PlayTargetAnimation("Fall");
+        animator.UpdateMoveSpeed(0);
     }
 
     public override void Tick(float deltaTime)
     {
-        // Cho phép dash khi đang rơi
         if (input.DashInput)
         {
             stateMachine.SwitchState(new PlayerDashState(stateMachine));
             return;
         }
 
-        locomotion.HandleAirborneMovement();
+        locomotion.HandleAirborneMovement(input.MoveInput, stateMachine.Targeting?.CurrentTarget);
         if (locomotion.IsGrounded())
         {
             stateMachine.SwitchState(new PlayerGroundedState(stateMachine));
         }
     }
+
+    public override void Exit() { }
 }

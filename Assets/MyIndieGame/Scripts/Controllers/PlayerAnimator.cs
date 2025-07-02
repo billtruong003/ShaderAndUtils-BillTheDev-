@@ -34,7 +34,7 @@ public class PlayerAnimator : MonoBehaviour
 
     public void PlayAction(int actionID)
     {
-        animator.SetInteger("ActionID", actionID);
+        animator.SetFloat("ActionID", actionID);
         animator.SetTrigger("PlayAction");
     }
 
