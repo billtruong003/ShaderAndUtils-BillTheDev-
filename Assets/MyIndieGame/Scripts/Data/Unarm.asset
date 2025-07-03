@@ -12,40 +12,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aedc12001e464469904596d8ea766c9, type: 3}
   m_Name: Unarm
   m_EditorClassIdentifier: 
+  weaponName: UnArm
+  WeaponModelPrefab: {fileID: 0}
   WeaponTypeID: 0
   AnimatorOverride: {fileID: 22100000, guid: c16ea65f918bb4ed7b1af39c9d42faba, type: 2}
+  baseDamage: 10
+  BaseModifiers: []
   AttackCombo:
   - AttackID: 1
     AnimationClip: {fileID: 7400000, guid: 614890ea888988848aef7332532aaf68, type: 2}
     Duration: 0.33333334
     ComboWindowStartTime: 1
-    moveForwardSpeed: 1
+    moveForwardSpeed: 0
     moveDuration: 0.25
+    attackingPart: 2
     hitboxStartTime: 0.1
     hitboxEndTime: 0.5
-    hitboxRadius: 0.5
     damageMultiplier: 1
+    poiseDamage: 10
     staminaCost: 0
   - AttackID: 2
     AnimationClip: {fileID: -2185066307609389148, guid: 8176fe6872f8e6a4ebfdacb646a6a79f, type: 3}
     Duration: 0.40000004
     ComboWindowStartTime: 1
-    moveForwardSpeed: 1
+    moveForwardSpeed: 0
     moveDuration: 0.25
+    attackingPart: 1
     hitboxStartTime: 0.1
     hitboxEndTime: 0.5
-    hitboxRadius: 0.5
     damageMultiplier: 1
+    poiseDamage: 10
     staminaCost: 0
   - AttackID: 3
     AnimationClip: {fileID: 7400000, guid: 03c26b248b2584344b0b71fdce2d3168, type: 2}
     Duration: 0.7333335
     ComboWindowStartTime: 1
-    moveForwardSpeed: 1
+    moveForwardSpeed: 0
     moveDuration: 0.25
+    attackingPart: 3
     hitboxStartTime: 0.1
     hitboxEndTime: 0.5
-    hitboxRadius: 0.5
     damageMultiplier: 1
+    poiseDamage: 10
     staminaCost: 0
-  BaseModifiers: []
+  castRadius: 0.2

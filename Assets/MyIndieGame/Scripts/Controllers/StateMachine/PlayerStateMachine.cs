@@ -1,3 +1,4 @@
+// File: PlayerStateMachine.cs (Đã sửa lỗi Gizmos)
 using UnityEngine;
 
 public class PlayerStateMachine : MonoBehaviour
@@ -7,15 +8,13 @@ public class PlayerStateMachine : MonoBehaviour
     [field: SerializeField] public PlayerAnimator Animator { get; private set; }
     [field: SerializeField] public StatController Stats { get; private set; }
     [field: SerializeField] public EquipmentManager Equipment { get; private set; }
-
-    // --- THUỘC TÍNH TARGETING ĐƯỢC THÊM VÀO ĐÂY ---
-    // Nhớ tạo và kéo component TargetingController vào ô này trong Inspector
     [field: SerializeField] public TargetingController Targeting { get; private set; }
 
     [Header("State Parameters")]
     public float jumpHeight = 1.5f;
 
-    private PlayerState currentState;
+    // --- THAY ĐỔI: Biến này giờ là public để các state con có thể đọc, nhưng chỉ StateMachine có thể ghi ---
+    public PlayerState CurrentState { get; private set; }
 
     void Start()
     {
@@ -24,58 +23,67 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Update()
     {
-        // Xử lý Target Input trước khi Tick State
         if (InputHandler.TargetInput && Targeting != null)
         {
             InputHandler.ConsumeTargetInput();
             Targeting.HandleTargeting();
         }
 
-        currentState?.Tick(Time.deltaTime);
-
-        // Gọi validate mỗi frame để tự động hủy target nếu mục tiêu chết hoặc ngoài tầm
+        CurrentState?.Tick(Time.deltaTime);
         Targeting?.ValidateTarget();
-
         Animator.SetGrounded(Locomotion.IsGrounded());
     }
 
     public void SwitchState(PlayerState newState)
     {
-        currentState?.Exit();
-        currentState = newState;
-        currentState?.Enter();
+        CurrentState?.Exit();
+        CurrentState = newState;
+        CurrentState?.Enter();
     }
-
+    
+    // --- ON DRAW GIZMOS ĐÃ ĐƯỢC CẬP NHẬT HOÀN CHỈNH ---
     private void OnDrawGizmos()
     {
-        if (Application.isPlaying == false) return;
+        if (!Application.isPlaying) return;
 
-        // --- GIZMOS CHO ATTACK STATE ---
-        if (currentState is PlayerAttackState attackState)
+        // Vẽ Gizmos cho Targeting
+        if (Targeting != null)
         {
-            AttackData attackData = attackState.CurrentAttackData;
-            if (attackData != null)
-            {
-                Vector3 hitboxCenter = transform.position + transform.forward * 1.0f;
-                bool isHitboxActive = attackState.TimeSinceEntered >= attackData.hitboxStartTime &&
-                                      attackState.TimeSinceEntered <= attackData.hitboxEndTime;
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position + Vector3.up, transform.position + Vector3.up + transform.forward * 2f);
 
-                Gizmos.color = isHitboxActive ? new Color(1f, 0f, 0f, 0.5f) : new Color(1f, 1f, 0f, 0.2f);
-                Gizmos.DrawSphere(hitboxCenter, attackData.hitboxRadius);
+            if (Targeting.CurrentTarget != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position + Vector3.up, Targeting.CurrentTarget.position);
+                Gizmos.DrawWireSphere(Targeting.CurrentTarget.position, 1f);
             }
         }
-
-        // --- GIZMOS CHO TARGETING (LUÔN HIỂN THỊ) ---
-        // Vẽ hướng nhân vật đang nhìn (để so sánh)
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, transform.position + transform.forward * 2f);
-
-        // Nếu có mục tiêu, vẽ một đường thẳng tới nó
-        if (Targeting != null && Targeting.CurrentTarget != null)
+        
+        // Vẽ Gizmos cho SphereCast của đòn tấn công hiện tại
+        if (CurrentState is PlayerAttackState attackState)
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, Targeting.CurrentTarget.position);
-            Gizmos.DrawWireSphere(Targeting.CurrentTarget.position, 1f);
+            if (Equipment.CurrentWeapon == null) return;
+
+            // Lấy dữ liệu từ AttackState
+            bool isActive = attackState.IsAttackWindowActive();
+            var activePoints = attackState.GetActiveCastPoints();
+
+            // Chọn màu: Đỏ khi active, Cyan khi không
+            Gizmos.color = isActive ? new Color(1, 0, 0, 0.5f) : new Color(0, 1, 1, 0.5f);
+            
+            float radius = Equipment.CurrentWeapon.castRadius;
+
+            if (activePoints != null)
+            {
+                foreach (var point in activePoints)
+                {
+                    if (point != null)
+                    {
+                        Gizmos.DrawSphere(point.position, radius);
+                    }
+                }
+            }
         }
     }
 }

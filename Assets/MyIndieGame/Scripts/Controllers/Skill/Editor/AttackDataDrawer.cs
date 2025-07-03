@@ -1,4 +1,4 @@
-// File: Assets/Editor/AttackDataDrawer.cs (Phiên bản đã sửa)
+// File: Assets/MyIndieGame/Scripts/Controllers/Skill/Editor/AttackDataDrawer.cs
 
 #if UNITY_EDITOR
 using UnityEngine;
@@ -9,102 +9,139 @@ using System.Collections.Generic;
 [CustomPropertyDrawer(typeof(AttackData))]
 public class AttackDataDrawer : PropertyDrawer
 {
+    private static readonly Dictionary<string, bool> foldoutStates = new Dictionary<string, bool>();
+
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
-        EditorGUI.LabelField(position, label);
-        var currentRect = new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing, position.width, EditorGUIUtility.singleLineHeight);
-        EditorGUI.indentLevel++;
+        
+        string propertyPath = property.propertyPath;
+        foldoutStates.TryGetValue(propertyPath, out bool isExpanded);
+        
+        var foldoutRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
+        isExpanded = EditorGUI.Foldout(foldoutRect, isExpanded, label, true);
+        foldoutStates[propertyPath] = isExpanded;
 
-        void DrawField(string propertyName, bool includeChildren = true)
+        float currentY = position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+
+        if (isExpanded)
         {
-            var prop = property.FindPropertyRelative(propertyName);
-            EditorGUI.PropertyField(currentRect, prop, includeChildren);
-            currentRect.y += EditorGUI.GetPropertyHeight(prop, includeChildren) + EditorGUIUtility.standardVerticalSpacing;
-        }
-
-        // Animation & Timing
-        DrawField("AttackID");
-        DrawField("AnimationClip");
-        DrawField("Duration");
-        DrawField("ComboWindowStartTime");
-
-        // Movement During Attack
-        DrawField("moveForwardSpeed");
-        DrawField("moveDuration");
-
-        // --- CÁC DÒNG MỚI THÊM VÀO ---
-        // Hitbox & Damage (Header sẽ được vẽ tự động)
-        DrawField("hitboxStartTime");
-        DrawField("hitboxEndTime");
-        DrawField("hitboxRadius");
-        DrawField("damageMultiplier");
-        DrawField("staminaCost");
-        // --- KẾT THÚC PHẦN MỚI ---
-
-        var animClipProp = property.FindPropertyRelative("AnimationClip");
-        var animClip = animClipProp.objectReferenceValue as AnimationClip;
-        if (animClip != null)
-        {
-            var buttonWidth = (currentRect.width / 2) - 5;
-            var button1Rect = new Rect(currentRect.x, currentRect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-            var button2Rect = new Rect(currentRect.x + buttonWidth + 10, currentRect.y, buttonWidth, EditorGUIUtility.singleLineHeight);
-            if (GUI.Button(button1Rect, "Set Duration"))
+            EditorGUI.indentLevel++;
+            
+            void DrawField(string propertyName, bool includeChildren = true)
             {
-                property.FindPropertyRelative("Duration").floatValue = animClip.length;
+                var prop = property.FindPropertyRelative(propertyName);
+                if (prop == null) 
+                {
+                    Debug.LogWarning($"Could not find property: {propertyName}");
+                    return;
+                }
+                var propHeight = EditorGUI.GetPropertyHeight(prop, includeChildren);
+                var propRect = new Rect(position.x, currentY, position.width, propHeight);
+                EditorGUI.PropertyField(propRect, prop, includeChildren);
+                currentY += propHeight + EditorGUIUtility.standardVerticalSpacing;
             }
-            if (GUI.Button(button2Rect, "Detect Movement"))
-            {
-                DetectAndApplyMovement_ThresholdBased(animClip, property);
-            }
-        }
+            
+            // Vẽ các trường theo đúng thứ tự trong AttackData.cs
+            
+            // Animation & Timing
+            DrawField("AttackID");
+            DrawField("AnimationClip");
+            DrawField("Duration");
+            DrawField("ComboWindowStartTime");
 
-        EditorGUI.indentLevel--;
+            // Movement
+            DrawField("moveForwardSpeed");
+            DrawField("moveDuration");
+            
+            // Hit Detection & Damage
+            // --- THÊM LẠI TRƯỜNG "attackingPart" VÀO ĐÚNG VỊ TRÍ ---
+            DrawField("attackingPart");
+            DrawField("hitboxStartTime");
+            DrawField("hitboxEndTime");
+            DrawField("damageMultiplier");
+            DrawField("poiseDamage");
+            DrawField("staminaCost");
+            
+            // Các nút tiện ích
+            var animClipProp = property.FindPropertyRelative("AnimationClip");
+            var animClip = animClipProp.objectReferenceValue as AnimationClip;
+            if (animClip != null)
+            {
+                currentY += EditorGUIUtility.standardVerticalSpacing;
+                var buttonsRect = new Rect(position.x, currentY, position.width, EditorGUIUtility.singleLineHeight);
+                var buttonWidth = EditorGUIUtility.labelWidth + (buttonsRect.width - EditorGUIUtility.labelWidth) / 2 - 2;
+                
+                using (new EditorGUI.DisabledScope(false))
+                {
+                    var button1Rect = new Rect(buttonsRect.x + EditorGUIUtility.labelWidth - EditorGUI.indentLevel * 15, buttonsRect.y, buttonWidth, buttonsRect.height);
+                    var button2Rect = new Rect(button1Rect.xMax + 4, buttonsRect.y, buttonWidth, buttonsRect.height);
+
+                    if (GUI.Button(button1Rect, "Set Duration from Clip"))
+                    {
+                        property.FindPropertyRelative("Duration").floatValue = animClip.length;
+                    }
+                    if (GUI.Button(button2Rect, "Detect Movement from Clip"))
+                    {
+                        DetectAndApplyMovement_ThresholdBased(animClip, property);
+                    }
+                }
+            }
+
+            EditorGUI.indentLevel--;
+        }
+        
         property.serializedObject.ApplyModifiedProperties();
         EditorGUI.EndProperty();
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        float totalHeight = EditorGUIUtility.singleLineHeight;
+        string propertyPath = property.propertyPath;
+        foldoutStates.TryGetValue(propertyPath, out bool isExpanded);
+        
+        float totalHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
-        void AddPropHeight(string propName)
+        if (isExpanded)
         {
-            totalHeight += EditorGUI.GetPropertyHeight(property.FindPropertyRelative(propName), true) + EditorGUIUtility.standardVerticalSpacing;
+            void AddPropHeight(string propName)
+            {
+                var prop = property.FindPropertyRelative(propName);
+                if (prop != null)
+                {
+                    totalHeight += EditorGUI.GetPropertyHeight(prop, true) + EditorGUIUtility.standardVerticalSpacing;
+                }
+            }
+            
+            // Tính toán chiều cao cho tất cả các trường
+            AddPropHeight("AttackID");
+            AddPropHeight("AnimationClip");
+            AddPropHeight("Duration");
+            AddPropHeight("ComboWindowStartTime");
+            AddPropHeight("moveForwardSpeed");
+            AddPropHeight("moveDuration");
+
+            // --- THÊM LẠI TRƯỜNG "attackingPart" VÀO TÍNH TOÁN ---
+            AddPropHeight("attackingPart");
+            AddPropHeight("hitboxStartTime");
+            AddPropHeight("hitboxEndTime");
+            AddPropHeight("damageMultiplier");
+            AddPropHeight("poiseDamage");
+            AddPropHeight("staminaCost");
+
+            if (property.FindPropertyRelative("AnimationClip").objectReferenceValue != null)
+            {
+                totalHeight += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2;
+            }
         }
 
-        AddPropHeight("AttackID");
-        AddPropHeight("AnimationClip");
-        AddPropHeight("Duration");
-        AddPropHeight("ComboWindowStartTime");
-        AddPropHeight("moveForwardSpeed");
-        AddPropHeight("moveDuration");
-
-        // --- CÁC DÒNG MỚI THÊM VÀO ---
-        AddPropHeight("hitboxStartTime");
-        AddPropHeight("hitboxEndTime");
-        AddPropHeight("hitboxRadius");
-        AddPropHeight("damageMultiplier");
-        AddPropHeight("staminaCost");
-        // --- KẾT THÚC PHẦN MỚI ---
-
-        if (property.FindPropertyRelative("AnimationClip").objectReferenceValue != null)
-        {
-            totalHeight += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-        }
         return totalHeight;
     }
 
-
-    /// <summary>
-    /// PHIÊN BẢN CẢI TIẾN: Logic phân tích chuyển động dựa trên "Ngưỡng Trạng Thái".
-    /// Tìm khoảng thời gian đầu tiên và cuối cùng mà vận tốc vượt qua một ngưỡng cố định.
-    /// </summary>
+    // Các hàm helper còn lại giữ nguyên
     private void DetectAndApplyMovement_ThresholdBased(AnimationClip clip, SerializedProperty attackDataProperty)
     {
-        // ... (Logic của hàm này giữ nguyên, không cần thay đổi) ...
         const float MOVEMENT_VELOCITY_THRESHOLD = 0.2f;
-
         var zCurve = GetZCurve(clip);
         if (zCurve == null || zCurve.keys.Length < 2)
         {
@@ -112,7 +149,6 @@ public class AttackDataDrawer : PropertyDrawer
             SetMovementProperties(attackDataProperty, 0, 0);
             return;
         }
-
         var velocities = new List<(float time, float velocity)>();
         for (int i = 0; i < zCurve.keys.Length - 1; i++)
         {
@@ -125,16 +161,13 @@ public class AttackDataDrawer : PropertyDrawer
                 velocities.Add((key1.time, velocity));
             }
         }
-
         if (velocities.Count == 0)
         {
             SetMovementProperties(attackDataProperty, 0, 0);
             return;
         }
-
         float startTime = -1f;
         float endTime = -1f;
-
         foreach (var v in velocities)
         {
             if (v.velocity > MOVEMENT_VELOCITY_THRESHOLD)
@@ -143,14 +176,12 @@ public class AttackDataDrawer : PropertyDrawer
                 break;
             }
         }
-
         if (startTime < 0)
         {
             Debug.Log($"[AttackDataDrawer] No significant movement detected for '{clip.name}' (Threshold: {MOVEMENT_VELOCITY_THRESHOLD}).");
             SetMovementProperties(attackDataProperty, 0, 0);
             return;
         }
-
         for (int i = velocities.Count - 1; i >= 0; i--)
         {
             if (velocities[i].velocity > MOVEMENT_VELOCITY_THRESHOLD)
@@ -159,18 +190,15 @@ public class AttackDataDrawer : PropertyDrawer
                 break;
             }
         }
-
         if (endTime <= startTime)
         {
             endTime = startTime + 0.1f;
         }
-
         float moveDuration = endTime - startTime;
         float startPos = zCurve.Evaluate(startTime);
         float endPos = zCurve.Evaluate(endTime);
         float moveDistance = endPos - startPos;
         float averageSpeed = (moveDuration > 0) ? moveDistance / moveDuration : 0;
-
         Debug.Log($"[AttackDataDrawer] Detected movement for '{clip.name}': Speed={averageSpeed:F2}, Duration={moveDuration:F2} (From {startTime:F2}s to {endTime:F2}s)");
         SetMovementProperties(attackDataProperty, averageSpeed, moveDuration);
     }

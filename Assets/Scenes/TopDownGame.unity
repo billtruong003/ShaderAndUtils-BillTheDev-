@@ -572,7 +572,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.19945362, g: 0.4245283, b: 0.09812211, a: 1}
   m_FlipX: 0
@@ -1670,7 +1670,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.19945362, g: 0.4245283, b: 0.09812211, a: 1}
   m_FlipX: 0
@@ -3758,7 +3758,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &240690831
 MonoBehaviour:
@@ -3942,7 +3942,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5263,7 +5263,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &411266270
 MonoBehaviour:
@@ -14839,6 +14839,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6022952361195027866, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1449856791}
+    - targetCorrespondingSourceObject: {fileID: 6022952361195027866, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1449856793}
     - targetCorrespondingSourceObject: {fileID: 2269581941872730070, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1166656743}
@@ -14848,6 +14851,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2269581941872730070, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1166656744}
+    - targetCorrespondingSourceObject: {fileID: 2269581941872730070, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1166656746}
     - targetCorrespondingSourceObject: {fileID: 5475374546534998815, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2140033516}
@@ -14857,6 +14863,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5475374546534998815, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2140033517}
+    - targetCorrespondingSourceObject: {fileID: 5475374546534998815, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2140033519}
   m_SourcePrefab: {fileID: 100100000, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
 --- !u!1 &1060585366
 GameObject:
@@ -15279,6 +15288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDatabase: {fileID: 11400000, guid: 454fddc3b152d074db54b6051cd15262, type: 2}
+  equipmentManager: {fileID: 1079316215}
   initialSlots: 20
   maxSlots: 50
 --- !u!114 &1079316210
@@ -15384,7 +15394,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerAnimator: {fileID: 1079316213}
   animator: {fileID: 1656046429}
+  weaponMountPoint: {fileID: 1024964879}
   unarmedWeaponData: {fileID: 11400000, guid: 6a81b20d0320ec24fb4bbd6e6f8fd7e8, type: 2}
+  unarmedCastPointMappings:
+  - bodyPart: 1
+    castPoint: {fileID: 1677496078}
+  - bodyPart: 2
+    castPoint: {fileID: 1677496082}
+  - bodyPart: 3
+    castPoint: {fileID: 1677496090}
+  - bodyPart: 4
+    castPoint: {fileID: 1677496094}
 --- !u!114 &1079316216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15402,7 +15422,7 @@ MonoBehaviour:
   <Animator>k__BackingField: {fileID: 1079316213}
   <Stats>k__BackingField: {fileID: 1079316210}
   <Equipment>k__BackingField: {fileID: 1079316215}
-  <Targeting>k__BackingField: {fileID: 0}
+  <Targeting>k__BackingField: {fileID: 1079316217}
   jumpHeight: 1.5
 --- !u!114 &1079316217
 MonoBehaviour:
@@ -15417,9 +15437,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetingRange: 15
+  targetingAngle: 90
   enemyLayer:
     serializedVersion: 2
     m_Bits: 8
+  targetReticlePrefab: {fileID: 0}
 --- !u!1 &1079995759
 GameObject:
   m_ObjectHideFlags: 0
@@ -16598,6 +16620,33 @@ CapsuleCollider:
   m_Height: 1.0292541
   m_Direction: 1
   m_Center: {x: 0.00000014901161, y: 0.51462704, z: 0.000000059604645}
+--- !u!54 &1166656746
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166656738}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1167552794
 GameObject:
   m_ObjectHideFlags: 0
@@ -20190,6 +20239,33 @@ CapsuleCollider:
   m_Height: 1.5300463
   m_Direction: 1
   m_Center: {x: 0.00000014901161, y: 0.7650232, z: 0.000000029802322}
+--- !u!54 &1449856793
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1449856785}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1457682162
 GameObject:
   m_ObjectHideFlags: 0
@@ -20648,7 +20724,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -30751,6 +30827,33 @@ CapsuleCollider:
   m_Height: 1.449184
   m_Direction: 1
   m_Center: {x: 0.000000029802322, y: 0.724592, z: 0.000000059604645}
+--- !u!54 &2140033519
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140033511}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2140800654
 GameObject:
   m_ObjectHideFlags: 0

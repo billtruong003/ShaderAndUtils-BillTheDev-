@@ -326,6 +326,26 @@ public class StatController : SerializedMonoBehaviour
     }
     #endregion
 
+    #region Vital Restoration
+    public void RestoreHealth(float amount)
+    {
+        CurrentHealth = Mathf.Min(CurrentHealth + amount, GetStatValue(StatType.MaxHealth));
+        OnHealthChanged?.Invoke(CurrentHealth, GetStatValue(StatType.MaxHealth));
+    }
+
+    public void RestoreMana(float amount)
+    {
+        CurrentMana = Mathf.Min(CurrentMana + amount, GetStatValue(StatType.MaxMana));
+        OnManaChanged?.Invoke(CurrentMana, GetStatValue(StatType.MaxMana));
+    }
+
+    public void RestoreStamina(float amount)
+    {
+        CurrentStamina = Mathf.Min(CurrentStamina + amount, GetStatValue(StatType.MaxStamina));
+        OnStaminaChanged?.Invoke(CurrentStamina, GetStatValue(StatType.MaxStamina));
+    }
+    #endregion
+
     public bool ConsumeStamina(float amount)
     {
         if (CurrentStamina >= amount)
