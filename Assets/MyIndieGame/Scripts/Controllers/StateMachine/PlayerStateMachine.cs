@@ -13,7 +13,6 @@ public class PlayerStateMachine : MonoBehaviour
     [Header("State Parameters")]
     public float jumpHeight = 1.5f;
 
-    // --- THAY ĐỔI: Biến này giờ là public để các state con có thể đọc, nhưng chỉ StateMachine có thể ghi ---
     public PlayerState CurrentState { get; private set; }
 
     void Start()
@@ -40,7 +39,7 @@ public class PlayerStateMachine : MonoBehaviour
         CurrentState = newState;
         CurrentState?.Enter();
     }
-    
+
     // --- ON DRAW GIZMOS ĐÃ ĐƯỢC CẬP NHẬT HOÀN CHỈNH ---
     private void OnDrawGizmos()
     {
@@ -59,7 +58,7 @@ public class PlayerStateMachine : MonoBehaviour
                 Gizmos.DrawWireSphere(Targeting.CurrentTarget.position, 1f);
             }
         }
-        
+
         // Vẽ Gizmos cho SphereCast của đòn tấn công hiện tại
         if (CurrentState is PlayerAttackState attackState)
         {
@@ -68,10 +67,8 @@ public class PlayerStateMachine : MonoBehaviour
             // Lấy dữ liệu từ AttackState
             bool isActive = attackState.IsAttackWindowActive();
             var activePoints = attackState.GetActiveCastPoints();
-
-            // Chọn màu: Đỏ khi active, Cyan khi không
             Gizmos.color = isActive ? new Color(1, 0, 0, 0.5f) : new Color(0, 1, 1, 0.5f);
-            
+
             float radius = Equipment.CurrentWeapon.castRadius;
 
             if (activePoints != null)

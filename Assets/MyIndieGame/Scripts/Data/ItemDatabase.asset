@@ -12,24 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3390056977ab63f4cb07167b16fb2e5c, type: 3}
   m_Name: ItemDatabase
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: itemTypeToCreate
+      Entry: 6
+      Data: 
   allItems:
-  - ItemID: POT_HP_01
-    Name: Health Potion
-    Description: 
-    Icon: {fileID: 21300000, guid: fdafaa6829703bc44a131efa68c8ba13, type: 3}
-    Type: 1
-    MaxStack: 99
-    Modifiers: []
-  - ItemID: SWD_WD_01
-    Name: Wooden Sword
-    Description: 
-    Icon: {fileID: 21300000, guid: f7add634a0356854fb9366a15d50a535, type: 3}
-    Type: 0
-    MaxStack: 1
-    Modifiers:
-    - TargetStat: 0
-      Value: 2
-      Type: 0
-    - TargetStat: 0
-      Value: 0
-      Type: 0
+  - {fileID: 11400000, guid: 0895298591116472b9182da7b7b9a28e, type: 2}
+  - {fileID: 11400000, guid: 68cef02343334497abc4060fbdc78771, type: 2}

@@ -5,7 +5,7 @@ public enum ItemType { Equipment, Consumable, Material, Quest }
 
 // Dùng [System.Serializable] để nó có thể hiển thị trong Inspector của ItemDatabase
 [System.Serializable]
-public class ItemDefinition
+public class ItemDefinition : ScriptableObject
 {
     [Header("General Info")]
     public string ItemID; // Mã định danh duy nhất, ví dụ: "SWD_001", "POT_002"
@@ -15,15 +15,12 @@ public class ItemDefinition
     public ItemType Type;
 
     [Header("Stacking")]
-    public int MaxStack = 1; // Mặc định là 1 cho trang bị
+    public int MaxStack = 1;
 
     [Header("Stats & Effects (Chỉ dùng cho Equipment/Consumable)")]
-    // Tích hợp với hệ thống chỉ số đã xây dựng
     public EquipmentModifier[] Modifiers;
-    // Thêm các trường khác nếu cần, ví dụ: Prefab model, hiệu ứng sử dụng...
 }
 
-// Struct này đã được định nghĩa ở phần trước, dùng để sửa đổi chỉ số
 [System.Serializable]
 public struct EquipmentModifier
 {

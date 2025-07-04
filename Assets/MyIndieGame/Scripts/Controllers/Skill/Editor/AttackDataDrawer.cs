@@ -1,4 +1,5 @@
 // File: Assets/MyIndieGame/Scripts/Controllers/Skill/Editor/AttackDataDrawer.cs
+// (PHIÊN BẢN ĐÃ SỬA LỖI HOÀN CHỈNH)
 
 #if UNITY_EDITOR
 using UnityEngine;
@@ -9,31 +10,41 @@ using System.Collections.Generic;
 [CustomPropertyDrawer(typeof(AttackData))]
 public class AttackDataDrawer : PropertyDrawer
 {
+    // Dùng Dictionary để lưu trạng thái foldout cho từng thuộc tính riêng biệt
     private static readonly Dictionary<string, bool> foldoutStates = new Dictionary<string, bool>();
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
-        
+
         string propertyPath = property.propertyPath;
         foldoutStates.TryGetValue(propertyPath, out bool isExpanded);
-        
+
+        // Tạo label có thể gập lại (foldout)
         var foldoutRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
-        isExpanded = EditorGUI.Foldout(foldoutRect, isExpanded, label, true);
+
+        // Gán lại tên cho label để hiển thị thông tin hữu ích
+        var animClipProp = property.FindPropertyRelative("AnimationClip");
+        var animClip = animClipProp.objectReferenceValue as AnimationClip;
+        string foldoutLabel = animClip != null ? $"{label.text} ({animClip.name})" : label.text;
+
+        isExpanded = EditorGUI.Foldout(foldoutRect, isExpanded, foldoutLabel, true);
         foldoutStates[propertyPath] = isExpanded;
 
+        // Bắt đầu vẽ các trường con nếu foldout được mở
         float currentY = position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
         if (isExpanded)
         {
             EditorGUI.indentLevel++;
-            
+
+            // Hàm helper để vẽ một trường và tự động cập nhật vị trí Y
             void DrawField(string propertyName, bool includeChildren = true)
             {
                 var prop = property.FindPropertyRelative(propertyName);
-                if (prop == null) 
+                if (prop == null)
                 {
-                    Debug.LogWarning($"Could not find property: {propertyName}");
+                    Debug.LogWarning($"[AttackDataDrawer] Could not find property: {propertyName}");
                     return;
                 }
                 var propHeight = EditorGUI.GetPropertyHeight(prop, includeChildren);
@@ -41,56 +52,51 @@ public class AttackDataDrawer : PropertyDrawer
                 EditorGUI.PropertyField(propRect, prop, includeChildren);
                 currentY += propHeight + EditorGUIUtility.standardVerticalSpacing;
             }
-            
-            // Vẽ các trường theo đúng thứ tự trong AttackData.cs
-            
-            // Animation & Timing
+
+            // === VẼ CÁC TRƯỜNG THEO ĐÚNG THỨ TỰ LOGIC ===
+
             DrawField("AttackID");
             DrawField("AnimationClip");
             DrawField("Duration");
             DrawField("ComboWindowStartTime");
 
-            // Movement
             DrawField("moveForwardSpeed");
             DrawField("moveDuration");
-            
-            // Hit Detection & Damage
-            // --- THÊM LẠI TRƯỜNG "attackingPart" VÀO ĐÚNG VỊ TRÍ ---
+
+            // --- DÒNG QUAN TRỌNG ĐÃ ĐƯỢC THÊM LẠI ---
             DrawField("attackingPart");
+
             DrawField("hitboxStartTime");
             DrawField("hitboxEndTime");
             DrawField("damageMultiplier");
             DrawField("poiseDamage");
             DrawField("staminaCost");
-            
-            // Các nút tiện ích
-            var animClipProp = property.FindPropertyRelative("AnimationClip");
-            var animClip = animClipProp.objectReferenceValue as AnimationClip;
+
+            // === CÁC NÚT TIỆN ÍCH ===
             if (animClip != null)
             {
                 currentY += EditorGUIUtility.standardVerticalSpacing;
                 var buttonsRect = new Rect(position.x, currentY, position.width, EditorGUIUtility.singleLineHeight);
-                var buttonWidth = EditorGUIUtility.labelWidth + (buttonsRect.width - EditorGUIUtility.labelWidth) / 2 - 2;
-                
-                using (new EditorGUI.DisabledScope(false))
-                {
-                    var button1Rect = new Rect(buttonsRect.x + EditorGUIUtility.labelWidth - EditorGUI.indentLevel * 15, buttonsRect.y, buttonWidth, buttonsRect.height);
-                    var button2Rect = new Rect(button1Rect.xMax + 4, buttonsRect.y, buttonWidth, buttonsRect.height);
+                // Canh lề các nút cho đẹp
+                var indentedRect = EditorGUI.IndentedRect(buttonsRect);
+                var buttonWidth = (indentedRect.width - 4) / 2;
 
-                    if (GUI.Button(button1Rect, "Set Duration from Clip"))
-                    {
-                        property.FindPropertyRelative("Duration").floatValue = animClip.length;
-                    }
-                    if (GUI.Button(button2Rect, "Detect Movement from Clip"))
-                    {
-                        DetectAndApplyMovement_ThresholdBased(animClip, property);
-                    }
+                var button1Rect = new Rect(indentedRect.x, indentedRect.y, buttonWidth, indentedRect.height);
+                var button2Rect = new Rect(button1Rect.xMax + 4, indentedRect.y, buttonWidth, indentedRect.height);
+
+                if (GUI.Button(button1Rect, "Set Duration from Clip"))
+                {
+                    property.FindPropertyRelative("Duration").floatValue = animClip.length;
+                }
+                if (GUI.Button(button2Rect, "Detect Movement from Clip"))
+                {
+                    DetectAndApplyMovement_ThresholdBased(animClip, property);
                 }
             }
 
             EditorGUI.indentLevel--;
         }
-        
+
         property.serializedObject.ApplyModifiedProperties();
         EditorGUI.EndProperty();
     }
@@ -99,11 +105,12 @@ public class AttackDataDrawer : PropertyDrawer
     {
         string propertyPath = property.propertyPath;
         foldoutStates.TryGetValue(propertyPath, out bool isExpanded);
-        
+
         float totalHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
         if (isExpanded)
         {
+            // Hàm helper để cộng dồn chiều cao của một trường
             void AddPropHeight(string propName)
             {
                 var prop = property.FindPropertyRelative(propName);
@@ -112,8 +119,8 @@ public class AttackDataDrawer : PropertyDrawer
                     totalHeight += EditorGUI.GetPropertyHeight(prop, true) + EditorGUIUtility.standardVerticalSpacing;
                 }
             }
-            
-            // Tính toán chiều cao cho tất cả các trường
+
+            // --- TÍNH TOÁN CHIỀU CAO CHO TẤT CẢ CÁC TRƯỜNG ---
             AddPropHeight("AttackID");
             AddPropHeight("AnimationClip");
             AddPropHeight("Duration");
@@ -121,14 +128,16 @@ public class AttackDataDrawer : PropertyDrawer
             AddPropHeight("moveForwardSpeed");
             AddPropHeight("moveDuration");
 
-            // --- THÊM LẠI TRƯỜNG "attackingPart" VÀO TÍNH TOÁN ---
+            // --- DÒNG QUAN TRỌNG ĐÃ ĐƯỢC THÊM LẠI ---
             AddPropHeight("attackingPart");
+
             AddPropHeight("hitboxStartTime");
             AddPropHeight("hitboxEndTime");
             AddPropHeight("damageMultiplier");
             AddPropHeight("poiseDamage");
             AddPropHeight("staminaCost");
 
+            // Thêm chiều cao cho các nút tiện ích nếu có animation clip
             if (property.FindPropertyRelative("AnimationClip").objectReferenceValue != null)
             {
                 totalHeight += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing * 2;

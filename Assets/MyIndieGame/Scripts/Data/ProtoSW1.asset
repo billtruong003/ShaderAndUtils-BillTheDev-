@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16759a1c28ee0476a84ab8778bad5ab5, type: 3}
+  m_Name: ProtoSW1
+  m_EditorClassIdentifier: 
+  ItemID: SW_S
+  Name: SwordSimple
+  Description: 
+  Icon: {fileID: 21300000, guid: 20c8731ec8bfc1f4399be346e4084439, type: 3}
+  Type: 0
+  MaxStack: 1
+  Modifiers:
+  - TargetStat: 0
+    Value: 30
+    Type: 0
+  weaponData: {fileID: 11400000, guid: 37a7c2e3cac194f9bb5de151bbf00ab4, type: 2}

@@ -19,7 +19,6 @@ public class CharacterStat
             return _value;
         }
     }
-
     private bool isDirty = true;
     private float _value;
     private float lastBaseValue;
