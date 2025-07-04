@@ -1,13 +1,16 @@
 // File: Assets/MyIndieGame/Scripts/Controllers/PlayerAnimator.cs
-// Phiên bản đã cập nhật hoàn chỉnh
+// PHIÊN BẢN CÓ TÍCH HỢP LEANTWEEN
 
 using UnityEngine;
+using DentedPixel; // Thêm thư viện LeanTween
 
 public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] private Animator animator;
+    [SerializeField] private float lockOnTweenTime = 0.25f; // Thời gian chuyển đổi
 
-    // Tự động lấy Animator nếu chưa được gán
+    private int lockOnTweenId;
+
     private void Awake()
     {
         if (animator == null)
@@ -16,21 +19,41 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
-    // Cập nhật tốc độ cho Blend Tree (cả 1D và 2D)
+    // ===================================================================
+    // === HÀM MỚI: TWEEN THAM SỐ LOCK-ON ================================
+    // ===================================================================
+    public void TweenLockOnParameter(bool isLockedOn)
+    {
+        // Hủy tween cũ nếu có để tránh xung đột
+        LeanTween.cancel(gameObject, lockOnTweenId);
+
+        float targetValue = isLockedOn ? 1.0f : 0.0f;
+        float startValue = animator.GetFloat("IsLockedOn");
+
+        // Sử dụng LeanTween.value để tween tham số
+        var tween = LeanTween.value(gameObject, startValue, targetValue, lockOnTweenTime)
+            .setEase(LeanTweenType.easeOutQuad)
+            .setOnUpdate((float val) =>
+            {
+                animator.SetFloat("IsLockedOn", val);
+            });
+
+        // Lưu ID của tween để có thể hủy nó
+        lockOnTweenId = tween.id;
+    }
+    // ===================================================================
+
     public void UpdateMoveSpeed(float verticalSpeed, float horizontalSpeed)
     {
         animator.SetFloat("VerticalSpeed", verticalSpeed, 0.1f, Time.deltaTime);
         animator.SetFloat("HorizontalSpeed", horizontalSpeed, 0.1f, Time.deltaTime);
     }
 
-    // --- HÀM MỚI BẠN CẦN THÊM VÀO ---
     public void SetBool(string parameterName, bool value)
     {
         animator.SetBool(parameterName, value);
     }
-    // --- KẾT THÚC HÀM MỚI ---
-    
-    // --- CÁC HÀM TIỆN ÍCH KHÁC ---
+
     public void SetTrigger(string parameterName)
     {
         animator.SetTrigger(parameterName);
@@ -38,18 +61,13 @@ public class PlayerAnimator : MonoBehaviour
 
     public void SetGrounded(bool isGrounded)
     {
-        // Có thể thay thế bằng hàm SetBool chung
-        // animator.SetBool("IsGrounded", isGrounded);
         SetBool("IsGrounded", isGrounded);
     }
 
     public void SetWeaponDrawn(bool isDrawn)
     {
-        // animator.SetBool("IsWeaponDrawn", isDrawn);
         SetBool("IsWeaponDrawn", isDrawn);
     }
-    
-    // --- Các hàm còn lại giữ nguyên ---
 
     public void PlayTargetAnimation(string stateName, float crossFadeDuration = 0.1f)
     {
@@ -64,11 +82,9 @@ public class PlayerAnimator : MonoBehaviour
     public void PlayAction(int actionID)
     {
         animator.SetFloat("ActionID", actionID);
-        // Có thể thay bằng hàm SetTrigger chung
-        // animator.SetTrigger("PlayAction");
         SetTrigger("PlayAction");
     }
-    
+
     public void SetAttackSpeedMultiplier(float multiplier)
     {
         animator.SetFloat("AttackSpeed", multiplier);

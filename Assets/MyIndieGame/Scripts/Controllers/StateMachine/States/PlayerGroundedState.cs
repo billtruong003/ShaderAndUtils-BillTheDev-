@@ -8,7 +8,7 @@ public class PlayerGroundedState : PlayerState
     public override void Enter()
     {
         // Đảm bảo Animator ở trạng thái Tự do
-        animator.SetBool("IsLockedOn", false);
+        animator.TweenLockOnParameter(false);
     }
 
     public override void Tick(float deltaTime)

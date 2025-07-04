@@ -184,7 +184,7 @@ public class PlayerAttackState : PlayerState
         float finalDamage = totalBaseDamage * attackData.damageMultiplier;
 
         health.TakeDamage(finalDamage, hitPoint);
-        GameFeelManager.Instance?.DoHitStop(0.08f);
+        GameFeelManager.Instance?.DoHitStop(0.1f);
     }
 
     // --- LOGIC COMBO "CHUẨN" ---

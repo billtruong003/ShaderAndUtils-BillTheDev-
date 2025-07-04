@@ -9,7 +9,7 @@ public class PlayerGroundedLockState : PlayerState
     {
         // Chuyển Animator sang Blend Tree của Lock-on mode
         // Giả sử bạn có một trigger/bool trong Animator để làm việc này
-        animator.SetBool("IsLockedOn", true);
+        animator.TweenLockOnParameter(true);
     }
 
     public override void Tick(float deltaTime)
@@ -71,6 +71,6 @@ public class PlayerGroundedLockState : PlayerState
     public override void Exit()
     {
         // Tắt trạng thái Lock-on trong Animator khi thoát
-        animator.SetBool("IsLockedOn", false);
+        animator.TweenLockOnParameter(false);
     }
 }

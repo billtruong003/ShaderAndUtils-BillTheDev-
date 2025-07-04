@@ -15,31 +15,52 @@ public class TargetingController : MonoBehaviour
     [Header("UI & Input")]
     [Tooltip("Kéo UI World-Space Canvas Prefab dùng làm hồng tâm khóa mục tiêu vào đây.")]
     [SerializeField] private GameObject targetReticlePrefab;
+    // MỚI: Biến để điều chỉnh khoảng cách nhấc hồng tâm về phía camera
+    [Tooltip("Khoảng cách để nhấc hồng tâm về phía camera, tránh bị khuất hoặc Z-fighting.")]
+    [SerializeField] private float reticleCameraOffset = 0.5f;
 
     // --- Các biến nội bộ ---
     public LayerMask EnemyLayer => enemyLayer;
     public Transform CurrentTarget { get; private set; }
-    private GameObject currentTargetReticleInstance; // Instance của hồng tâm
+    private GameObject currentTargetReticleInstance;
     private List<Transform> potentialTargets = new List<Transform>();
+    private Camera mainCamera; // MỚI: Cache camera để tăng hiệu suất
 
     private void Start()
     {
         if (targetReticlePrefab != null)
         {
-            // Tạo sẵn một instance và tắt nó đi để dùng sau
             currentTargetReticleInstance = Instantiate(targetReticlePrefab);
             currentTargetReticleInstance.SetActive(false);
         }
+
+        // MỚI: Tìm và cache camera chính khi bắt đầu
+        mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            Debug.LogError("TargetingController: Không tìm thấy Camera được tag 'MainCamera'. Tính năng hồng tâm sẽ không hoạt động đúng.");
+        }
     }
 
-    // Chuyển logic cập nhật vị trí reticle sang LateUpdate để nó chạy sau khi mọi di chuyển đã hoàn tất
+    // THAY ĐỔI: Chuyển logic cập nhật vị trí reticle sang LateUpdate
     private void LateUpdate()
     {
-        if (CurrentTarget != null && currentTargetReticleInstance != null)
+        // THAY ĐỔI: Toàn bộ logic bên trong đã được cập nhật
+        if (CurrentTarget != null && currentTargetReticleInstance != null && mainCamera != null)
         {
-            // Reticle sẽ di chuyển theo mục tiêu
-            // Giả sử reticle có component để tự xoay mặt về camera (FaceCamera script)
-            currentTargetReticleInstance.transform.position = CurrentTarget.position + Vector3.up * 0.1f; // Điều chỉnh độ cao cho phù hợp
+            // 1. Vị trí gốc của hồng tâm (trên mục tiêu, có thể điều chỉnh độ cao cho phù hợp)
+            Vector3 basePosition = CurrentTarget.position + Vector3.up * 0.1f;
+
+            // 2. Tính toán hướng từ vị trí gốc của hồng tâm đến camera
+            //    Vector này đã được chuẩn hóa (độ dài = 1)
+            Vector3 directionToCamera = (mainCamera.transform.position - basePosition).normalized;
+
+            // 3. Vị trí cuối cùng: Dịch chuyển hồng tâm từ vị trí gốc một khoảng về phía camera
+            currentTargetReticleInstance.transform.position = basePosition + directionToCamera * reticleCameraOffset;
+
+            // 4. (Giữ nguyên) Giả sử reticle có component để tự xoay mặt về camera (FaceCamera script)
+            //    Nếu không, bạn có thể thêm dòng này để nó luôn nhìn vào camera:
+            //    currentTargetReticleInstance.transform.rotation = Quaternion.LookRotation(currentTargetReticleInstance.transform.position - mainCamera.transform.position);
         }
     }
 
@@ -72,7 +93,7 @@ public class TargetingController : MonoBehaviour
             int nextIndex = (currentIndex + 1) % potentialTargets.Count;
             SetTarget(potentialTargets[nextIndex]);
         }
-        else // Nếu vì lý do nào đó mục tiêu hiện tại không có trong danh sách, chỉ cần chọn mục tiêu đầu tiên
+        else
         {
             SetTarget(potentialTargets[0]);
         }
@@ -87,7 +108,6 @@ public class TargetingController : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, CurrentTarget.position);
 
-        // Hủy khóa nếu mục tiêu chết hoặc chạy quá xa
         if (!CurrentTarget.gameObject.activeInHierarchy || distance > targetingRange * 1.2f)
         {
             ClearTarget();
@@ -109,17 +129,14 @@ public class TargetingController : MonoBehaviour
 
         if (potentialTargets.Count == 0) return;
 
-        // Sắp xếp danh sách mục tiêu tiềm năng: ưu tiên góc nhỏ nhất, sau đó đến khoảng cách gần nhất
         potentialTargets = potentialTargets.OrderBy(target =>
         {
             Vector3 directionToTarget = target.position - transform.position;
             return Vector3.Angle(transform.forward, directionToTarget);
         }).ThenBy(target => Vector3.Distance(transform.position, target.position)).ToList();
 
-        // Chọn mục tiêu đầu tiên trong danh sách đã sắp xếp (gần tâm phía trước nhất)
         Transform bestTarget = potentialTargets[0];
 
-        // Kiểm tra xem mục tiêu tốt nhất có nằm trong hình nón phía trước không
         Vector3 dirToBestTarget = (bestTarget.position - transform.position).normalized;
         float angleToBestTarget = Vector3.Angle(transform.forward, dirToBestTarget);
 
@@ -127,7 +144,7 @@ public class TargetingController : MonoBehaviour
         {
             SetTarget(bestTarget);
         }
-        else // Nếu không có ai trong hình nón, chỉ cần chọn kẻ địch gần nhất
+        else
         {
             bestTarget = potentialTargets.OrderBy(t => Vector3.Distance(transform.position, t.position)).FirstOrDefault();
             if (bestTarget != null)
@@ -155,13 +172,11 @@ public class TargetingController : MonoBehaviour
         }
     }
 
-    // Optional: Vẽ Gizmos để debug trong Editor
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, targetingRange);
 
-        // Vẽ hình nón
         Vector3 forwardCone = Quaternion.Euler(0, -targetingAngle / 2, 0) * transform.forward;
         Vector3 backwardCone = Quaternion.Euler(0, targetingAngle / 2, 0) * transform.forward;
         Gizmos.color = new Color(1, 1, 0, 0.2f);
