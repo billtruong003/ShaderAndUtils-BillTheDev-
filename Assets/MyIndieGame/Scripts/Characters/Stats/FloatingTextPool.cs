@@ -1,5 +1,3 @@
-// File: Assets/MyIndieGame/Scripts/UI/FloatingTextPool.cs (Tạo file mới)
-
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -14,15 +12,8 @@ public class FloatingTextPool : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
-
+        if (Instance != null && Instance != this) Destroy(gameObject);
+        else Instance = this;
         InitializePool();
     }
 
@@ -34,24 +25,21 @@ public class FloatingTextPool : MonoBehaviour
         }
     }
 
+    public void ShowText(string text, Vector3 position, Color color)
+    {
+        if (pool.Count == 0) CreateNewTextObject();
+        FloatingText textToShow = pool.Dequeue();
+        textToShow.transform.position = position;
+        textToShow.transform.rotation = Camera.main.transform.rotation;
+        textToShow.gameObject.SetActive(true);
+        textToShow.Show(text, color, ReturnToPool);
+    }
+
     private void CreateNewTextObject()
     {
         FloatingText newText = Instantiate(floatingTextPrefab, transform);
         newText.gameObject.SetActive(false);
         pool.Enqueue(newText);
-    }
-
-    public void ShowText(string text, Vector3 position, Color color)
-    {
-        if (pool.Count == 0)
-        {
-            CreateNewTextObject();
-        }
-
-        FloatingText textToShow = pool.Dequeue();
-        textToShow.transform.position = position;
-        textToShow.gameObject.SetActive(true);
-        textToShow.Show(text, color, ReturnToPool);
     }
 
     private void ReturnToPool(FloatingText textObject)

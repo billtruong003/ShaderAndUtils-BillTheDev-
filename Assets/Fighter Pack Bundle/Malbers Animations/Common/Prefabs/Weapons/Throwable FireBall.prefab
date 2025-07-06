@@ -355,8 +355,7 @@ MonoBehaviour:
     Variable: {fileID: 0}
   m_Projectile:
     UseConstant: 1
-    ConstantValue: {fileID: 2500509063572550999, guid: 036870d00a2a8084e93b15f161bc2064,
-      type: 3}
+    ConstantValue: {fileID: 2500509063572550999, guid: 036870d00a2a8084e93b15f161bc2064, type: 3}
     Variable: {fileID: 11400000, guid: 0e938d2fa6715534d96aa7109c41dd7f, type: 2}
   m_ProjectileParent: {fileID: 4000011008835940}
   gravity:
@@ -423,6 +422,10 @@ MonoBehaviour:
     UseConstant: 1
     ConstantValue: 0
     Variable: {fileID: 0}
+  m_AfterDistance:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
   references:
     version: 2
     RefIds:
@@ -439,6 +442,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -562,6 +566,9 @@ LineRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -713,6 +720,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:

@@ -12,49 +12,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aedc12001e464469904596d8ea766c9, type: 3}
   m_Name: WPN_SimpleSword
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   weaponName: Simple Sword
-  WeaponModelPrefab: {fileID: 0}
+  WeaponModelPrefab: {fileID: 4057327886135544970, guid: 26f212eb3fe857f4581e42ca405e1886, type: 3}
   WeaponTypeID: 1
   AnimatorOverride: {fileID: 22100000, guid: c16ea65f918bb4ed7b1af39c9d42faba, type: 2}
+  EquipSocket: 0
+  SheathSocket: 2
   baseDamage: 10
-  BaseModifiers:
-  - Value: 100
-    Type: 0
+  AttackStrategyType: 0
+  castRadius: 0.3
+  projectileData: {fileID: 0}
   AttackCombo:
   - AttackID: 1
-    AnimationClip: {fileID: 7400000, guid: 614890ea888988848aef7332532aaf68, type: 2}
-    Duration: 0.33333334
+    AnimationClip: {fileID: 7400000, guid: d82669b37833c5f4db716b82428a5ad6, type: 3}
+    Duration: 0.40000004
     ComboWindowStartTime: 1
-    moveForwardSpeed: 0
+    moveForwardSpeed: 0.1
     moveDuration: 0.25
-    attackingPart: 2
+    attackingPart: 5
     hitboxStartTime: 0.1
     hitboxEndTime: 0.5
     damageMultiplier: 1
     poiseDamage: 10
     staminaCost: 0
   - AttackID: 2
-    AnimationClip: {fileID: -2185066307609389148, guid: 8176fe6872f8e6a4ebfdacb646a6a79f, type: 3}
-    Duration: 0.40000004
+    AnimationClip: {fileID: 7400000, guid: 4cc7a6346b1003244b110b3324155da7, type: 3}
+    Duration: 0.4
     ComboWindowStartTime: 1
-    moveForwardSpeed: 0
+    moveForwardSpeed: 0.1
     moveDuration: 0.25
-    attackingPart: 1
+    attackingPart: 5
     hitboxStartTime: 0.1
     hitboxEndTime: 0.5
     damageMultiplier: 1
     poiseDamage: 10
     staminaCost: 0
   - AttackID: 3
-    AnimationClip: {fileID: 7400000, guid: 03c26b248b2584344b0b71fdce2d3168, type: 2}
-    Duration: 0.7333335
+    AnimationClip: {fileID: 7400000, guid: 475796453e56ae447b098689c94bcfb5, type: 3}
+    Duration: 0.4
     ComboWindowStartTime: 1
-    moveForwardSpeed: 0
+    moveForwardSpeed: 0.1
     moveDuration: 0.25
-    attackingPart: 3
+    attackingPart: 5
     hitboxStartTime: 0.1
     hitboxEndTime: 0.5
     damageMultiplier: 1
     poiseDamage: 10
     staminaCost: 0
-  castRadius: 0.3

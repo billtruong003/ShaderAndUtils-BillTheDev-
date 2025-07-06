@@ -12,47 +12,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aedc12001e464469904596d8ea766c9, type: 3}
   m_Name: Unarm
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   weaponName: UnArm
   WeaponModelPrefab: {fileID: 0}
   WeaponTypeID: 0
-  AnimatorOverride: {fileID: 22100000, guid: c16ea65f918bb4ed7b1af39c9d42faba, type: 2}
+  AnimatorOverride: {fileID: 22100000, guid: 847bbdece7791b443844b88c3bf34912, type: 2}
+  EquipSocket: 0
+  SheathSocket: 2
   baseDamage: 10
-  BaseModifiers: []
+  AttackStrategyType: 0
+  castRadius: 0.4
+  projectileData: {fileID: 0}
   AttackCombo:
   - AttackID: 1
-    AnimationClip: {fileID: 7400000, guid: 614890ea888988848aef7332532aaf68, type: 2}
-    Duration: 0.33333334
+    AnimationClip: {fileID: 7400000, guid: 2b8a0559f50074eddaa7c22058981a4a, type: 2}
+    Duration: 0.3703704
     ComboWindowStartTime: 1
-    moveForwardSpeed: 0.4
+    moveForwardSpeed: 1
     moveDuration: 0.25
     attackingPart: 2
     hitboxStartTime: 0.1
-    hitboxEndTime: 0.5
+    hitboxEndTime: 1
     damageMultiplier: 1
     poiseDamage: 10
     staminaCost: 0
+    canLunge: 1
+    maxLungeDistance: 6
+    idealAttackRange: 0.8
+    lungeDuration: 0.2
   - AttackID: 2
-    AnimationClip: {fileID: -2185066307609389148, guid: 8176fe6872f8e6a4ebfdacb646a6a79f, type: 3}
-    Duration: 0.40000004
+    AnimationClip: {fileID: 1827226128182048838, guid: 6b63e45829f7d90418ac773f2d2c5a5d, type: 3}
+    Duration: 0.3703704
     ComboWindowStartTime: 1
-    moveForwardSpeed: 0.4
+    moveForwardSpeed: 1
     moveDuration: 0.25
     attackingPart: 1
     hitboxStartTime: 0.1
-    hitboxEndTime: 0.5
+    hitboxEndTime: 1
     damageMultiplier: 1
     poiseDamage: 10
     staminaCost: 0
+    canLunge: 1
+    maxLungeDistance: 6
+    idealAttackRange: 0.8
+    lungeDuration: 0.2
   - AttackID: 3
-    AnimationClip: {fileID: 7400000, guid: 03c26b248b2584344b0b71fdce2d3168, type: 2}
-    Duration: 0.7333335
+    AnimationClip: {fileID: -7341408176237984087, guid: 68265286f2ba419498e32ed5a2c7919a, type: 3}
+    Duration: 1.1666666
     ComboWindowStartTime: 1
-    moveForwardSpeed: 0.4
+    moveForwardSpeed: 0.2
     moveDuration: 0.25
     attackingPart: 3
     hitboxStartTime: 0.1
-    hitboxEndTime: 0.5
+    hitboxEndTime: 1
     damageMultiplier: 1
     poiseDamage: 10
     staminaCost: 0
-  castRadius: 0.2
+    canLunge: 1
+    maxLungeDistance: 6
+    idealAttackRange: 0.8
+    lungeDuration: 0.2

@@ -1,12 +1,11 @@
 // File: Assets/MyIndieGame/Scripts/Controllers/PlayerLocomotion.cs
-// PHIÊN BẢN CẢI TIẾN VẬT LÝ - GIỮ NGUYÊN 100% API GỐC
-
 using UnityEngine;
+using System; // <-- THÊM MỚI
+using System.Collections; // <-- THÊM MỚI
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerLocomotion : MonoBehaviour
 {
-    // === CÁC BIẾN GỐC CỦA BẠN ===
     [Header("Dependencies")]
     [SerializeField] private PlayerAnimator playerAnimator;
 
@@ -19,37 +18,27 @@ public class PlayerLocomotion : MonoBehaviour
     [SerializeField] private float rotationSpeed = 15f;
     [SerializeField] private float gravity = -20.0f;
 
-    // === CÁC CẢI TIẾN VỀ VẬT LÝ (THÊM VÀO) ===
     [Header("Physics & Feel Improvements")]
-    [Tooltip("Thời gian để đạt tốc độ tối đa. Tạo cảm giác quán tính.")]
     [SerializeField] private float movementSmoothTime = 0.1f;
-    [Tooltip("Tốc độ nhân vật trượt khi đứng trên dốc quá nghiêng.")]
     [SerializeField] private float slopeSlideSpeed = 8f;
-    [Tooltip("Thời gian (giây) người chơi vẫn có thể nhảy sau khi rời khỏi mặt đất.")]
     [SerializeField] private float coyoteTime = 0.15f;
+    [SerializeField] private int maxJumps = 2;
 
-    // THAY ĐỔI: Chuyển GroundCheck sang Raycast để xử lý dốc
     [Header("Ground Check Settings")]
     [SerializeField] private LayerMask groundLayer;
-    [Tooltip("Khoảng cách Raycast xuống để kiểm tra đất.")]
     [SerializeField] private float groundCheckDistance = 1.1f;
 
-    // === CÁC BIẾN NỘI BỘ ===
     private CharacterController controller;
     private Transform camTransform;
 
-    // Biến nội bộ gốc
     private Vector3 playerVelocity;
-
-    // Biến nội bộ mới cho các cải tiến
-    private Vector3 currentMoveVector;
     private Vector3 moveDampVelocity;
     private float coyoteTimeCounter;
     private bool isCurrentlyGrounded;
     private Vector3 groundNormal;
+    private int jumpsLeft;
 
-    // THAY ĐỔI: Dùng controller.velocity để lấy tốc độ thực tế, chính xác hơn
-    public float CurrentSpeed => new Vector3(controller.velocity.x, 0, controller.velocity.z).magnitude;
+    public float CurrentSpeed => new Vector3(playerVelocity.x, 0, playerVelocity.z).magnitude;
     public Vector3 PlayerVelocity => playerVelocity;
 
     void Awake()
@@ -57,22 +46,25 @@ public class PlayerLocomotion : MonoBehaviour
         controller = GetComponent<CharacterController>();
         camTransform = Camera.main.transform;
         if (playerAnimator == null) playerAnimator = GetComponent<PlayerAnimator>();
+        jumpsLeft = maxJumps;
     }
 
     void Update()
     {
-        // Chạy kiểm tra mặt đất và trọng lực mỗi frame để ổn định hơn
         PerformGroundCheck();
         HandleGravity();
     }
 
     private void PerformGroundCheck()
     {
-        // Dùng Raycast thay cho SphereCast để lấy được "groundNormal"
         if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, groundCheckDistance, groundLayer, QueryTriggerInteraction.Ignore))
         {
+            if (!isCurrentlyGrounded)
+            {
+                groundNormal = hit.normal;
+                jumpsLeft = maxJumps;
+            }
             isCurrentlyGrounded = true;
-            groundNormal = hit.normal;
             coyoteTimeCounter = coyoteTime;
         }
         else
@@ -82,128 +74,38 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
-    // GIỮ NGUYÊN API: Hàm IsGrounded() vẫn tồn tại và hoạt động đúng
     public bool IsGrounded()
     {
-        // Trả về trạng thái đã được tính toán trong PerformGroundCheck()
-        return isCurrentlyGrounded;
+        return isCurrentlyGrounded || controller.isGrounded;
     }
 
-    // GIỮ NGUYÊN API: HandleGroundedMovement
-    public void HandleGroundedMovement(Vector2 moveInput, bool isRunning, Transform target)
+    public bool PerformJump(float jumpHeight, float doubleJumpHeight, Vector2 moveInput, out bool isDoubleJump)
     {
-        // 1. Tính toán vector di chuyển mục tiêu
-        float targetMaxSpeed = isRunning ? runSpeed : walkSpeed;
-        Vector3 targetMoveVector = CalculateCameraRelativeMoveDirection(moveInput) * targetMaxSpeed;
+        isDoubleJump = false;
 
-        // 2. CẢI TIẾN: Làm mượt di chuyển để tạo quán tính
-        currentMoveVector = Vector3.SmoothDamp(currentMoveVector, targetMoveVector, ref moveDampVelocity, movementSmoothTime);
-
-        // 3. CẢI TIẾN: Xử lý trượt dốc
-        Vector3 finalMove = HandleSlopeSlide(currentMoveVector);
-
-        // 4. CẬP NHẬT ANIMATOR (Logic không đổi)
-        UpdateAnimatorParameters(moveInput, target, CalculateCameraRelativeMoveDirection(moveInput));
-
-        // 5. XOAY (Logic không đổi)
-        HandleRotation(targetMoveVector, target); // Dùng vector mục tiêu để xoay ngay cả khi đang đứng yên
-
-        // 6. CẢI TIẾN: Chỉ gọi controller.Move MỘT LẦN với tất cả các lực
-        controller.Move((finalMove + playerVelocity) * Time.deltaTime);
-    }
-
-    private Vector3 HandleSlopeSlide(Vector3 moveDirection)
-    {
-        if (!isCurrentlyGrounded) return moveDirection;
-
-        float slopeAngle = Vector3.Angle(Vector3.up, groundNormal);
-        if (slopeAngle > controller.slopeLimit)
-        {
-            Vector3 slopeSlideDirection = Vector3.ProjectOnPlane(Vector3.down, groundNormal).normalized;
-            return moveDirection + (slopeSlideDirection * slopeSlideSpeed);
-        }
-        return moveDirection;
-    }
-
-    // GIỮ NGUYÊN API: HandleAirborneMovement
-    public void HandleAirborneMovement(Vector2 moveInput, Transform target)
-    {
-        Vector3 moveDirection = CalculateCameraRelativeMoveDirection(moveInput);
-
-        // CẬP NHẬT ANIMATOR (Logic không đổi)
-        if (target != null)
-        {
-            Vector3 localMoveDirection = transform.InverseTransformDirection(moveDirection);
-            playerAnimator.UpdateMoveSpeed(localMoveDirection.z, localMoveDirection.x);
-        }
-
-        // XOAY (Logic không đổi)
-        HandleRotation(moveDirection, target);
-
-        // CẢI TIẾN: Chỉ gọi controller.Move MỘT LẦN
-        controller.Move((moveDirection * airControlSpeed + playerVelocity) * Time.deltaTime);
-    }
-
-    // GIỮ NGUYÊN API: HandleJump
-    public void HandleJump(float jumpHeight)
-    {
-        // CẢI TIẾN: Dùng coyote time thay vì IsGrounded()
         if (coyoteTimeCounter > 0f)
         {
-            coyoteTimeCounter = 0f; // Ngăn nhảy 2 lần
+            jumpsLeft = maxJumps - 1;
+            coyoteTimeCounter = 0f;
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            return true;
         }
-    }
 
-    /// <summary>
-    /// THÊM MỚI (TÙY CHỌN): Hàm để cắt ngắn cú nhảy (gọi khi thả nút nhảy).
-    /// Đây là hàm mới, không ảnh hưởng đến code cũ.
-    /// </summary>
-    public void CutJump()
-    {
-        if (playerVelocity.y > 0)
+        if (jumpsLeft > 0)
         {
-            playerVelocity.y *= 0.5f;
-        }
-    }
+            isDoubleJump = true;
+            jumpsLeft--;
 
-    // ==========================================================
-    // CÁC HÀM CÒN LẠI GIỮ NGUYÊN, KHÔNG THAY ĐỔI
-    // ==========================================================
+            Vector3 moveDirection = CalculateCameraRelativeMoveDirection(moveInput);
+            playerVelocity.x = moveDirection.x * airControlSpeed;
+            playerVelocity.z = moveDirection.z * airControlSpeed;
+            playerVelocity.y = Mathf.Sqrt(doubleJumpHeight * -2f * gravity);
 
-    private void UpdateAnimatorParameters(Vector2 moveInput, Transform target, Vector3 worldMoveDirection)
-    {
-        // Logic animation của bạn được giữ nguyên 100%
-        if (target != null)
-        {
-            Vector3 localMoveDirection = transform.InverseTransformDirection(worldMoveDirection);
-            playerAnimator.UpdateMoveSpeed(localMoveDirection.z, localMoveDirection.x);
+            HandleRotation(moveDirection, null);
+            return true;
         }
-        else
-        {
-            // Cải tiến nhỏ: dùng tốc độ đã làm mượt để animation đồng bộ với di chuyển
-            float currentPhysicalSpeed = currentMoveVector.magnitude;
-            playerAnimator.UpdateMoveSpeed(currentPhysicalSpeed, 0f);
-        }
-    }
 
-    public void HandleRotation(Vector3 moveDirection, Transform target)
-    {
-        if (target != null)
-        {
-            Vector3 directionToTarget = (target.position - transform.position).normalized;
-            directionToTarget.y = 0;
-            if (directionToTarget != Vector3.zero)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed * 2f);
-            }
-        }
-        else if (moveDirection.magnitude > 0.1f) // Thêm ngưỡng nhỏ để không bị giật khi thả tay
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-        }
+        return false;
     }
 
     private void HandleGravity()
@@ -218,6 +120,74 @@ public class PlayerLocomotion : MonoBehaviour
         }
     }
 
+    public void HandleGroundedMovement(Vector2 moveInput, bool isRunning, Transform target)
+    {
+        float targetMaxSpeed = isRunning ? runSpeed : walkSpeed;
+        Vector3 targetMoveVector = CalculateCameraRelativeMoveDirection(moveInput) * targetMaxSpeed;
+
+        Vector3 horizontalVelocity = new Vector3(playerVelocity.x, 0, playerVelocity.z);
+        horizontalVelocity = Vector3.SmoothDamp(horizontalVelocity, targetMoveVector, ref moveDampVelocity, movementSmoothTime);
+        playerVelocity.x = horizontalVelocity.x;
+        playerVelocity.z = horizontalVelocity.z;
+
+        Vector3 finalMove = HandleSlopeSlide(playerVelocity);
+
+        UpdateAnimatorParameters(moveInput, target, CalculateCameraRelativeMoveDirection(moveInput));
+        HandleRotation(targetMoveVector, target);
+        controller.Move(finalMove * Time.deltaTime);
+    }
+
+    private Vector3 HandleSlopeSlide(Vector3 currentVelocity)
+    {
+        if (!isCurrentlyGrounded) return currentVelocity;
+
+        float slopeAngle = Vector3.Angle(Vector3.up, groundNormal);
+        if (slopeAngle > controller.slopeLimit)
+        {
+            Vector3 slopeDirection = Vector3.ProjectOnPlane(new Vector3(currentVelocity.x, 0, currentVelocity.z), groundNormal);
+            Vector3 slideDirection = Vector3.ProjectOnPlane(Vector3.down, groundNormal).normalized * slopeSlideSpeed;
+            return new Vector3(slopeDirection.x + slideDirection.x, currentVelocity.y, slopeDirection.z + slideDirection.z);
+        }
+        return currentVelocity;
+    }
+
+    public void HandleAirborneMovement(Vector2 moveInput, Transform target)
+    {
+        Vector3 moveDirection = CalculateCameraRelativeMoveDirection(moveInput);
+
+        playerVelocity.x = Mathf.Lerp(playerVelocity.x, moveDirection.x * airControlSpeed, Time.deltaTime * airControlSpeed * 0.5f);
+        playerVelocity.z = Mathf.Lerp(playerVelocity.z, moveDirection.z * airControlSpeed, Time.deltaTime * airControlSpeed * 0.5f);
+
+        if (target != null)
+        {
+            Vector3 worldMoveDirection = new Vector3(playerVelocity.x, 0, playerVelocity.z);
+            Vector3 localMoveDirection = transform.InverseTransformDirection(worldMoveDirection);
+            playerAnimator.UpdateMoveSpeed(localMoveDirection.z, localMoveDirection.x);
+        }
+
+        HandleRotation(moveDirection, target);
+        controller.Move(playerVelocity * Time.deltaTime);
+    }
+
+    public void HandleRotation(Vector3 moveDirection, Transform target)
+    {
+        if (target != null)
+        {
+            Vector3 directionToTarget = (target.position - transform.position).normalized;
+            directionToTarget.y = 0;
+            if (directionToTarget != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed * 2f);
+            }
+        }
+        else if (moveDirection.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
+    }
+
     private Vector3 CalculateCameraRelativeMoveDirection(Vector2 moveInput)
     {
         Vector3 camForward = camTransform.forward;
@@ -227,9 +197,86 @@ public class PlayerLocomotion : MonoBehaviour
         return (camForward.normalized * moveInput.y + camRight.normalized * moveInput.x).normalized;
     }
 
-    public void HandleDash(float dashSpeed) { controller.Move(transform.forward * dashSpeed * Time.deltaTime); }
-    public void HandleAttackMovement(float speed) { controller.Move(transform.forward * speed * Time.deltaTime); }
-    public void ForceLookAtTarget(Transform target) { if (target == null) return; Vector3 dir = (target.position - transform.position).normalized; dir.y = 0; if (dir != Vector3.zero) transform.rotation = Quaternion.LookRotation(dir); }
-    public void ForceLookAtDirection(Vector3 direction) { direction.y = 0; if (direction != Vector3.zero) transform.rotation = Quaternion.LookRotation(direction); }
-    private void OnDrawGizmosSelected() { Gizmos.color = Color.cyan; Gizmos.DrawLine(transform.position + Vector3.up * 0.1f, transform.position + Vector3.up * 0.1f + Vector3.down * groundCheckDistance); }
+    private void UpdateAnimatorParameters(Vector2 moveInput, Transform target, Vector3 worldMoveDirection)
+    {
+        if (target != null)
+        {
+            Vector3 localMoveDirection = transform.InverseTransformDirection(worldMoveDirection);
+            playerAnimator.UpdateMoveSpeed(localMoveDirection.z, localMoveDirection.x);
+        }
+        else
+        {
+            float currentPhysicalSpeed = new Vector3(playerVelocity.x, 0, playerVelocity.z).magnitude;
+            playerAnimator.UpdateMoveSpeed(currentPhysicalSpeed, 0f);
+        }
+    }
+
+    public void HandleDash(float dashSpeed)
+    {
+        controller.Move(transform.forward * dashSpeed * Time.deltaTime);
+    }
+
+    public void HandleAttackMovement(float speed)
+    {
+        controller.Move(transform.forward * speed * Time.deltaTime);
+    }
+
+    public void ForceLookAtTarget(Transform target)
+    {
+        if (target == null) return;
+        Vector3 dir = (target.position - transform.position).normalized;
+        dir.y = 0;
+        if (dir != Vector3.zero) transform.rotation = Quaternion.LookRotation(dir);
+    }
+
+    public void ForceLookAtDirection(Vector3 direction)
+    {
+        direction.y = 0;
+        if (direction != Vector3.zero) transform.rotation = Quaternion.LookRotation(direction);
+    }
+
+    // --- THÊM MỚI: Hệ thống Lunge thông minh ---
+    public void PerformLunge(Transform target, float idealRange, float duration)
+    {
+        StartCoroutine(LungeCoroutine(target, idealRange, duration));
+    }
+    private IEnumerator LungeCoroutine(Transform target, float idealRange, float duration)
+    {
+        if (target == null || duration <= 0)
+        {
+            yield break;
+        }
+
+        Vector3 startPosition = transform.position;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            // Luôn tính toán lại vị trí đích để xử lý trường hợp mục tiêu di chuyển
+            Vector3 directionToTarget = (target.position - transform.position).normalized;
+            directionToTarget.y = 0;
+            Vector3 targetPosition = target.position - directionToTarget * idealRange;
+            targetPosition.y = transform.position.y; // Giữ nguyên độ cao của người chơi
+
+            // Xoay người về phía mục tiêu trong khi lướt
+            if (directionToTarget != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed * 3f);
+            }
+
+            // Di chuyển mượt mà
+            float progress = Mathf.SmoothStep(0, 1, timer / duration);
+            Vector3 newPosition = Vector3.Lerp(startPosition, targetPosition, progress);
+            controller.Move(newPosition - transform.position);
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        // Đảm bảo xoay mặt đúng hướng khi kết thúc
+        ForceLookAtTarget(target);
+    }
+
+    // --- KẾT THÚC THÊM MỚI ---
 }

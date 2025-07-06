@@ -8,7 +8,7 @@ public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] private Animator animator;
     [SerializeField] private float lockOnTweenTime = 0.25f; // Thời gian chuyển đổi
-
+    public Animator GetAnimator() => animator;
     private int lockOnTweenId;
 
     private void Awake()

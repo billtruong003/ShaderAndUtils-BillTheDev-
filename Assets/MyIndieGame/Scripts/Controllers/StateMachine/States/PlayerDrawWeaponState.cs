@@ -1,16 +1,14 @@
+// File: Assets/MyIndieGame/Scripts/Controllers/StateMachine/States/PlayerDrawWeaponState.cs
 public class PlayerDrawWeaponState : PlayerState
 {
-    private float drawAnimationDuration = 0.8f; // Lấy từ dữ liệu hoặc đặt cứng
+    // Cân nhắc lấy thời gian này từ animation để chính xác hơn trong tương lai
+    private float drawAnimationDuration = 0.8f;
 
     public PlayerDrawWeaponState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
-        // Báo cho EquipmentManager và Animator
         equipment.ToggleWeaponStance();
-
-        // Giả sử có 1 animation tên "DrawWeapon" trong Animator
-        // Nếu không, bạn có thể bỏ qua dòng này và chỉ dùng timer
         // animator.PlayTargetAnimation("DrawWeapon"); 
     }
 
@@ -20,8 +18,8 @@ public class PlayerDrawWeaponState : PlayerState
 
         if (drawAnimationDuration <= 0)
         {
-            // Sau khi rút vũ khí xong, ngay lập tức chuyển sang trạng thái tấn công
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
+            // SỬA LỖI Ở ĐÂY: Gọi hàm khởi tạo mới không có comboIndex
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine));
         }
     }
 
