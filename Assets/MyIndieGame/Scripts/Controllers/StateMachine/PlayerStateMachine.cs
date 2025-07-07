@@ -11,6 +11,7 @@ public class PlayerStateMachine : MonoBehaviour
     [field: SerializeField] public TargetingController Targeting { get; private set; }
     [field: SerializeField] public WeaponController WeaponController { get; private set; }
     [field: SerializeField] public PlayerParticlesController ParticlesController { get; private set; }
+    [field: SerializeField] public AfterImageController AfterImageController { get; private set; }
 
     [Header("State Parameters")]
     public float jumpHeight = 1.5f;

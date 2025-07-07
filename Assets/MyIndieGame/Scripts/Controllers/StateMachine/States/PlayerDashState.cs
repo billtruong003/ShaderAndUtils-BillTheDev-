@@ -11,11 +11,14 @@ public class PlayerDashState : PlayerState
 
     public override void Enter()
     {
+
         timer = dashDuration;
         input.ConsumeDashInput();
 
         // Giả sử có 1 animation tên "Dash" trong Animator
         animator.PlayTargetAnimation("Dash");
+        afterImageController?.Trigger();
+
     }
 
     public override void Tick(float deltaTime)

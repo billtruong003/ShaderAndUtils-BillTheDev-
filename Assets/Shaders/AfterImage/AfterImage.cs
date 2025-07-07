@@ -124,7 +124,7 @@ public class AfterImage : MonoBehaviour
         {
             if (objectPool[i].activeInHierarchy)
             {
-                currentFadeAmounts[i] -= Time.deltaTime * calculatedFadeSpeed;
+                currentFadeAmounts[i] += Time.deltaTime * calculatedFadeSpeed;
 
                 poolRenderers[i].GetPropertyBlock(propBlock);
                 propBlock.SetFloat(fadeProperty, currentFadeAmounts[i]);

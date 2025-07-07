@@ -8,6 +8,7 @@ public abstract class PlayerState
     protected readonly StatController stats;
     protected readonly EquipmentManager equipment;
     protected readonly PlayerParticlesController particles;
+    protected readonly AfterImageController afterImageController;
 
     public PlayerState(PlayerStateMachine stateMachine)
     {
@@ -18,6 +19,7 @@ public abstract class PlayerState
         this.stats = stateMachine.Stats;
         this.equipment = stateMachine.Equipment;
         this.particles = stateMachine.ParticlesController;
+        this.afterImageController = stateMachine.AfterImageController;
     }
 
     public virtual void Enter() { }
