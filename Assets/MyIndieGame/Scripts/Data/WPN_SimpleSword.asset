@@ -27,7 +27,7 @@ MonoBehaviour:
   AnimatorOverride: {fileID: 22100000, guid: c16ea65f918bb4ed7b1af39c9d42faba, type: 2}
   EquipSocket: 0
   SheathSocket: 2
-  baseDamage: 10
+  baseDamage: 30
   AttackStrategyType: 0
   castRadius: 0.3
   projectileData: {fileID: 0}
@@ -44,6 +44,10 @@ MonoBehaviour:
     damageMultiplier: 1
     poiseDamage: 10
     staminaCost: 0
+    canLunge: 1
+    maxLungeDistance: 6
+    idealAttackRange: 1.5
+    lungeDuration: 0.2
   - AttackID: 2
     AnimationClip: {fileID: 7400000, guid: 4cc7a6346b1003244b110b3324155da7, type: 3}
     Duration: 0.4
@@ -56,6 +60,10 @@ MonoBehaviour:
     damageMultiplier: 1
     poiseDamage: 10
     staminaCost: 0
+    canLunge: 1
+    maxLungeDistance: 6
+    idealAttackRange: 1.5
+    lungeDuration: 0.2
   - AttackID: 3
     AnimationClip: {fileID: 7400000, guid: 475796453e56ae447b098689c94bcfb5, type: 3}
     Duration: 0.4
@@ -68,3 +76,7 @@ MonoBehaviour:
     damageMultiplier: 1
     poiseDamage: 10
     staminaCost: 0
+    canLunge: 1
+    maxLungeDistance: 6
+    idealAttackRange: 1.5
+    lungeDuration: 0.2

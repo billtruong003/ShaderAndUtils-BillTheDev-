@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aedc12001e464469904596d8ea766c9, type: 3}
+  m_Name: WPN_SimpleStaff
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  weaponName: Simple Staff
+  WeaponModelPrefab: {fileID: 4057327886135544970, guid: 26f212eb3fe857f4581e42ca405e1886, type: 3}
+  WeaponTypeID: 1
+  AnimatorOverride: {fileID: 22100000, guid: c16ea65f918bb4ed7b1af39c9d42faba, type: 2}
+  EquipSocket: 0
+  SheathSocket: 2
+  baseDamage: 30
+  AttackStrategyType: 0
+  castRadius: 0.3
+  projectileData: {fileID: 0}
+  AttackCombo:
+  - AttackID: 1
+    AnimationClip: {fileID: 7400000, guid: d82669b37833c5f4db716b82428a5ad6, type: 3}
+    Duration: 0.40000004
+    ComboWindowStartTime: 1
+    moveForwardSpeed: 0.1
+    moveDuration: 0.25
+    attackingPart: 5
+    hitboxStartTime: 0.1
+    hitboxEndTime: 0.5
+    damageMultiplier: 1
+    poiseDamage: 10
+    staminaCost: 0
+    canLunge: 1
+    maxLungeDistance: 6
+    idealAttackRange: 1.5
+    lungeDuration: 0.2
+  - AttackID: 2
+    AnimationClip: {fileID: 7400000, guid: 4cc7a6346b1003244b110b3324155da7, type: 3}
+    Duration: 0.4
+    ComboWindowStartTime: 1
+    moveForwardSpeed: 0.1
+    moveDuration: 0.25
+    attackingPart: 5
+    hitboxStartTime: 0.1
+    hitboxEndTime: 0.5
+    damageMultiplier: 1
+    poiseDamage: 10
+    staminaCost: 0
+    canLunge: 1
+    maxLungeDistance: 6
+    idealAttackRange: 1.5
+    lungeDuration: 0.2
+  - AttackID: 3
+    AnimationClip: {fileID: 7400000, guid: 475796453e56ae447b098689c94bcfb5, type: 3}
+    Duration: 0.4
+    ComboWindowStartTime: 1
+    moveForwardSpeed: 0.1
+    moveDuration: 0.25
+    attackingPart: 5
+    hitboxStartTime: 0.1
+    hitboxEndTime: 0.5
+    damageMultiplier: 1
+    poiseDamage: 10
+    staminaCost: 0
+    canLunge: 1
+    maxLungeDistance: 6
+    idealAttackRange: 1.5
+    lungeDuration: 0.2
