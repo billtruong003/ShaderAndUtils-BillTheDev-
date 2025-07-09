@@ -9,17 +9,17 @@ public class CharacterSocketController : MonoBehaviour
     [System.Serializable]
     public class SocketMapping
     {
-        public EquipmentSlotType slotType;
+        public CharacterSocketType slotType;
         public Transform socketTransform;
     }
 
     [SerializeField]
     private List<SocketMapping> socketMappings;
-    private Dictionary<EquipmentSlotType, Transform> socketDictionary;
+    private Dictionary<CharacterSocketType, Transform> socketDictionary;
 
     void Awake()
     {
-        socketDictionary = new Dictionary<EquipmentSlotType, Transform>();
+        socketDictionary = new Dictionary<CharacterSocketType, Transform>();
         foreach (var mapping in socketMappings)
         {
             if (mapping.socketTransform != null && !socketDictionary.ContainsKey(mapping.slotType))
@@ -29,7 +29,7 @@ public class CharacterSocketController : MonoBehaviour
         }
     }
 
-    public Transform GetSocket(EquipmentSlotType slotType)
+    public Transform GetSocket(CharacterSocketType slotType)
     {
         socketDictionary.TryGetValue(slotType, out Transform socket);
         return socket;

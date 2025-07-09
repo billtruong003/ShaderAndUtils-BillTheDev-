@@ -1,20 +1,27 @@
 using UnityEngine;
-public class PlayerInteraction : MonoBehaviour
-{
-    private InventoryController inventory;
+using ModularInventory.Logic;
 
-    void Awake()
+[RequireComponent(typeof(Collider))]
+public sealed class PlayerInteraction : MonoBehaviour
+{
+    private InventoryContainer inventoryContainer;
+
+    private void Awake()
     {
-        inventory = GetComponent<InventoryController>();
+        inventoryContainer = GetComponentInParent<InventoryContainer>();
+        if (inventoryContainer == null)
+        {
+            Debug.LogError("PlayerInteraction could not find an InventoryContainer in parent GameObjects!", this);
+            enabled = false;
+        }
+        GetComponent<Collider>().isTrigger = true;
     }
 
-    // Ví dụ dùng Trigger
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        WorldItem worldItem = other.GetComponent<WorldItem>();
-        if (worldItem != null)
+        if (other.TryGetComponent<WorldItem>(out var worldItem))
         {
-            worldItem.OnInteract(inventory);
+            worldItem.OnInteract(inventoryContainer);
         }
     }
 }

@@ -15,8 +15,8 @@ public class WeaponData : SerializedScriptableObject
     public AnimatorOverrideController AnimatorOverride;
 
     [Title("Socket Configuration")]
-    public EquipmentSlotType EquipSocket = EquipmentSlotType.RightHand;
-    public EquipmentSlotType SheathSocket = EquipmentSlotType.Back_Primary;
+    public CharacterSocketType EquipSocket = CharacterSocketType.Hand_Right;
+    public CharacterSocketType SheathSocket = CharacterSocketType.Back_Primary;
 
     [Title("Core Stats")]
     public float baseDamage = 10f;

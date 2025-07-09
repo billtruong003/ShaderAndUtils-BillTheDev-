@@ -1,23 +1,23 @@
 using UnityEngine;
+using Sirenix.OdinInspector;
+using ModularInventory.Data;
+using ModularInventory.Logic;
 
-public class WorldItem : MonoBehaviour
+public sealed class WorldItem : MonoBehaviour
 {
-    [Tooltip("Mã định danh trong ItemDatabase")]
-    public string ItemID;
+    [AssetsOnly, Required]
+    public ItemDefinition Item;
+
+    [Range(1, 999)]
     public int Quantity = 1;
 
-    // Hàm này có thể được gọi bởi một script PlayerInteraction
-    public void OnInteract(InventoryController inventory)
+    public void OnInteract(InventoryContainer inventory)
     {
-        if (inventory.AddItem(ItemID, Quantity))
+        if (inventory == null || this.Item == null) return;
+
+        if (inventory.TryAddItem(this.Item, this.Quantity))
         {
-            // Nếu nhặt thành công, xóa object khỏi thế giới
             Destroy(gameObject);
-        }
-        else
-        {
-            // Có thể hiển thị thông báo "Kho đồ đã đầy!"
-            Debug.Log("Could not pick up item, inventory full.");
         }
     }
 }
