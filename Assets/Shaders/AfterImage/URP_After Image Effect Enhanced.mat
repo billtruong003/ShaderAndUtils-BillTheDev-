@@ -29,23 +29,23 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: 5766ecf8a393d4a97b3b30dccf32b971, type: 3}
+        m_Texture: {fileID: 2800000, guid: da6bd667b340e477794044afc531c33b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Cull: 2
-    - _DissolveEdgeWidth: 0.1
+    - _DissolveEdgeWidth: 0.184
     - _DistortionStrength: 0.05
     - _EnableDistortion: 1
-    - _Fade: 0.348
-    - _RimIntensity: 5.41
-    - _RimPower: 68.4
-    - _RimPulseSpeed: 7.9
+    - _Fade: 0.08
+    - _RimIntensity: 4.16
+    - _RimPower: 15.3
+    - _RimPulseSpeed: 15.4
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DissolveEdgeColor: {r: 2.9960787, g: 0, b: 0, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _DissolveEdgeColor: {r: 0.0933614, g: 0.0933614, b: 0.0933614, a: 1}
     - _NoiseScrollSpeed: {r: 0.1, g: 0.1, b: 0, a: 0.1}
-    - _RimColor: {r: 19.930758, g: 19.930758, b: 19.930758, a: 1}
+    - _RimColor: {r: 26.609123, g: 26.609123, b: 26.609123, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

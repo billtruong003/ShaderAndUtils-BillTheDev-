@@ -3914,6 +3914,7 @@ MonoBehaviour:
   playerTransform: {fileID: 1700963802}
   mapDisplayImage: {fileID: 673378521}
   playerIcon: {fileID: 439415831}
+  zoomSlider: {fileID: 0}
   iconsContainer: {fileID: 623582271}
   iconPrefab: {fileID: 1075355243}
   mapAreas:
@@ -7833,13 +7834,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1179643505}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -6.63, y: 1.5058686, z: 7.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &1194150462
 GameObject:
   m_ObjectHideFlags: 0

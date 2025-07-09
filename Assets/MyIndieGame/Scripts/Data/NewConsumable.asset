@@ -25,7 +25,7 @@ MonoBehaviour:
   ItemID: POT_HEALTH_LARGE
   DisplayName: Large Health Potion
   Description: Restores a large amount of health
-  Type: 2
+  Type: 3
   MaxStackSize: 99
   ActionToExecute:
     rid: 2925589478467175071
@@ -35,6 +35,6 @@ MonoBehaviour:
     - rid: 2925589478467175071
       type: {class: RestoreVitalsAction, ns: ModularInventory.Data.Actions, asm: Assembly-CSharp}
       data:
-        Health: 100
-        Mana: 0
-        Stamina: 0
+        HealthToRestore: 99
+        ManaToRestore: 0
+        StaminaToRestore: 0

@@ -29,6 +29,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _GradientTexture:
+        m_Texture: {fileID: -7740892969094995619, guid: 56178e93b9d621c4895e4dd0d3f4bd76, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -56,9 +60,9 @@ Material:
     - _DestinationAlpha: 0.5
     - _DistortionStrength: 0.1
     - _DistortionType: 0
-    - _EdgeNoiseAmplitude: 0
-    - _EdgeThickness: 5
-    - _GlowIntensity: 1
+    - _EdgeNoiseAmplitude: 0.168
+    - _EdgeThickness: 1
+    - _GlowIntensity: 0.5
     - _NoiseAnimSpeed: 0.5
     - _NoiseDistortScale: 1
     - _NoiseDistortStrength: 0.01
@@ -67,16 +71,16 @@ Material:
     - _ParallaxDepth: 0.1
     - _PortalHeight: 0.5
     - _PortalSize: 0.317
-    - _PortalSoftness: 0.97
+    - _PortalSoftness: 1.43
     - _PortalType: 0
     - _PortalWidth: 0.434
     - _RaymarchCoreIntensity: 0.5
     - _RaymarchMaxDist: 10
     - _Softness: 0.01
     - _SwirlSpeed: 2
-    - _SwirlStrength: 1
-    - _SwirlTightness: 50
-    - _TextureNoiseScale: 1
+    - _SwirlStrength: 0.192
+    - _SwirlTightness: 0.1
+    - _TextureNoiseScale: 0.5
     - _TextureNoiseStrength: 5.82
     - _UseEdgeNoise: 1
     - _WaveAmplitude: 0.05
@@ -84,7 +88,7 @@ Material:
     - _WaveSpeed: 1
     m_Colors:
     - _DistortionColor: {r: 0.7490197, g: 0.28910434, b: 0, a: 1}
-    - _GlowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlowColor: {r: 2.6232057, g: 0, b: 0.054935727, a: 1}
     - _GradientColor1: {r: 0, g: 1, b: 0.2155745, a: 1}
     - _GradientColor2: {r: 0, g: 0.74539256, b: 1, a: 1}
     - _GradientColor3: {r: 0, g: 0.016850948, b: 1, a: 1}
