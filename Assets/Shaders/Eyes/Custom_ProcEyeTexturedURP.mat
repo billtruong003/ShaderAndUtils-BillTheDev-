@@ -40,6 +40,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 370049cd2be224e3b85c0cfb8ec68dbe, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _VeinsTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Brightness: 0.61
@@ -47,6 +51,7 @@ Material:
     - _Distort: 0.725
     - _Edgewidth: 0.15
     - _GlintScale: 0.3
+    - _InvisibleWhiteEye: 0
     - _IrisScaleX: 1
     - _IrisScaleY: 1
     - _MaxDistort: 0.5
@@ -58,19 +63,21 @@ Material:
     - _PatternScale: 1
     - _PatternScaleX: 0.5
     - _PatternScaleY: 0.5
+    - _PatternTexRadius: 0.15
     - _PatternTexScale: 1
     - _PupilCorner: 0
     - _PupilScale: 0.3
     - _PupilScaleX: 1
     - _PupilScaleY: 1
     - _Radius: 0.35
-    - _RadiusPupil: 0.351
+    - _RadiusPupil: 0.167
     - _RotationDegree: 0
     - _RotationSpeed: 0
     - _Scale: 5
     - _ScaleAnimation: 0
     - _Speed: 0
     - _TEXTURE: 0
+    - _Veins: 0
     - _WhiteEye: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -80,7 +87,9 @@ Material:
     - _IrisEdgeColor: {r: 0, g: 0, b: 0, a: 1}
     - _IrisTexColor: {r: 0.5, g: 0, b: 0, a: 1}
     - _PatternColor: {r: 0, g: 0, b: 0, a: 1}
+    - _PatternColorOut: {r: 0, g: 0, b: 1, a: 1}
     - _PupilColor: {r: 0.15686275, g: 0, b: 0, a: 1}
     - _PupilColorOut: {r: 0.15686275, g: 0, b: 0, a: 1}
+    - _VeinsColor: {r: 1, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

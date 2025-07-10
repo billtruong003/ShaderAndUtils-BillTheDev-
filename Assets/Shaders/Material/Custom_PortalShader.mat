@@ -18,7 +18,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: _DistortionColor
@@ -26,6 +26,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _DestinationTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GradientTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -46,7 +50,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTexture:
-        m_Texture: {fileID: 2800000, guid: 16b63ab079bd641a781906f06ce088b0, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9eaeca867a34e7348bfb235ee6800c76, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PortalMask:
@@ -55,14 +59,20 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _BreathingAmplitude: 0.05
+    - _BreathingSpeed: 1.5
     - _DepthFade: 0.5
     - _DepthScale: 1
     - _DestinationAlpha: 0.5
     - _DistortionStrength: 0.1
     - _DistortionType: 0
-    - _EdgeNoiseAmplitude: 0.168
+    - _EdgeNoiseAmplitude: 0.037
+    - _EdgeSoftness: 0.5
     - _EdgeThickness: 1
+    - _Glow: 2
     - _GlowIntensity: 0.5
+    - _GradientDistortionStrength: 0.5
+    - _InnerEdgeThickness: 0.02
     - _NoiseAnimSpeed: 0.5
     - _NoiseDistortScale: 1
     - _NoiseDistortStrength: 0.01
@@ -70,33 +80,40 @@ Material:
     - _NoiseStrength: 0.1
     - _ParallaxDepth: 0.1
     - _PortalHeight: 0.5
-    - _PortalSize: 0.317
-    - _PortalSoftness: 1.43
+    - _PortalSize: 0.364
+    - _PortalSoftness: 0.74
     - _PortalType: 0
     - _PortalWidth: 0.434
+    - _PosterizeSteps: 5.36
     - _RaymarchCoreIntensity: 0.5
     - _RaymarchMaxDist: 10
+    - _RimPower: 10
     - _Softness: 0.01
-    - _SwirlSpeed: 2
-    - _SwirlStrength: 0.192
-    - _SwirlTightness: 0.1
-    - _TextureNoiseScale: 0.5
-    - _TextureNoiseStrength: 5.82
+    - _SparkleCutoff: 1
+    - _SparkleNoiseScale: 15
+    - _SwirlSpeed: 0.05
+    - _SwirlStrength: 0.987
+    - _SwirlTightness: 25
+    - _TextureNoiseScale: 0.1
+    - _TextureNoiseStrength: 5
     - _UseEdgeNoise: 1
     - _WaveAmplitude: 0.05
     - _WaveFrequency: 10
     - _WaveSpeed: 1
     m_Colors:
     - _DistortionColor: {r: 0.7490197, g: 0.28910434, b: 0, a: 1}
-    - _GlowColor: {r: 2.6232057, g: 0, b: 0.054935727, a: 1}
+    - _GlowColor: {r: 34.29675, g: 3.1097732, b: 0, a: 1}
     - _GradientColor1: {r: 0, g: 1, b: 0.2155745, a: 1}
     - _GradientColor2: {r: 0, g: 0.74539256, b: 1, a: 1}
     - _GradientColor3: {r: 0, g: 0.016850948, b: 1, a: 1}
     - _GradientColor4: {r: 0.0107040405, g: 0, b: 1, a: 1}
+    - _InnerEdgeColor: {r: 1, g: 0.5, b: 0, a: 1}
     - _MainColor: {r: 0.7490196, g: 0.109006315, b: 0.0035331198, a: 1}
     - _NoiseAnimDirection: {r: 1, g: 0, b: 0, a: 0}
     - _RaymarchCoreColor: {r: 0.19999996, g: 0.5, b: 1, a: 1}
-    - _TextureNoiseSpeed: {r: 0.1, g: 0.1, b: 0.1, a: 0}
+    - _RimColor: {r: 0, g: 1, b: 1, a: 1}
+    - _SparkleColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TextureNoiseSpeed: {r: 0.005, g: 0.005, b: 0.005, a: 0}
     - _TintColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

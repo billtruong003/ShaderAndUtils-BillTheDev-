@@ -20,7 +20,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 2000
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -37,7 +37,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EdgeNoiseTex:
-        m_Texture: {fileID: 2800000, guid: 213a5a3b1b04b4c79bd2c7b554207732, type: 3}
+        m_Texture: {fileID: 2800000, guid: a803a6ba5581743b4961ddacf788e57b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -59,7 +59,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AnimateDepthPattern: 0
-    - _AnimationSpeed: 0.05
+    - _AnimationSpeed: 0.21
     - _CameraDepthScale: 1
     - _CameraFollowStrength: 0.1
     - _ChromaticAberrationAmount: 0.001
@@ -72,11 +72,11 @@ Material:
     - _DistortionStrength: 0.05
     - _EdgeNoiseAmplitude: 0.2
     - _EdgeNoiseAnimSpeed: 0.1
-    - _EdgeNoiseScale: 2
-    - _EdgeNoiseStrength: 0.05
+    - _EdgeNoiseScale: 1
+    - _EdgeNoiseStrength: 0.052
     - _EnableChromaticAberration: 1
     - _EnableParallax: 1
-    - _GlowIntensity: 2
+    - _GlowIntensity: 1.3
     - _MovePatternDepth: 0
     - _NoiseAnimSpeed: 1
     - _NoiseDistortScale: 1

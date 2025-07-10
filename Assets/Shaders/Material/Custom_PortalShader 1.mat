@@ -32,6 +32,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DetailNoiseTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GradientTex:
+        m_Texture: {fileID: 457892249546160887, guid: 0d0f30ff4f3f5d44282c50f2443fda39, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _GradientTexture:
         m_Texture: {fileID: 2800000, guid: f8e1c135db3764078b111a1d21744fd8, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -45,32 +53,49 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: 34df45895d0864caf90cc6bd2e505999, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTexture:
         m_Texture: {fileID: 2800000, guid: e4fe2219612aa4d4ba987bd61ef901c0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _VeinsTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _BreathingAmplitude: 0.05
+    - _BreathingSpeed: 1.5
     - _BumpAmt: 10
     - _ColorGradientBlend: 0
     - _ColorGradientPower: 1
     - _ColorStrength: 1
     - _CoreGlowIntensity: 2
     - _CoreGlowMultiplier: 6.35
+    - _CorePulseMagnitude: 0.5
+    - _CorePulseSpeed: 3
     - _CoreRadius: 0
+    - _CoreSize: 0.1
     - _DestinationAlpha: 0.5
+    - _DetailNoiseScale: 16.6
+    - _DetailNoiseSpeed: -2.5
+    - _DistortionStrength: 0.05
     - _EdgeGlowIntensity: 2
     - _EdgeNoiseAmplitude: 0.1
+    - _EdgeSoftness: 0.492
     - _EdgeThickness: 0.88
     - _FadeEdge: 0.66
+    - _FresnelPower: 7
+    - _Glow: 2
     - _GlowIntensity: 1
     - _GlowPower: 78.57
+    - _GradientDistortionStrength: 0.1
+    - _InnerEdgeThickness: 0.02
     - _Intensity: 6.22
     - _NoiseAmount: 0.004
-    - _NoiseScale: 15
+    - _NoiseScale: 0.5
     - _NoiseSpeed: 0
     - _OffsetAmount: 1.06
     - _OverallBrightness: 0.5
@@ -78,19 +103,32 @@ Material:
     - _PortalSize: 0.502
     - _PortalSoftness: 1.13
     - _PortalType: 0
+    - _PosterizeSteps: 4
     - _Power: 0.47
     - _Radius: 0.33
+    - _RimPower: 20
+    - _RimSize: 0.02
     - _RotationSpeed: 1
     - _ScrollSpeed1: 1
     - _ScrollSpeed2: 1
+    - _SparkleCutoff: 0.95
+    - _SparkleNoiseScale: 15
     - _StarBrightness: 0
     - _StarDensity: 0.9
     - _SwirlIntensity: 0.68
+    - _SwirlScale: 7.43
     - _SwirlSpeed: 1
-    - _SwirlStrength: 0.52
+    - _SwirlStrength: 9.96
     - _SwirlTightness: 0.1
     - _TextureNoiseScale: 0.5
     - _TextureNoiseStrength: 25
+    - _UVDisplacementStrength: 0.03
+    - _VeinsScale: 8
+    - _VeinsSoftness: 0.02
+    - _VeinsSpeed: -2
+    - _VeinsThreshold: 0.7
+    - _VertexDisplacementAmount: 0.1
+    - _VertexDisplacementSpeed: 2.33
     - _VignetteStrength: 0
     - _WaveAmplitude: 0.05
     - _WaveFrequency: 10
@@ -100,12 +138,17 @@ Material:
     - _Color: {r: 0, g: 0.4453579, b: 1.174064, a: 1}
     - _CoreColor: {r: 1, g: 0.8, b: 0.5, a: 1}
     - _DistortionColor: {r: 0.0009765625, g: 0.00037693063, b: 0, a: 0.9}
+    - _FresnelColor: {r: 0, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 0, g: 0, b: 0, a: 1}
     - _GradientColor1: {r: 0, g: 0, b: 1, a: 0.7}
     - _GradientColor2: {r: 0, g: 1, b: 1, a: 0.7}
     - _GradientColor3: {r: 1, g: 0, b: 1, a: 0.7}
+    - _InnerEdgeColor: {r: 1, g: 0.5, b: 0, a: 1}
     - _MainColor: {r: 0.98833734, g: 0.36248687, b: 0, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 1}
     - _SecondaryColor: {r: 0.35782075, g: 1, b: 0, a: 1}
+    - _SparkleColor: {r: 1, g: 1, b: 1, a: 1}
     - _TextureNoiseSpeed: {r: 0.1, g: 0.1, b: 0.1, a: 0.5}
+    - _VeinsColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
