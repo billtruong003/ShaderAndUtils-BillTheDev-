@@ -1,5 +1,10 @@
+// WaterStylizeCommon.hlsl
+
 #ifndef WATER_STYLIZE_GRAPH_LOGIC_INCLUDED
 #define WATER_STYLIZE_GRAPH_LOGIC_INCLUDED
+
+// THÊM DÒNG NÀY VÀO ĐÂY
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
 //-------------------------------------------------------------------------------------
 // Properties and Textures
@@ -60,6 +65,7 @@ float Unity_GradientNoise_LegacyMod_float(float2 uv, float scale)
 // Hàm tái tạo vị trí thế giới từ depth (tương đương subgraph ScenePosition)
 float3 GetScenePositionWS(float2 screenUV)
 {
+    // Lỗi xảy ra ở dòng này, giờ sẽ hoạt động bình thường
     float rawDepth = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, screenUV).r;
     return ComputeWorldSpacePosition(screenUV, rawDepth, UNITY_MATRIX_I_VP);
 }

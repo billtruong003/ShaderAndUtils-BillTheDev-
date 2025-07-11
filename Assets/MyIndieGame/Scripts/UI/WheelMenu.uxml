@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/MyIndieGame/Scripts/UI/WheelMenu.uss?fileID=7433441132597879392&amp;guid=2e25a8434f40af1449fc166481e8dd6c&amp;type=3#WheelMenu" />
+    <ui:VisualElement name="root-container" style="flex-grow: 1;">
+        <ui:VisualElement name="menu-container">
+            <ui:VisualElement name="wheel-background" />
+        </ui:VisualElement>
+        
+        <ui:Label name="info-label" class="info-label" />
+    </ui:VisualElement>
+</ui:UXML>

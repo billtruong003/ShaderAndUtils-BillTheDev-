@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ColorB
-  m_Shader: {fileID: 4800000, guid: 1c87c1420ee81bd459ebdddc6bba8d73, type: 3}
+  m_Shader: {fileID: 4800000, guid: 02cb2aa7dcbd7d74b98dd360b4dae4d8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -107,6 +107,7 @@ Material:
     m_Floats:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
+    - _AlphaClipMode: 0
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
@@ -118,11 +119,19 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DistanceFadeEnd: 30
+    - _DistanceFadeStart: 20
     - _DstBlend: 10
     - _DstBlendAlpha: 10
+    - _EmissionMode: 0
     - _EnableEmission: 0
     - _EnvironmentReflections: 1
+    - _FakeLightMode: 0
+    - _FresnelOutlinePower: 5
+    - _FresnelOutlineWidth: 0.1
     - _FresnelPower: 10
+    - _GlassSpecularIntensity: 1.1
+    - _GlassSpecularPower: 32.1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -131,10 +140,13 @@ Material:
     - _Mode: 3
     - _OcclusionStrength: 1
     - _Offset: 0.8
+    - _OutlineMode: 0
+    - _OutlineScaleWithDistance: 1
+    - _OutlineWidth: 0.01
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RefractionStrength: 0.1
+    - _RefractionStrength: 0.0605
     - _RimPower: 6
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -149,12 +161,16 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.8, g: 0.8, b: 0.8, a: 0.49397588}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.49397588}
     - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 0.49397588}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor: {r: 1.4142135, g: 1.4142135, b: 1.4142135, a: 1}
+    - _FakeLightColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _FakeLightDirection: {r: 0.5, g: 0.5, b: -0.5, a: 0}
     - _FresnelColor: {r: 0.7971698, g: 0.816803, b: 1, a: 1}
-    - _GlassColor: {r: 0, g: 0.4782095, b: 1, a: 0.5}
+    - _FresnelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlassColor: {r: 0, g: 0.4782095, b: 1, a: 0.2}
     - _HiColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 0.29999998, b: 0.29999998, a: 1}
     - _ShadowTint: {r: 0.09999997, g: 0.09999997, b: 0.19999996, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}

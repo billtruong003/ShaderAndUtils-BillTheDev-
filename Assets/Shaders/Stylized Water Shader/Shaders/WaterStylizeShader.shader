@@ -91,7 +91,6 @@ Shader "CleanCode/StylizedWater_GraphLogic"
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             #include "Assets/Shaders/Stylized Water Shader/Shaders/WaterStylizeCommon.hlsl"
 
             struct Attributes
@@ -239,15 +238,26 @@ Shader "CleanCode/StylizedWater_GraphLogic"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
             #include "Assets/Shaders/Stylized Water Shader/Shaders/WaterStylizeCommon.hlsl"
-            struct Attributes { float4 positionOS : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
-            struct Varyings { float4 positionCS : SV_POSITION; UNITY_VERTEX_OUTPUT_STEREO };
+            struct Attributes { 
+                float4 positionOS : POSITION; 
+                UNITY_VERTEX_INPUT_INSTANCE_ID 
+            };
+            
+            struct Varyings { 
+                float4 positionCS : SV_POSITION; 
+                UNITY_VERTEX_OUTPUT_STEREO 
+            };
+
             Varyings vert(Attributes IN)
             {
                 Varyings OUT = (Varyings)0;
                 UNITY_SETUP_INSTANCE_ID(IN);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
                 float3 offset, waveNormalOS;
-                GerstnerWaves_float(IN.positionOS.xyz, _WaveSteepness, _WaveLength, _WaveSpeed, _WaveDirections, offset, waveNormalOS);
+                
+                // DÒNG CẦN SỬA: Thêm dấu gạch dưới vào các biến sóng
+                GerstnerWaves_float(IN.positionOS.xyz, _Wave_Steepness, _Wave_Length, _Wave_Speed, _Wave_Directions, offset, waveNormalOS);
+
                 float3 worldPos = TransformObjectToWorld(IN.positionOS.xyz + offset);
                 float3 worldNormal = TransformObjectToWorldNormal(waveNormalOS);
                 float3 lightDirection = GetMainLight().direction;

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: Render Feature - Outline Opaque
+  m_Name: Render Feature  Outline Opaque
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
-    passTag: RenderObjectsFeature
+    passTag: Render Feature  Outline Opaque
     Event: 300
     filterSettings:
       RenderQueueType: 0
@@ -172,11 +172,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: Render Feature - Outline Transparent
+  m_Name: Render Feature  Outline Transparent
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
-    passTag: RenderObjectsFeature
+    passTag: Render Feature  Outline Transparent
     Event: 500
     filterSettings:
       RenderQueueType: 1
@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd6e526a1bb489a8df34cbfcfca6bfc, type: 3}
   m_Name: OutlineRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   FeatureSettings:
     RenderPassEvent: 600
     LayerMask:
@@ -230,10 +230,10 @@ MonoBehaviour:
     BlitMaterial: {fileID: -876546973899608171, guid: 6c897a44b62e6d84e9b0f6d5238a158e, type: 3}
     ClearDepth: 0
   MaterialSettings:
-    OutlineScale: 0.3
-    RobertsCrossMultiplier: 50
+    OutlineScale: 0.25
+    RobertsCrossMultiplier: 51.75
     DepthThreshold: 50
-    NormalThreshold: 1.1
+    NormalThreshold: 0.5
     SteepAngleThreshold: 25
     SteepAngleMultiplier: 25
-    OutlineColor: {r: 0.122641504, g: 0.122641504, b: 0.122641504, a: 1}
+    OutlineColor: {r: 0, g: 0, b: 0, a: 1}

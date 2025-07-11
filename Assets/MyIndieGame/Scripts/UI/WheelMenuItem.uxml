@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- Thẻ VisualElement này sẽ là nút bấm của chúng ta -->
+    <ui:VisualElement name="item-root" class="wheel-menu-item-base">
+        <!-- Thẻ này để hiển thị icon -->
+        <ui:VisualElement name="icon" class="wheel-menu-item-icon" />
+    </ui:VisualElement>
+</ui:UXML>
