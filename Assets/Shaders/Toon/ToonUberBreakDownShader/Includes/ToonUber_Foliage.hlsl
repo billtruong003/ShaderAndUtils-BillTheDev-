@@ -1,5 +1,5 @@
-#ifndef TOON_UBER_FOLIAGE_INCLUDED
-#define TOON_UBER_FOLIAGE_INCLUDED
+#ifndef BILLS_TOON_FOLIAGE_INCLUDED
+#define BILLS_TOON_FOLIAGE_INCLUDED
 
 #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
 
@@ -11,7 +11,6 @@ void ApplyWind(inout float3 positionOS, float4 vertexColor)
 
     float3 windVector = normalize(_WindDirection) * windSine * _WindAmplitude;
     
-    // Vertex Color Alpha is the best and most explicit way to control wind influence.
     float windMask = vertexColor.a;
 
     positionOS.xyz += windVector * windMask;

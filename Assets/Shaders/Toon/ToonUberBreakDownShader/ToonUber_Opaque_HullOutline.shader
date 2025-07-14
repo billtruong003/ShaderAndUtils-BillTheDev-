@@ -1,28 +1,24 @@
-// Gần như giống hệt ToonUber_Opaque.shader, nhưng thêm Pass "Outline" ở đầu
-// và có các thuộc tính Outline được hiển thị
-Shader "Custom/Toon Uber/Opaque (Hull Outline)"
+Shader "Bill's Toon/Opaque (Hull Outline)"
 {
     Properties
     {
-        // ... (Sao chép toàn bộ khối Properties từ ToonUber_Opaque.shader)
         [HideInInspector] _SurfaceType("Surface Type", Float) = 0
-        [HideInInspector] _OutlineMode("Outline Mode", Float) = 1 // Giá trị mặc định là Inverted Hull
         
         [Header(Base Properties)]
         _BaseMap("Albedo (RGB) Alpha (A)", 2D) = "white" {}
         _BaseColor("Base Color", Color) = (1, 1, 1, 1)
 
         [Header(Alpha Clipping)]
-        [Enum(Off, 0, On, 1)] _AlphaClipMode("Enable Alpha Clip", Float) = 0
+        [Toggle(_ALPHACLIP_ON)] _AlphaClipMode("Enable Alpha Clip", Float) = 0
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         
         [Header(Emission)]
-        [Enum(Off, 0, On, 1)] _EmissionMode("Enable Emission", Float) = 0
+        [Toggle(_EMISSION_ON)] _EmissionMode("Enable Emission", Float) = 0
         [HDR] _EmissionColor("Emission Color", Color) = (0,0,0,1)
         _EmissionMap("Emission Map", 2D) = "black" {}
 
         [Header(Lighting)]
-        [Enum(Off, 0, On, 1)] _FakeLightMode("Enable Fake Light", Float) = 1
+        [Toggle(_FAKELIGHT_ON)] _FakeLightMode("Enable Fake Light", Float) = 1
         _FakeLightColor("Fake Light Color", Color) = (0.8, 0.8, 0.8, 1)
         _FakeLightDirection("Fake Light Direction", Vector) = (0.5, 0.5, -0.5, 0)
 
@@ -50,8 +46,8 @@ Shader "Custom/Toon Uber/Opaque (Hull Outline)"
         
         [Header(Outline Properties (Inverted Hull))]
         _OutlineColor("Color", Color) = (0, 0, 0, 1)
-        _OutlineWidth("Width", Range(0.0, 10)) = 0.01
-        [Enum(Off, 0, On, 1)] _OutlineScaleWithDistance("Scale With Distance", Float) = 1
+        _OutlineWidth("Width", Range(0.0, 10)) = 1.0
+        [Toggle(_OUTLINE_SCALE_WITH_DISTANCE)] _OutlineScaleWithDistance("Screen-Space Scaling", Float) = 1
         _DistanceFadeStart("Distance Fade Start", Float) = 20
         _DistanceFadeEnd("Distance Fade End", Float) = 30
     }
@@ -70,37 +66,60 @@ Shader "Custom/Toon Uber/Opaque (Hull Outline)"
             #pragma fragment OutlineFrag
             
             #pragma shader_feature_local _OUTLINE_SCALE_WITH_DISTANCE
+            #pragma shader_feature_local _SURFACETYPE_FOLIAGE
 
+            // FIX 1: Loại bỏ include và hàm không cần thiết
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
+            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Foliage.hlsl"
             
-            struct OutlineVaryings { float4 positionCS : SV_POSITION; };
+            // FIX 2: Loại bỏ định nghĩa lại 'struct Attributes'. Struct này đã có trong ToonUberCore.hlsl
+            // Struct Attributes đã được include từ file trên
             
-            OutlineVaryings OutlineVert(Attributes input)
+            struct OutlineVaryings
+            {
+                float4 positionCS : SV_POSITION;
+            };
+            
+            OutlineVaryings OutlineVert(Attributes input) // Bây giờ có thể dùng 'input' trực tiếp
             {
                 OutlineVaryings o = (OutlineVaryings)0;
-                float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
-                float4 positionCS = TransformWorldToHClip(positionWS);
 
-                float cameraDist = length(positionWS - _WorldSpaceCameraPos.xyz);
-                float distFade = 1.0 - saturate((cameraDist - _DistanceFadeStart) / (_DistanceFadeEnd - _DistanceFadeStart + 1e-5));
-                float scaledWidth = _OutlineWidth * distFade;
-
-                #if defined(_OUTLINE_SCALE_WITH_DISTANCE)
-                    scaledWidth *= positionCS.w * 0.01;
+                #if defined(_SURFACETYPE_FOLIAGE)
+                    // Giả sử ApplyWind không cần UV, nếu cần thì phải đảm bảo 'Attributes' trong file include có 'uv'
+                    ApplyWind(input.positionOS.xyz, input.color);
                 #endif
 
-                float3 normalVS = TransformWorldToView(TransformObjectToWorldNormal(input.normalOS));
-                float2 projectedNormal = normalize(TransformWViewToHClip(float4(normalVS, 0)).xy);
-                positionCS.xy += projectedNormal * scaledWidth;
+                float3 positionOS_final = input.positionOS.xyz;
+                float3 normalOS_final = input.normalOS;
+                
+                float cameraDist = length(TransformObjectToWorld(positionOS_final) - _WorldSpaceCameraPos.xyz);
+                float distFade = 1.0 - saturate((cameraDist - _DistanceFadeStart) / (_DistanceFadeEnd - _DistanceFadeStart + 1e-5));
+                float scaledWidth = _OutlineWidth * 0.01 * distFade;
+
+                float4 positionCS = TransformObjectToHClip(positionOS_final);
+
+                #if defined(_OUTLINE_SCALE_WITH_DISTANCE)
+                    float3 normalWS = TransformObjectToWorldNormal(normalOS_final);
+                    float3 normalVS = TransformWorldToView(normalWS);
+                    float4 projectedNormal = mul(UNITY_MATRIX_P, float4(normalVS, 0.0));
+                    positionCS.xy += normalize(projectedNormal.xy) * scaledWidth;
+                #else
+                    positionOS_final += normalOS_final * scaledWidth;
+                    positionCS = TransformObjectToHClip(positionOS_final);
+                #endif
                 
                 o.positionCS = positionCS;
                 return o;
             }
-            half4 OutlineFrag(OutlineVaryings input) : SV_Target { return _OutlineColor; }
+            
+            half4 OutlineFrag(OutlineVaryings input) : SV_Target
+            {
+                return _OutlineColor;
+            }
             ENDHLSL
         }
         
-        // ... (Sao chép toàn bộ khối Pass "ForwardLit" và "ShadowCaster" từ ToonUber_Opaque.shader vào đây)
         Pass
         {
             Name "ForwardLit"
@@ -114,17 +133,17 @@ Shader "Custom/Toon Uber/Opaque (Hull Outline)"
             #pragma vertex vert
             #pragma fragment frag
             
-            #pragma shader_feature_local _SURFACETYPE_OPAQUE _SURFACETYPE_METALLIC _SURFACETYPE_FOLIAGE
+            // IMPROVEMENT 1: Dùng multi_compile cho các tùy chọn loại trừ lẫn nhau để tối ưu
+            #pragma multi_compile_local _SURFACETYPE_OPAQUE _SURFACETYPE_METALLIC _SURFACETYPE_FOLIAGE
             #pragma shader_feature_local_fragment _ALPHACLIP_ON
             #pragma shader_feature_local_fragment _EMISSION_ON
             #pragma shader_feature_local_fragment _FAKELIGHT_ON
-            // Fresnel Outline không có trong shader này, có thể bỏ keyword đi
-            // #pragma shader_feature_local_fragment _OUTLINEMODE_FRESNEL
 
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Lighting.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Foliage.hlsl"
@@ -157,15 +176,14 @@ Shader "Custom/Toon Uber/Opaque (Hull Outline)"
                     surfaceColor = albedo.rgb * (lighting + SampleSH(i.normalWS));
                 #elif defined(_SURFACETYPE_METALLIC)
                     float3 lighting = CalculateMetallicLighting(i.normalWS, viewDir, mainLight);
-                    surfaceColor = albedo.rgb * lighting;
+                    // FIX 3: Thêm ánh sáng môi trường để vật thể không bị đen hoàn toàn trong bóng tối
+                    surfaceColor = albedo.rgb * (lighting + SampleSH(i.normalWS));
                 #elif defined(_SURFACETYPE_FOLIAGE)
                     float3 lighting = CalculateFoliageLighting(i.normalWS, i.positionWS, mainLight);
                     surfaceColor = albedo.rgb * (lighting + SampleSH(i.normalWS));
                 #endif
 
                 surfaceColor = ApplyEmission(surfaceColor, i.uv);
-                // Fresnel outline không áp dụng ở đây
-                // surfaceColor = ApplyFresnelOutline(surfaceColor, i.normalWS, viewDir);
 
                 return half4(surfaceColor, albedo.a);
             }
@@ -188,11 +206,18 @@ Shader "Custom/Toon Uber/Opaque (Hull Outline)"
 
             #pragma shader_feature_local_fragment _ALPHACLIP_ON
             #pragma shader_feature_local _SURFACETYPE_FOLIAGE
-
+            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+            
+            half3 LerpWhiteTo(half3 b, half t)
+            {
+                return lerp(half3(1.0, 1.0, 1.0), b, t);
+            }
+            
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Foliage.hlsl"
-
+            
             struct ShadowVaryings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
 
             ShadowVaryings ShadowVert(Attributes input)
@@ -201,9 +226,10 @@ Shader "Custom/Toon Uber/Opaque (Hull Outline)"
                 #if defined(_SURFACETYPE_FOLIAGE)
                     ApplyWind(input.positionOS.xyz, input.color);
                 #endif
-                float3 posWS = TransformObjectToWorld(input.positionOS.xyz);
-                float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
-                o.positionCS = GetShadowPositionHClip(input.positionOS, posWS, normalWS);
+
+                VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
+                o.positionCS = GetShadowCoord(posInputs);
+
                 o.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 return o;
             }
@@ -216,5 +242,5 @@ Shader "Custom/Toon Uber/Opaque (Hull Outline)"
             ENDHLSL
         }
     }
-    CustomEditor "ToonUberShaderSeparateGUI"
+    CustomEditor "ToonOpaqueHullOutlineShaderGUI"
 }

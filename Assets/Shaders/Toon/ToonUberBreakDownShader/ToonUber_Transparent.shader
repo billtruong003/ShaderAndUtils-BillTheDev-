@@ -1,11 +1,10 @@
-Shader "Custom/Toon Uber/Transparent"
+Shader "Bill's Toon/Transparent"
 {
     Properties
     {
-        [HideInInspector] _SurfaceType("Surface Type", Float) = 1 // Giá trị mặc định là Transparent
+        [HideInInspector] _SurfaceType("Surface Type", Float) = 1
         [HideInInspector] _OutlineMode("Outline Mode", Float) = 0
 
-        // Chỉ chứa các thuộc tính liên quan đến Transparent
         [Header(Base Properties)]
         _BaseMap("Albedo (RGB) Alpha (A)", 2D) = "white" {}
         _BaseColor("Base Color", Color) = (1, 1, 1, 1)
@@ -29,7 +28,7 @@ Shader "Custom/Toon Uber/Transparent"
         _GlassSpecularIntensity("Specular Intensity", Range(0, 5)) = 1.0
 
         [Header(Outline Properties (Fresnel))]
-        [Enum(None, 0, Fresnel, 2)] _FresnelOutlineToggle("Enable Fresnel Outline", Float) = 0
+        [Toggle(_OUTLINEMODE_FRESNEL)] _FresnelOutlineToggle("Enable Fresnel Outline", Float) = 0
         _FresnelOutlineColor("Color", Color) = (0, 0, 0, 1)
         _FresnelOutlineWidth("Width", Range(0.001, 1.0)) = 0.1
         _FresnelOutlinePower("Power", Range(1.0, 20.0)) = 5.0
@@ -70,6 +69,7 @@ Shader "Custom/Toon Uber/Transparent"
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.uv = TRANSFORM_TEX(v.uv, _BaseMap);
                 o.color = v.color;
+                // screenPos dùng để lấy _CameraOpaqueTexture cho hiệu ứng khúc xạ
                 o.screenPos = o.positionCS;
                 return o;
             }
@@ -79,16 +79,20 @@ Shader "Custom/Toon Uber/Transparent"
                 float3 viewDir = SafeNormalize(_WorldSpaceCameraPos.xyz - i.positionWS);
                 Light mainLight = GetEffectiveMainLight(i.positionWS);
                 
+                // Fresnel: các cạnh của vật thể sẽ có màu khác
                 float fresnelDot = 1.0 - saturate(dot(i.normalWS, viewDir));
                 float fresnel = pow(fresnelDot, _FresnelPower);
                 
+                // Khúc xạ: lấy màu của cảnh phía sau và làm méo nó
                 float2 screenUV = i.screenPos.xy / i.screenPos.w;
                 float2 distortion = i.normalWS.xy * _RefractionStrength;
                 float3 sceneColor = SAMPLE_TEXTURE2D_X_LOD(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + distortion, 0).rgb;
                 
+                // Trộn màu kính với màu cảnh và màu fresnel
                 half3 surfaceColor = lerp(sceneColor, _GlassColor.rgb, _GlassColor.a);
                 surfaceColor = lerp(surfaceColor, _FresnelColor.rgb, fresnel);
 
+                // Thêm phản chiếu specular từ nguồn sáng chính
                 float3 reflectDir = reflect(-mainLight.direction, i.normalWS);
                 float spec = pow(saturate(dot(viewDir, reflectDir)), _GlassSpecularPower);
                 surfaceColor += mainLight.color * spec * _GlassSpecularIntensity * mainLight.shadowAttenuation;
@@ -100,8 +104,7 @@ Shader "Custom/Toon Uber/Transparent"
             }
             ENDHLSL
         }
-        // Transparent objects typically do not cast shadows in a stylized context,
-        // but a ShadowCaster pass could be added here if needed.
     }
-    CustomEditor "ToonUberShaderSeparateGUI"
+    CustomEditor "ToonTransparentShaderGUI"
 }
+

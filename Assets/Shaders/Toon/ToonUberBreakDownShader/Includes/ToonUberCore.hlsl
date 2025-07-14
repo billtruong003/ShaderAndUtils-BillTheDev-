@@ -1,10 +1,9 @@
-#ifndef TOON_UBER_CORE_INCLUDED
-#define TOON_UBER_CORE_INCLUDED
+#ifndef BILLS_TOON_CORE_INCLUDED
+#define BILLS_TOON_CORE_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
-// ================== STRUCTS ==================
 struct Attributes
 {
     float4 positionOS   : POSITION;
@@ -24,9 +23,7 @@ struct Varyings
     float4 screenPos    : TEXCOORD3;
 };
 
-// ================== CBUFFER ==================
 CBUFFER_START(UnityPerMaterial)
-    // Shared
     float4 _BaseMap_ST;
     float4 _BaseColor;
     float4 _EmissionColor;
@@ -34,12 +31,10 @@ CBUFFER_START(UnityPerMaterial)
     float3 _FakeLightDirection;
     float  _Cutoff;
 
-    // Toon
     float  _ToonRampOffset;
     float  _ToonRampSmoothness;
     float4 _ShadowTint;
 
-    // Metallic
     float  _Brightness;
     float  _Offset;
     float  _HighlightOffset;
@@ -48,7 +43,6 @@ CBUFFER_START(UnityPerMaterial)
     float4 _HiColor;
     float4 _RimColor;
 
-    // Transparent (Glass)
     float4 _GlassColor;
     float4 _FresnelColor;
     float  _FresnelPower;
@@ -56,32 +50,27 @@ CBUFFER_START(UnityPerMaterial)
     float  _GlassSpecularPower;
     float  _GlassSpecularIntensity;
 
-    // Foliage
     float  _WindFrequency;
     float  _WindAmplitude;
     float3 _WindDirection;
     float3 _TranslucencyColor;
     float  _TranslucencyStrength;
 
-    // Fresnel Outline
     float4 _FresnelOutlineColor;
     float  _FresnelOutlineWidth;
     float  _FresnelOutlinePower;
 
-    // Inverted Hull Outline
     float4 _OutlineColor;
     float  _OutlineWidth;
     float  _DistanceFadeStart;
     float  _DistanceFadeEnd;
 CBUFFER_END
 
-// ================== TEXTURES ==================
 TEXTURE2D(_BaseMap);        SAMPLER(sampler_BaseMap);
 TEXTURE2D(_EmissionMap);    SAMPLER(sampler_EmissionMap);
 TEXTURE2D(_Ramp);           SAMPLER(sampler_Ramp);
 TEXTURE2D_X_FLOAT(_CameraOpaqueTexture); SAMPLER(sampler_CameraOpaqueTexture);
 
-// ================== HELPER FUNCTIONS ==================
 void ApplyAlphaClip(float2 uv)
 {
     #if defined(_ALPHACLIP_ON)
@@ -114,7 +103,6 @@ Light GetEffectiveMainLight(float3 positionWS)
     Light mainLight = GetMainLight(TransformWorldToShadowCoord(positionWS));
     
     #if defined(_FAKELIGHT_ON)
-        // A more robust check for a "black" or non-existent light
         if (dot(mainLight.color, mainLight.color) < 0.001) 
         {
             mainLight.direction = normalize(_FakeLightDirection.xyz);
@@ -124,5 +112,6 @@ Light GetEffectiveMainLight(float3 positionWS)
     #endif
     return mainLight;
 }
+
 
 #endif

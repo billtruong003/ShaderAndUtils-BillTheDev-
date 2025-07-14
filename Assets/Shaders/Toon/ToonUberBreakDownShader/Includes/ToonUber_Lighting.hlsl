@@ -1,5 +1,5 @@
-#ifndef TOON_UBER_LIGHTING_INCLUDED
-#define TOON_UBER_LIGHTING_INCLUDED
+#ifndef BILLS_TOON_LIGHTING_INCLUDED
+#define BILLS_TOON_LIGHTING_INCLUDED
 
 #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
 

@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 1df97a1cdad3849d4bdc34987768c369, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: c8ebbccadfb77f1448126ea563e9a59d, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -14526,6 +14526,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1945885461}
   - component: {fileID: 1945885460}
+  - component: {fileID: 1945885462}
   m_Layer: 0
   m_Name: Point light (1)
   m_TagString: Untagged
@@ -14547,7 +14548,7 @@ Light:
   m_Intensity: 0.74
   m_Range: 3.1481476
   m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
+  m_InnerSpotAngle: 21.802082
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -14613,6 +14614,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 650326991}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1945885462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945885459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1001 &1946762119
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15283,6 +15307,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2045651790}
   - component: {fileID: 2045651789}
+  - component: {fileID: 2045651791}
   m_Layer: 0
   m_Name: Point light
   m_TagString: Untagged
@@ -15304,7 +15329,7 @@ Light:
   m_Intensity: 0.46
   m_Range: 4.791214
   m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
+  m_InnerSpotAngle: 21.802082
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -15370,6 +15395,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 650326991}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2045651791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045651788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &2057282763
 GameObject:
   m_ObjectHideFlags: 0
@@ -15380,6 +15428,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2057282765}
   - component: {fileID: 2057282764}
+  - component: {fileID: 2057282766}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -15401,7 +15450,7 @@ Light:
   m_Intensity: 1.2
   m_Range: 10
   m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
+  m_InnerSpotAngle: 21.802082
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
@@ -15467,6 +15516,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 650326991}
   m_LocalEulerAnglesHint: {x: 164.3, y: 235.1, z: 0}
+--- !u!114 &2057282766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2057282763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!4 &2059753401 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4359024376148704, guid: 82cad9dfd78287447b96cf00b0f5e712, type: 3}

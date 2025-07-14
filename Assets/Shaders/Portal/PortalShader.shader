@@ -1,5 +1,5 @@
 // Shader by VNTALKINGTECH - The Ultimate, Art-Directed Magic Portal for URP
-Shader "VNTALKINGTECH/Magic Portal Ultimate"
+Shader "BillPortal/Magic Portal Ultimate"
 {
     Properties
     {
