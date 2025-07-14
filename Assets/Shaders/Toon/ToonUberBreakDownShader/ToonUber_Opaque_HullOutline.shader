@@ -1,4 +1,4 @@
-Shader "Bill's Toon/Opaque (Hull Outline)"
+Shader "Bill's Toon/Optimized/Opaque (Hull Outline)"
 {
     Properties
     {
@@ -68,44 +68,34 @@ Shader "Bill's Toon/Opaque (Hull Outline)"
             #pragma shader_feature_local _OUTLINE_SCALE_WITH_DISTANCE
             #pragma shader_feature_local _SURFACETYPE_FOLIAGE
 
-            // FIX 1: Loại bỏ include và hàm không cần thiết
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
-            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Foliage.hlsl"
-            
-            // FIX 2: Loại bỏ định nghĩa lại 'struct Attributes'. Struct này đã có trong ToonUberCore.hlsl
-            // Struct Attributes đã được include từ file trên
             
             struct OutlineVaryings
             {
                 float4 positionCS : SV_POSITION;
             };
             
-            OutlineVaryings OutlineVert(Attributes input) // Bây giờ có thể dùng 'input' trực tiếp
+            OutlineVaryings OutlineVert(Attributes input)
             {
                 OutlineVaryings o = (OutlineVaryings)0;
 
                 #if defined(_SURFACETYPE_FOLIAGE)
-                    // Giả sử ApplyWind không cần UV, nếu cần thì phải đảm bảo 'Attributes' trong file include có 'uv'
                     ApplyWind(input.positionOS.xyz, input.color);
                 #endif
 
-                float3 positionOS_final = input.positionOS.xyz;
-                float3 normalOS_final = input.normalOS;
-                
-                float cameraDist = length(TransformObjectToWorld(positionOS_final) - _WorldSpaceCameraPos.xyz);
+                float cameraDist = length(TransformObjectToWorld(input.positionOS.xyz) - _WorldSpaceCameraPos.xyz);
                 float distFade = 1.0 - saturate((cameraDist - _DistanceFadeStart) / (_DistanceFadeEnd - _DistanceFadeStart + 1e-5));
                 float scaledWidth = _OutlineWidth * 0.01 * distFade;
 
-                float4 positionCS = TransformObjectToHClip(positionOS_final);
-
+                float4 positionCS = TransformObjectToHClip(input.positionOS.xyz);
                 #if defined(_OUTLINE_SCALE_WITH_DISTANCE)
-                    float3 normalWS = TransformObjectToWorldNormal(normalOS_final);
+                    float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
                     float3 normalVS = TransformWorldToView(normalWS);
                     float4 projectedNormal = mul(UNITY_MATRIX_P, float4(normalVS, 0.0));
-                    positionCS.xy += normalize(projectedNormal.xy) * scaledWidth;
+                    positionCS.xy += normalize(projectedNormal.xy) * scaledWidth * positionCS.w;
                 #else
-                    positionOS_final += normalOS_final * scaledWidth;
+                    float3 positionOS_final = input.positionOS.xyz + input.normalOS * scaledWidth;
                     positionCS = TransformObjectToHClip(positionOS_final);
                 #endif
                 
@@ -133,7 +123,6 @@ Shader "Bill's Toon/Opaque (Hull Outline)"
             #pragma vertex vert
             #pragma fragment frag
             
-            // IMPROVEMENT 1: Dùng multi_compile cho các tùy chọn loại trừ lẫn nhau để tối ưu
             #pragma multi_compile_local _SURFACETYPE_OPAQUE _SURFACETYPE_METALLIC _SURFACETYPE_FOLIAGE
             #pragma shader_feature_local_fragment _ALPHACLIP_ON
             #pragma shader_feature_local_fragment _EMISSION_ON
@@ -143,10 +132,7 @@ Shader "Bill's Toon/Opaque (Hull Outline)"
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
-            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Lighting.hlsl"
-            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Foliage.hlsl"
 
             Varyings vert(Attributes v)
             {
@@ -169,20 +155,18 @@ Shader "Bill's Toon/Opaque (Hull Outline)"
                 half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv) * _BaseColor;
                 float3 viewDir = SafeNormalize(_WorldSpaceCameraPos.xyz - i.positionWS);
                 Light mainLight = GetEffectiveMainLight(i.positionWS);
+                half3 ambient = SampleSH(i.normalWS);
                 
-                half3 surfaceColor = 0;
+                half3 lighting = 0;
                 #if defined(_SURFACETYPE_OPAQUE)
-                    float3 lighting = CalculateToonLighting(i.normalWS, i.positionWS, mainLight);
-                    surfaceColor = albedo.rgb * (lighting + SampleSH(i.normalWS));
+                    lighting = CalculateToonLighting(i.normalWS, i.positionWS, mainLight);
                 #elif defined(_SURFACETYPE_METALLIC)
-                    float3 lighting = CalculateMetallicLighting(i.normalWS, viewDir, mainLight);
-                    // FIX 3: Thêm ánh sáng môi trường để vật thể không bị đen hoàn toàn trong bóng tối
-                    surfaceColor = albedo.rgb * (lighting + SampleSH(i.normalWS));
+                    lighting = CalculateMetallicLighting(i.normalWS, viewDir, mainLight);
                 #elif defined(_SURFACETYPE_FOLIAGE)
-                    float3 lighting = CalculateFoliageLighting(i.normalWS, i.positionWS, mainLight);
-                    surfaceColor = albedo.rgb * (lighting + SampleSH(i.normalWS));
+                    lighting = CalculateFoliageLighting(i.normalWS, i.positionWS, mainLight);
                 #endif
 
+                half3 surfaceColor = albedo.rgb * (lighting + ambient);
                 surfaceColor = ApplyEmission(surfaceColor, i.uv);
 
                 return half4(surfaceColor, albedo.a);
@@ -203,20 +187,13 @@ Shader "Bill's Toon/Opaque (Hull Outline)"
             HLSLPROGRAM
             #pragma vertex ShadowVert
             #pragma fragment ShadowFrag
-
             #pragma shader_feature_local_fragment _ALPHACLIP_ON
             #pragma shader_feature_local _SURFACETYPE_FOLIAGE
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
             
-            half3 LerpWhiteTo(half3 b, half t)
-            {
-                return lerp(half3(1.0, 1.0, 1.0), b, t);
-            }
-            
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
-            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Foliage.hlsl"
             
             struct ShadowVaryings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
 
@@ -226,10 +203,8 @@ Shader "Bill's Toon/Opaque (Hull Outline)"
                 #if defined(_SURFACETYPE_FOLIAGE)
                     ApplyWind(input.positionOS.xyz, input.color);
                 #endif
-
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 o.positionCS = GetShadowCoord(posInputs);
-
                 o.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 return o;
             }

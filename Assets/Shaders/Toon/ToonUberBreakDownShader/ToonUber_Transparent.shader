@@ -1,4 +1,4 @@
-Shader "Bill's Toon/Transparent"
+Shader "Bill's Toon/Optimized/Transparent"
 {
     Properties
     {
@@ -10,12 +10,12 @@ Shader "Bill's Toon/Transparent"
         _BaseColor("Base Color", Color) = (1, 1, 1, 1)
 
         [Header(Emission)]
-        [Enum(Off, 0, On, 1)] _EmissionMode("Enable Emission", Float) = 0
+        [Toggle(_EMISSION_ON)] _EmissionMode("Enable Emission", Float) = 0
         [HDR] _EmissionColor("Emission Color", Color) = (0,0,0,1)
         _EmissionMap("Emission Map", 2D) = "black" {}
 
         [Header(Lighting)]
-        [Enum(Off, 0, On, 1)] _FakeLightMode("Enable Fake Light", Float) = 1
+        [Toggle(_FAKELIGHT_ON)] _FakeLightMode("Enable Fake Light", Float) = 1
         _FakeLightColor("Fake Light Color", Color) = (0.8, 0.8, 0.8, 1)
         _FakeLightDirection("Fake Light Direction", Vector) = (0.5, 0.5, -0.5, 0)
         
@@ -56,7 +56,6 @@ Shader "Bill's Toon/Transparent"
             #pragma shader_feature_local_fragment _OUTLINEMODE_FRESNEL
 
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
@@ -69,7 +68,6 @@ Shader "Bill's Toon/Transparent"
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.uv = TRANSFORM_TEX(v.uv, _BaseMap);
                 o.color = v.color;
-                // screenPos dùng để lấy _CameraOpaqueTexture cho hiệu ứng khúc xạ
                 o.screenPos = o.positionCS;
                 return o;
             }
@@ -79,22 +77,18 @@ Shader "Bill's Toon/Transparent"
                 float3 viewDir = SafeNormalize(_WorldSpaceCameraPos.xyz - i.positionWS);
                 Light mainLight = GetEffectiveMainLight(i.positionWS);
                 
-                // Fresnel: các cạnh của vật thể sẽ có màu khác
                 float fresnelDot = 1.0 - saturate(dot(i.normalWS, viewDir));
-                float fresnel = pow(fresnelDot, _FresnelPower);
+                float fresnel = FastPow(fresnelDot, _FresnelPower);
                 
-                // Khúc xạ: lấy màu của cảnh phía sau và làm méo nó
                 float2 screenUV = i.screenPos.xy / i.screenPos.w;
                 float2 distortion = i.normalWS.xy * _RefractionStrength;
                 float3 sceneColor = SAMPLE_TEXTURE2D_X_LOD(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + distortion, 0).rgb;
                 
-                // Trộn màu kính với màu cảnh và màu fresnel
                 half3 surfaceColor = lerp(sceneColor, _GlassColor.rgb, _GlassColor.a);
                 surfaceColor = lerp(surfaceColor, _FresnelColor.rgb, fresnel);
 
-                // Thêm phản chiếu specular từ nguồn sáng chính
                 float3 reflectDir = reflect(-mainLight.direction, i.normalWS);
-                float spec = pow(saturate(dot(viewDir, reflectDir)), _GlassSpecularPower);
+                float spec = FastPow(saturate(dot(viewDir, reflectDir)), _GlassSpecularPower);
                 surfaceColor += mainLight.color * spec * _GlassSpecularIntensity * mainLight.shadowAttenuation;
                 
                 surfaceColor = ApplyEmission(surfaceColor, i.uv);
@@ -107,4 +101,3 @@ Shader "Bill's Toon/Transparent"
     }
     CustomEditor "ToonTransparentShaderGUI"
 }
-

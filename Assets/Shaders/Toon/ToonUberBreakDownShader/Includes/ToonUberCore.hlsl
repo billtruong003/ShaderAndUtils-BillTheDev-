@@ -26,10 +26,12 @@ struct Varyings
 CBUFFER_START(UnityPerMaterial)
     float4 _BaseMap_ST;
     float4 _BaseColor;
+    float  _Cutoff;
+
     float4 _EmissionColor;
+    
     float4 _FakeLightColor;
     float3 _FakeLightDirection;
-    float  _Cutoff;
 
     float  _ToonRampOffset;
     float  _ToonRampSmoothness;
@@ -71,11 +73,13 @@ TEXTURE2D(_EmissionMap);    SAMPLER(sampler_EmissionMap);
 TEXTURE2D(_Ramp);           SAMPLER(sampler_Ramp);
 TEXTURE2D_X_FLOAT(_CameraOpaqueTexture); SAMPLER(sampler_CameraOpaqueTexture);
 
+#include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Functions.hlsl"
+
 void ApplyAlphaClip(float2 uv)
 {
     #if defined(_ALPHACLIP_ON)
-        half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
-        clip(albedo.a - _Cutoff);
+        half albedoAlpha = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv).a * _BaseColor.a;
+        clip(albedoAlpha - _Cutoff);
     #endif
 }
 
@@ -91,9 +95,9 @@ half3 ApplyFresnelOutline(half3 surfaceColor, float3 normalWS, float3 viewDir)
 {
     #if defined(_OUTLINEMODE_FRESNEL)
         float fresnelDot = 1.0 - saturate(dot(normalWS, viewDir));
-        float fresnelOutline = pow(fresnelDot, _FresnelOutlinePower);
-        float outlineFactor = smoothstep(1.0 - _FresnelOutlineWidth, 1.0 - _FresnelOutlineWidth + 0.05, fresnelOutline);
-        surfaceColor = lerp(surfaceColor, _FresnelOutlineColor.rgb, outlineFactor);
+        float outlineFactor = FastPow(fresnelDot, _FresnelOutlinePower);
+        float outlineEdge = FastSmoothstep(1.0 - _FresnelOutlineWidth, 1.0 - _FresnelOutlineWidth + 0.05, outlineFactor);
+        surfaceColor = lerp(surfaceColor, _FresnelOutlineColor.rgb, outlineEdge);
     #endif
     return surfaceColor;
 }
@@ -103,7 +107,8 @@ Light GetEffectiveMainLight(float3 positionWS)
     Light mainLight = GetMainLight(TransformWorldToShadowCoord(positionWS));
     
     #if defined(_FAKELIGHT_ON)
-        if (dot(mainLight.color, mainLight.color) < 0.001) 
+        bool hasRealLight = dot(mainLight.color, mainLight.color) > 0.001;
+        if (!hasRealLight)
         {
             mainLight.direction = normalize(_FakeLightDirection.xyz);
             mainLight.color = _FakeLightColor.rgb;
@@ -112,6 +117,5 @@ Light GetEffectiveMainLight(float3 positionWS)
     #endif
     return mainLight;
 }
-
 
 #endif

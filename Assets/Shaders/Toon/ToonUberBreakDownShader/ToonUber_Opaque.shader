@@ -1,4 +1,4 @@
-Shader "Bill's Toon/Opaque"
+Shader "Bill's Toon/Optimized/Opaque"
 {
     Properties
     {
@@ -67,7 +67,7 @@ Shader "Bill's Toon/Opaque"
             #pragma vertex vert
             #pragma fragment frag
             
-            #pragma shader_feature_local _SURFACETYPE_OPAQUE _SURFACETYPE_METALLIC _SURFACETYPE_FOLIAGE
+            #pragma multi_compile_local _SURFACETYPE_OPAQUE _SURFACETYPE_METALLIC _SURFACETYPE_FOLIAGE
             #pragma shader_feature_local_fragment _ALPHACLIP_ON
             #pragma shader_feature_local_fragment _EMISSION_ON
             #pragma shader_feature_local_fragment _FAKELIGHT_ON
@@ -78,8 +78,6 @@ Shader "Bill's Toon/Opaque"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
-            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Lighting.hlsl"
-            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Foliage.hlsl"
 
             Varyings vert(Attributes v)
             {
@@ -102,19 +100,18 @@ Shader "Bill's Toon/Opaque"
                 half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv) * _BaseColor;
                 float3 viewDir = SafeNormalize(_WorldSpaceCameraPos.xyz - i.positionWS);
                 Light mainLight = GetEffectiveMainLight(i.positionWS);
+                half3 ambient = SampleSH(i.normalWS);
                 
-                half3 surfaceColor = 0;
+                half3 lighting = 0;
                 #if defined(_SURFACETYPE_OPAQUE)
-                    float3 lighting = CalculateToonLighting(i.normalWS, i.positionWS, mainLight);
-                    surfaceColor = albedo.rgb * (lighting + SampleSH(i.normalWS));
+                    lighting = CalculateToonLighting(i.normalWS, i.positionWS, mainLight);
                 #elif defined(_SURFACETYPE_METALLIC)
-                    float3 lighting = CalculateMetallicLighting(i.normalWS, viewDir, mainLight);
-                    surfaceColor = albedo.rgb * lighting;
+                    lighting = CalculateMetallicLighting(i.normalWS, viewDir, mainLight);
                 #elif defined(_SURFACETYPE_FOLIAGE)
-                    float3 lighting = CalculateFoliageLighting(i.normalWS, i.positionWS, mainLight);
-                    surfaceColor = albedo.rgb * (lighting + SampleSH(i.normalWS));
+                    lighting = CalculateFoliageLighting(i.normalWS, i.positionWS, mainLight);
                 #endif
 
+                half3 surfaceColor = albedo.rgb * (lighting + ambient);
                 surfaceColor = ApplyEmission(surfaceColor, i.uv);
                 surfaceColor = ApplyFresnelOutline(surfaceColor, i.normalWS, viewDir);
 
@@ -140,16 +137,9 @@ Shader "Bill's Toon/Opaque"
             #pragma shader_feature_local _SURFACETYPE_FOLIAGE
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
             
-            
-            half3 LerpWhiteTo(half3 b, half t)
-            {
-                return lerp(half3(1.0, 1.0, 1.0), b, t);
-            }
-            // Explicitly include Core.hlsl first, then Shadows.hlsl
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
-            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Foliage.hlsl"
 
             struct ShadowVaryings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
 
@@ -162,7 +152,6 @@ Shader "Bill's Toon/Opaque"
 
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 o.positionCS = GetShadowCoord(posInputs);
-
                 o.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 return o;
             }
