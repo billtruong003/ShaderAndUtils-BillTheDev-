@@ -1,7 +1,7 @@
 #ifndef TOON_UBER_LIGHTING_INCLUDED
 #define TOON_UBER_LIGHTING_INCLUDED
 
-#include "Assets\Shaders\Toon\ToonUberBreakDownShader\Includes\ToonUberCore.hlsl"
+#include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
 
 float3 CalculateToonLighting(float3 normalWS, float3 worldPos, Light mainLight)
 {

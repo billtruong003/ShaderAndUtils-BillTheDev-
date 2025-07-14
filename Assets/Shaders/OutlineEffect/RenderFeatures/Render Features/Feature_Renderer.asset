@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5626489256934977135
+--- !u!114 &-3959773003492513664
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,103 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: Render Feature  Outline Opaque
+  m_Script: {fileID: 11500000, guid: 246c17ff153234840bbeb08593f85ab3, type: 3}
+  m_Name: PerObjectProfilerFeature
   m_EditorClassIdentifier: 
   m_Active: 0
   settings:
-    passTag: Render Feature  Outline Opaque
-    Event: 300
-    filterSettings:
-      RenderQueueType: 0
-      LayerMask:
-        serializedVersion: 2
-        m_Bits: 4294967295
-      PassNames:
-      - OutlinePass
-    overrideMaterial: {fileID: 0}
-    overrideMaterialPassIndex: 0
-    overrideShader: {fileID: 0}
-    overrideShaderPassIndex: 0
-    overrideMode: 1
-    overrideDepthState: 0
-    depthCompareFunction: 4
-    enableWrite: 1
-    stencilSettings:
-      overrideStencilState: 0
-      stencilReference: 0
-      stencilCompareFunction: 8
-      passOperation: 0
-      failOperation: 0
-      zFailOperation: 0
-    cameraSettings:
-      overrideCamera: 0
-      restoreCamera: 1
-      offset: {x: 0, y: 0, z: 0, w: 0}
-      cameraFieldOfView: 60
---- !u!114 &-5457076824657212328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1614fc811f8f184697d9bee70ab9fe5, type: 3}
-  m_Name: DecalRendererFeature
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  m_Settings:
-    technique: 0
-    maxDrawDistance: 1000
-    decalLayers: 1
-    dBufferSettings:
-      surfaceData: 2
-    screenSpaceSettings:
-      normalBlend: 0
---- !u!114 &-5082045742588182058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: RenderObjects
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  settings:
-    passTag: RenderObjects
-    Event: 300
-    filterSettings:
-      RenderQueueType: 0
-      LayerMask:
-        serializedVersion: 2
-        m_Bits: 64
-      PassNames: []
-    overrideMaterial: {fileID: 2100000, guid: e260a684f72584acdac6f9aac98646f9, type: 2}
-    overrideMaterialPassIndex: 1
-    overrideShader: {fileID: 0}
-    overrideShaderPassIndex: 0
-    overrideMode: 1
-    overrideDepthState: 0
-    depthCompareFunction: 3
-    enableWrite: 1
-    stencilSettings:
-      overrideStencilState: 1
-      stencilReference: 1
-      stencilCompareFunction: 8
-      passOperation: 2
-      failOperation: 0
-      zFailOperation: 0
-    cameraSettings:
-      overrideCamera: 0
-      restoreCamera: 1
-      offset: {x: 0, y: 0, z: 0, w: 0}
-      cameraFieldOfView: 60
+    profilerTag: PerObjectProfiling
+    renderPassEvent: 500
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 64
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,12 +44,8 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
-  - {fileID: 3742361536663684561}
-  - {fileID: -5457076824657212328}
-  - {fileID: -5082045742588182058}
-  - {fileID: -5626489256934977135}
-  - {fileID: 2233887300319411723}
-  m_RendererFeatureMap: d185ec5dfd89ef33584c4a728a9144b4d6c1beac52f278b900000000000000000000000000000000
+  - {fileID: -3959773003492513664}
+  m_RendererFeatureMap: 80a8a5df6e0f0cc9
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -155,85 +64,10 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
-  m_RenderingMode: 0
+  m_RenderingMode: 2
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 0
   m_DepthAttachmentFormat: 0
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 1
   m_IntermediateTextureMode: 1
---- !u!114 &2233887300319411723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: Render Feature  Outline Transparent
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  settings:
-    passTag: Render Feature  Outline Transparent
-    Event: 500
-    filterSettings:
-      RenderQueueType: 1
-      LayerMask:
-        serializedVersion: 2
-        m_Bits: 4294967295
-      PassNames:
-      - OutlinePass
-    overrideMaterial: {fileID: 0}
-    overrideMaterialPassIndex: 0
-    overrideShader: {fileID: 0}
-    overrideShaderPassIndex: 0
-    overrideMode: 1
-    overrideDepthState: 0
-    depthCompareFunction: 4
-    enableWrite: 1
-    stencilSettings:
-      overrideStencilState: 0
-      stencilReference: 0
-      stencilCompareFunction: 8
-      passOperation: 0
-      failOperation: 0
-      zFailOperation: 0
-    cameraSettings:
-      overrideCamera: 0
-      restoreCamera: 1
-      offset: {x: 0, y: 0, z: 0, w: 0}
-      cameraFieldOfView: 60
---- !u!114 &3742361536663684561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbd6e526a1bb489a8df34cbfcfca6bfc, type: 3}
-  m_Name: OutlineRenderFeature
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  FeatureSettings:
-    RenderPassEvent: 600
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 4160
-    RenderingLayerMask:
-      serializedVersion: 0
-      m_Bits: 3
-    OverrideMaterial: {fileID: -876546973899608171, guid: 4f3bc6b888d3080448e0c3bb6fc9deb0, type: 3}
-    BlitMaterial: {fileID: -876546973899608171, guid: 6c897a44b62e6d84e9b0f6d5238a158e, type: 3}
-    ClearDepth: 0
-  MaterialSettings:
-    OutlineScale: 0.25
-    RobertsCrossMultiplier: 51.75
-    DepthThreshold: 50
-    NormalThreshold: 0.5
-    SteepAngleThreshold: 25
-    SteepAngleMultiplier: 25
-    OutlineColor: {r: 0, g: 0, b: 0, a: 1}

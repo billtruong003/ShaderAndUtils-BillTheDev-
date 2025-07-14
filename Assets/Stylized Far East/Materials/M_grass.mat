@@ -26,15 +26,13 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
-  - EFFECT_SUBSURFACE
   - _ALPHACLIP_ON
   - _FAKELIGHT_ON
   - _SURFACETYPE_OPAQUE
-  - _WINDQUALITY_NONE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -144,7 +142,7 @@ Material:
     - _CelShadingThreshold: 0.429
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorHeight: 2.46
+    - _ColorHeight: 5
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -158,6 +156,7 @@ Material:
     - _EnvironmentReflections: 1
     - _FakeLightMode: 1
     - _FresnelOutlinePower: 5
+    - _FresnelOutlineToggle: 0
     - _FresnelOutlineWidth: 0.1
     - _FresnelPower: 5
     - _GlassSpecularIntensity: 1
@@ -196,18 +195,21 @@ Material:
     - _SurfaceType: 0
     - _ToonRampOffset: 0.661
     - _ToonRampSmoothness: 0.001
+    - _TranslucencyStrength: 1
     - _TranslucencyViewDependency: 0.7
     - _TwoSided: 0
     - _UVSec: 0
+    - _WindAmplitude: 0.1
+    - _WindFrequency: 2
     - _WindQuality: 0
-    - _WindScale: 4.89
-    - _WindSpeed: 1.39
-    - _WindStrength: 0.349
+    - _WindScale: 5.75
+    - _WindSpeed: 5
+    - _WindStrength: 0.641
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0.822528, g: 1, b: 0.34433955, a: 1}
+    - _BaseColor: {r: 0.022774577, g: 1, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FakeLightColor: {r: 1, g: 1, b: 1, a: 1}
     - _FakeLightDirection: {r: 5, g: 5, b: -0.5, a: 0}
@@ -219,14 +221,15 @@ Material:
     - _HueVariationColor: {r: 1, g: 0.5, b: 0, a: 0.1}
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 0}
     - _RimColor: {r: 1, g: 0.29999998, b: 0.29999998, a: 1}
-    - _ShadowColor: {r: 0.09999997, g: 0.29999998, b: 0.049999982, a: 1}
+    - _ShadowColor: {r: 0.044923633, g: 0.23584908, b: 0, a: 1}
     - _ShadowTint: {r: 0.09999997, g: 0.09999997, b: 0.19999996, a: 1}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _SpecuColor: {r: 0.8, g: 0.45, b: 0.19999996, a: 1}
     - _SubsurfaceColor: {r: 0.7128401, g: 0.764151, b: 0.3280082, a: 1}
-    - _TipColor: {r: 0.5, g: 0.8, b: 0.19999996, a: 1}
+    - _TipColor: {r: 0.1034369, g: 0.6117647, b: 0, a: 1}
     - _TranslucencyColor: {r: 0.73, g: 0.85, b: 0.40999997, a: 1}
     - _TreeInstanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _TreeInstanceScale: {r: 1, g: 1, b: 1, a: 1}
+    - _WindDirection: {r: 1, g: 0, b: 0.5, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

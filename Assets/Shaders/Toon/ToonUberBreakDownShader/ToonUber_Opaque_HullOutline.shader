@@ -71,7 +71,7 @@ Shader "Custom/Toon Uber/Opaque (Hull Outline)"
             
             #pragma shader_feature_local _OUTLINE_SCALE_WITH_DISTANCE
 
-            #include "Assets\Shaders\Toon\ToonUberBreakDownShader\Includes\ToonUberCore.hlsl"
+            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
             
             struct OutlineVaryings { float4 positionCS : SV_POSITION; };
             
@@ -125,9 +125,9 @@ Shader "Custom/Toon Uber/Opaque (Hull Outline)"
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             
-            #include "Assets\Shaders\Toon\ToonUberBreakDownShader\Includes\ToonUberCore.hlsl"
-            #include "Assets\Shaders\Toon\ToonUberBreakDownShader\Includes\ToonUber_Lighting.hlsl"
-            #include "Assets\Shaders\Toon\ToonUberBreakDownShader\Includes\ToonUber_Foliage.hlsl"
+            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
+            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Lighting.hlsl"
+            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Foliage.hlsl"
 
             Varyings vert(Attributes v)
             {
@@ -190,8 +190,8 @@ Shader "Custom/Toon Uber/Opaque (Hull Outline)"
             #pragma shader_feature_local _SURFACETYPE_FOLIAGE
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
-            #include "Assets\Shaders\Toon\ToonUberBreakDownShader\Includes\ToonUberCore.hlsl"
-            #include "Assets\Shaders\Toon\ToonUberBreakDownShader\Includes\ToonUber_Foliage.hlsl"
+            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
+            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUber_Foliage.hlsl"
 
             struct ShadowVaryings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
 

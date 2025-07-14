@@ -1,0 +1,1688 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3464d08b1ecd7f340818bc7e77ef59cc, type: 3}
+  m_Name: ShaderAnalysisData
+  m_EditorClassIdentifier: 
+  AllShaderStats:
+  - ShaderName: AllIn1Vfx/Others/ZWrite
+    StaticComplexityScore: 2.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: AllIn1Vfx/Others/ZWriteGpuInstancing
+    StaticComplexityScore: 2.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: AllIn1Vfx/Noises/AllIn1VfxFractalNoise
+    StaticComplexityScore: 7.55
+    SamplerCount: 0
+    InstructionCost: 10
+  - ShaderName: AllIn1Vfx/Noises/AllIn1VfxWorleyNoise
+    StaticComplexityScore: 7.95
+    SamplerCount: 0
+    InstructionCost: 19
+  - ShaderName: AllIn1Vfx/AllIn1Vfx
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 17
+    InstructionCost: 547
+  - ShaderName: AllIn1Vfx/AllIn1VfxBuiltIn
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 17
+    InstructionCost: 596
+  - ShaderName: AllIn1Vfx/AllIn1VfxGrabPass
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 17
+    InstructionCost: 616
+  - ShaderName: Malbers/Anisotropic/Circular
+    StaticComplexityScore: 39.95
+    SamplerCount: 6
+    InstructionCost: 54
+  - ShaderName: Malbers/Anisotropic/Ward
+    StaticComplexityScore: 29.55
+    SamplerCount: 3
+    InstructionCost: 20
+  - ShaderName: Malbers/Color3x3
+    StaticComplexityScore: 42.35
+    SamplerCount: 4
+    InstructionCost: 23
+  - ShaderName: Malbers/Color4x3
+    StaticComplexityScore: 37.35
+    SamplerCount: 2
+    InstructionCost: 13
+  - ShaderName: Malbers/Color4x4 Unlit
+    StaticComplexityScore: 35.85
+    SamplerCount: 2
+    InstructionCost: 13
+  - ShaderName: Malbers/Color4x4
+    StaticComplexityScore: 44.35
+    SamplerCount: 2
+    InstructionCost: 13
+  - ShaderName: Malbers/DragonEggs
+    StaticComplexityScore: 34.55
+    SamplerCount: 5
+    InstructionCost: 40
+  - ShaderName: Malbers/Fur
+    StaticComplexityScore: 48.45
+    SamplerCount: 8
+    InstructionCost: 109
+  - ShaderName: Malbers/Golem PA
+    StaticComplexityScore: 31.55
+    SamplerCount: 2
+    InstructionCost: 10
+  - ShaderName: Malbers/Gradient4
+    StaticComplexityScore: 36.25
+    SamplerCount: 3
+    InstructionCost: 22
+  - ShaderName: Malbers/Mask4Realistic
+    StaticComplexityScore: 40.05
+    SamplerCount: 6
+    InstructionCost: 50
+  - ShaderName: Malbers/Masks4Toon
+    StaticComplexityScore: 32.05
+    SamplerCount: 3
+    InstructionCost: 20
+  - ShaderName: Malbers/Mask8Realistic
+    StaticComplexityScore: 48.55
+    SamplerCount: 7
+    InstructionCost: 60
+  - ShaderName: Malbers/Masks8Toon
+    StaticComplexityScore: 39.55
+    SamplerCount: 4
+    InstructionCost: 30
+  - ShaderName: Malbers/MWater2
+    StaticComplexityScore: 34.45
+    SamplerCount: 1
+    InstructionCost: 24
+  - ShaderName: Malbers/Wind
+    StaticComplexityScore: 10.85
+    SamplerCount: 3
+    InstructionCost: 33
+  - ShaderName: Shader Graphs/Impact
+    StaticComplexityScore: 34.25
+    SamplerCount: 8
+    InstructionCost: 2
+  - ShaderName: Shader Graphs/Orb Warp Lit
+    StaticComplexityScore: 39.55
+    SamplerCount: 6
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Orb Warp
+    StaticComplexityScore: 34.55
+    SamplerCount: 6
+    InstructionCost: 0
+  - ShaderName: GAP_SG/ParallaxOcclusion
+    StaticComplexityScore: 28.05
+    SamplerCount: 5
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Slash World
+    StaticComplexityScore: 31.15
+    SamplerCount: 5
+    InstructionCost: 6
+  - ShaderName: Shader Graphs/Slash
+    StaticComplexityScore: 34.75
+    SamplerCount: 8
+    InstructionCost: 2
+  - ShaderName: Shader Graphs/Trail
+    StaticComplexityScore: 40.65
+    SamplerCount: 6
+    InstructionCost: 16
+  - ShaderName: UI/Particles/Hidden
+    StaticComplexityScore: 2.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: UI/Additive
+    StaticComplexityScore: 7.55
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Shader Graphs/Bar
+    StaticComplexityScore: 18.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/CustomShader
+    StaticComplexityScore: 47.05
+    SamplerCount: 4
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/LitShader
+    StaticComplexityScore: 43.05
+    SamplerCount: 4
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/UberParticles
+    StaticComplexityScore: 59.25
+    SamplerCount: 7
+    InstructionCost: 2
+  - ShaderName: Particles Alpha Blended + TEXCOORD1
+    StaticComplexityScore: 4.55
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Particles Alpha Blended Textureless
+    StaticComplexityScore: 3.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Particles Anim Alpha Blended + MV Tex
+    StaticComplexityScore: 6.05
+    SamplerCount: 2
+    InstructionCost: 20
+  - ShaderName: Hidden/Mirza Beig/Image Effects/Sharpen
+    StaticComplexityScore: 11.55
+    SamplerCount: 1
+    InstructionCost: 90
+  - ShaderName: Screen Rain
+    StaticComplexityScore: 10.15
+    SamplerCount: 2
+    InstructionCost: 26
+  - ShaderName: Particles/Additive (Soft + Mult)
+    StaticComplexityScore: 5.05
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Mirza Beig/Particles/Alpha Cutoff/Additive
+    StaticComplexityScore: 5.75
+    SamplerCount: 1
+    InstructionCost: 12
+  - ShaderName: Mirza Beig/Particles/Alpha Cutoff/Alpha Blended
+    StaticComplexityScore: 5.75
+    SamplerCount: 1
+    InstructionCost: 12
+  - ShaderName: Particles/Anim Additive
+    StaticComplexityScore: 5.55
+    SamplerCount: 1
+    InstructionCost: 20
+  - ShaderName: Mirza Beig/Particles/Distance Fade/Additive
+    StaticComplexityScore: 5.55
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Mirza Beig/Particles/Distance Fade/Alpha Blended
+    StaticComplexityScore: 5.55
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Mirza Beig/Particles/Distance Fade/Anim Additive
+    StaticComplexityScore: 6.55
+    SamplerCount: 1
+    InstructionCost: 20
+  - ShaderName: Mirza Beig/Particles/Distance Fade/Anim Alpha Blended
+    StaticComplexityScore: 6.55
+    SamplerCount: 1
+    InstructionCost: 20
+  - ShaderName: Mirza Beig/Particles/Distortion/Add
+    StaticComplexityScore: 7.25
+    SamplerCount: 1
+    InstructionCost: 12
+  - ShaderName: Mirza Beig/Particles/Distortion/Alpha Blended
+    StaticComplexityScore: 9.05
+    SamplerCount: 2
+    InstructionCost: 20
+  - ShaderName: Mirza Beig/Particles/Texture Distortion/Additive
+    StaticComplexityScore: 11.55
+    SamplerCount: 4
+    InstructionCost: 40
+  - ShaderName: Mirza Beig/Particles/Texture Distortion/Alpha Blended
+    StaticComplexityScore: 12.05
+    SamplerCount: 4
+    InstructionCost: 40
+  - ShaderName: Mirza Beig/Particles/Intersection Highlight/Additive
+    StaticComplexityScore: 6.25
+    SamplerCount: 1
+    InstructionCost: 12
+  - ShaderName: Mirza Beig/Particles/Intersection Highlight/Alpha Blended
+    StaticComplexityScore: 6.25
+    SamplerCount: 1
+    InstructionCost: 12
+  - ShaderName: Mirza Beig/Particles/Mask/Alpha Blended
+    StaticComplexityScore: 6.25
+    SamplerCount: 2
+    InstructionCost: 22
+  - ShaderName: Mirza Beig/Particles/No Fog/Additive
+    StaticComplexityScore: 4.55
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Mirza Beig/Particles/No Fog/Alpha Blended
+    StaticComplexityScore: 4.55
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Mirza Beig/Standard/Terrain Rain 2
+    StaticComplexityScore: 45.95
+    SamplerCount: 10
+    InstructionCost: 94
+  - ShaderName: Mirza Beig/Standard/Terrain Rain
+    StaticComplexityScore: 45.95
+    SamplerCount: 10
+    InstructionCost: 94
+  - ShaderName: MyShaders/UI/URP_SelectionWheel_Donut
+    StaticComplexityScore: 298.45
+    SamplerCount: 0
+    InstructionCost: 2889
+  - ShaderName: Alvios/Noise Flow
+    StaticComplexityScore: 28.05
+    SamplerCount: 2
+    InstructionCost: 30
+  - ShaderName: StandardDoubleSide
+    StaticComplexityScore: 2.1499085e+14
+    SamplerCount: 9
+    InstructionCost: 6
+  - ShaderName: Outlined/Silhouette Only
+    StaticComplexityScore: 21.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Skybox/Cubemap Blend
+    StaticComplexityScore: 18.5
+    SamplerCount: 2
+    InstructionCost: 33
+  - ShaderName: Skybox/Cubemap Extended
+    StaticComplexityScore: 16
+    SamplerCount: 1
+    InstructionCost: 23
+  - ShaderName: Hidden/BOXOPHOBIC/Helpers/Channel Preview
+    StaticComplexityScore: 6.85
+    SamplerCount: 2
+    InstructionCost: 28
+  - ShaderName: Shader Graphs/ScaleTilingShader
+    StaticComplexityScore: 29.55
+    SamplerCount: 6
+    InstructionCost: 0
+  - ShaderName: AllIn1SpringsToolkit/Demo/FakeLight
+    StaticComplexityScore: 8.35
+    SamplerCount: 1
+    InstructionCost: 13
+  - ShaderName: AllIn1SpringsToolkit/Demo/ScrollTexture
+    StaticComplexityScore: 5.05
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: AllIn1SpringsToolkit/Demo/UIGradient
+    StaticComplexityScore: 5.35
+    SamplerCount: 1
+    InstructionCost: 13
+  - ShaderName: AllIn1SpriteShader/AllIn1SpriteShader
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 12
+    InstructionCost: 822
+  - ShaderName: AllIn1SpriteShader/AllIn1SpriteShaderLit
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 16
+    InstructionCost: 13866
+  - ShaderName: AllIn1SpriteShader/AllIn1SpriteShaderScaledTime
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 12
+    InstructionCost: 822
+  - ShaderName: AllIn1SpriteShader/AllIn1SpriteShaderUiMask
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 12
+    InstructionCost: 820
+  - ShaderName: AllIn1SpriteShader/AllIn1SpriteShaderUiMaskScaledTime
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 12
+    InstructionCost: 820
+  - ShaderName: Custom/ScreenSpaceGradient
+    StaticComplexityScore: 5.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Custom/Skybox3Colors
+    StaticComplexityScore: 5.65
+    SamplerCount: 0
+    InstructionCost: 6
+  - ShaderName: Custom/SkyStylized
+    StaticComplexityScore: 16.6
+    SamplerCount: 1
+    InstructionCost: 27
+  - ShaderName: AllIn13DShader/Noises/AllIn13DShaderFractalNoise
+    StaticComplexityScore: 7.55
+    SamplerCount: 0
+    InstructionCost: 10
+  - ShaderName: AllIn13DShader/Noises/AllIn13DShaderWorleyNoise
+    StaticComplexityScore: 7.95
+    SamplerCount: 0
+    InstructionCost: 19
+  - ShaderName: AllIn13DShader/AllIn13DShader
+    StaticComplexityScore: 1180273.1
+    SamplerCount: 23
+    InstructionCost: 4916
+  - ShaderName: AllIn13DShader/AllIn13DShader_NoShadowCaster
+    StaticComplexityScore: 590443.3
+    SamplerCount: 23
+    InstructionCost: 4898
+  - ShaderName: AllIn13DShader/AllIn13DShaderOutline
+    StaticComplexityScore: 1180280.4
+    SamplerCount: 23
+    InstructionCost: 4918
+  - ShaderName: AllIn13DShader/AllIn13DShaderOutline_NoShadowCaster
+    StaticComplexityScore: 590450.5
+    SamplerCount: 23
+    InstructionCost: 4900
+  - ShaderName: Hidden/Sirenix/Editor/ExtractSprite
+    StaticComplexityScore: 5.05
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Hidden/Sirenix/OdinGUIShader
+    StaticComplexityScore: 3.25
+    SamplerCount: 0
+    InstructionCost: 12
+  - ShaderName: Hidden/Sirenix/Editor/GUIIcon
+    StaticComplexityScore: 5.05
+    SamplerCount: 1
+    InstructionCost: 20
+  - ShaderName: Hidden/Sirenix/SdfIconShader
+    StaticComplexityScore: 3.8500001
+    SamplerCount: 0
+    InstructionCost: 18
+  - ShaderName: Shader Graphs/SkyPlanet
+    StaticComplexityScore: 19.05
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/BlobShadow_Graph
+    StaticComplexityScore: 20.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/PaintSplat_Graph
+    StaticComplexityScore: 21.75
+    SamplerCount: 3
+    InstructionCost: 2
+  - ShaderName: Shader Graphs/PointLight_Graph
+    StaticComplexityScore: 20.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/SpotLightProxy_Graph
+    StaticComplexityScore: 20.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/BlitMaterial
+    StaticComplexityScore: 8.05
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Quad
+    StaticComplexityScore: 20.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/DepthEdge
+    StaticComplexityScore: 7.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Distort
+    StaticComplexityScore: 7.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Tunnel
+    StaticComplexityScore: 20.55
+    SamplerCount: 4
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Glitch_Graph
+    StaticComplexityScore: 21.05
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/SwirlyFrame_Graph
+    StaticComplexityScore: 9.05
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Dither_Graph
+    StaticComplexityScore: 19.05
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/DepthColor_graph
+    StaticComplexityScore: 21.05
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Sand_Graph
+    StaticComplexityScore: 28.55
+    SamplerCount: 4
+    InstructionCost: 10
+  - ShaderName: Shader Graphs/TrailMap
+    StaticComplexityScore: 8.05
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: GUI/3D Text Shader - Cull Back
+    StaticComplexityScore: 3.05
+    SamplerCount: 1
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/GradientRemap_Graph
+    StaticComplexityScore: 27.05
+    SamplerCount: 4
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Wall_Graph
+    StaticComplexityScore: 26.05
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: BlitWithMaterial
+    StaticComplexityScore: 306.75
+    SamplerCount: 0
+    InstructionCost: 3047
+  - ShaderName: FrameBufferFetch
+    StaticComplexityScore: 308.75
+    SamplerCount: 0
+    InstructionCost: 3047
+  - ShaderName: Universal Render Pipeline/GBuffer_Visualization_Shader_Sample
+    StaticComplexityScore: 298.35
+    SamplerCount: 0
+    InstructionCost: 2873
+  - ShaderName: Hidden/MrtColor
+    StaticComplexityScore: 289.85
+    SamplerCount: 1
+    InstructionCost: 2873
+  - ShaderName: Shader Graphs/BlitTargetTexture
+    StaticComplexityScore: 8.05
+    SamplerCount: 4
+    InstructionCost: 0
+  - ShaderName: Unlit/AdvancedMinimapShader_V4_NoBorder
+    StaticComplexityScore: 11.1
+    SamplerCount: 2
+    InstructionCost: 25
+  - ShaderName: Custom/URP/MapReveal
+    StaticComplexityScore: 295.55002
+    SamplerCount: 3
+    InstructionCost: 2905
+  - ShaderName: Shader Graphs/InstancedColor
+    StaticComplexityScore: 33.55
+    SamplerCount: 4
+    InstructionCost: 0
+  - ShaderName: URP/After Image Effect Enhanced
+    StaticComplexityScore: 301.1
+    SamplerCount: 2
+    InstructionCost: 2920
+  - ShaderName: URP/After Image Effect
+    StaticComplexityScore: 295.05002
+    SamplerCount: 2
+    InstructionCost: 2900
+  - ShaderName: Custom/CircleShaderURP
+    StaticComplexityScore: 296.65
+    SamplerCount: 2
+    InstructionCost: 2891
+  - ShaderName: Custom/DecalShader
+    StaticComplexityScore: 464.30002
+    SamplerCount: 0
+    InstructionCost: 4616
+  - ShaderName: Unlit/Hole
+    StaticComplexityScore: 6.1
+    SamplerCount: 2
+    InstructionCost: 20
+  - ShaderName: Custom/Stencil Decal
+    StaticComplexityScore: 15.65
+    SamplerCount: 3
+    InstructionCost: 46
+  - ShaderName: Custom/URPDecalOrtho
+    StaticComplexityScore: 306.75
+    SamplerCount: 3
+    InstructionCost: 2937
+  - ShaderName: Universal Render Pipeline/Wireframe/DisplacementFade
+    StaticComplexityScore: 311.7
+    SamplerCount: 1
+    InstructionCost: 3021
+  - ShaderName: Custom/URP/AdvancedDissolveToonShader
+    StaticComplexityScore: 487.85
+    SamplerCount: 2
+    InstructionCost: 4738
+  - ShaderName: Universal Render Pipeline/Wireframe/DisplacementFade-SimpleLit
+    StaticComplexityScore: 603980300
+    SamplerCount: 2
+    InstructionCost: 4703
+  - ShaderName: Universal Render Pipeline/Wireframe/DisplacementFadeWire
+    StaticComplexityScore: 311.7
+    SamplerCount: 1
+    InstructionCost: 3021
+  - ShaderName: Stylized/TrueObjectSpace_MultiPulse_Improved
+    StaticComplexityScore: 302.25
+    SamplerCount: 4
+    InstructionCost: 2922
+  - ShaderName: Custom/ProcEyeTexturedURP
+    StaticComplexityScore: 508.80002
+    SamplerCount: 3
+    InstructionCost: 4690
+  - ShaderName: Custom/ProcEyeTexturedURPNoPolar
+    StaticComplexityScore: 526.2
+    SamplerCount: 5
+    InstructionCost: 4728
+  - ShaderName: Custom/URP/ToonEyeAdvanced_Pro
+    StaticComplexityScore: 493.1
+    SamplerCount: 8
+    InstructionCost: 4692
+  - ShaderName: Custom/URP/ToonWhiteEye_Pro
+    StaticComplexityScore: 690.60004
+    SamplerCount: 4
+    InstructionCost: 4650
+  - ShaderName: Example/FakeVolumetricFog
+    StaticComplexityScore: 290.75
+    SamplerCount: 0
+    InstructionCost: 2877
+  - ShaderName: Example/GlowOutline
+    StaticComplexityScore: 290.95
+    SamplerCount: 0
+    InstructionCost: 2879
+  - ShaderName: Example/HologramDissolve
+    StaticComplexityScore: 290.75
+    SamplerCount: 0
+    InstructionCost: 2877
+  - ShaderName: Example/OptimizedFakeVolumetricFog
+    StaticComplexityScore: 471.55002
+    SamplerCount: 1
+    InstructionCost: 4615
+  - ShaderName: Example/SoftParticles
+    StaticComplexityScore: 291.75
+    SamplerCount: 1
+    InstructionCost: 2887
+  - ShaderName: Custom/StylizedWater
+    StaticComplexityScore: 484.30002
+    SamplerCount: 4
+    InstructionCost: 4691
+  - ShaderName: Example/WaterDepthFade
+    StaticComplexityScore: 290.75
+    SamplerCount: 0
+    InstructionCost: 2877
+  - ShaderName: Unlit/FogPlane
+    StaticComplexityScore: 3.25
+    SamplerCount: 0
+    InstructionCost: 2
+  - ShaderName: Custom/FullScreenFog
+    StaticComplexityScore: 294.4
+    SamplerCount: 0
+    InstructionCost: 2901
+  - ShaderName: Custom/LightweightVolumetricNoiseFog
+    StaticComplexityScore: 12.85
+    SamplerCount: 1
+    InstructionCost: 23
+  - ShaderName: Custom/URPObjectFog
+    StaticComplexityScore: 300.85
+    SamplerCount: 2
+    InstructionCost: 2907
+  - ShaderName: MyShaders/VerticalFogURP
+    StaticComplexityScore: 469.35
+    SamplerCount: 0
+    InstructionCost: 4603
+  - ShaderName: Minimalist/Ultra Lightweight Transparent Glass
+    StaticComplexityScore: 292.15
+    SamplerCount: 0
+    InstructionCost: 2886
+  - ShaderName: Stylized/Dithered Glass
+    StaticComplexityScore: 471.55002
+    SamplerCount: 0
+    InstructionCost: 4625
+  - ShaderName: PerfHeatMap/Volume
+    StaticComplexityScore: 8.35
+    SamplerCount: 1
+    InstructionCost: 8
+  - ShaderName: Tutorial/FuturisticShield_With_Tiling
+    StaticComplexityScore: 513.7
+    SamplerCount: 2
+    InstructionCost: 4673
+  - ShaderName: Tutorial/SimpleHologram
+    StaticComplexityScore: 298.15
+    SamplerCount: 1
+    InstructionCost: 2901
+  - ShaderName: Universal Render Pipeline/Wireframe/HologramDisplacementFade
+    StaticComplexityScore: 301.9
+    SamplerCount: 1
+    InstructionCost: 2898
+  - ShaderName: DanTheCreative/MagicCircleUber
+    StaticComplexityScore: 516.65
+    SamplerCount: 3
+    InstructionCost: 4662
+  - ShaderName: Shader Graphs/AdvancedWaterfall
+    StaticComplexityScore: 34.05
+    SamplerCount: 5
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Appear
+    StaticComplexityScore: 23.55
+    SamplerCount: 5
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Decals
+    StaticComplexityScore: 19.05
+    SamplerCount: 4
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Disappear
+    StaticComplexityScore: 23.55
+    SamplerCount: 5
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/GlitchWireframe
+    StaticComplexityScore: 38.75
+    SamplerCount: 3
+    InstructionCost: 17
+  - ShaderName: Shader Graphs/LightningParticles
+    StaticComplexityScore: 19.55
+    SamplerCount: 5
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/LiquidEffect
+    StaticComplexityScore: 27.25
+    SamplerCount: 4
+    InstructionCost: 2
+  - ShaderName: Paint1G_WAnim_Shader
+    StaticComplexityScore: 29.05
+    SamplerCount: 8
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Stylized Skybox
+    StaticComplexityScore: 33.55
+    SamplerCount: 7
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/StylizedGlass
+    StaticComplexityScore: 24.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/StylizedWaterInteractive
+    StaticComplexityScore: 29.55
+    SamplerCount: 5
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/SwapTextures
+    StaticComplexityScore: 28.05
+    SamplerCount: 6
+    InstructionCost: 0
+  - ShaderName: StoryLabResearch/VAT/TemplateVAT
+    StaticComplexityScore: 57.55
+    SamplerCount: 8
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/Vertical Dissolve Stream
+    StaticComplexityScore: 32.05
+    SamplerCount: 5
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/VerticleDissolve
+    StaticComplexityScore: 32.05
+    SamplerCount: 5
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/WorldPositionEffects
+    StaticComplexityScore: 29.55
+    SamplerCount: 6
+    InstructionCost: 0
+  - ShaderName: Custom/URP Lightweight Outline
+    StaticComplexityScore: 475.9
+    SamplerCount: 2
+    InstructionCost: 4658
+  - ShaderName: CustomEffects/Blur
+    StaticComplexityScore: 311.15
+    SamplerCount: 0
+    InstructionCost: 3071
+  - ShaderName: Shader Graphs/DesaturateFullscreen
+    StaticComplexityScore: 8.05
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Hidden/S_ScreenSpaceOutlines
+    StaticComplexityScore: 11.25
+    SamplerCount: 3
+    InstructionCost: 2
+  - ShaderName: Hidden/S_ViewSpaceNormals
+    StaticComplexityScore: 18.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Hidden/Hidden_ScreenSpaceOutlines
+    StaticComplexityScore: 299.85
+    SamplerCount: 0
+    InstructionCost: 2923
+  - ShaderName: Unlit/Fast Outline
+    StaticComplexityScore: 290.35
+    SamplerCount: 0
+    InstructionCost: 2873
+  - ShaderName: Hidden/OutlineEffect
+    StaticComplexityScore: 13.25
+    SamplerCount: 1
+    InstructionCost: 72
+  - ShaderName: Particles/Lightning
+    StaticComplexityScore: 7.45
+    SamplerCount: 2
+    InstructionCost: 24
+  - ShaderName: VNTALKINGTECH/Magic Portal Ultimate
+    StaticComplexityScore: 304.45
+    SamplerCount: 3
+    InstructionCost: 2924
+  - ShaderName: CleanCode/AdvancedPortal
+    StaticComplexityScore: 321.9
+    SamplerCount: 4
+    InstructionCost: 2987
+  - ShaderName: Custom/SimpleSpriteProgress
+    StaticComplexityScore: 294.85
+    SamplerCount: 1
+    InstructionCost: 2883
+  - ShaderName: My Shaders/MultiStyleReticleShader
+    StaticComplexityScore: 307.1
+    SamplerCount: 2
+    InstructionCost: 2969
+  - ShaderName: Stylized/URP/Outline Only
+    StaticComplexityScore: 290.55002
+    SamplerCount: 0
+    InstructionCost: 2875
+  - ShaderName: Stylized/URP/Stylized Rock (Lean)
+    StaticComplexityScore: 493
+    SamplerCount: 2
+    InstructionCost: 4623
+  - ShaderName: Shader Graphs/Stylized Water
+    StaticComplexityScore: 38.55
+    SamplerCount: 6
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/water test
+    StaticComplexityScore: 2.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: CleanCode/StylizedWater_GraphLogic
+    StaticComplexityScore: 514.4
+    SamplerCount: 3
+    InstructionCost: 4691
+  - ShaderName: Custom/URP/ToonShader
+    StaticComplexityScore: 466.85
+    SamplerCount: 1
+    InstructionCost: 4618
+  - ShaderName: Custom/URP/ToonShaderInteractive_URP_Modern
+    StaticComplexityScore: 495.7
+    SamplerCount: 2
+    InstructionCost: 4623
+  - ShaderName: Custom/URP/LightweightToonFadeDistance
+    StaticComplexityScore: 471.35
+    SamplerCount: 1
+    InstructionCost: 4608
+  - ShaderName: Custom/URP/LightweightToonFadeDistanceSaturate
+    StaticComplexityScore: 471.35
+    SamplerCount: 1
+    InstructionCost: 4608
+  - ShaderName: Custom/ToonShaderFromGraph
+    StaticComplexityScore: 493.15
+    SamplerCount: 2
+    InstructionCost: 4621
+  - ShaderName: Shader Graphs/ToonShading
+    StaticComplexityScore: 28.95
+    SamplerCount: 5
+    InstructionCost: 4
+  - ShaderName: Shader Graphs/ToonShadingUpdatedNode
+    StaticComplexityScore: 29.85
+    SamplerCount: 5
+    InstructionCost: 8
+  - ShaderName: Custom/Toon Uber/Opaque
+    StaticComplexityScore: 494.6
+    SamplerCount: 3
+    InstructionCost: 4674
+  - ShaderName: Custom/Toon Uber/Opaque (Hull Outline)
+    StaticComplexityScore: 504.30002
+    SamplerCount: 3
+    InstructionCost: 4674
+  - ShaderName: Custom/Toon Uber/Transparent
+    StaticComplexityScore: 477
+    SamplerCount: 2
+    InstructionCost: 4641
+  - ShaderName: Stylized/URP/Grass Terrain Toon (No Outline)
+    StaticComplexityScore: 490.45
+    SamplerCount: 1
+    InstructionCost: 4614
+  - ShaderName: Custom/Toon Uber Shader
+    StaticComplexityScore: 545.5
+    SamplerCount: 3
+    InstructionCost: 4685
+  - ShaderName: Custom/Stylized Glass
+    StaticComplexityScore: 294.35
+    SamplerCount: 1
+    InstructionCost: 2888
+  - ShaderName: Custom/VR Additive Glass
+    StaticComplexityScore: 291.15
+    SamplerCount: 0
+    InstructionCost: 2876
+  - ShaderName: VAT/VertexAnimationURP
+    StaticComplexityScore: 475.6
+    SamplerCount: 3
+    InstructionCost: 4630
+  - ShaderName: Universal Render Pipeline/Wireframe/DisplacementFadeFakeWireFrame
+    StaticComplexityScore: 313.2
+    SamplerCount: 2
+    InstructionCost: 3031
+  - ShaderName: VR/SpatialMapping/Wireframe
+    StaticComplexityScore: 3.35
+    SamplerCount: 0
+    InstructionCost: 8
+  - ShaderName: Universal Render Pipeline/Wireframe/DisplacementFade-SimpleLit-Compute
+    StaticComplexityScore: 905970200
+    SamplerCount: 2
+    InstructionCost: 4699
+  - ShaderName: Custom/URPWorldPosSphere
+    StaticComplexityScore: 494.65
+    SamplerCount: 3
+    InstructionCost: 4655
+  - ShaderName: UI/Demo/Color Picker
+    StaticComplexityScore: 8.7
+    SamplerCount: 2
+    InstructionCost: 10
+  - ShaderName: Sprite Shaders Ultimate/2D Lit URP SSU
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 24
+    InstructionCost: 12064
+  - ShaderName: Sprite Shaders Ultimate/3D Lit BuiltIn SSU
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 22
+    InstructionCost: 6754
+  - ShaderName: Sprite Shaders Ultimate/3D Lit Cutout BuiltIn SSU
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 22
+    InstructionCost: 6754
+  - ShaderName: Sprite Shaders Ultimate/3D Lit Cutout URP SSU
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 25
+    InstructionCost: 18882
+  - ShaderName: Sprite Shaders Ultimate/3D Lit URP SSU
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 25
+    InstructionCost: 18882
+  - ShaderName: Sprite Shaders Ultimate/Additive GUI SSU
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 19
+    InstructionCost: 1296
+  - ShaderName: Sprite Shaders Ultimate/Additive SSU
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 20
+    InstructionCost: 1320
+  - ShaderName: Sprite Shaders Ultimate/GUI SSU
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 19
+    InstructionCost: 1296
+  - ShaderName: Sprite Shaders Ultimate/Multiplicative SSU
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 20
+    InstructionCost: 1320
+  - ShaderName: Sprite Shaders Ultimate/Standard SSU
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 20
+    InstructionCost: 1320
+  - ShaderName: TextMeshPro/Optimized/Mobile SDF (Face with Outline)
+    StaticComplexityScore: 22.4
+    SamplerCount: 1
+    InstructionCost: 22
+  - ShaderName: TextMeshPro/Optimized/Mobile SDF (Face Only)
+    StaticComplexityScore: 18.1
+    SamplerCount: 1
+    InstructionCost: 19
+  - ShaderName: TextMeshPro/Bitmap Custom Atlas
+    StaticComplexityScore: 13
+    SamplerCount: 2
+    InstructionCost: 28
+  - ShaderName: TextMeshPro/Mobile/Bitmap
+    StaticComplexityScore: 13.5
+    SamplerCount: 1
+    InstructionCost: 18
+  - ShaderName: TextMeshPro/Bitmap
+    StaticComplexityScore: 12.5
+    SamplerCount: 2
+    InstructionCost: 28
+  - ShaderName: TextMeshPro/Distance Field Overlay
+    StaticComplexityScore: 60.8
+    SamplerCount: 5
+    InstructionCost: 166
+  - ShaderName: TextMeshPro/Distance Field SSD
+    StaticComplexityScore: 75.8
+    SamplerCount: 5
+    InstructionCost: 172
+  - ShaderName: TextMeshPro/SRP/TMP_SDF-HDRP LIT
+    StaticComplexityScore: 19.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: TextMeshPro/SRP/TMP_SDF-HDRP UNLIT
+    StaticComplexityScore: 19.55
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: TextMeshPro/Mobile/Distance Field - Masking
+    StaticComplexityScore: 32.3
+    SamplerCount: 2
+    InstructionCost: 74
+  - ShaderName: TextMeshPro/Mobile/Distance Field Overlay
+    StaticComplexityScore: 28.8
+    SamplerCount: 1
+    InstructionCost: 64
+  - ShaderName: TextMeshPro/Mobile/Distance Field SSD
+    StaticComplexityScore: 33.1
+    SamplerCount: 2
+    InstructionCost: 82
+  - ShaderName: TextMeshPro/Mobile/Distance Field - 2 Pass
+    StaticComplexityScore: 40.7
+    SamplerCount: 1
+    InstructionCost: 91
+  - ShaderName: TextMeshPro/Mobile/Distance Field
+    StaticComplexityScore: 28.8
+    SamplerCount: 1
+    InstructionCost: 64
+  - ShaderName: TextMeshPro/Mobile/Distance Field (Surface)
+    StaticComplexityScore: 36.75
+    SamplerCount: 3
+    InstructionCost: 181
+  - ShaderName: TextMeshPro/Distance Field (Surface)
+    StaticComplexityScore: 48.05
+    SamplerCount: 5
+    InstructionCost: 179
+  - ShaderName: TextMeshPro/SRP/TMP_SDF-URP Lit
+    StaticComplexityScore: 40.05
+    SamplerCount: 6
+    InstructionCost: 0
+  - ShaderName: TextMeshPro/SRP/TMP_SDF-URP Unlit
+    StaticComplexityScore: 36.05
+    SamplerCount: 6
+    InstructionCost: 0
+  - ShaderName: TextMeshPro/Distance Field
+    StaticComplexityScore: 60.8
+    SamplerCount: 5
+    InstructionCost: 166
+  - ShaderName: TextMeshPro/Sprite
+    StaticComplexityScore: 9.1
+    SamplerCount: 1
+    InstructionCost: 14
+  - ShaderName: TextMeshPro/Optimized/Mobile SDF (Opaque Cutout)
+    StaticComplexityScore: 9.2
+    SamplerCount: 1
+    InstructionCost: 16
+  - ShaderName: SH_Vexa
+    StaticComplexityScore: 35.55
+    SamplerCount: 6
+    InstructionCost: 50
+  - ShaderName: SH_Vexa_Selector_Body
+    StaticComplexityScore: 45.05
+    SamplerCount: 9
+    InstructionCost: 80
+  - ShaderName: SH_Vexa_Selector_Hair
+    StaticComplexityScore: 39.05
+    SamplerCount: 7
+    InstructionCost: 60
+  - ShaderName: SH_Vexa_Selector_Jacket
+    StaticComplexityScore: 39.05
+    SamplerCount: 7
+    InstructionCost: 60
+  - ShaderName: Vefects/SH_VFX_Vefects_Distortion_01
+    StaticComplexityScore: 37.55
+    SamplerCount: 4
+    InstructionCost: 40
+  - ShaderName: SH_VFX_Veffects_AB
+    StaticComplexityScore: 28.65
+    SamplerCount: 2
+    InstructionCost: 16
+  - ShaderName: SH_VFX_Veffects_ABColor
+    StaticComplexityScore: 30.15
+    SamplerCount: 2
+    InstructionCost: 16
+  - ShaderName: Vefects/URP/SH_VFX_Vefects_Distortion_01_URP
+    StaticComplexityScore: 320.05002
+    SamplerCount: 3
+    InstructionCost: 2915
+  - ShaderName: SH_VFX_Veffects_ABDissolveTex
+    StaticComplexityScore: 27.65
+    SamplerCount: 2
+    InstructionCost: 16
+  - ShaderName: SH_VFX_Veffects_ABTrail
+    StaticComplexityScore: 28.65
+    SamplerCount: 2
+    InstructionCost: 16
+  - ShaderName: SH_VFX_Veffects_Add
+    StaticComplexityScore: 27.55
+    SamplerCount: 2
+    InstructionCost: 10
+  - ShaderName: SH_VFX_Veffects_AddColor
+    StaticComplexityScore: 27.55
+    SamplerCount: 2
+    InstructionCost: 10
+  - ShaderName: SH_VFX_Veffects_AddDissolve
+    StaticComplexityScore: 30.85
+    SamplerCount: 4
+    InstructionCost: 23
+  - ShaderName: SH_VFX_Veffects_AddDissolveEmissive
+    StaticComplexityScore: 33.95
+    SamplerCount: 4
+    InstructionCost: 29
+  - ShaderName: SH_VFX_Veffects_AddDissolveTex
+    StaticComplexityScore: 27.05
+    SamplerCount: 2
+    InstructionCost: 10
+  - ShaderName: SH_VFX_Veffects_Add_DoubleSided
+    StaticComplexityScore: 27.55
+    SamplerCount: 2
+    InstructionCost: 10
+  - ShaderName: SH_VFX_Veffects_AddTrail
+    StaticComplexityScore: 28.55
+    SamplerCount: 2
+    InstructionCost: 10
+  - ShaderName: SH_VFX_Veffects_Piercing
+    StaticComplexityScore: 48.65
+    SamplerCount: 10
+    InstructionCost: 86
+  - ShaderName: Vefects/URP/SH_VFX_Veffects_Slash_URP
+    StaticComplexityScore: 312.55002
+    SamplerCount: 7
+    InstructionCost: 2945
+  - ShaderName: Hidden/SkinningModule-GUITextureClip
+    StaticComplexityScore: 8.25
+    SamplerCount: 1
+    InstructionCost: 22
+  - ShaderName: Hidden/2D-Animation-SpriteBitmask
+    StaticComplexityScore: 2.55
+    SamplerCount: 1
+    InstructionCost: 0
+  - ShaderName: Hidden/2D-Animation-SpriteEdgeOutline
+    StaticComplexityScore: 3.95
+    SamplerCount: 0
+    InstructionCost: 14
+  - ShaderName: Hidden/2D-Animation-SpriteOutline
+    StaticComplexityScore: 13.45
+    SamplerCount: 1
+    InstructionCost: 99
+  - ShaderName: Hidden/InternalSpritesInspector
+    StaticComplexityScore: 5.8
+    SamplerCount: 1
+    InstructionCost: 22
+  - ShaderName: Hidden/BoneHandles
+    StaticComplexityScore: 2.6
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/RigEffector
+    StaticComplexityScore: 3.55
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: CMWaveform
+    StaticComplexityScore: 2.75
+    SamplerCount: 0
+    InstructionCost: 7
+  - ShaderName: Unlit/TestReportShader
+    StaticComplexityScore: 2.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/PostProcessing/Bloom
+    StaticComplexityScore: 173.15001
+    SamplerCount: 0
+    InstructionCost: 1551
+  - ShaderName: Hidden/PostProcessing/Copy
+    StaticComplexityScore: 73.450005
+    SamplerCount: 0
+    InstructionCost: 694
+  - ShaderName: Hidden/PostProcessing/CopyStd
+    StaticComplexityScore: 7.55
+    SamplerCount: 1
+    InstructionCost: 30
+  - ShaderName: Hidden/PostProcessing/CopyStdFromDoubleWide
+    StaticComplexityScore: 7.15
+    SamplerCount: 1
+    InstructionCost: 26
+  - ShaderName: Hidden/PostProcessing/CopyStdFromTexArray
+    StaticComplexityScore: 5.15
+    SamplerCount: 1
+    InstructionCost: 6
+  - ShaderName: Hidden/PostProcessing/DeferredFog
+    StaticComplexityScore: 73.6
+    SamplerCount: 0
+    InstructionCost: 694
+  - ShaderName: Hidden/PostProcessing/DepthOfField
+    StaticComplexityScore: 190.75
+    SamplerCount: 0
+    InstructionCost: 1507
+  - ShaderName: Hidden/PostProcessing/DiscardAlpha
+    StaticComplexityScore: 70.25
+    SamplerCount: 0
+    InstructionCost: 682
+  - ShaderName: Hidden/PostProcessing/FinalPass
+    StaticComplexityScore: 245.05
+    SamplerCount: 0
+    InstructionCost: 1803
+  - ShaderName: Hidden/PostProcessing/GrainBaker
+    StaticComplexityScore: 71.55
+    SamplerCount: 0
+    InstructionCost: 675
+  - ShaderName: Hidden/PostProcessing/Lut2DBaker
+    StaticComplexityScore: 167.1
+    SamplerCount: 0
+    InstructionCost: 1609
+  - ShaderName: Hidden/PostProcessing/MotionBlur
+    StaticComplexityScore: 103.85
+    SamplerCount: 0
+    InstructionCost: 918
+  - ShaderName: Hidden/PostProcessing/MultiScaleVO
+    StaticComplexityScore: 79
+    SamplerCount: 0
+    InstructionCost: 706
+  - ShaderName: Hidden/PostProcessing/ScalableAO
+    StaticComplexityScore: 166.2
+    SamplerCount: 0
+    InstructionCost: 1470
+  - ShaderName: Hidden/PostProcessing/ScreenSpaceReflections
+    StaticComplexityScore: 12.45
+    SamplerCount: 0
+    InstructionCost: 44
+  - ShaderName: Hidden/PostProcessing/SubpixelMorphologicalAntialiasing
+    StaticComplexityScore: 168.05
+    SamplerCount: 0
+    InstructionCost: 1540
+  - ShaderName: Hidden/PostProcessing/TemporalAntialiasing
+    StaticComplexityScore: 132.55
+    SamplerCount: 0
+    InstructionCost: 1285
+  - ShaderName: Hidden/PostProcessing/Texture2DLerp
+    StaticComplexityScore: 74.25
+    SamplerCount: 0
+    InstructionCost: 702
+  - ShaderName: Hidden/PostProcessing/Uber
+    StaticComplexityScore: 7299246.5
+    SamplerCount: 0
+    InstructionCost: 1723
+  - ShaderName: Hidden/PostProcessing/Debug/Histogram
+    StaticComplexityScore: 70.25
+    SamplerCount: 0
+    InstructionCost: 682
+  - ShaderName: Hidden/PostProcessing/Debug/LightMeter
+    StaticComplexityScore: 72.200005
+    SamplerCount: 0
+    InstructionCost: 700
+  - ShaderName: Hidden/PostProcessing/Debug/Overlays
+    StaticComplexityScore: 147.40001
+    SamplerCount: 0
+    InstructionCost: 1333
+  - ShaderName: Hidden/PostProcessing/Debug/Vectorscope
+    StaticComplexityScore: 124.450005
+    SamplerCount: 0
+    InstructionCost: 1224
+  - ShaderName: Hidden/PostProcessing/Debug/Waveform
+    StaticComplexityScore: 69.25
+    SamplerCount: 0
+    InstructionCost: 672
+  - ShaderName: Hidden/PostProcessing/Editor/ConvertToLog
+    StaticComplexityScore: 3.75
+    SamplerCount: 1
+    InstructionCost: 12
+  - ShaderName: Hidden/PostProcessing/Editor/CurveGrid
+    StaticComplexityScore: 4.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/PostProcessing/Editor/Trackball
+    StaticComplexityScore: 4.75
+    SamplerCount: 0
+    InstructionCost: 7
+  - ShaderName: ProBuilder/Diffuse Texture Blend
+    StaticComplexityScore: 28.05
+    SamplerCount: 4
+    InstructionCost: 40
+  - ShaderName: ProBuilder/Diffuse Vertex Color
+    StaticComplexityScore: 23.55
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Hidden/ProBuilder/EdgePicker
+    StaticComplexityScore: 2.25
+    SamplerCount: 0
+    InstructionCost: 2
+  - ShaderName: Hidden/ProBuilder/FaceHighlight
+    StaticComplexityScore: 4.25
+    SamplerCount: 0
+    InstructionCost: 2
+  - ShaderName: Hidden/ProBuilder/FacePicker
+    StaticComplexityScore: 2.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/ProBuilder/HideVertices
+    StaticComplexityScore: 2.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/ProBuilder/LineBillboard
+    StaticComplexityScore: 4.25
+    SamplerCount: 0
+    InstructionCost: 2
+  - ShaderName: Hidden/ProBuilder/LineBillboardMetal
+    StaticComplexityScore: 4.25
+    SamplerCount: 0
+    InstructionCost: 2
+  - ShaderName: Hidden/ProBuilder/NormalPreview
+    StaticComplexityScore: 2.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/ProBuilder/PointBillboard
+    StaticComplexityScore: 4.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: ProBuilder/Reference Unlit
+    StaticComplexityScore: 3.55
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Hidden/ProBuilder/ScrollHighlight
+    StaticComplexityScore: 18.55
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/ProBuilder/SelectionPicker
+    StaticComplexityScore: 6.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/ProBuilder/SmoothingPreview
+    StaticComplexityScore: 2.55
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: ProBuilder6/Standard Vertex Color
+    StaticComplexityScore: 42.55
+    SamplerCount: 4
+    InstructionCost: 0
+  - ShaderName: Hidden/ProBuilder/TransparentOverlay
+    StaticComplexityScore: 3.55
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: ProBuilder/Unlit Solid Color
+    StaticComplexityScore: 2.55
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: ProBuilder/UnlitVertexColor
+    StaticComplexityScore: 2.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/ProBuilder/VertexPicker
+    StaticComplexityScore: 2.25
+    SamplerCount: 0
+    InstructionCost: 2
+  - ShaderName: Hidden/ProBuilder/VertexShader
+    StaticComplexityScore: 4.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/ProGrids/GridShader
+    StaticComplexityScore: 3.55
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/UnlitTransparentColored
+    StaticComplexityScore: 2.55
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/ProbeVolume/VoxelizeScene
+    StaticComplexityScore: 133.90001
+    SamplerCount: 0
+    InstructionCost: 1217
+  - ShaderName: Hidden/LookDev/Compositor
+    StaticComplexityScore: 27.35
+    SamplerCount: 4
+    InstructionCost: 98
+  - ShaderName: Hidden/LookDev/CubeToLatlong
+    StaticComplexityScore: 7.55
+    SamplerCount: 1
+    InstructionCost: 20
+  - ShaderName: Hidden/Core/LensFlareDataDrivenPreview2
+    StaticComplexityScore: 142.90001
+    SamplerCount: 0
+    InstructionCost: 1341
+  - ShaderName: Hidden/Core/LensFlareDataDrivenPreview
+    StaticComplexityScore: 138.55
+    SamplerCount: 0
+    InstructionCost: 1345
+  - ShaderName: Hidden/Core/ProbeVolumeDebug
+    StaticComplexityScore: 275.75
+    SamplerCount: 0
+    InstructionCost: 2736
+  - ShaderName: Hidden/Core/ProbeVolumeFragmentationDebug
+    StaticComplexityScore: 275.65
+    SamplerCount: 0
+    InstructionCost: 2736
+  - ShaderName: Hidden/Core/ProbeVolumeOffsetDebug
+    StaticComplexityScore: 275.75
+    SamplerCount: 0
+    InstructionCost: 2736
+  - ShaderName: Hidden/Core/ProbeVolumeSamplingDebug
+    StaticComplexityScore: 264.65
+    SamplerCount: 0
+    InstructionCost: 2625
+  - ShaderName: Hidden/Core/FallbackError
+    StaticComplexityScore: 2.15
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/Core/DebugOccluder
+    StaticComplexityScore: 105.55
+    SamplerCount: 0
+    InstructionCost: 1035
+  - ShaderName: Hidden/Core/DebugOcclusionTest
+    StaticComplexityScore: 236.65001
+    SamplerCount: 0
+    InstructionCost: 2346
+  - ShaderName: Hidden/CoreSRP/CoreCopy
+    StaticComplexityScore: 251.75
+    SamplerCount: 0
+    InstructionCost: 2477
+  - ShaderName: DummyPipeline/VariantStrippingTestsShader
+    StaticComplexityScore: 3.55
+    SamplerCount: 1
+    InstructionCost: 10
+  - ShaderName: Unlit/SimpleDots
+    StaticComplexityScore: 122.700005
+    SamplerCount: 0
+    InstructionCost: 1201
+  - ShaderName: Unlit/SimpleSpeedTreeDots
+    StaticComplexityScore: 123.200005
+    SamplerCount: 0
+    InstructionCost: 1201
+  - ShaderName: Hidden/BlitNoAlpha
+    StaticComplexityScore: 2.55
+    SamplerCount: 1
+    InstructionCost: 0
+  - ShaderName: Hidden/Checkerboard
+    StaticComplexityScore: 2.25
+    SamplerCount: 0
+    InstructionCost: 2
+  - ShaderName: Hidden/Shader Graph/FallbackError
+    StaticComplexityScore: 2.2
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: RayTracing/StandardMaterial
+    StaticComplexityScore: 8.45
+    SamplerCount: 0
+    InstructionCost: 64
+  - ShaderName: Hidden/TMP/Internal/Editor/Distance Field SSD
+    StaticComplexityScore: 23.5
+    SamplerCount: 1
+    InstructionCost: 79
+  - ShaderName: Hidden/Universal Render Pipeline/Editor/CurveBackground
+    StaticComplexityScore: 4.05
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/Universal Render Pipeline/Editor/Shadows Midtones Highlights
+      Curve
+    StaticComplexityScore: 6.45
+    SamplerCount: 0
+    InstructionCost: 24
+  - ShaderName: Hidden/Universal Render Pipeline/Editor/Trackball
+    StaticComplexityScore: 4.95
+    SamplerCount: 0
+    InstructionCost: 9
+  - ShaderName: Hidden/Universal Render Pipeline/DBufferClear
+    StaticComplexityScore: 310.45
+    SamplerCount: 0
+    InstructionCost: 3083
+  - ShaderName: Shader Graphs/ArnoldStandardSurface
+    StaticComplexityScore: 31.05
+    SamplerCount: 10
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/ArnoldStandardSurfaceTransparent
+    StaticComplexityScore: 30.05
+    SamplerCount: 11
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/PhysicalMaterial3DsMax
+    StaticComplexityScore: 34.05
+    SamplerCount: 11
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/PhysicalMaterial3DsMaxTransparent
+    StaticComplexityScore: 32.05
+    SamplerCount: 11
+    InstructionCost: 0
+  - ShaderName: Hidden/Light2D
+    StaticComplexityScore: 305.95
+    SamplerCount: 0
+    InstructionCost: 3029
+  - ShaderName: Hidden/ShadowProjected2D
+    StaticComplexityScore: 295.65
+    SamplerCount: 0
+    InstructionCost: 2911
+  - ShaderName: Hidden/Shadow2DShadowGeometry
+    StaticComplexityScore: 289.85
+    SamplerCount: 0
+    InstructionCost: 2873
+  - ShaderName: Hidden/Shadow2DShadowSprite
+    StaticComplexityScore: 291.85
+    SamplerCount: 1
+    InstructionCost: 2883
+  - ShaderName: Hidden/Shadow2DUnshadowGeometry
+    StaticComplexityScore: 291.85
+    SamplerCount: 0
+    InstructionCost: 2873
+  - ShaderName: Hidden/Shadow2DUnshadowSprite
+    StaticComplexityScore: 295.25
+    SamplerCount: 1
+    InstructionCost: 2897
+  - ShaderName: Universal Render Pipeline/2D/Sprite-Lit-Default
+    StaticComplexityScore: 320.6
+    SamplerCount: 4
+    InstructionCost: 3097
+  - ShaderName: Universal Render Pipeline/2D/Sprite-Mask
+    StaticComplexityScore: 295.95
+    SamplerCount: 1
+    InstructionCost: 2889
+  - ShaderName: Universal Render Pipeline/2D/Sprite-Unlit-Default
+    StaticComplexityScore: 301.30002
+    SamplerCount: 2
+    InstructionCost: 2937
+  - ShaderName: Shader Graphs/VFXSpriteLit
+    StaticComplexityScore: 14.05
+    SamplerCount: 4
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/VFXSpriteUnlit
+    StaticComplexityScore: 12.05
+    SamplerCount: 4
+    InstructionCost: 0
+  - ShaderName: Universal Render Pipeline/Autodesk Interactive/AutodeskInteractive
+    StaticComplexityScore: 33.55
+    SamplerCount: 9
+    InstructionCost: 0
+  - ShaderName: Universal Render Pipeline/Autodesk Interactive/AutodeskInteractiveMasked
+    StaticComplexityScore: 34.05
+    SamplerCount: 9
+    InstructionCost: 0
+  - ShaderName: Universal Render Pipeline/Autodesk Interactive/AutodeskInteractiveTransparent
+    StaticComplexityScore: 31.55
+    SamplerCount: 8
+    InstructionCost: 0
+  - ShaderName: Universal Render Pipeline/Baked Lit
+    StaticComplexityScore: 4424208
+    SamplerCount: 5
+    InstructionCost: 4841
+  - ShaderName: Hidden/Universal Render Pipeline/BRGPicking
+    StaticComplexityScore: 322.85
+    SamplerCount: 1
+    InstructionCost: 3173
+  - ShaderName: Hidden/Universal Render Pipeline/CameraMotionVectors
+    StaticComplexityScore: 295.15
+    SamplerCount: 0
+    InstructionCost: 2931
+  - ShaderName: Universal Render Pipeline/Complex Lit
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 14
+    InstructionCost: 5089
+  - ShaderName: Hidden/Universal Render Pipeline/Debug/DebugReplacement
+    StaticComplexityScore: 450.75
+    SamplerCount: 0
+    InstructionCost: 4487
+  - ShaderName: Hidden/Universal/HDRDebugView
+    StaticComplexityScore: 330.9
+    SamplerCount: 0
+    InstructionCost: 3268
+  - ShaderName: Shader Graphs/Decal
+    StaticComplexityScore: 21.05
+    SamplerCount: 5
+    InstructionCost: 0
+  - ShaderName: Shader Graphs/FullscreenInvertColors
+    StaticComplexityScore: 8.05
+    SamplerCount: 3
+    InstructionCost: 0
+  - ShaderName: Universal Render Pipeline/Lit
+    StaticComplexityScore: 4.611686e+17
+    SamplerCount: 14
+    InstructionCost: 5087
+  - ShaderName: Universal Render Pipeline/Nature/SpeedTree7
+    StaticComplexityScore: 2.6418075e+13
+    SamplerCount: 3
+    InstructionCost: 4751
+  - ShaderName: Universal Render Pipeline/Nature/SpeedTree7 Billboard
+    StaticComplexityScore: 754975200
+    SamplerCount: 2
+    InstructionCost: 4737
+  - ShaderName: Universal Render Pipeline/Nature/SpeedTree8
+    StaticComplexityScore: 1.4495515e+11
+    SamplerCount: 4
+    InstructionCost: 4793
+  - ShaderName: Universal Render Pipeline/Nature/SpeedTree8_PBRLit
+    StaticComplexityScore: 34.75
+    SamplerCount: 7
+    InstructionCost: 2
+  - ShaderName: Universal Render Pipeline/Nature/SpeedTree9_URP
+    StaticComplexityScore: 35.55
+    SamplerCount: 7
+    InstructionCost: 0
+  - ShaderName: Hidden/Universal Render Pipeline/ObjectMotionVectorFallback
+    StaticComplexityScore: 4.25
+    SamplerCount: 0
+    InstructionCost: 2
+  - ShaderName: Universal Render Pipeline/Particles/Lit
+    StaticComplexityScore: 1.408964e+14
+    SamplerCount: 4
+    InstructionCost: 4822
+  - ShaderName: Universal Render Pipeline/Particles/Simple Lit
+    StaticComplexityScore: 8.806025e+12
+    SamplerCount: 4
+    InstructionCost: 2921
+  - ShaderName: Universal Render Pipeline/Particles/Unlit
+    StaticComplexityScore: 10690.9
+    SamplerCount: 3
+    InstructionCost: 2909
+  - ShaderName: Hidden/Universal Render Pipeline/Bloom
+    StaticComplexityScore: 328.7
+    SamplerCount: 0
+    InstructionCost: 3206
+  - ShaderName: Hidden/Universal Render Pipeline/BokehDepthOfField
+    StaticComplexityScore: 387.9
+    SamplerCount: 0
+    InstructionCost: 3677
+  - ShaderName: Hidden/Universal Render Pipeline/CameraMotionBlur
+    StaticComplexityScore: 318.4
+    SamplerCount: 0
+    InstructionCost: 3063
+  - ShaderName: Hidden/Universal Render Pipeline/Edge Adaptive Spatial Upsampling
+    StaticComplexityScore: 452.85
+    SamplerCount: 0
+    InstructionCost: 4508
+  - ShaderName: Hidden/Universal Render Pipeline/FinalPost
+    StaticComplexityScore: 466.6
+    SamplerCount: 0
+    InstructionCost: 4624
+  - ShaderName: Hidden/Universal Render Pipeline/GaussianDepthOfField
+    StaticComplexityScore: 328.2
+    SamplerCount: 0
+    InstructionCost: 3174
+  - ShaderName: Hidden/Universal Render Pipeline/LensFlareDataDriven
+    StaticComplexityScore: 612.3
+    SamplerCount: 0
+    InstructionCost: 3975
+  - ShaderName: Hidden/Universal Render Pipeline/LensFlareScreenSpace
+    StaticComplexityScore: 399.15
+    SamplerCount: 0
+    InstructionCost: 3891
+  - ShaderName: Hidden/Universal Render Pipeline/LutBuilderHdr
+    StaticComplexityScore: 381.95
+    SamplerCount: 0
+    InstructionCost: 3799
+  - ShaderName: Hidden/Universal Render Pipeline/LutBuilderLdr
+    StaticComplexityScore: 369.15
+    SamplerCount: 0
+    InstructionCost: 3671
+  - ShaderName: Hidden/Universal Render Pipeline/PaniniProjection
+    StaticComplexityScore: 307.75
+    SamplerCount: 0
+    InstructionCost: 3057
+  - ShaderName: Hidden/Universal Render Pipeline/Scaling Setup
+    StaticComplexityScore: 369.35
+    SamplerCount: 0
+    InstructionCost: 3673
+  - ShaderName: Hidden/Universal Render Pipeline/Stop NaN
+    StaticComplexityScore: 306.95
+    SamplerCount: 0
+    InstructionCost: 3049
+  - ShaderName: Hidden/Universal Render Pipeline/SubpixelMorphologicalAntialiasing
+    StaticComplexityScore: 403.65
+    SamplerCount: 0
+    InstructionCost: 3966
+  - ShaderName: Hidden/Universal Render Pipeline/TemporalAA
+    StaticComplexityScore: 382.7
+    SamplerCount: 0
+    InstructionCost: 3705
+  - ShaderName: Hidden/Universal Render Pipeline/UberPost
+    StaticComplexityScore: 406.30002
+    SamplerCount: 0
+    InstructionCost: 4041
+  - ShaderName: Universal Render Pipeline/Simple Lit
+    StaticComplexityScore: 2.4319438e+16
+    SamplerCount: 8
+    InstructionCost: 4893
+  - ShaderName: Universal Render Pipeline/VR/SpatialMapping/Occlusion
+    StaticComplexityScore: 306.35
+    SamplerCount: 0
+    InstructionCost: 3003
+  - ShaderName: Universal Render Pipeline/VR/SpatialMapping/Wireframe
+    StaticComplexityScore: 307.65
+    SamplerCount: 0
+    InstructionCost: 3011
+  - ShaderName: Hidden/TerrainEngine/Details/UniversalPipeline/Vertexlit
+    StaticComplexityScore: 2949645.8
+    SamplerCount: 1
+    InstructionCost: 5151
+  - ShaderName: Universal Render Pipeline/Terrain/Lit
+    StaticComplexityScore: 9.277129e+12
+    SamplerCount: 15
+    InstructionCost: 5053
+  - ShaderName: Hidden/Universal Render Pipeline/Terrain/Lit (Add Pass)
+    StaticComplexityScore: 2.0132664e+9
+    SamplerCount: 15
+    InstructionCost: 4936
+  - ShaderName: Hidden/Universal Render Pipeline/Terrain/Lit (Base Pass)
+    StaticComplexityScore: 2.4159191e+10
+    SamplerCount: 3
+    InstructionCost: 5053
+  - ShaderName: Hidden/Universal Render Pipeline/Terrain/Lit (Basemap Gen)
+    StaticComplexityScore: 517.3
+    SamplerCount: 9
+    InstructionCost: 5036
+  - ShaderName: Hidden/TerrainEngine/Details/UniversalPipeline/WavingDoublePass
+    StaticComplexityScore: 117965280
+    SamplerCount: 1
+    InstructionCost: 4720
+  - ShaderName: Hidden/TerrainEngine/Details/UniversalPipeline/BillboardWavingDoublePass
+    StaticComplexityScore: 123362
+    SamplerCount: 1
+    InstructionCost: 4720
+  - ShaderName: Universal Render Pipeline/Unlit
+    StaticComplexityScore: 66047.805
+    SamplerCount: 2
+    InstructionCost: 4843
+  - ShaderName: Hidden/Universal Render Pipeline/Blit
+    StaticComplexityScore: 312.7
+    SamplerCount: 0
+    InstructionCost: 3105
+  - ShaderName: Hidden/Universal/BlitHDROverlay
+    StaticComplexityScore: 327.9
+    SamplerCount: 0
+    InstructionCost: 3237
+  - ShaderName: Hidden/Universal Render Pipeline/CopyDepth
+    StaticComplexityScore: 308.5
+    SamplerCount: 0
+    InstructionCost: 3061
+  - ShaderName: Hidden/Universal/CoreBlit
+    StaticComplexityScore: 362.1
+    SamplerCount: 0
+    InstructionCost: 3113
+  - ShaderName: Hidden/Universal/CoreBlitColorAndDepth
+    StaticComplexityScore: 294.55002
+    SamplerCount: 0
+    InstructionCost: 2905
+  - ShaderName: Hidden/Universal Render Pipeline/FallbackError
+    StaticComplexityScore: 138.45
+    SamplerCount: 0
+    InstructionCost: 1343
+  - ShaderName: Hidden/Universal Render Pipeline/FallbackLoading
+    StaticComplexityScore: 136.6
+    SamplerCount: 0
+    InstructionCost: 1343
+  - ShaderName: Hidden/Universal Render Pipeline/MaterialError
+    StaticComplexityScore: 136.45
+    SamplerCount: 0
+    InstructionCost: 1343
+  - ShaderName: Hidden/Universal Render Pipeline/Sampling
+    StaticComplexityScore: 306.75
+    SamplerCount: 0
+    InstructionCost: 3047
+  - ShaderName: Hidden/Universal Render Pipeline/ScreenSpaceAmbientOcclusion
+    StaticComplexityScore: 340.4
+    SamplerCount: 0
+    InstructionCost: 3203
+  - ShaderName: Hidden/Universal Render Pipeline/ScreenSpaceShadows
+    StaticComplexityScore: 402.4
+    SamplerCount: 0
+    InstructionCost: 3999
+  - ShaderName: Hidden/Universal Render Pipeline/StencilDeferred
+    StaticComplexityScore: 5.277656e+16
+    SamplerCount: 0
+    InstructionCost: 0
+  - ShaderName: Hidden/Universal Render Pipeline/XR/XRMirrorView
+    StaticComplexityScore: 309
+    SamplerCount: 0
+    InstructionCost: 3069
+  - ShaderName: Hidden/Universal Render Pipeline/XR/XRMotionVector
+    StaticComplexityScore: 289.35
+    SamplerCount: 0
+    InstructionCost: 2873
+  - ShaderName: Hidden/Universal Render Pipeline/XR/XROcclusionMesh
+    StaticComplexityScore: 290.4
+    SamplerCount: 0
+    InstructionCost: 2883
+  - ShaderName: Custom/Test Shader
+    StaticComplexityScore: 25.45
+    SamplerCount: 1
+    InstructionCost: 14
+  - ShaderName: Custom/Test Shader
+    StaticComplexityScore: 25.45
+    SamplerCount: 1
+    InstructionCost: 14
