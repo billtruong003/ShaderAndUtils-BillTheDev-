@@ -10,7 +10,7 @@ Shader "BillPortal/Magic Portal Ultimate"
 
         [Header(Nebula Swirl Background)]
         _SwirlScale ("Nebula Scale", Range(0.1, 10)) = 2.0
-        _SwirlStrength ("Nebula Swirl Strength", Range(0, 10)) = 3.0
+        _SwirlStrength ("Nebula Swirl Strength", Range(0, 100)) = 3.0
         _SwirlSpeed ("Nebula Swirl Speed", Range(-5, 5)) = 0.5
 
         [Header(Energy Veins Foreground)]
@@ -36,7 +36,7 @@ Shader "BillPortal/Magic Portal Ultimate"
     
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue"="Transparent" "RenderPipeline"="UniversalPipeline" }
+        Tags { "RenderType"="Geometry" "Queue"="Opaque" "RenderPipeline"="UniversalPipeline" }
 
         Pass
         {

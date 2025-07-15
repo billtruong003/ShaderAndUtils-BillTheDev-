@@ -74,8 +74,8 @@ Material:
     - _ColorStrength: 1
     - _CoreGlowIntensity: 2
     - _CoreGlowMultiplier: 6.35
-    - _CorePulseMagnitude: 0.5
-    - _CorePulseSpeed: 6.16
+    - _CorePulseMagnitude: 0.69
+    - _CorePulseSpeed: 6.28
     - _CoreRadius: 0
     - _CoreSize: 0.136
     - _DestinationAlpha: 0.5
@@ -84,7 +84,7 @@ Material:
     - _DistortionStrength: 0.05
     - _EdgeGlowIntensity: 2
     - _EdgeNoiseAmplitude: 0.1
-    - _EdgeSoftness: 0.444
+    - _EdgeSoftness: 0.346
     - _EdgeThickness: 0.88
     - _FadeEdge: 0.66
     - _FresnelPower: 7
@@ -107,7 +107,7 @@ Material:
     - _Power: 0.47
     - _Radius: 0.33
     - _RimPower: 20
-    - _RimSize: 0.088
+    - _RimSize: 0.1308
     - _RotationSpeed: 1
     - _ScrollSpeed1: 1
     - _ScrollSpeed2: 1
@@ -118,13 +118,13 @@ Material:
     - _SwirlIntensity: 0.68
     - _SwirlScale: 0.1
     - _SwirlSpeed: 1
-    - _SwirlStrength: 10
+    - _SwirlStrength: 20
     - _SwirlTightness: 0.1
     - _TextureNoiseScale: 0.5
     - _TextureNoiseStrength: 25
-    - _UVDisplacementStrength: 0.02
+    - _UVDisplacementStrength: 0
     - _VeinsScale: 2
-    - _VeinsSoftness: 0.001
+    - _VeinsSoftness: 0.0293
     - _VeinsSpeed: 0.1
     - _VeinsThreshold: 1
     - _VertexDisplacementAmount: 0.1
@@ -145,10 +145,10 @@ Material:
     - _GradientColor3: {r: 1, g: 0, b: 1, a: 0.7}
     - _InnerEdgeColor: {r: 1, g: 0.5, b: 0, a: 1}
     - _MainColor: {r: 0.98833734, g: 0.36248687, b: 0, a: 1}
-    - _RimColor: {r: 0.80608505, g: 0.032562338, b: 0, a: 1}
+    - _RimColor: {r: 3.187707, g: 0.12379444, b: 0, a: 1}
     - _SecondaryColor: {r: 0.35782075, g: 1, b: 0, a: 1}
     - _SparkleColor: {r: 1, g: 1, b: 1, a: 1}
     - _TextureNoiseSpeed: {r: 0.1, g: 0.1, b: 0.1, a: 0.5}
-    - _VeinsColor: {r: 4.0472026, g: 0, b: 0.04237965, a: 1}
+    - _VeinsColor: {r: 4, g: 0, b: 0.06282616, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
