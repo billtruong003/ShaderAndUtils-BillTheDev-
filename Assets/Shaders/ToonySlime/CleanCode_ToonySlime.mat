@@ -33,13 +33,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BubbleDensity: 0.08
-    - _BubbleScale: 2
+    - _BubbleDensity: 0.005
+    - _BubbleScale: 1
     - _DepthTransparency: 0.432
     - _MaxDepth: 100
     - _Metallic: 0.659
-    - _NoiseAmplitude: 6.49
-    - _NoiseScale: 5
+    - _NoiseAmplitude: 12.85
+    - _NoiseScale: 1
     - _NoiseSpeed: 0.5
     - _ReflectionStrength: 1
     - _RefractionStrength: 0.0994
@@ -57,7 +57,7 @@ Material:
     - _BubbleSpeed: {r: 0.01, g: 0.01, b: 0, a: 0}
     - _ColorTint: {r: 0.075694196, g: 0.53571814, b: 0.5943396, a: 0.15686275}
     - _DepthColor: {r: 0.20536669, g: 0.4983118, b: 0.6698113, a: 0.28235295}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
+    - _EmissionColor: {r: 0, g: 112.150665, b: 126.507195, a: 0}
     - _RimColor: {r: 0, g: 0.96078444, b: 1, a: 1}
     - _SpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

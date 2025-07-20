@@ -35,7 +35,7 @@ Shader "CleanCode/ToonySlime"
         _RimPower("Rim Power", Range(0.1, 10.0)) = 3.0
 
         [Header(Emission)]
-        [HDR]_EmissionColor("Emission Color", Color) = (0, 0, 0, 1)
+        [HDR]_EmissionColor("Bubble Emission Color", Color) = (0, 0, 0, 1)
     }
 
     SubShader
@@ -202,7 +202,13 @@ Shader "CleanCode/ToonySlime"
                 
                 half3 bubbles = SampleBubbles(input.positionWS);
 
-                half3 finalRGB = albedo * lightColor + specular + rimColor + _EmissionColor.rgb + bubbles;
+                // --- LOGIC ĐÃ CẬP NHẬT ---
+                // Tính màu cơ bản của slime không bao gồm các hiệu ứng cộng thêm
+                half3 baseColor = albedo * lightColor + specular + rimColor;
+                // Tạo hiệu ứng bong bóng phát sáng bằng cách nhân màu gốc của bong bóng với màu phát sáng
+                half3 glowingBubbles = bubbles * (1.0 + _EmissionColor.rgb);
+                // Kết hợp màu cơ bản và bong bóng phát sáng
+                half3 finalRGB = baseColor + glowingBubbles;
                 
                 float surfaceAlpha = _ColorTint.a * texColor.a;
                 float alphaFromSurface = lerp(1.0, surfaceAlpha, _SurfaceTransparency);
