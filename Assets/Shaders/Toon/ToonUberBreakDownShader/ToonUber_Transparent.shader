@@ -3,7 +3,6 @@ Shader "Bill's Toon/Optimized/Transparent"
     Properties
     {
         [HideInInspector] _SurfaceType("Surface Type", Float) = 1
-        [HideInInspector] _OutlineMode("Outline Mode", Float) = 0
 
         [Header(Base Properties)]
         _BaseMap("Albedo (RGB) Alpha (A)", 2D) = "white" {}
@@ -32,6 +31,13 @@ Shader "Bill's Toon/Optimized/Transparent"
         _FresnelOutlineColor("Color", Color) = (0, 0, 0, 1)
         _FresnelOutlineWidth("Width", Range(0.001, 1.0)) = 0.1
         _FresnelOutlinePower("Power", Range(1.0, 20.0)) = 5.0
+        _FresnelOutlineSharpness("Sharpness", Range(0.1, 10.0)) = 2.0
+
+        [Toggle(_OUTLINEGLINT_ON)] _GlintToggle("Enable Glint Effect", Float) = 0
+        [HDR] _GlintColor("Glint Color", Color) = (1, 1, 0.5, 1)
+        _GlintScale("Glint Scale", Float) = 20.0
+        _GlintSpeed("Glint Speed", Range(0.1, 10.0)) = 2.0
+        _GlintThreshold("Glint Threshold", Range(0.5, 0.99)) = 0.95
     }
 
     SubShader
@@ -51,12 +57,15 @@ Shader "Bill's Toon/Optimized/Transparent"
             #pragma vertex vert
             #pragma fragment frag
             
+            #pragma shader_feature_local _SURFACETYPE_GLASS 
             #pragma shader_feature_local_fragment _EMISSION_ON
             #pragma shader_feature_local_fragment _FAKELIGHT_ON
             #pragma shader_feature_local_fragment _OUTLINEMODE_FRESNEL
+            #pragma shader_feature_local_fragment _OUTLINEGLINT_ON
 
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
             
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
 
@@ -68,7 +77,7 @@ Shader "Bill's Toon/Optimized/Transparent"
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.uv = TRANSFORM_TEX(v.uv, _BaseMap);
                 o.color = v.color;
-                o.screenPos = o.positionCS;
+                o.screenPos = ComputeScreenPos(o.positionCS);
                 return o;
             }
 
@@ -76,25 +85,60 @@ Shader "Bill's Toon/Optimized/Transparent"
             {
                 float3 viewDir = SafeNormalize(_WorldSpaceCameraPos.xyz - i.positionWS);
                 Light mainLight = GetEffectiveMainLight(i.positionWS);
-                
-                float fresnelDot = 1.0 - saturate(dot(i.normalWS, viewDir));
-                float fresnel = FastPow(fresnelDot, _FresnelPower);
-                
-                float2 screenUV = i.screenPos.xy / i.screenPos.w;
-                float2 distortion = i.normalWS.xy * _RefractionStrength;
-                float3 sceneColor = SAMPLE_TEXTURE2D_X_LOD(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + distortion, 0).rgb;
-                
-                half3 surfaceColor = lerp(sceneColor, _GlassColor.rgb, _GlassColor.a);
-                surfaceColor = lerp(surfaceColor, _FresnelColor.rgb, fresnel);
+                half3 ambient = SampleSH(i.normalWS);
 
-                float3 reflectDir = reflect(-mainLight.direction, i.normalWS);
-                float spec = FastPow(saturate(dot(viewDir, reflectDir)), _GlassSpecularPower);
-                surfaceColor += mainLight.color * spec * _GlassSpecularIntensity * mainLight.shadowAttenuation;
+                half3 surfaceColor = CalculateGlassLighting(i, mainLight, viewDir, ambient);
                 
                 surfaceColor = ApplyEmission(surfaceColor, i.uv);
-                surfaceColor = ApplyFresnelOutline(surfaceColor, i.normalWS, viewDir);
+                surfaceColor = ApplyFresnelOutline(surfaceColor, i.normalWS, viewDir, i.positionWS); // CẬP NHẬT LỜI GỌI HÀM
 
                 return half4(surfaceColor, _GlassColor.a);
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthNormals"
+            Tags { "LightMode"="DepthNormals" }
+
+            ZWrite On
+            Cull Back
+
+            HLSLPROGRAM
+            #pragma vertex DepthNormalsVert
+            #pragma fragment DepthNormalsFrag
+
+            #pragma shader_feature_local _ALPHACLIP_ON
+            #pragma shader_feature_local _SURFACETYPE_FOLIAGE
+            
+            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
+
+            struct VaryingsDepthNormals
+            {
+                float4 positionCS   : SV_POSITION;
+                float3 normalWS     : TEXCOORD0;
+                float2 uv           : TEXCOORD1;
+            };
+            
+            VaryingsDepthNormals DepthNormalsVert(Attributes v)
+            {
+                VaryingsDepthNormals o;
+                #if defined(_SURFACETYPE_FOLIAGE)
+                    ApplyWind(v.positionOS.xyz, v.color);
+                #endif
+                o.positionCS = TransformObjectToHClip(v.positionOS.xyz);
+                o.normalWS = TransformObjectToWorldNormal(v.normalOS);
+                o.uv = TRANSFORM_TEX(v.uv, _BaseMap);
+                return o;
+            }
+
+            half4 DepthNormalsFrag(VaryingsDepthNormals i) : SV_TARGET
+            {
+                ApplyAlphaClip(i.uv);
+                
+                float3 normalWS = normalize(i.normalWS);
+                return float4(normalWS * 0.5 + 0.5, 1.0);
             }
             ENDHLSL
         }

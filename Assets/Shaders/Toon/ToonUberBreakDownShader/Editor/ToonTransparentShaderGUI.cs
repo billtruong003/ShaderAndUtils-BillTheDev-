@@ -13,7 +13,10 @@ public class ToonTransparentShaderGUI : ToonUberShaderGUIBase
     private MaterialProperty fakeLightModeProp, fakeLightColorProp, fakeLightDirectionProp;
     private MaterialProperty glassColorProp, fresnelColorProp, fresnelPowerProp;
     private MaterialProperty refractionStrengthProp, glassSpecularPowerProp, glassSpecularIntensityProp;
-    private MaterialProperty fresnelOutlineToggleProp, fresnelOutlineColorProp, fresnelOutlineWidthProp, fresnelOutlinePowerProp;
+
+    // CẬP NHẬT THUỘC TÍNH OUTLINE
+    private MaterialProperty fresnelOutlineToggleProp, fresnelOutlineColorProp, fresnelOutlineWidthProp, fresnelOutlinePowerProp, fresnelOutlineSharpnessProp;
+    private MaterialProperty glintToggleProp, glintColorProp, glintScaleProp, glintSpeedProp, glintThresholdProp;
 
     protected override void FindProperties()
     {
@@ -31,10 +34,19 @@ public class ToonTransparentShaderGUI : ToonUberShaderGUIBase
         refractionStrengthProp = FindProperty("_RefractionStrength", properties);
         glassSpecularPowerProp = FindProperty("_GlassSpecularPower", properties);
         glassSpecularIntensityProp = FindProperty("_GlassSpecularIntensity", properties);
+
+        // CẬP NHẬT THUỘC TÍNH OUTLINE
         fresnelOutlineToggleProp = FindProperty("_FresnelOutlineToggle", properties);
         fresnelOutlineColorProp = FindProperty("_FresnelOutlineColor", properties);
         fresnelOutlineWidthProp = FindProperty("_FresnelOutlineWidth", properties);
         fresnelOutlinePowerProp = FindProperty("_FresnelOutlinePower", properties);
+        fresnelOutlineSharpnessProp = FindProperty("_FresnelOutlineSharpness", properties);
+
+        glintToggleProp = FindProperty("_GlintToggle", properties);
+        glintColorProp = FindProperty("_GlintColor", properties);
+        glintScaleProp = FindProperty("_GlintScale", properties);
+        glintSpeedProp = FindProperty("_GlintSpeed", properties);
+        glintThresholdProp = FindProperty("_GlintThreshold", properties);
     }
 
     protected override void DrawWorkflowSettings()
@@ -68,10 +80,6 @@ public class ToonTransparentShaderGUI : ToonUberShaderGUIBase
                     materialEditor.ShaderProperty(fakeLightDirectionProp, "Direction");
                 });
             }
-            else
-            {
-                EditorGUILayout.HelpBox("Fake Light is not available for this Transparent shader.", MessageType.Warning);
-            }
         });
 
         DrawFoldout("Stylized Glass", ref showGlassSettings, () =>
@@ -90,6 +98,7 @@ public class ToonTransparentShaderGUI : ToonUberShaderGUIBase
             materialEditor.ShaderProperty(glassSpecularIntensityProp, "Intensity");
         });
 
+        // CẬP NHẬT GIAO DIỆN OUTLINE
         DrawFoldout("Fresnel Outline", ref showOutlineSettings, () =>
         {
             DrawPropertyGroup(fresnelOutlineToggleProp, "Enable Fresnel Outline", () =>
@@ -97,6 +106,17 @@ public class ToonTransparentShaderGUI : ToonUberShaderGUIBase
                 materialEditor.ShaderProperty(fresnelOutlineColorProp, "Color");
                 materialEditor.ShaderProperty(fresnelOutlineWidthProp, "Width");
                 materialEditor.ShaderProperty(fresnelOutlinePowerProp, "Power");
+                materialEditor.ShaderProperty(fresnelOutlineSharpnessProp, "Sharpness");
+
+                EditorGUILayout.Space();
+
+                DrawPropertyGroup(glintToggleProp, "Enable Glint Effect", () =>
+                {
+                    materialEditor.ShaderProperty(glintColorProp, "Glint Color");
+                    materialEditor.ShaderProperty(glintScaleProp, "Glint Scale");
+                    materialEditor.ShaderProperty(glintSpeedProp, "Glint Speed");
+                    materialEditor.ShaderProperty(glintThresholdProp, "Glint Threshold");
+                });
             });
         });
     }
@@ -108,7 +128,13 @@ public class ToonTransparentShaderGUI : ToonUberShaderGUIBase
         {
             SetKeyword("_FAKELIGHT_ON", fakeLightModeProp.floatValue > 0);
         }
-        SetKeyword("_OUTLINEMODE_FRESNEL", fresnelOutlineToggleProp.floatValue > 0);
+
+        bool fresnelEnabled = fresnelOutlineToggleProp.floatValue > 0;
+        SetKeyword("_OUTLINEMODE_FRESNEL", fresnelEnabled);
+
+        bool glintEnabled = fresnelEnabled && glintToggleProp.floatValue > 0;
+        SetKeyword("_OUTLINEGLINT_ON", glintEnabled);
+
         EditorUtility.SetDirty(material);
     }
 }

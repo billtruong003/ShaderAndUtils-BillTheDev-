@@ -1,4 +1,4 @@
-Shader "Bill's Toon/Optimized/Opaque (Hull Outline)"
+Shader "Bill's Toon/Opaque (Hull Outline)"
 {
     Properties
     {
@@ -26,6 +26,7 @@ Shader "Bill's Toon/Optimized/Opaque (Hull Outline)"
         _ToonRampOffset("Ramp Offset", Range(0.0, 1.0)) = 0.5
         _ToonRampSmoothness("Ramp Smoothness", Range(0.001, 1.0)) = 0.05
         _ShadowTint("Shadow Tint", Color) = (0.1, 0.1, 0.2, 1.0)
+        _AmbientColor("Ambient Color", Color) = (0.5, 0.5, 0.5, 0) // <-- THÊM MỚI
 
         [Header(Stylized Metal)]
         _Ramp("Toon Ramp (RGB)", 2D) = "white" {} 
@@ -71,42 +72,40 @@ Shader "Bill's Toon/Optimized/Opaque (Hull Outline)"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
             
-            struct OutlineVaryings
-            {
-                float4 positionCS : SV_POSITION;
-            };
+            struct OutlineVaryings { float4 positionCS : SV_POSITION; };
             
             OutlineVaryings OutlineVert(Attributes input)
             {
-                OutlineVaryings o = (OutlineVaryings)0;
+                OutlineVaryings output = (OutlineVaryings)0;
+                float3 positionOS = input.positionOS.xyz;
+                float3 normalOS = input.normalOS;
 
                 #if defined(_SURFACETYPE_FOLIAGE)
-                    ApplyWind(input.positionOS.xyz, input.color);
+                    ApplyWind(positionOS, input.color);
                 #endif
 
-                float cameraDist = length(TransformObjectToWorld(input.positionOS.xyz) - _WorldSpaceCameraPos.xyz);
-                float distFade = 1.0 - saturate((cameraDist - _DistanceFadeStart) / (_DistanceFadeEnd - _DistanceFadeStart + 1e-5));
+                float camDist = distance(TransformObjectToWorld(positionOS), _WorldSpaceCameraPos.xyz);
+                float distFade = 1.0 - saturate((camDist - _DistanceFadeStart) / (_DistanceFadeEnd - _DistanceFadeStart + 1e-5));
                 float scaledWidth = _OutlineWidth * 0.01 * distFade;
-
-                float4 positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                
                 #if defined(_OUTLINE_SCALE_WITH_DISTANCE)
-                    float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
-                    float3 normalVS = TransformWorldToView(normalWS);
-                    float4 projectedNormal = mul(UNITY_MATRIX_P, float4(normalVS, 0.0));
-                    positionCS.xy += normalize(projectedNormal.xy) * scaledWidth * positionCS.w;
+                    float4 positionCS = TransformObjectToHClip(positionOS);
+                    float3 normalWS = TransformObjectToWorldNormal(normalOS);
+                    float3 normalVS = TransformWorldToViewDir(normalWS);
+                    
+                    float2 screenSpaceNormal = normalize(mul((float2x3)UNITY_MATRIX_P, normalVS).xy);
+                    positionCS.xy += screenSpaceNormal * scaledWidth * positionCS.w;
+                    
+                    output.positionCS = positionCS;
                 #else
-                    float3 positionOS_final = input.positionOS.xyz + input.normalOS * scaledWidth;
-                    positionCS = TransformObjectToHClip(positionOS_final);
+                    positionOS += normalOS * scaledWidth;
+                    output.positionCS = TransformObjectToHClip(positionOS);
                 #endif
                 
-                o.positionCS = positionCS;
-                return o;
+                return output;
             }
             
-            half4 OutlineFrag(OutlineVaryings input) : SV_Target
-            {
-                return _OutlineColor;
-            }
+            half4 OutlineFrag(OutlineVaryings input) : SV_Target { return _OutlineColor; }
             ENDHLSL
         }
         
@@ -137,10 +136,11 @@ Shader "Bill's Toon/Optimized/Opaque (Hull Outline)"
             Varyings vert(Attributes v)
             {
                 Varyings o = (Varyings)0;
+                float3 positionOS = v.positionOS.xyz;
                 #if defined(_SURFACETYPE_FOLIAGE)
-                    ApplyWind(v.positionOS.xyz, v.color);
+                    ApplyWind(positionOS, v.color);
                 #endif
-                o.positionWS = TransformObjectToWorld(v.positionOS.xyz);
+                o.positionWS = TransformObjectToWorld(positionOS);
                 o.positionCS = TransformWorldToHClip(o.positionWS);
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.uv = TRANSFORM_TEX(v.uv, _BaseMap);
@@ -155,7 +155,9 @@ Shader "Bill's Toon/Optimized/Opaque (Hull Outline)"
                 half4 albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv) * _BaseColor;
                 float3 viewDir = SafeNormalize(_WorldSpaceCameraPos.xyz - i.positionWS);
                 Light mainLight = GetEffectiveMainLight(i.positionWS);
-                half3 ambient = SampleSH(i.normalWS);
+                
+                half3 sceneAmbient = SampleSH(i.normalWS);
+                half3 ambient = lerp(sceneAmbient, _AmbientColor.rgb, _AmbientColor.a); // <-- CẬP NHẬT LOGIC
                 
                 half3 lighting = 0;
                 #if defined(_SURFACETYPE_OPAQUE)
@@ -191,28 +193,78 @@ Shader "Bill's Toon/Optimized/Opaque (Hull Outline)"
             #pragma shader_feature_local _SURFACETYPE_FOLIAGE
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
             
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
             #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
             
             struct ShadowVaryings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
 
             ShadowVaryings ShadowVert(Attributes input)
             {
                 ShadowVaryings o;
+                float3 positionOS = input.positionOS.xyz;
                 #if defined(_SURFACETYPE_FOLIAGE)
-                    ApplyWind(input.positionOS.xyz, input.color);
+                    ApplyWind(positionOS, input.color);
                 #endif
-                VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
-                o.positionCS = GetShadowCoord(posInputs);
+                VertexPositionInputs positionInputs = GetVertexPositionInputs(positionOS);
+                float3 positionWS = TransformObjectToWorld(positionOS);
+                float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
+                float3 lightDirectionWS = _MainLightPosition.xyz;
+                float3 biasedPositionWS = ApplyShadowBias(positionWS, normalWS, lightDirectionWS);
+                o.positionCS = TransformWorldToHClip(biasedPositionWS);
                 o.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 return o;
             }
 
-            half4 ShadowFrag(ShadowVaryings i) : SV_Target
+            half4 ShadowFrag(Varyings i) : SV_Target
             {
                 ApplyAlphaClip(i.uv);
                 return 0;
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthNormals"
+            Tags { "LightMode"="DepthNormals" }
+
+            ZWrite On
+            Cull Back
+
+            HLSLPROGRAM
+            #pragma vertex DepthNormalsVert
+            #pragma fragment DepthNormalsFrag
+
+            #pragma shader_feature_local _ALPHACLIP_ON
+            #pragma shader_feature_local _SURFACETYPE_FOLIAGE
+            
+            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
+
+            struct VaryingsDepthNormals
+            {
+                float4 positionCS   : SV_POSITION;
+                float3 normalWS     : TEXCOORD0;
+                float2 uv           : TEXCOORD1;
+            };
+            
+            VaryingsDepthNormals DepthNormalsVert(Attributes v)
+            {
+                VaryingsDepthNormals o;
+                #if defined(_SURFACETYPE_FOLIAGE)
+                    ApplyWind(v.positionOS.xyz, v.color);
+                #endif
+                o.positionCS = TransformObjectToHClip(v.positionOS.xyz);
+                o.normalWS = TransformObjectToWorldNormal(v.normalOS);
+                o.uv = TRANSFORM_TEX(v.uv, _BaseMap);
+                return o;
+            }
+
+            half4 DepthNormalsFrag(VaryingsDepthNormals i) : SV_TARGET
+            {
+                ApplyAlphaClip(i.uv);
+                
+                float3 normalWS = normalize(i.normalWS);
+                return float4(normalWS * 0.5 + 0.5, 1.0);
             }
             ENDHLSL
         }

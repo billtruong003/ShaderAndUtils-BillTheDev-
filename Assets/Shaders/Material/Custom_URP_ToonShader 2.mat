@@ -18,7 +18,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 3002
+  m_CustomRenderQueue: 2003
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -60,8 +60,13 @@ Material:
     - _FakeLightMode: 1
     - _FlashAmount: 0
     - _FresnelOutlinePower: 5
+    - _FresnelOutlineSharpness: 2
     - _FresnelOutlineToggle: 0
     - _FresnelOutlineWidth: 0.1
+    - _GlintScale: 20
+    - _GlintSpeed: 2
+    - _GlintThreshold: 0.95
+    - _GlintToggle: 0
     - _HighlightOffset: 0.9
     - _Offset: 0.8
     - _OutlineWidth: 0.0002
@@ -85,6 +90,7 @@ Material:
     - _FakeLightDirection: {r: 0.5, g: 0.5, b: -0.5, a: 0}
     - _FlashColor: {r: 1, g: 1, b: 1, a: 1}
     - _FresnelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlintColor: {r: 1, g: 1, b: 0.5, a: 1}
     - _HiColor: {r: 1, g: 1, b: 1, a: 1}
     - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}

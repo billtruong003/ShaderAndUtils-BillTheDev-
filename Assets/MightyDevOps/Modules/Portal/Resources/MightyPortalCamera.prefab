@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9150309076965029535
 Transform:
   m_ObjectHideFlags: 0
@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1828095339002199168}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.86014235, z: 0, w: -0.5100542}
-  m_LocalPosition: {x: -49.5, y: 10.813158, z: -3.7569733}
+  m_LocalRotation: {x: 0, y: 0.98576766, z: 0, w: -0.1681137}
+  m_LocalPosition: {x: -17.77225, y: 2, z: -11.993957}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -64,8 +64,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.014950196
-  far clip plane: 2990.0393
+  near clip plane: 0.029121175
+  far clip plane: 5824.2354
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5
@@ -92,4 +92,4 @@ Skybox:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1828095339002199168}
   m_Enabled: 1
-  m_CustomSkybox: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_CustomSkybox: {fileID: 2100000, guid: 1cf6f4c6e6e0518419839d3f5448dd99, type: 2}

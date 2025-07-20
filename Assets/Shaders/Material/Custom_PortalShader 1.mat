@@ -17,7 +17,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: _DistortionColor _TextureNoiseScale
@@ -122,9 +122,9 @@ Material:
     - _SwirlTightness: 0.1
     - _TextureNoiseScale: 0.5
     - _TextureNoiseStrength: 25
-    - _UVDisplacementStrength: 0
+    - _UVDisplacementStrength: 0.0297
     - _VeinsScale: 2
-    - _VeinsSoftness: 0.0293
+    - _VeinsSoftness: 0.1015
     - _VeinsSpeed: 0.1
     - _VeinsThreshold: 1
     - _VertexDisplacementAmount: 0.1

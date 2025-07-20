@@ -139,13 +139,18 @@ Material:
     - _EnvironmentReflections: 1
     - _FakeLightMode: 1
     - _FresnelOutlinePower: 5
+    - _FresnelOutlineSharpness: 2
     - _FresnelOutlineToggle: 0
     - _FresnelOutlineWidth: 0.1
-    - _FresnelPower: 20
-    - _GlassSpecularIntensity: 2.22
-    - _GlassSpecularPower: 32.1
+    - _FresnelPower: 1
+    - _GlassSpecularIntensity: 0.75
+    - _GlassSpecularPower: 8.4
     - _GlassSpecularSize: 0.189
     - _GlassSpecularSmoothness: 0.0853
+    - _GlintScale: 20
+    - _GlintSpeed: 2
+    - _GlintThreshold: 0.95
+    - _GlintToggle: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -162,7 +167,7 @@ Material:
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RefractionStrength: 0.0658
+    - _RefractionStrength: 0.1
     - _RimPower: 6
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -192,10 +197,11 @@ Material:
     - _EmissionColor: {r: 1.4142135, g: 1.4142135, b: 1.4142135, a: 1}
     - _FakeLightColor: {r: 1, g: 1, b: 1, a: 1}
     - _FakeLightDirection: {r: 5, g: 5, b: 5, a: 0}
-    - _FresnelColor: {r: 0.7971698, g: 0.816803, b: 1, a: 1}
+    - _FresnelColor: {r: 0, g: 0.049834676, b: 0.5188679, a: 1}
     - _FresnelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GlassColor: {r: 0, g: 0.4782095, b: 1, a: 0.53333336}
+    - _GlassColor: {r: 0, g: 0.035097625, b: 0.6792453, a: 0.78431374}
     - _GlassSpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlintColor: {r: 1, g: 1, b: 0.5, a: 1}
     - _HiColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 0.29999998, b: 0.29999998, a: 1}

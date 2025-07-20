@@ -12,7 +12,7 @@ public class ToonOpaqueHullOutlineShaderGUI : ToonUberShaderGUIBase
     private MaterialProperty alphaClipModeProp, cutoffProp;
     private MaterialProperty emissionModeProp, emissionColorProp, emissionMapProp;
     private MaterialProperty fakeLightModeProp, fakeLightColorProp, fakeLightDirectionProp;
-    private MaterialProperty toonRampOffsetProp, toonRampSmoothnessProp, shadowTintProp;
+    private MaterialProperty toonRampOffsetProp, toonRampSmoothnessProp, shadowTintProp, ambientColorProp; // <-- THÊM MỚI
     private MaterialProperty rampProp, brightnessProp, offsetProp, specuColorProp, highlightOffsetProp, hiColorProp, rimColorProp, rimPowerProp;
     private MaterialProperty windFrequencyProp, windAmplitudeProp, windDirectionProp, translucencyColorProp, translucencyStrengthProp;
     private MaterialProperty outlineColorProp, outlineWidthProp, outlineScaleWithDistanceProp, distanceFadeStartProp, distanceFadeEndProp;
@@ -33,6 +33,7 @@ public class ToonOpaqueHullOutlineShaderGUI : ToonUberShaderGUIBase
         toonRampOffsetProp = FindProperty("_ToonRampOffset", properties);
         toonRampSmoothnessProp = FindProperty("_ToonRampSmoothness", properties);
         shadowTintProp = FindProperty("_ShadowTint", properties);
+        ambientColorProp = FindProperty("_AmbientColor", properties); // <-- THÊM MỚI
         rampProp = FindProperty("_Ramp", properties);
         brightnessProp = FindProperty("_Brightness", properties);
         offsetProp = FindProperty("_Offset", properties);
@@ -113,6 +114,9 @@ public class ToonOpaqueHullOutlineShaderGUI : ToonUberShaderGUIBase
         {
             case ToonOpaqueDrawerUtils.SurfaceType.Opaque:
                 ToonOpaqueDrawerUtils.DrawToonSettings(materialEditor, toonRampOffsetProp, toonRampSmoothnessProp, shadowTintProp);
+                EditorGUILayout.Space(); // <-- THÊM MỚI
+                materialEditor.ColorProperty(ambientColorProp, "Ambient Color"); // <-- THÊM MỚI
+                EditorGUILayout.HelpBox("Use the Alpha channel to blend between Scene Ambient (A=0) and this custom color (A=1).", MessageType.Info); // <-- THÊM MỚI
                 break;
             case ToonOpaqueDrawerUtils.SurfaceType.Metallic:
                 ToonOpaqueDrawerUtils.DrawMetallicSettings(materialEditor, rampProp, brightnessProp, offsetProp, specuColorProp, highlightOffsetProp, hiColorProp, rimColorProp, rimPowerProp);

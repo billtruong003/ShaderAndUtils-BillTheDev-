@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3397b03e178f64147a2acb572e46c16d, type: 3}
+  m_Name: Fire_Lv1_Bunis_VAT_Data
+  m_EditorClassIdentifier: 
+  bakedMesh: {fileID: 4300000, guid: 4bdba0d9a30ca8e4990e36f0d5230bb2, type: 2}
+  positionTexture: {fileID: 2800000, guid: 37bf1a75b9d5f4a4fa00725f80fc67c8, type: 2}
+  positionMinBounds: {x: -3.4696832, y: -1.0140998, z: -4.3589363}
+  positionMaxBounds: {x: 3.2311397, y: 6.263322, z: 4.8597775}
+  animationClips:
+  - name: A_Bunis_Idle
+    startFrame: 0
+    frameCount: 30
+    duration: 1
+    wrapMode: 2
+  - name: A_Bunis_Attack
+    startFrame: 30
+    frameCount: 30
+    duration: 1
+    wrapMode: 2
+  - name: A_Bunis_Run
+    startFrame: 60
+    frameCount: 30
+    duration: 1
+    wrapMode: 2
+  - name: A_Bunis_Skill
+    startFrame: 90
+    frameCount: 30
+    duration: 1
+    wrapMode: 2
+  - name: A_Bunis_Die
+    startFrame: 120
+    frameCount: 30
+    duration: 1
+    wrapMode: 1

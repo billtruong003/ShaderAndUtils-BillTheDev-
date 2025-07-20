@@ -36,6 +36,7 @@ CBUFFER_START(UnityPerMaterial)
     float  _ToonRampOffset;
     float  _ToonRampSmoothness;
     float4 _ShadowTint;
+    float4 _AmbientColor; // <-- THÊM MỚI
 
     float  _Brightness;
     float  _Offset;
@@ -61,6 +62,18 @@ CBUFFER_START(UnityPerMaterial)
     float4 _FresnelOutlineColor;
     float  _FresnelOutlineWidth;
     float  _FresnelOutlinePower;
+    float  _FresnelOutlineSharpness;
+
+    float4 _GlintColor;
+    float  _GlintScale;
+    float  _GlintSpeed;
+    float  _GlintThreshold;
+
+    float4 _BlingColor;
+    float  _BlingIntensity;
+    float  _BlingScale;
+    float  _BlingSpeed;
+    float  _BlingThreshold;
 
     float4 _OutlineColor;
     float  _OutlineWidth;
@@ -91,13 +104,26 @@ half3 ApplyEmission(half3 surfaceColor, float2 uv)
     return surfaceColor;
 }
 
-half3 ApplyFresnelOutline(half3 surfaceColor, float3 normalWS, float3 viewDir)
+half3 ApplyFresnelOutline(half3 surfaceColor, float3 normalWS, float3 viewDir, float3 worldPos)
 {
     #if defined(_OUTLINEMODE_FRESNEL)
-        float fresnelDot = 1.0 - saturate(dot(normalWS, viewDir));
-        float outlineFactor = FastPow(fresnelDot, _FresnelOutlinePower);
-        float outlineEdge = FastSmoothstep(1.0 - _FresnelOutlineWidth, 1.0 - _FresnelOutlineWidth + 0.05, outlineFactor);
-        surfaceColor = lerp(surfaceColor, _FresnelOutlineColor.rgb, outlineEdge);
+        float fresnelDot = dot(normalWS, viewDir);
+        float fresnelTerm = 1.0 - saturate(fresnelDot);
+        float fresnelPower = MU_FastPow(fresnelTerm, _FresnelOutlinePower);
+        
+        float screenSpaceDerivative = fwidth(fresnelPower);
+        float edgeWidth = screenSpaceDerivative * _FresnelOutlineSharpness;
+        
+        float outlineFactor = smoothstep(1.0 - _FresnelOutlineWidth - edgeWidth, 1.0 - _FresnelOutlineWidth, fresnelPower);
+        
+        half3 finalOutlineColor = _FresnelOutlineColor.rgb;
+
+        #if defined(_OUTLINEGLINT_ON)
+            float glintFactor = CalculateGlintFactor(worldPos);
+            finalOutlineColor = lerp(finalOutlineColor, _GlintColor.rgb, glintFactor);
+        #endif
+
+        surfaceColor = lerp(surfaceColor, finalOutlineColor, outlineFactor);
     #endif
     return surfaceColor;
 }

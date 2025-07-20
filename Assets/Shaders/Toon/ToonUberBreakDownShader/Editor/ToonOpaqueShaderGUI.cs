@@ -12,10 +12,13 @@ public class ToonOpaqueShaderGUI : ToonUberShaderGUIBase
     private MaterialProperty alphaClipModeProp, cutoffProp;
     private MaterialProperty emissionModeProp, emissionColorProp, emissionMapProp;
     private MaterialProperty fakeLightModeProp, fakeLightColorProp, fakeLightDirectionProp;
-    private MaterialProperty toonRampOffsetProp, toonRampSmoothnessProp, shadowTintProp;
+    private MaterialProperty toonRampOffsetProp, toonRampSmoothnessProp, shadowTintProp, ambientColorProp; // <-- THÊM MỚI
     private MaterialProperty rampProp, brightnessProp, offsetProp, specuColorProp, highlightOffsetProp, hiColorProp, rimColorProp, rimPowerProp;
     private MaterialProperty windFrequencyProp, windAmplitudeProp, windDirectionProp, translucencyColorProp, translucencyStrengthProp;
-    private MaterialProperty fresnelOutlineToggleProp, fresnelOutlineColorProp, fresnelOutlineWidthProp, fresnelOutlinePowerProp;
+
+    private MaterialProperty fresnelOutlineToggleProp, fresnelOutlineColorProp, fresnelOutlineWidthProp, fresnelOutlinePowerProp, fresnelOutlineSharpnessProp;
+    private MaterialProperty glintToggleProp, glintColorProp, glintScaleProp, glintSpeedProp, glintThresholdProp;
+
 
     protected override void FindProperties()
     {
@@ -33,6 +36,7 @@ public class ToonOpaqueShaderGUI : ToonUberShaderGUIBase
         toonRampOffsetProp = FindProperty("_ToonRampOffset", properties);
         toonRampSmoothnessProp = FindProperty("_ToonRampSmoothness", properties);
         shadowTintProp = FindProperty("_ShadowTint", properties);
+        ambientColorProp = FindProperty("_AmbientColor", properties); // <-- THÊM MỚI
         rampProp = FindProperty("_Ramp", properties);
         brightnessProp = FindProperty("_Brightness", properties);
         offsetProp = FindProperty("_Offset", properties);
@@ -46,10 +50,18 @@ public class ToonOpaqueShaderGUI : ToonUberShaderGUIBase
         windDirectionProp = FindProperty("_WindDirection", properties);
         translucencyColorProp = FindProperty("_TranslucencyColor", properties);
         translucencyStrengthProp = FindProperty("_TranslucencyStrength", properties);
+
         fresnelOutlineToggleProp = FindProperty("_FresnelOutlineToggle", properties);
         fresnelOutlineColorProp = FindProperty("_FresnelOutlineColor", properties);
         fresnelOutlineWidthProp = FindProperty("_FresnelOutlineWidth", properties);
         fresnelOutlinePowerProp = FindProperty("_FresnelOutlinePower", properties);
+        fresnelOutlineSharpnessProp = FindProperty("_FresnelOutlineSharpness", properties);
+
+        glintToggleProp = FindProperty("_GlintToggle", properties);
+        glintColorProp = FindProperty("_GlintColor", properties);
+        glintScaleProp = FindProperty("_GlintScale", properties);
+        glintSpeedProp = FindProperty("_GlintSpeed", properties);
+        glintThresholdProp = FindProperty("_GlintThreshold", properties);
     }
 
     private void DrawSurfaceTypeSelector()
@@ -87,25 +99,36 @@ public class ToonOpaqueShaderGUI : ToonUberShaderGUIBase
         DrawFoldout("Base Properties", ref showBaseSettings, () =>
         {
             materialEditor.TexturePropertySingleLine(new GUIContent(baseMapProp.displayName), baseMapProp, baseColorProp);
-            DrawPropertyGroup(alphaClipModeProp, "Enable Alpha Clip", () =>
+
+            materialEditor.ShaderProperty(alphaClipModeProp, alphaClipModeProp.displayName);
+            if (alphaClipModeProp.floatValue > 0)
             {
+                EditorGUI.indentLevel++;
                 materialEditor.ShaderProperty(cutoffProp, cutoffProp.displayName);
-            });
-            DrawPropertyGroup(emissionModeProp, "Enable Emission", () =>
+                EditorGUI.indentLevel--;
+            }
+
+            materialEditor.ShaderProperty(emissionModeProp, emissionModeProp.displayName);
+            if (emissionModeProp.floatValue > 0)
             {
+                EditorGUI.indentLevel++;
                 materialEditor.ShaderProperty(emissionColorProp, "Emission Color");
                 materialEditor.TexturePropertySingleLine(new GUIContent(emissionMapProp.displayName), emissionMapProp);
-            });
+                EditorGUI.indentLevel--;
+            }
         });
 
         DrawFoldout("Lighting", ref showLightingSettings, () =>
         {
-            DrawPropertyGroup(fakeLightModeProp, "Enable Fake Light", () =>
+            materialEditor.ShaderProperty(fakeLightModeProp, fakeLightModeProp.displayName);
+            if (fakeLightModeProp.floatValue > 0)
             {
+                EditorGUI.indentLevel++;
                 EditorGUILayout.HelpBox("Fake Light acts as a fallback when no main Directional Light is present, ensuring the object is never completely black.", MessageType.Info);
                 materialEditor.ShaderProperty(fakeLightColorProp, "Color");
                 materialEditor.ShaderProperty(fakeLightDirectionProp, "Direction");
-            });
+                EditorGUI.indentLevel--;
+            }
         });
 
         var surface = (ToonOpaqueDrawerUtils.SurfaceType)surfaceTypeProp.floatValue;
@@ -113,6 +136,9 @@ public class ToonOpaqueShaderGUI : ToonUberShaderGUIBase
         {
             case ToonOpaqueDrawerUtils.SurfaceType.Opaque:
                 ToonOpaqueDrawerUtils.DrawToonSettings(materialEditor, toonRampOffsetProp, toonRampSmoothnessProp, shadowTintProp);
+                EditorGUILayout.Space(); // <-- THÊM MỚI
+                materialEditor.ColorProperty(ambientColorProp, "Ambient Color"); // <-- THÊM MỚI
+                EditorGUILayout.HelpBox("Use the Alpha channel to blend between Scene Ambient (A=0) and this custom color (A=1).", MessageType.Info); // <-- THÊM MỚI
                 break;
             case ToonOpaqueDrawerUtils.SurfaceType.Metallic:
                 ToonOpaqueDrawerUtils.DrawMetallicSettings(materialEditor, rampProp, brightnessProp, offsetProp, specuColorProp, highlightOffsetProp, hiColorProp, rimColorProp, rimPowerProp);
@@ -124,28 +150,38 @@ public class ToonOpaqueShaderGUI : ToonUberShaderGUIBase
 
         DrawFoldout("Fresnel Outline", ref showFresnelOutlineSettings, () =>
         {
-            DrawPropertyGroup(fresnelOutlineToggleProp, "Enable Fresnel Outline", () =>
+            materialEditor.ShaderProperty(fresnelOutlineToggleProp, fresnelOutlineToggleProp.displayName);
+            if (fresnelOutlineToggleProp.floatValue > 0)
             {
+                EditorGUI.indentLevel++;
                 materialEditor.ShaderProperty(fresnelOutlineColorProp, "Color");
                 materialEditor.ShaderProperty(fresnelOutlineWidthProp, "Width");
                 materialEditor.ShaderProperty(fresnelOutlinePowerProp, "Power");
-            });
+                materialEditor.ShaderProperty(fresnelOutlineSharpnessProp, "Sharpness");
+
+                EditorGUILayout.Space();
+
+                materialEditor.ShaderProperty(glintToggleProp, glintToggleProp.displayName);
+                if (glintToggleProp.floatValue > 0)
+                {
+                    EditorGUI.indentLevel++;
+                    materialEditor.ShaderProperty(glintColorProp, "Glint Color");
+                    materialEditor.ShaderProperty(glintScaleProp, "Glint Scale");
+                    materialEditor.ShaderProperty(glintSpeedProp, "Glint Speed");
+                    materialEditor.ShaderProperty(glintThresholdProp, "Glint Threshold");
+                    EditorGUI.indentLevel--;
+                }
+                EditorGUI.indentLevel--;
+            }
         });
     }
 
     protected override void ApplyKeywords()
     {
-        SetKeyword("_ALPHACLIP_ON", alphaClipModeProp.floatValue > 0);
-        SetKeyword("_EMISSION_ON", emissionModeProp.floatValue > 0);
-        SetKeyword("_FAKELIGHT_ON", fakeLightModeProp.floatValue > 0);
-
         var surface = (ToonOpaqueDrawerUtils.SurfaceType)surfaceTypeProp.floatValue;
         SetKeyword("_SURFACETYPE_OPAQUE", surface == ToonOpaqueDrawerUtils.SurfaceType.Opaque);
         SetKeyword("_SURFACETYPE_METALLIC", surface == ToonOpaqueDrawerUtils.SurfaceType.Metallic);
         SetKeyword("_SURFACETYPE_FOLIAGE", surface == ToonOpaqueDrawerUtils.SurfaceType.Foliage);
-
-        SetKeyword("_OUTLINEMODE_FRESNEL", fresnelOutlineToggleProp.floatValue > 0);
-
         EditorUtility.SetDirty(material);
     }
 }
