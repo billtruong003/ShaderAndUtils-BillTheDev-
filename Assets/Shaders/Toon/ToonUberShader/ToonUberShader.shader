@@ -337,7 +337,7 @@ Shader "Custom/Toon Uber Shader"
                 #endif
                 float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
                 float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
-                output.positionCS = GetShadowPositionHClip(input.positionOS, positionWS, normalWS);
+                output.positionCS = GetShadowCoord(input.positionOS, positionWS, normalWS);
                 output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 return output;
             }

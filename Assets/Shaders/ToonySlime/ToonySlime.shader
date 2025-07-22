@@ -265,7 +265,7 @@ Shader "CleanCode/ToonySlime"
                 
                 float3 animatedPositionOS = AnimateVertexWithNoise(input.positionOS.xyz, input.normalOS, _NoiseScale, _NoiseSpeed, _NoiseAmplitude);
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(animatedPositionOS);
-                output.positionCS = GetShadowPositionHClip(vertexInput);
+                output.positionCS = GetShadowCoord(vertexInput);
                 
                 return output;
             }
