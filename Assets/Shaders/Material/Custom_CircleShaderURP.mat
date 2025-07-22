@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: 07b42c53d8a944ed3a57ef8d82fb5c60, type: 3}
+        m_Texture: {fileID: 2800000, guid: a803a6ba5581743b4961ddacf788e57b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -37,13 +37,13 @@ Material:
     - _Emission: 1
     - _FillMode: 0
     - _FlickerEnabled: 1
-    - _FlickerIntensity: 0
-    - _FlickerSpeed: 0
-    - _NoiseScale: 0.85
-    - _Thickness: 0.067
+    - _FlickerIntensity: 0.08
+    - _FlickerSpeed: 1.85
+    - _NoiseScale: 9.81
+    - _Thickness: 0.034
     m_Colors:
-    - _InnerColor: {r: 1, g: 1, b: 1, a: 0}
-    - _OuterColor: {r: 2.9960785, g: 0, b: 0.024358338, a: 1}
+    - _InnerColor: {r: 0, g: 0.6816917, b: 3.482202, a: 0}
+    - _OuterColor: {r: 0, g: 38.85376, b: 41.839375, a: 1}
     - _Outer_Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: e30b74e045d14b54eb2d87a1b23297e2, type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -13684,7 +13684,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -18398,6 +18398,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3233133318604902719, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3327052671040424892, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3499578482476499904, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4333543976344105737, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4696089237341698536, guid: e6efb91ef2db340148483d461e1ef6b1, type: 3}
@@ -24779,6 +24791,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b8ceae29734cc46c4966546a07fff128, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: b8ceae29734cc46c4966546a07fff128, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: b8ceae29734cc46c4966546a07fff128, type: 3}
@@ -40352,6 +40368,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3305902186265372522, guid: 26f212eb3fe857f4581e42ca405e1886, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 87d9d9f82863d436abf83ac0a893bcde, type: 2}
     - target: {fileID: 4057327886135544970, guid: 26f212eb3fe857f4581e42ca405e1886, type: 3}
       propertyPath: m_Name
       value: SimpleSword

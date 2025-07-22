@@ -45,7 +45,7 @@ Material:
     m_Floats:
     - _ALPHATEST_ON: 0
     - _AlphaClipMode: 0
-    - _Brightness: 0.704
+    - _Brightness: 0.54
     - _Cull: 2
     - _Cutoff: 0
     - _DISSOLVE_ON: 0
@@ -60,10 +60,10 @@ Material:
     - _EmissionMode: 0
     - _FAKELIGHT_ON: 1
     - _FakeLightMode: 1
-    - _FresnelOutlinePower: 5
-    - _FresnelOutlineSharpness: 2
+    - _FresnelOutlinePower: 100
+    - _FresnelOutlineSharpness: 10
     - _FresnelOutlineToggle: 1
-    - _FresnelOutlineWidth: 0.1
+    - _FresnelOutlineWidth: 0.75
     - _FresnelPower: 5
     - _GlassSpecularIntensity: 1
     - _GlassSpecularPower: 20
@@ -73,14 +73,14 @@ Material:
     - _GlintToggle: 0
     - _HighlightOffset: 0.593
     - _OUTLINE_SCALE_WITH_DISTANCE: 1
-    - _Offset: 0.64
+    - _Offset: 0.46
     - _OutlineMode: 0
     - _OutlineScaleWithDistance: 1
     - _OutlineWidth: 4.15
     - _RefractionStrength: 0.01
-    - _RimPower: 6.88
+    - _RimPower: 5.8
     - _SrcBlend: 1
-    - _SurfaceType: 2
+    - _SurfaceType: 1
     - _ToonRampOffset: 0.3
     - _ToonRampSmoothness: 0.001
     - _TranslucencyStrength: 1
@@ -99,14 +99,14 @@ Material:
     - _FakeLightColor: {r: 1, g: 1, b: 1, a: 1}
     - _FakeLightDirection: {r: 0.5, g: 0.5, b: -0.5, a: 0}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
-    - _FresnelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FresnelOutlineColor: {r: 766.99615, g: 766.2816, b: 0, a: 1}
     - _GlassColor: {r: 0.8, g: 0.9, b: 1, a: 0.5}
     - _GlintColor: {r: 1, g: 1, b: 0.5, a: 1}
-    - _HiColor: {r: 1, g: 0.94081724, b: 0.5613208, a: 1}
+    - _HiColor: {r: 1.7411011, g: 1.638058, b: 0.97731626, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RimColor: {r: 1, g: 0.65916854, b: 0, a: 1}
+    - _RimColor: {r: 4.594794, g: 3.0287435, b: 0, a: 1}
     - _ShadowTint: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecuColor: {r: 1, g: 0.41830063, b: 0, a: 1}
+    - _SpecuColor: {r: 7.017272, g: 6.703772, b: 0.36410376, a: 1}
     - _TranslucencyColor: {r: 0.7, g: 0.9, b: 0.3, a: 1}
     - _WindDirection: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

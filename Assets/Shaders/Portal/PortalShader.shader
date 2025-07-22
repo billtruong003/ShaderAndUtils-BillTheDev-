@@ -1,4 +1,3 @@
-// Shader by VNTALKINGTECH - The Ultimate, Art-Directed Magic Portal for URP
 Shader "BillPortal/Magic Portal Ultimate"
 {
     Properties
@@ -36,7 +35,7 @@ Shader "BillPortal/Magic Portal Ultimate"
     
     SubShader
     {
-        Tags { "RenderType"="Geometry" "Queue"="Opaque" "RenderPipeline"="UniversalPipeline" }
+        Tags { "RenderType"="Opaque" "Queue"="Geometry" "RenderPipeline"="UniversalPipeline" }
 
         Pass
         {

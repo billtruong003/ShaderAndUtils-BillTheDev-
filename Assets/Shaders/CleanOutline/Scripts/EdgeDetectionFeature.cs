@@ -11,26 +11,27 @@ public class AdvancedEdgeDetectionFeature : ScriptableRendererFeature
     {
         public RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingTransparents;
 
-        [Range(0, 15)]
-        public float outlineThickness = 3; // Đổi thành float để có sự tinh chỉnh tốt hơn
+        [Range(0f, 15f)]
+        public float outlineThickness = 1.0f;
         public Color outlineColor = Color.black;
 
         [Header("Edge Sensitivities")]
-        [Tooltip("Controls sensitivity to depth differences. Higher values detect only large depth gaps, ideal for exterior outlines.")]
-        [Range(0.0f, 1000.0f)]
+        [Tooltip("Controls sensitivity to depth differences. Higher values detect smaller depth gaps.")]
+        [Range(0.0f, 500.0f)]
         public float depthSensitivity = 200.0f;
 
-        [Tooltip("Controls sensitivity to surface normal changes. Higher values detect sharp angles, ideal for interior details.")]
+        [Tooltip("Controls sensitivity to surface normal changes. Higher values detect more subtle angle changes.")]
         [Range(0.0f, 50.0f)]
         public float normalSensitivity = 4.0f;
 
-        [Tooltip("Controls sensitivity to luminance (color brightness) differences. Higher values detect edges between different colored areas.")]
+        [Tooltip("Controls sensitivity to luminance differences. Higher values detect edges between similar colors.")]
         [Range(0.0f, 20.0f)]
         public float luminanceSensitivity = 2.0f;
 
-        [Tooltip("Controls the transition softness of the outline. Higher values create a softer, more feathered edge.")]
-        [Range(0.0f, 5.0f)] // Bắt đầu từ > 1 để tránh chia cho 0
-        public float edgeSoftness = 1.5f; // Tham số mới
+        [Header("Appearance")]
+        [Tooltip("Controls the falloff of the outline. A value of 0.01 is a sharp, hard edge. A value of 1.0 is a very soft, smooth gradient.")]
+        [Range(0.01f, 1.0f)]
+        public float outlineSoftness = 0.5f;
     }
 
     [SerializeField]
@@ -44,7 +45,7 @@ public class AdvancedEdgeDetectionFeature : ScriptableRendererFeature
     private static readonly int DepthSensitivityProperty = Shader.PropertyToID("_DepthSensitivity");
     private static readonly int NormalSensitivityProperty = Shader.PropertyToID("_NormalSensitivity");
     private static readonly int LuminanceSensitivityProperty = Shader.PropertyToID("_LuminanceSensitivity");
-    private static readonly int EdgeSoftnessProperty = Shader.PropertyToID("_EdgeSoftness"); // ID mới
+    private static readonly int OutlineSoftnessProperty = Shader.PropertyToID("_OutlineSoftness");
 
     public override void Create()
     {
@@ -81,18 +82,22 @@ public class AdvancedEdgeDetectionFeature : ScriptableRendererFeature
     private bool EnsureMaterialIsCreated()
     {
         if (edgeDetectionMaterial != null) return true;
-        edgeDetectionMaterial = CoreUtils.CreateEngineMaterial("Hidden/Advanced Edge Detection");
-        if (edgeDetectionMaterial == null)
+
+        var shader = Shader.Find("Hidden/Advanced Edge Detection");
+        if (shader == null)
         {
-            Debug.LogError("Advanced Edge Detection material could not be created. The effect will not be rendered.");
+            Debug.LogError("Shader 'Hidden/Advanced Edge Detection' not found. The effect will not be rendered.");
             return false;
         }
-        return true;
+
+        edgeDetectionMaterial = CoreUtils.CreateEngineMaterial(shader);
+        return edgeDetectionMaterial != null;
     }
 
     private class AdvancedEdgeDetectionPass : ScriptableRenderPass
     {
         private Material material;
+        private EdgeDetectionSettings currentSettings;
 
         private class PassData { }
 
@@ -104,17 +109,20 @@ public class AdvancedEdgeDetectionFeature : ScriptableRendererFeature
         public void Setup(EdgeDetectionSettings passSettings, Material edgeDetectionMaterial)
         {
             this.material = edgeDetectionMaterial;
-            renderPassEvent = passSettings.renderPassEvent;
+            this.currentSettings = passSettings;
+            renderPassEvent = currentSettings.renderPassEvent;
+        }
 
-            if (material != null)
-            {
-                material.SetFloat(OutlineThicknessProperty, passSettings.outlineThickness);
-                material.SetColor(OutlineColorProperty, passSettings.outlineColor);
-                material.SetFloat(DepthSensitivityProperty, passSettings.depthSensitivity);
-                material.SetFloat(NormalSensitivityProperty, passSettings.normalSensitivity);
-                material.SetFloat(LuminanceSensitivityProperty, passSettings.luminanceSensitivity);
-                material.SetFloat(EdgeSoftnessProperty, passSettings.edgeSoftness); // Gửi tham số mới
-            }
+        private void UpdateMaterialProperties()
+        {
+            if (material == null || currentSettings == null) return;
+
+            material.SetFloat(OutlineThicknessProperty, currentSettings.outlineThickness);
+            material.SetColor(OutlineColorProperty, currentSettings.outlineColor);
+            material.SetFloat(DepthSensitivityProperty, currentSettings.depthSensitivity);
+            material.SetFloat(NormalSensitivityProperty, currentSettings.normalSensitivity);
+            material.SetFloat(LuminanceSensitivityProperty, currentSettings.luminanceSensitivity);
+            material.SetFloat(OutlineSoftnessProperty, currentSettings.outlineSoftness);
         }
 
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
@@ -125,6 +133,8 @@ public class AdvancedEdgeDetectionFeature : ScriptableRendererFeature
             builder.SetRenderAttachment(resourceData.activeColorTexture, 0);
             builder.UseAllGlobalTextures(true);
             builder.AllowPassCulling(false);
+
+            UpdateMaterialProperties();
 
             builder.SetRenderFunc((PassData _, RasterGraphContext context) =>
             {

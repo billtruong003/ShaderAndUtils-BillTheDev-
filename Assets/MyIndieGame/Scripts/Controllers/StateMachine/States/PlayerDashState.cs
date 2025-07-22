@@ -15,9 +15,11 @@ public class PlayerDashState : PlayerState
         timer = dashDuration;
         input.ConsumeDashInput();
 
-        // Giả sử có 1 animation tên "Dash" trong Animator
         animator.PlayTargetAnimation("Dash");
-        afterImageController?.Trigger();
+        for (int i = 0; i < 3; i++)
+        {
+            afterImageController?.Trigger();
+        }
 
     }
 

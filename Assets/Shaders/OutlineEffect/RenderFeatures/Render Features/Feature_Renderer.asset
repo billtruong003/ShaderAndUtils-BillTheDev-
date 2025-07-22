@@ -1,24 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3959773003492513664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 246c17ff153234840bbeb08593f85ab3, type: 3}
-  m_Name: PerObjectProfilerFeature
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  settings:
-    profilerTag: PerObjectProfiling
-    renderPassEvent: 500
-    layerMask:
-      serializedVersion: 2
-      m_Bits: 64
 --- !u!114 &-3807376484010879209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,10 +17,10 @@ MonoBehaviour:
     renderPassEvent: 300
     outlineThickness: 0.0003
     outlineColor: {r: 0, g: 0, b: 0, a: 1}
-    depthSensitivity: 1000
-    normalSensitivity: 15
-    luminanceSensitivity: 20
-    edgeSoftness: 5
+    depthSensitivity: 0
+    normalSensitivity: 1
+    luminanceSensitivity: 0
+    outlineSoftness: 0.146
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,11 +46,9 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
-  - {fileID: -3959773003492513664}
   - {fileID: 3899579887225231287}
-  - {fileID: 654668317359200864}
   - {fileID: -3807376484010879209}
-  m_RendererFeatureMap: 80a8a5df6e0f0cc9b757511f3f171e3660dae5b55dd9150917175b98427b29cb
+  m_RendererFeatureMap: b757511f3f171e3617175b98427b29cb
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -95,38 +74,6 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 1
   m_IntermediateTextureMode: 0
---- !u!114 &654668317359200864
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbd6e526a1bb489a8df34cbfcfca6bfc, type: 3}
-  m_Name: OutlineRenderFeature
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  FeatureSettings:
-    RenderPassEvent: 600
-    LayerMask:
-      serializedVersion: 2
-      m_Bits: 64
-    RenderingLayerMask:
-      serializedVersion: 0
-      m_Bits: 3
-    OverrideMaterial: {fileID: -876546973899608171, guid: 4f3bc6b888d3080448e0c3bb6fc9deb0, type: 3}
-    BlitMaterial: {fileID: -876546973899608171, guid: 6c897a44b62e6d84e9b0f6d5238a158e, type: 3}
-    ClearDepth: 0
-  MaterialSettings:
-    OutlineScale: 0.3
-    RobertsCrossMultiplier: 20
-    DepthThreshold: 10
-    NormalThreshold: 0.8
-    SteepAngleThreshold: 19.39
-    SteepAngleMultiplier: 25
-    OutlineColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &3899579887225231287
 MonoBehaviour:
   m_ObjectHideFlags: 0
