@@ -1,4 +1,4 @@
-Shader "Advanced/HologramEmissive_Corrected"
+Shader "Advanced/HologramEmissive"
 {
     Properties
     {
