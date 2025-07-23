@@ -106,7 +106,7 @@ void ApplyWind(inout float3 positionOS, float4 vertexColor)
 {
     float3 worldPos = TransformObjectToWorld(positionOS);
     float windPhase = dot(worldPos.xz, float2(0.2, 0.1));
-    float windSine = MU_FastSin(_Time.y * _WindFrequency + windPhase);
+    float windSine = sin(_Time.y * _WindFrequency + windPhase);
     float3 windVector = normalize(_WindDirection) * windSine * _WindAmplitude;
     float windMask = vertexColor.a;
     positionOS.xyz += windVector * windMask;

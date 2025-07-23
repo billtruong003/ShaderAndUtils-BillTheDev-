@@ -2,42 +2,57 @@ Shader "PRO/AdvancedPortalURP"
 {
     Properties
     {
+        [Header(Render Pipeline Settings)]
+        [Enum(Opaque, 0, Transparent, 1)] _SurfaceType("Surface Type", Float) = 1.0
+
         [Header(Portal Core)]
-        [HDR] _PortalColor ("Core Color", Color) = (0, 1, 1, 1)
+        [HDR] _PortalColor("Core Color", Color) = (0, 1, 1, 1)
         _PortalRadius("Radius", Range(0, 1)) = 0.4
+        _NoiseTex("Spiral Noise (Seamless)", 2D) = "white" {}
+        _NoiseTilingAndSpeed("Noise Tiling & Speed", Vector) = (1, 1, 0.2, 0.3)
         _PullSpeed("Inward Pull Speed", Float) = 0.5
         _SpiralStrength("Spiral Strength", Float) = 2.0
-        _TimeScale("Time Scale", Float) = 1.0
 
         [Header(Edge and Rim)]
         _RimColor("Rim Color", Color) = (1, 1, 1, 1)
         _RimWidth("Rim Width", Range(0, 0.2)) = 0.05
         _EdgeSoftness("Edge Softness", Range(0.001, 0.1)) = 0.02
 
-        [Header(Distortion and Effects)]
-        _WobbleFrequency("Wobble Frequency", Float) = 10.0
+        [Header(Dynamic Effects)]
+        [Enum(Off, 0, Procedural, 1, Texture Based, 2)] _WobbleMode("Wobble Mode", Float) = 2
+        _WobbleNoise("Wobble Noise (Texture)", 2D) = "gray" {}
+        _WobbleTilingAndSpeed("Wobble Tiling & Speed", Vector) = (5, 5, 0.5, 0.5)
         _WobbleAmplitude("Wobble Amplitude", Range(0, 0.1)) = 0.05
-        _DistortionAmount("Scene Distortion", Range(0, 0.2)) = 0.03
-        _ParallaxDepth("Parallax Depth", Range(0, 0.2)) = 0.05
-        _ChromaticAberration("Chromatic Aberration", Range(0, 0.1)) = 0.01
+        _WobbleFrequency("Wobble Frequency (Procedural)", Float) = 10.0
 
-        [Header(Textures)]
-        _NoiseTex("Spiral Noise (Seamless)", 2D) = "white" {}
-        _NoiseTilingAndSpeed("Noise Tiling & Speed (XY=Tiling, ZW=Speed)", Vector) = (1, 1, 0.2, 0.3)
+        [Header(Transparent Mode Effects)]
+        [Enum(Off, 0, Simple Distortion, 1, Chromatic Aberration, 2)] _DistortionMode("Distortion Mode", Float) = 2
+        _DistortionAmount("Scene Distortion", Range(0, 0.1)) = 0.03
+        _ChromaticAberration("Chromatic Aberration", Range(0, 0.1)) = 0.01
+        _ParallaxDepth("View Parallax Depth", Range(0, 0.2)) = 0.05
+        _SoftIntersectionDistance("Soft Intersection Distance", Range(0.01, 5.0)) = 0.5
+
+        [Header(Animation)]
+        _TimeScale("Time Scale", Float) = 1.0
+
+        // Keyword Toggles
+        [Toggle(_PARALLAX_EFFECT_ON)] _EnableParallax("Enable View Parallax", Float) = 1
+        [Toggle(_SOFT_INTERSECTION_ON)] _EnableSoftIntersection("Enable Soft Intersection", Float) = 1
     }
 
     SubShader
     {
         Tags
         {
-            "RenderType" = "Transparent"
-            "Queue" = "Transparent"
             "RenderPipeline" = "UniversalPipeline"
             "IgnoreProjector" = "True"
         }
 
         Pass
         {
+            Name "PortalForward"
+            Tags { "LightMode" = "UniversalForward" }
+
             Blend SrcAlpha OneMinusSrcAlpha
             ZWrite Off
             Cull Off
@@ -46,10 +61,19 @@ Shader "PRO/AdvancedPortalURP"
             #pragma vertex vert
             #pragma fragment frag
 
+            #pragma multi_compile_local _SURFACE_TYPE_OPAQUE _SURFACE_TYPE_TRANSPARENT
+            #pragma multi_compile_local _WOBBLEMODE_OFF _WOBBLEMODE_PROCEDURAL _WOBBLEMODE_TEXTURE_BASED
+            #pragma multi_compile_local _DISTORTIONMODE_OFF _DISTORTIONMODE_SIMPLE_DISTORTION _DISTORTIONMODE_CHROMATIC_ABERRATION
+            
+            #pragma shader_feature_local _PARALLAX_EFFECT_ON
+            #pragma shader_feature_local _SOFT_INTERSECTION_ON
+
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
             TEXTURE2D_X(_CameraOpaqueTexture);
-            SAMPLER(sampler_CameraOpaqueTexture);
+            TEXTURE2D_X(_CameraDepthTexture);
+            SAMPLER(sampler_LinearClamp);
 
             struct Attributes
             {
@@ -62,173 +86,173 @@ Shader "PRO/AdvancedPortalURP"
                 float4 positionCS   : SV_POSITION;
                 float2 uv           : TEXCOORD0;
                 float4 screenPos    : TEXCOORD1;
-            };
-
-            struct PortalInfo
-            {
-                float2 baseUV;
-                float2 toCenter;
-                float radius;
-                float angle;
+                float3 viewDirVS    : TEXCOORD2;
             };
 
             CBUFFER_START(UnityPerMaterial)
-                float4 _PortalColor;
-                float4 _RimColor;
-                float _PortalRadius;
-                float _PullSpeed;
-                float _SpiralStrength;
-                float _RimWidth;
-                float _EdgeSoftness;
-                float _WobbleFrequency;
-                float _WobbleAmplitude;
-                float _DistortionAmount;
-                float _ParallaxDepth;
-                float _TimeScale;
-                float _ChromaticAberration;
-                float4 _NoiseTilingAndSpeed;
+                float4 _PortalColor, _RimColor;
+                float _PortalRadius, _PullSpeed, _SpiralStrength, _RimWidth, _EdgeSoftness;
+                float _WobbleAmplitude, _WobbleFrequency, _DistortionAmount, _ParallaxDepth, _TimeScale, _ChromaticAberration;
+                float _SoftIntersectionDistance;
+                float4 _NoiseTilingAndSpeed, _WobbleTilingAndSpeed;
             CBUFFER_END
 
-            TEXTURE2D(_NoiseTex);
-            SAMPLER(sampler_NoiseTex);
-
-            float snoise(float2 v)
-            {
-                const float4 C = float4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
-                float2 i = floor(v + dot(v, C.yy));
-                float2 x0 = v - i + dot(i, C.xx);
-                float2 i1 = (x0.x > x0.y) ? float2(1.0, 0.0) : float2(0.0, 1.0);
-                float4 x12 = x0.xyxy + C.xxzz;
-                x12.xy -= i1;
-                i = i - floor(i * (1.0 / 289.0)) * 289.0;
-                float3 p = ( ( (i.y + float3(0.0, i1.y, 1.0)) * 34.0) + 1.0) * ( (i.y + float3(0.0, i1.y, 1.0))) + i.x + float3(0.0, i1.x, 1.0);
-                p = p - floor(p * (1.0 / 289.0)) * 289.0;
-                p = ( ( (p) * 34.0) + 1.0) * (p);
-                p = p - floor(p * (1.0 / 289.0)) * 289.0;
-                float3 m = max(0.5 - float3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
-                m = m * m;
-                m = m * m;
-                float3 x = 2.0 * frac(p * C.www) - 1.0;
-                float3 h = abs(x) - 0.5;
-                float3 ox = floor(x + 0.5);
-                float3 a0 = x - ox;
-                m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
-                float3 g;
-                g.x = a0.x * x0.x + h.x * x0.y;
-                g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-                return 130.0 * dot(m, g);
-            }
+            TEXTURE2D(_NoiseTex);       SAMPLER(sampler_NoiseTex);
+            TEXTURE2D(_WobbleNoise);    SAMPLER(sampler_WobbleNoise);
 
             Varyings vert(Attributes IN)
             {
                 Varyings OUT;
-                OUT.positionCS = TransformObjectToHClip(IN.positionOS.xyz);
-                OUT.uv = IN.uv;
+                VertexPositionInputs posInputs = GetVertexPositionInputs(IN.positionOS.xyz);
+                OUT.positionCS = posInputs.positionCS;
                 OUT.screenPos = ComputeScreenPos(OUT.positionCS);
+                OUT.uv = IN.uv;
+                OUT.viewDirVS = posInputs.positionVS;
                 return OUT;
             }
 
-            PortalInfo getPortalCoordinates(float2 uv)
+            float calculatePortalMask(float distance, float radius, float softness)
             {
-                PortalInfo p;
-                p.baseUV = uv;
-                p.toCenter = uv - 0.5;
-                p.radius = length(p.toCenter);
-                p.angle = atan2(p.toCenter.y, p.toCenter.x);
-                return p;
+                return 1.0 - smoothstep(radius - softness, radius, distance);
             }
 
-            float calculateWobble(float2 uv, float time, float frequency, float amplitude)
+            float calculateWobble(float2 uv, float time)
             {
-                return snoise(uv * frequency + time) * amplitude;
+                #if defined(_WOBBLEMODE_PROCEDURAL)
+                    float proceduralNoise = sin(uv.x * _WobbleFrequency + time) * cos(uv.y * _WobbleFrequency + time);
+                    return proceduralNoise * _WobbleAmplitude;
+                #elif defined(_WOBBLEMODE_TEXTURE_BASED)
+                    float2 wobbleUV = uv * _WobbleTilingAndSpeed.xy + time * _WobbleTilingAndSpeed.zw;
+                    float textureNoise = SAMPLE_TEXTURE2D(_WobbleNoise, sampler_WobbleNoise, wobbleUV).r * 2.0 - 1.0;
+                    return textureNoise * _WobbleAmplitude;
+                #else
+                    return 0.0;
+                #endif
             }
 
-            float calculateVisibilityMask(float radius, float portalRadius, float edgeSoftness)
+            float calculateSpiralNoise(float2 uv, float distance, float time)
             {
-                return 1.0 - smoothstep(portalRadius - edgeSoftness, portalRadius, radius);
+                float2 centeredUV = uv - 0.5;
+                float angle = atan2(centeredUV.y, centeredUV.x) + distance * _SpiralStrength;
+                float inwardRadius = distance - time * _PullSpeed;
+
+                float2 noiseCoords = float2(cos(angle), sin(angle)) * inwardRadius;
+                float2 finalNoiseUV = noiseCoords * _NoiseTilingAndSpeed.xy + time * _NoiseTilingAndSpeed.zw;
+                return saturate(pow(SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, finalNoiseUV).r, 2.0));
             }
 
-            float2 getNoiseVector(float2 tiling, float2 speed, float time)
+            float calculateSoftIntersection(float4 screenPos, float surfaceDepthVS)
             {
-                return (tiling * speed * time);
+                #if defined(_SURFACE_TYPE_TRANSPARENT) && defined(_SOFT_INTERSECTION_ON)
+                    float sceneDepthRaw = SampleSceneDepth(screenPos.xy / screenPos.w);
+                    float sceneDepthVS = LinearEyeDepth(sceneDepthRaw, _ZBufferParams);
+                    float intersectionFade = saturate((sceneDepthVS - surfaceDepthVS) / _SoftIntersectionDistance);
+                    return intersectionFade;
+                #else
+                    return 1.0;
+                #endif
             }
 
-            float getLayeredNoise(float2 parallaxUV, float angle, float distortedRadius, float time)
-            {
-                float inwardRadius = distortedRadius - time * _PullSpeed;
-                angle += distortedRadius * _SpiralStrength;
-                
-                float2 spiralUV = float2(cos(angle), sin(angle)) * inwardRadius * _NoiseTilingAndSpeed.xy;
-
-                float2 noiseVec1 = getNoiseVector(float2(1.0, 1.0), _NoiseTilingAndSpeed.zw, time);
-                float2 noiseVec2 = getNoiseVector(float2(2.1, 2.1), _NoiseTilingAndSpeed.zw * 1.5, time);
-
-                float noise1 = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, spiralUV + parallaxUV + noiseVec1).r;
-                float noise2 = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, spiralUV * 0.5 + parallaxUV + noiseVec2).r;
-
-                return pow(noise1 * noise2, 2.5);
-            }
-            
-            float4 getCoreColor(float noise, float mask)
-            {
-                return _PortalColor * noise * mask;
-            }
-
-            float4 getRimColor(float radius, float portalRadius, float rimWidth, float edgeSoftness, float mask)
-            {
-                float rimFalloff = smoothstep(portalRadius, portalRadius + edgeSoftness, radius);
-                float rim = smoothstep(portalRadius - rimWidth, portalRadius, radius) - rimFalloff;
-                return _RimColor * rim * mask * _RimColor.a;
-            }
-
-            float3 getDistortedSceneColor(float4 screenPos, float2 distortionVector)
+            float3 getSceneColor(float4 screenPos, float2 distortion)
             {
                 float2 screenUV = screenPos.xy / screenPos.w;
-                float3 sceneColor;
-
-                if(_ChromaticAberration > 0)
-                {
-                    float3 R = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + distortionVector * (1.0 + _ChromaticAberration)).r;
-                    float3 G = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + distortionVector).g;
-                    float3 B = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + distortionVector * (1.0 - _ChromaticAberration)).b;
-                    sceneColor = float3(R.r, G.g, B.b);
-                }
-                else
-                {
-                    sceneColor = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV + distortionVector).rgb;
-                }
-                
-                return sceneColor;
+                #if defined(_DISTORTIONMODE_SIMPLE_DISTORTION)
+                    return SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_LinearClamp, screenUV + distortion).rgb;
+                #elif defined(_DISTORTIONMODE_CHROMATIC_ABERRATION)
+                    float r = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_LinearClamp, screenUV + distortion * (1.0 + _ChromaticAberration)).r;
+                    float g = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_LinearClamp, screenUV + distortion).g;
+                    float b = SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_LinearClamp, screenUV - distortion * (1.0 - _ChromaticAberration)).b;
+                    return float3(r, g, b);
+                #else // Off
+                    return SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_LinearClamp, screenUV).rgb;
+                #endif
             }
 
             float4 frag(Varyings IN) : SV_Target
             {
                 float time = _Time.y * _TimeScale;
-                PortalInfo pInfo = getPortalCoordinates(IN.uv);
-                
-                float2 parallaxUV = pInfo.toCenter * _ParallaxDepth;
-                float wobble = calculateWobble(pInfo.baseUV + parallaxUV, time, _WobbleFrequency, _WobbleAmplitude);
-                float distortedRadius = pInfo.radius - wobble;
+                float2 centeredUV = IN.uv - 0.5;
 
-                float portalMask = calculateVisibilityMask(distortedRadius, _PortalRadius, _EdgeSoftness);
-                clip(portalMask - 0.001);
+                #if _PARALLAX_EFFECT_ON && defined(_SURFACE_TYPE_TRANSPARENT)
+                    float parallaxAmount = (1.0 - length(centeredUV) * 2.0) * _ParallaxDepth;
+                    float2 parallaxOffset = normalize(IN.viewDirVS.xy) * parallaxAmount;
+                    centeredUV -= parallaxOffset;
+                #endif
 
-                float noiseSample = getLayeredNoise(parallaxUV, pInfo.angle, distortedRadius, time);
+                float distanceToCenter = length(centeredUV);
+                float wobbleOffset = calculateWobble(IN.uv, time);
+                float distortedRadius = distanceToCenter - wobbleOffset;
 
-                float4 coreColor = getCoreColor(noiseSample, portalMask);
-                float4 rimColor = getRimColor(distortedRadius, _PortalRadius, _RimWidth, _EdgeSoftness, portalMask);
-                
-                float2 distortionVector = normalize(pInfo.toCenter) * noiseSample * portalMask * _DistortionAmount;
-                float3 sceneColor = getDistortedSceneColor(IN.screenPos, distortionVector);
+                float portalMask = calculatePortalMask(distortedRadius, _PortalRadius, _EdgeSoftness);
+                float noise = calculateSpiralNoise(IN.uv, distortedRadius, time);
 
-                float4 finalColor = lerp(float4(sceneColor, 1.0), coreColor, coreColor.a);
-                finalColor += rimColor;
-                finalColor.a = portalMask;
+                float4 coreColor = _PortalColor * noise * portalMask;
+                float rimBand = smoothstep(_PortalRadius - _RimWidth, _PortalRadius, distortedRadius) - smoothstep(_PortalRadius, _PortalRadius + _EdgeSoftness, distortedRadius);
+                float4 rimColor = _RimColor * rimBand * portalMask * _RimColor.a;
+                float4 portalVisuals = coreColor + rimColor;
 
-                return finalColor;
+                #if _SURFACE_TYPE_OPAQUE
+                    clip(portalMask - 0.001);
+                    return float4(portalVisuals.rgb, 1.0);
+                #else // _SURFACE_TYPE_TRANSPARENT
+                    float2 distortionVector = 0;
+                    #if !defined(_DISTORTIONMODE_OFF)
+                       distortionVector = normalize(centeredUV) * noise * portalMask * _DistortionAmount;
+                    #endif
+                    
+                    float3 sceneColor = getSceneColor(IN.screenPos, distortionVector);
+                    float3 blendedRgb = lerp(sceneColor, portalVisuals.rgb, portalVisuals.a);
+                    
+                    float softIntersectionFade = calculateSoftIntersection(IN.screenPos, -IN.viewDirVS.z);
+                    float finalAlpha = portalMask * softIntersectionFade;
+
+                    return float4(blendedRgb, finalAlpha);
+                #endif
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthOnly"
+            Tags { "LightMode" = "DepthOnly" }
+            ZWrite On
+            ColorMask 0
+            Cull Off
+
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma multi_compile_local _SURFACE_TYPE_OPAQUE _SURFACE_TYPE_TRANSPARENT
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            
+            struct Attributes { float4 positionOS : POSITION; float2 uv : TEXCOORD0; };
+            struct Varyings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
+            
+            CBUFFER_START(UnityPerMaterial)
+                float _PortalRadius;
+            CBUFFER_END
+
+            Varyings vert(Attributes IN) 
+            {
+                Varyings OUT;
+                OUT.positionCS = TransformObjectToHClip(IN.positionOS.xyz);
+                OUT.uv = IN.uv;
+                return OUT;
+            }
+            
+            void frag(Varyings IN) 
+            {
+                #if _SURFACE_TYPE_OPAQUE
+                    float mask = 1.0 - smoothstep(_PortalRadius - 0.01, _PortalRadius, length(IN.uv - 0.5));
+                    clip(mask - 0.5);
+                #else
+                    clip(-1);
+                #endif
             }
             ENDHLSL
         }
     }
-    FallBack "Transparent/VertexLit"
+    CustomEditor "AdvancedPortalURPShaderGUI"
+    FallBack "Hidden/Universal Render Pipeline/FallbackError"
 }

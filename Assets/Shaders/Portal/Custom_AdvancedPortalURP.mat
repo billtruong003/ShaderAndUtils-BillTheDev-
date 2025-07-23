@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Custom_AdvancedPortalURP
-  m_Shader: {fileID: 4800000, guid: eb45ad85fc64faf4db463976d9e0aa6b, type: 3}
+  m_Shader: {fileID: 4800000, guid: c2fa86e8deb3a4611918bd4b749067e5, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -16,7 +16,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 2000
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -24,25 +24,25 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: b6dfd98595eeb492eb4aaf6e876af249, type: 3}
+        m_Texture: {fileID: 2800000, guid: a40081a4e56854e91aa5dd6115d95dfb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ChromaticAberration: 0.1
-    - _DistortionAmount: 0.115
+    - _ChromaticAberration: 0
+    - _DistortionAmount: 0.088
     - _EdgeSoftness: 0.1
-    - _ParallaxDepth: 0.011
-    - _PortalRadius: 0.459
+    - _ParallaxDepth: 0.2
+    - _PortalRadius: 1
     - _PullSpeed: 0
-    - _RimWidth: 0.083
-    - _SpiralStrength: 10
+    - _RimWidth: 0.2
+    - _SpiralStrength: -15
     - _TimeScale: 0.2
-    - _WobbleAmplitude: 0.0554
-    - _WobbleFrequency: 1
+    - _WobbleAmplitude: 0.1
+    - _WobbleFrequency: 88.12
     m_Colors:
-    - _NoiseTilingAndSpeed: {r: 5, g: 5, b: 0.2, a: 0.1}
-    - _PortalColor: {r: 0, g: 1.1653607, b: 30.209375, a: 1}
-    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _NoiseTilingAndSpeed: {r: 0.5, g: 0.5, b: 0.1, a: 0.1}
+    - _PortalColor: {r: 0, g: 1.3904597, b: 29.508846, a: 1}
+    - _RimColor: {r: 0.3776164, g: 0, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

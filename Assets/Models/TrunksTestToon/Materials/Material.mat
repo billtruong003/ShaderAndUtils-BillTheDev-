@@ -7,22 +7,18 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Material.004
-  m_Shader: {fileID: 4800000, guid: 9b53b844e282b1d49a0981cc94b168da, type: 3}
+  m_Name: Material
+  m_Shader: {fileID: 4800000, guid: aa099c4455b06b84d9e6180954f03d90, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords:
-  - INVERT
-  - _ALPHACLIP_ON
+  m_ValidKeywords:
   - _EMISSION_ON
-  - _FAKELIGHT_ON
-  - _OUTLINEMODE_FRESNEL
   - _SURFACETYPE_OPAQUE
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -31,11 +27,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 9aee017ccddd14644ad6f754d1faa913, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _BaseTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 846254a3de5784dde9bd0c4673ab9039, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -54,16 +46,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _DissolveMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 2800000, guid: e5ec1f2de62bcb346a4f3247603ef687, type: 3}
+        m_Texture: {fileID: 2800000, guid: 846254a3de5784dde9bd0c4673ab9039, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 9639a6af1f67a78439f8b0dc8a9f0e6e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 846254a3de5784dde9bd0c4673ab9039, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -102,8 +90,7 @@ Material:
     m_Floats:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
-    - _AlphaClipMode: 1
-    - _AlphaMultiplier: 1
+    - _AlphaClipMode: 0
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
@@ -111,59 +98,35 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ClipPose: -10
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DissolveDisplacement: 0.05
-    - _DissolveEdgeWidth: 0.05
-    - _DissolveThreshold: 0.5
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EmissionIntensity: 3
-    - _EmissionMapScale: 2
     - _EmissionMode: 1
     - _EnvironmentReflections: 1
-    - _Extrude: -5.3
-    - _Fade: 1
-    - _FakeLightMode: 1
-    - _FlickerFrequency: 0
-    - _FlickerIntensity: 0.3
-    - _FlickerSpeed: 5
-    - _FresnelIntensity: 0
+    - _FakeLightMode: 0
     - _FresnelOutlinePower: 5
     - _FresnelOutlineSharpness: 2
-    - _FresnelOutlineToggle: 1
+    - _FresnelOutlineToggle: 0
     - _FresnelOutlineWidth: 0.1
-    - _FresnelPower: 10
     - _GlintScale: 20
     - _GlintSpeed: 2
     - _GlintThreshold: 0.95
     - _GlintToggle: 0
-    - _GlitchAmount: 0.003
-    - _GlitchFrequency: 3.8
-    - _GlitchIntensity: 0.05
-    - _GlitchSpeed: 10
-    - _GlitchTime: 0.01
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _HighlightOffset: 0.9
-    - _INVERT: 1
     - _Metallic: 0
     - _Mode: 0
-    - _MovingSlider: 3
     - _OcclusionStrength: 1
     - _Offset: 0.8
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RimPower: 6
-    - _ScanlineScale: 200
-    - _ScanlineSpeed: -1
-    - _ScanlineStrength: 0.5
-    - _ScanlineTiling: 10
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -171,44 +134,33 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _SurfaceType: 0
-    - _TextureStrength: 0.5
-    - _ToonRampOffset: 0.5
-    - _ToonRampSmoothness: 0.05
+    - _ToonRampOffset: 0.75
+    - _ToonRampSmoothness: 0
     - _TranslucencyStrength: 1
     - _UVSec: 0
     - _WindAmplitude: 0.1
     - _WindFrequency: 2
-    - _WireFrameStay: -1
-    - _WireThickness: 0.675
     - _WorkflowMode: 1
-    - _WorldScale: 10
     - _ZWrite: 1
     m_Colors:
-    - _AmbientColor: {r: 1, g: 1, b: 1, a: 0}
+    - _AmbientColor: {r: 1, g: 1, b: 1, a: 0.6745098}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 50}
-    - _DissolveEdgeColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0, g: 0.5913396, b: 1, a: 0}
-    - _EmissionScrollSpeed: {r: 0, g: 0, b: 0, a: 0}
-    - _FakeLightColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
-    - _FakeLightDirection: {r: 0.5, g: 0.5, b: -0.5, a: 0}
-    - _FresnelColor: {r: 0, g: 0, b: 0, a: 0.7372549}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 1.4980392, g: 0.92199934, b: 0, a: 0}
+    - _FakeLightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FakeLightDirection: {r: 5, g: 5, b: 5, a: 0}
     - _FresnelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _GlintColor: {r: 1, g: 1, b: 0.5, a: 1}
     - _HiColor: {r: 1, g: 1, b: 1, a: 1}
-    - _HoloColor: {r: 0, g: 1, b: 1, a: 0.5}
-    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ScanlineColor: {r: 1, g: 0.6410234, b: 0.5613207, a: 0.6313726}
-    - _ShadowTint: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+    - _ShadowTint: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecuColor: {r: 0.8, g: 0.45, b: 0.2, a: 1}
-    - _TintColor: {r: 1, g: 0.009412639, b: 0, a: 1}
     - _TranslucencyColor: {r: 0.7, g: 0.9, b: 0.3, a: 1}
     - _WindDirection: {r: 1, g: 0, b: 0.5, a: 0}
-    - _WireColor: {r: 0.15389305, g: 0.015560201, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &4415459329880618648
+--- !u!114 &1651485908268602766
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

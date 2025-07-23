@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aefbbfbe76beef947a1c8888b59f71c2, type: 3}
   m_Name: AdvancedEdgeDetectionFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
-    renderPassEvent: 300
-    outlineThickness: 0.0003
+    renderPassEvent: 600
+    outlineThickness: 0.0005
     outlineColor: {r: 0, g: 0, b: 0, a: 1}
     depthSensitivity: 0
-    normalSensitivity: 1
+    normalSensitivity: 0.3
     luminanceSensitivity: 0
     outlineSoftness: 0.146
 --- !u!114 &11400000
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_ShadowTransparentReceive: 1
   m_RenderingMode: 0
   m_DepthPrimingMode: 0
-  m_CopyDepthMode: 0
+  m_CopyDepthMode: 1
   m_DepthAttachmentFormat: 0
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 1

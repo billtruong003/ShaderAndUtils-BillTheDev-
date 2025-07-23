@@ -136,7 +136,10 @@ Shader "Bill's Toon/Opaque"
         {
             Name "ShadowCaster"
             Tags { "LightMode"="ShadowCaster" }
-            ZWrite On ZTest LEqual ColorMask 0 Cull Back
+            ZWrite On 
+            ZTest LEqual 
+            ColorMask 0 
+            Cull Back
             HLSLPROGRAM
             #pragma vertex ShadowVert
             #pragma fragment ShadowFrag

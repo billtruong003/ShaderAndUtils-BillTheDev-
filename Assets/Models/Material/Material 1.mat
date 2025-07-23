@@ -7,20 +7,21 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Material
-  m_Shader: {fileID: 4800000, guid: 1c87c1420ee81bd459ebdddc6bba8d73, type: 3}
+  m_Name: Material 1
+  m_Shader: {fileID: 4800000, guid: aa099c4455b06b84d9e6180954f03d90, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _EMISSION_ON
+  - _FAKELIGHT_ON
+  - _OUTLINEMODE_FRESNEL
   - _SURFACETYPE_OPAQUE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
@@ -109,13 +110,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Brightness_Rim: 2
+    - Brightness_Rim: 1.93
     - Rim_Power: 5
-    - ShadowStengthOverRim: 0.5
+    - ShadowStengthOverRim: 0.513
     - Toon_Ramp_Offset: 0.5
     - Toon_Ramp_Smoothness: 0
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
+    - _AlphaClipMode: 0
     - _AlphaFadeRange: 0.5
     - _AlphaToMask: 0
     - _Blend: 0
@@ -135,13 +137,21 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EdgeWidth: 0.02
-    - _EnableEmission: 1
+    - _EmissionMode: 1
     - _EnableOutline: 0
     - _EnvironmentReflections: 1
     - _FadeEndDistance: 0.1
     - _FadeStartDistance: 1
+    - _FakeLightMode: 1
     - _FlashAmount: 0
-    - _FresnelPower: 5
+    - _FresnelOutlinePower: 5
+    - _FresnelOutlineSharpness: 2
+    - _FresnelOutlineToggle: 1
+    - _FresnelOutlineWidth: 0.1
+    - _GlintScale: 20
+    - _GlintSpeed: 2
+    - _GlintThreshold: 0.95
+    - _GlintToggle: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -159,7 +169,6 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RefractionStrength: 0.01
     - _RimEnable: 1
     - _RimPower: 10
     - _RimThreshold: 0.112
@@ -175,39 +184,46 @@ Material:
     - _Surface: 0
     - _SurfaceType: 0
     - _TimeScale: 1
-    - _ToonRampOffset: 0.482
-    - _ToonRampSmoothness: 0.001
+    - _ToonRampOffset: 0.442
+    - _ToonRampSmoothness: 1
     - _ToonSmoothness: 0.06
     - _ToonThreshold: 0
+    - _TranslucencyStrength: 1
     - _UVSec: 0
     - _UseTimeAnimation: 0
     - _VertexDisplacement: 0
+    - _WindAmplitude: 0.1
+    - _WindFrequency: 2
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Toon_Ramp_Tint: {r: 0.49056596, g: 0.49056596, b: 0.49056596, a: 1}
+    - Toon_Ramp_Tint: {r: 1, g: 1, b: 1, a: 1}
     - _AmbientColor: {r: 0, g: 0, b: 0, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 2, g: 2, b: 2, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Direction: {r: 0, g: 1, b: 0, a: 0}
     - _DissolveEdgeColor: {r: 1, g: 0.04412794, b: 0, a: 1}
     - _EdgeColor: {r: 1, g: 0.5, b: 0, a: 1}
-    - _EmissionColor: {r: 0.74901974, g: 0.74901974, b: 0.74901974, a: 0}
+    - _EmissionColor: {r: 1.4142135, g: 1.4142135, b: 1.4142135, a: 0}
+    - _FakeLightColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _FakeLightDirection: {r: 0.5, g: 0.5, b: -0.5, a: 0}
     - _FlashColor: {r: 11.949089, g: 11.949089, b: 11.949089, a: 1}
-    - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
-    - _GlassColor: {r: 0.8, g: 0.9, b: 1, a: 0.5}
+    - _FresnelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlintColor: {r: 1, g: 1, b: 0.5, a: 1}
     - _HiColor: {r: 1, g: 1, b: 1, a: 1}
     - _LightColor: {r: 2, g: 2, b: 2, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 2.996079, g: 2.996079, b: 2.996079, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ShadowTint: {r: 0.05660379, g: 0.05660379, b: 0.05660379, a: 1}
+    - _ShadowTint: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _SpecuColor: {r: 0.8, g: 0.45, b: 0.19999996, a: 1}
+    - _SpecuColor: {r: 0.8, g: 0.45, b: 0.2, a: 1}
     - _SpecularColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
     - _ToonLitColor: {r: 1, g: 1, b: 1, a: 1}
     - _ToonRampTinting: {r: 1, g: 1, b: 1, a: 1}
     - _ToonShadowColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _TranslucencyColor: {r: 0.7, g: 0.9, b: 0.3, a: 1}
+    - _WindDirection: {r: 1, g: 0, b: 0.5, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &1723086451873084544

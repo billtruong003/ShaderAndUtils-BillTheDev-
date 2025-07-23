@@ -30,15 +30,10 @@ MonoBehaviour:
   WeaponData: {fileID: 11400000, guid: 37a7c2e3cac194f9bb5de151bbf00ab4, type: 2}
   EquipConditions:
   - rid: 2925589478467175073
-  - rid: 2925589478467175074
   references:
     version: 2
     RefIds:
     - rid: 2925589478467175073
       type: {class: AllowedSlotTypesCondition, ns: ModularInventory.Data.Conditions, asm: Assembly-CSharp}
       data:
-        AllowedTypes: 0400000005000000
-    - rid: 2925589478467175074
-      type: {class: RequiredLevelCondition, ns: ModularInventory.Data.Conditions, asm: Assembly-CSharp}
-      data:
-        RequiredLevel: 1
+        AllowedTypes: 04000000
