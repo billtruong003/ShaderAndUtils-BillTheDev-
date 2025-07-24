@@ -7,15 +7,21 @@ namespace Orion
     {
         [Header("Core References")]
         public InputHandler Input;
+        public Transform PlayerCameraTransform;
+        public PlayerAnimationController AnimationController { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
         public CapsuleCollider CapsuleCollider { get; private set; }
-        public Transform PlayerCameraTransform;
 
         [Header("Movement Stats")]
         [SerializeField] private float _walkSpeed = 5.0f;
+        [SerializeField] private float _runSpeed = 8.0f;
         [SerializeField] private float _slideSpeedMultiplier = 1.5f;
         [SerializeField] private float _movementAcceleration = 50.0f;
         [SerializeField] private float _maxSlopeAngle = 45.0f;
+
+        [Header("Dash Stats")]
+        [SerializeField] private float _dashForce = 25.0f;
+        [SerializeField] private float _dashDuration = 0.2f;
 
         [Header("Jump Stats")]
         [SerializeField] private float _jumpForce = 10.0f;
@@ -40,9 +46,11 @@ namespace Orion
 
         public StateMachine MovementStateMachine { get; private set; }
         public PlayerGroundedState GroundedState { get; private set; }
-        public PlayerAirborneState AirborneState { get; private set; }
+        public PlayerJumpState JumpState { get; private set; }
+        public PlayerFallState FallState { get; private set; }
         public PlayerWallRunState WallRunState { get; private set; }
         public PlayerLedgeClimbState LedgeClimbState { get; private set; }
+        public PlayerDashState DashState { get; private set; }
 
         public Vector3 CurrentVelocity { get; private set; }
         public float CoyoteTimeCounter { get; set; }
@@ -53,17 +61,21 @@ namespace Orion
             Input = GetComponent<InputHandler>();
             Rigidbody = GetComponent<Rigidbody>();
             CapsuleCollider = GetComponent<CapsuleCollider>();
+            AnimationController = GetComponentInChildren<PlayerAnimationController>();
 
             MovementStateMachine = new StateMachine();
 
             GroundedState = new PlayerGroundedState(this, MovementStateMachine);
-            AirborneState = new PlayerAirborneState(this, MovementStateMachine);
+            JumpState = new PlayerJumpState(this, MovementStateMachine);
+            FallState = new PlayerFallState(this, MovementStateMachine);
             WallRunState = new PlayerWallRunState(this, MovementStateMachine);
             LedgeClimbState = new PlayerLedgeClimbState(this, MovementStateMachine);
+            DashState = new PlayerDashState(this, MovementStateMachine);
         }
 
         private void Start()
         {
+            AnimationController.Initialize(this);
             MovementStateMachine.Initialize(GroundedState);
         }
 
@@ -102,13 +114,27 @@ namespace Orion
 
         public bool IsGrounded()
         {
-            // A simple ground check. Can be improved with a sphere cast for reliability.
             return Physics.Raycast(transform.position, Vector3.down, CapsuleCollider.height * 0.5f + 0.1f);
         }
 
+        public bool IsOnSteepSlope(out Vector3 slopeNormal)
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, CapsuleCollider.height * 0.5f + 0.2f))
+            {
+                slopeNormal = hit.normal;
+                float slopeAngle = Vector3.Angle(Vector3.up, hit.normal);
+                return slopeAngle > _maxSlopeAngle;
+            }
+            slopeNormal = Vector3.up;
+            return false;
+        }
+
         public float GetWalkSpeed() => _walkSpeed;
+        public float GetRunSpeed() => _runSpeed;
         public float GetSlideSpeedMultiplier() => _slideSpeedMultiplier;
         public float GetMovementAcceleration() => _movementAcceleration;
+        public float GetDashForce() => _dashForce;
+        public float GetDashDuration() => _dashDuration;
         public float GetJumpForce() => _jumpForce;
         public float GetCoyoteTime() => _coyoteTime;
         public float GetJumpBufferTime() => _jumpBufferTime;
@@ -123,21 +149,8 @@ namespace Orion
         public float GetLedgeDetectRadius() => _ledgeDetectRadius;
         public LayerMask GetLedgeLayer() => _ledgeLayer;
 
-        public bool IsOnSteepSlope(out Vector3 slopeNormal)
-        {
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, CapsuleCollider.height * 0.5f + 0.2f))
-            {
-                slopeNormal = hit.normal;
-                float slopeAngle = Vector3.Angle(Vector3.up, hit.normal);
-                return slopeAngle > _maxSlopeAngle;
-            }
-            slopeNormal = Vector3.up;
-            return false;
-        }
-
         private void OnDrawGizmos()
         {
-            // Visualize ledge detection sphere
             Gizmos.color = Color.cyan;
             Vector3 worldLedgeDetectPoint = transform.TransformPoint(_ledgeDetectOffset);
             Gizmos.DrawWireSphere(worldLedgeDetectPoint, _ledgeDetectRadius);

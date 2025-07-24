@@ -14,6 +14,7 @@ namespace Orion
         public override void Enter()
         {
             base.Enter();
+            player.AnimationController.SetClimbingLedge(true);
             player.Rigidbody.isKinematic = true;
             _hasReachedLedge = false;
             CalculateLedgePosition();
@@ -22,6 +23,7 @@ namespace Orion
         public override void Exit()
         {
             base.Exit();
+            player.AnimationController.SetClimbingLedge(false);
             player.Rigidbody.isKinematic = false;
         }
 
@@ -31,8 +33,6 @@ namespace Orion
 
             if (_hasReachedLedge)
             {
-                // Here you would trigger an animation and wait for it to finish.
-                // For simplicity, we instantly transition out.
                 stateMachine.ChangeState(player.GroundedState);
                 return;
             }

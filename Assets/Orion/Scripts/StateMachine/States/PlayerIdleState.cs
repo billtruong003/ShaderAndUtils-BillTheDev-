@@ -13,15 +13,20 @@ namespace Orion
             base.LogicUpdate();
             if (player.Input.MoveInput != Vector2.zero)
             {
-                // Clean state transition without reflection
-                stateMachine.ChangeState(player.GroundedState.WalkState);
+                if (player.Input.SprintIsHeld)
+                {
+                    stateMachine.ChangeState(player.GroundedState.RunState);
+                }
+                else
+                {
+                    stateMachine.ChangeState(player.GroundedState.WalkState);
+                }
             }
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-            // Apply drag to stop the player
             player.ApplyAirResistance(5f);
         }
     }

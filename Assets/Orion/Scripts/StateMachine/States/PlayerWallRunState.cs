@@ -7,6 +7,7 @@ namespace Orion
         private float _wallRunTimer;
         private Vector3 _wallNormal;
         private Vector3 _wallForward;
+        private bool _isWallOnRight;
 
         public PlayerWallRunState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine)
         {
@@ -18,6 +19,13 @@ namespace Orion
             _wallRunTimer = player.GetMaxWallRunTime();
             player.SetVelocity(new Vector3(player.CurrentVelocity.x, 0, player.CurrentVelocity.z));
             FindWall();
+            player.AnimationController.SetWallRunning(true, _isWallOnRight);
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            player.AnimationController.SetWallRunning(false, _isWallOnRight);
         }
 
         public override void LogicUpdate()
@@ -27,7 +35,7 @@ namespace Orion
 
             if (_wallRunTimer <= 0 || !IsWallNearby() || player.IsGrounded())
             {
-                stateMachine.ChangeState(player.AirborneState);
+                stateMachine.ChangeState(player.FallState);
                 return;
             }
 
@@ -42,7 +50,7 @@ namespace Orion
             base.PhysicsUpdate();
 
             Vector3 velocity = _wallForward * player.GetWallRunSpeed();
-            velocity.y = player.Rigidbody.linearVelocity.y; // Keep vertical velocity
+            velocity.y = player.Rigidbody.linearVelocity.y;
             player.Rigidbody.linearVelocity = velocity;
 
             float gravity = Physics.gravity.y * player.GetWallRunGravityMultiplier();
@@ -51,22 +59,22 @@ namespace Orion
 
         private void FindWall()
         {
-            // Raycast left and right relative to player's view direction
             Vector3 right = player.PlayerCameraTransform.right;
             right.y = 0;
 
             if (Physics.Raycast(player.transform.position, right, out RaycastHit rightHit, 1f, player.GetWallRunLayer()))
             {
                 _wallNormal = rightHit.normal;
+                _isWallOnRight = true;
             }
             else if (Physics.Raycast(player.transform.position, -right, out RaycastHit leftHit, 1f, player.GetWallRunLayer()))
             {
                 _wallNormal = leftHit.normal;
+                _isWallOnRight = false;
             }
 
             _wallForward = Vector3.Cross(_wallNormal, Vector3.up).normalized;
 
-            // Align wall forward with player's intended direction based on camera
             Vector3 cameraForward = player.PlayerCameraTransform.forward;
             cameraForward.y = 0;
             if (Vector3.Dot(cameraForward, _wallForward) < 0)
@@ -88,7 +96,7 @@ namespace Orion
             Vector3 finalForce = _wallNormal * wallJumpForce.x + Vector3.up * wallJumpForce.y;
 
             player.SetVelocity(finalForce);
-            stateMachine.ChangeState(player.AirborneState);
+            stateMachine.ChangeState(player.JumpState);
         }
     }
 }

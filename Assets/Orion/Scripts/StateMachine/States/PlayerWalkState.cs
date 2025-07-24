@@ -11,16 +11,21 @@ namespace Orion
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            if (player.Input.SprintIsHeld && player.Input.MoveInput != Vector2.zero)
+            {
+                stateMachine.ChangeState(player.GroundedState.RunState);
+                return;
+            }
+
             if (player.Input.MoveInput == Vector2.zero)
             {
-                // Clean state transition without reflection
                 stateMachine.ChangeState(player.GroundedState.IdleState);
                 return;
             }
 
             if (player.IsOnSteepSlope(out _))
             {
-                // Clean state transition without reflection
                 stateMachine.ChangeState(player.GroundedState.SlideState);
                 return;
             }

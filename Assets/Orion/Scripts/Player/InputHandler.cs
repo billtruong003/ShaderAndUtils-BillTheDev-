@@ -9,13 +9,8 @@ namespace Orion
         public bool JumpWasPressed { get; private set; }
         public bool JumpIsHeld { get; private set; }
         public bool TetherButtonWasPressed { get; private set; }
-
-        private PlayerInput _playerInput;
-
-        private void Awake()
-        {
-            _playerInput = GetComponent<PlayerInput>();
-        }
+        public bool SprintIsHeld { get; private set; }
+        public bool DashWasPressed { get; private set; }
 
         public void OnMove(InputAction.CallbackContext context)
         {
@@ -39,7 +34,21 @@ namespace Orion
             }
         }
 
+        public void OnSprint(InputAction.CallbackContext context)
+        {
+            SprintIsHeld = context.performed;
+        }
+
+        public void OnDash(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                DashWasPressed = true;
+            }
+        }
+
         public void UseJumpInput() => JumpWasPressed = false;
         public void UseTetherInput() => TetherButtonWasPressed = false;
+        public void UseDashInput() => DashWasPressed = false;
     }
 }
