@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Orion
 {
-    public class PlayerJumpState : PlayerAirborneBaseState
+    public class PlayerJumpState : PlayerAirborneState
     {
         public PlayerJumpState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine)
         {
@@ -18,11 +18,19 @@ namespace Orion
         {
             base.LogicUpdate();
 
-            if (player.Rigidbody.linearVelocity.y < 0f)
+            if (player.CurrentVelocity.y < 0f)
             {
                 stateMachine.ChangeState(player.FallState);
                 return;
             }
+        }
+
+        protected override void ApplyGravity()
+        {
+            float baseGravity = Physics.gravity.y * player.GravityMultiplier;
+            float finalGravity = player.Input.JumpIsHeld ? baseGravity : baseGravity * 1.5f;
+
+            player.AddForce(new Vector3(0, finalGravity, 0), ForceMode.Acceleration);
         }
 
         private void PerformJump()
@@ -33,8 +41,7 @@ namespace Orion
             player.CoyoteTimeCounter = 0f;
             player.JumpBufferCounter = 0f;
 
-            float jumpForce = player.GetJumpForce();
-            player.SetVelocity(new Vector3(player.CurrentVelocity.x, jumpForce, player.CurrentVelocity.z));
+            player.SetVelocityY(player.JumpForce);
         }
     }
 }

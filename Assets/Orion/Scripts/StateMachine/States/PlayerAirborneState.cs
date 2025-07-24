@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace Orion
 {
-    public abstract class PlayerAirborneBaseState : State
+    public abstract class PlayerAirborneState : State
     {
-        protected PlayerAirborneBaseState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine)
+        protected PlayerAirborneState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine)
         {
         }
 
@@ -18,15 +18,16 @@ namespace Orion
                 return;
             }
 
-            if (CheckForWallRun())
+            if (player.CurrentVelocity.y <= 0f && TryDetectLedge(out LedgeData ledgeData))
             {
-                stateMachine.ChangeState(player.WallRunState);
+                player.LedgeClimbState.SetLedgeData(ledgeData);
+                stateMachine.ChangeState(player.LedgeClimbState);
                 return;
             }
 
-            if (CheckForLedge())
+            if (CheckForWallRun())
             {
-                stateMachine.ChangeState(player.LedgeClimbState);
+                stateMachine.ChangeState(player.WallRunState);
                 return;
             }
         }
@@ -38,63 +39,57 @@ namespace Orion
             ApplyAirControl();
         }
 
-        protected void ApplyGravity()
+        protected virtual void ApplyGravity()
         {
-            float gravity = Physics.gravity.y * player.GetGravityMultiplier();
-            player.Rigidbody.AddForce(new Vector3(0, gravity, 0), ForceMode.Acceleration);
+            float gravity = Physics.gravity.y * player.GravityMultiplier;
+            player.AddForce(new Vector3(0, gravity, 0), ForceMode.Acceleration);
         }
 
         protected void ApplyAirControl()
         {
-            Vector3 moveDirection = GetCameraRelativeMoveDirection();
-            float airControl = player.GetAirControlFactor();
-            float acceleration = player.GetMovementAcceleration();
+            Vector3 moveDirection = MovementUtilities.GetCameraRelativeMoveDirection(player.PlayerCameraTransform, player.Input.MoveInput);
+            if (moveDirection == Vector3.zero) return;
 
-            player.Rigidbody.AddForce(moveDirection * airControl * acceleration, ForceMode.Acceleration);
-        }
+            Vector3 currentHorizontalVelocity = new Vector3(player.CurrentVelocity.x, 0, player.CurrentVelocity.z);
+            Vector3 targetVelocity = moveDirection * player.RunSpeed;
 
-        protected Vector3 GetCameraRelativeMoveDirection()
-        {
-            Vector3 forward = player.PlayerCameraTransform.forward;
-            Vector3 right = player.PlayerCameraTransform.right;
+            Vector3 velocityChange = targetVelocity - currentHorizontalVelocity;
+            float acceleration = player.AirAcceleration;
 
-            forward.y = 0;
-            right.y = 0;
-            forward.Normalize();
-            right.Normalize();
-
-            return (forward * player.Input.MoveInput.y + right * player.Input.MoveInput.x).normalized;
+            Vector3 requiredForce = Vector3.ClampMagnitude(velocityChange, player.RunSpeed) * acceleration;
+            player.AddForce(requiredForce, ForceMode.Acceleration);
         }
 
         private bool CheckForWallRun()
         {
-            if (player.Input.MoveInput == Vector2.zero || player.CurrentVelocity.y <= 0) return false;
+            if (player.Input.MoveInput == Vector2.zero || player.CurrentVelocity.y > 0) return false;
 
-            Vector3 intendedDirection = GetCameraRelativeMoveDirection();
-            if (Physics.Raycast(player.transform.position, intendedDirection, 1f, player.GetWallRunLayer()))
-            {
-                return true;
-            }
+            Vector3 right = player.transform.right;
+            right.y = 0f;
 
-            Vector3 right = player.PlayerCameraTransform.right;
-            right.y = 0;
-            return Physics.Raycast(player.transform.position, right, 1f, player.GetWallRunLayer()) ||
-                   Physics.Raycast(player.transform.position, -right, 1f, player.GetWallRunLayer());
+            return Physics.Raycast(player.transform.position, right, 1f, player.WallRunLayer) ||
+                   Physics.Raycast(player.transform.position, -right, 1f, player.WallRunLayer);
         }
 
-        private bool CheckForLedge()
+        private bool TryDetectLedge(out LedgeData ledgeData)
         {
-            Vector3 worldLedgeDetectPoint = player.transform.TransformPoint(player.GetLedgeDetectOffset());
-
+            ledgeData = new LedgeData();
             if (player.CurrentVelocity.y > 0) return false;
 
-            if (Physics.CheckSphere(worldLedgeDetectPoint, player.GetLedgeDetectRadius(), player.GetLedgeLayer()))
+            Vector3 forwardRayOrigin = player.transform.position + player.LedgeDetectForwardOffset;
+            Vector3 forwardDirection = player.transform.forward;
+
+            if (Physics.Raycast(forwardRayOrigin, forwardDirection, out RaycastHit wallHit, player.LedgeDetectForwardDistance, player.LedgeLayer))
             {
-                if (!Physics.Raycast(worldLedgeDetectPoint, Vector3.up, player.CapsuleCollider.height))
+                Vector3 downRayOrigin = wallHit.point + (forwardDirection * 0.1f) + (Vector3.up * player.LedgeDetectDownDistance);
+                if (Physics.Raycast(downRayOrigin, Vector3.down, out RaycastHit surfaceHit, player.LedgeDetectDownDistance, player.LedgeLayer))
                 {
+                    ledgeData.SurfacePoint = surfaceHit.point;
+                    ledgeData.WallNormal = wallHit.normal;
                     return true;
                 }
             }
+
             return false;
         }
     }

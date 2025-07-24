@@ -2,8 +2,10 @@ using UnityEngine;
 
 namespace Orion
 {
-    public class PlayerWalkState : State
+    public class PlayerWalkState : PlayerGroundedMovementState
     {
+        protected override float TargetSpeed => player.WalkSpeed;
+
         public PlayerWalkState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine)
         {
         }
@@ -24,44 +26,11 @@ namespace Orion
                 return;
             }
 
-            if (player.IsOnSteepSlope(out _))
+            if (player.IsOnSteepSlope())
             {
-                stateMachine.ChangeState(player.GroundedState.SlideState);
+                stateMachine.ChangeState(player.GroundedState.SlopeSlideState);
                 return;
             }
-        }
-
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-            MovePlayer();
-        }
-
-        private void MovePlayer()
-        {
-            Vector3 moveDirection = GetCameraRelativeMoveDirection();
-            float targetSpeed = player.GetWalkSpeed();
-            Vector3 targetVelocity = moveDirection * targetSpeed;
-
-            Vector3 currentHorizontalVelocity = new Vector3(player.Rigidbody.linearVelocity.x, 0, player.Rigidbody.linearVelocity.z);
-
-            Vector3 velocityChange = targetVelocity - currentHorizontalVelocity;
-            float acceleration = player.GetMovementAcceleration();
-
-            player.Rigidbody.AddForce(velocityChange * acceleration, ForceMode.Acceleration);
-        }
-
-        private Vector3 GetCameraRelativeMoveDirection()
-        {
-            Vector3 forward = player.PlayerCameraTransform.forward;
-            Vector3 right = player.PlayerCameraTransform.right;
-
-            forward.y = 0;
-            right.y = 0;
-            forward.Normalize();
-            right.Normalize();
-
-            return (forward * player.Input.MoveInput.y + right * player.Input.MoveInput.x).normalized;
         }
     }
 }

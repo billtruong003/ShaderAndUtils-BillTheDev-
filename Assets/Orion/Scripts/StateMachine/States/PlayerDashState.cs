@@ -5,6 +5,7 @@ namespace Orion
     public class PlayerDashState : State
     {
         private float _dashTimer;
+        private Vector3 _dashMomentum;
 
         public PlayerDashState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine)
         {
@@ -13,9 +14,10 @@ namespace Orion
         public override void Enter()
         {
             base.Enter();
+            player.LockOrientation = true;
             player.AnimationController.TriggerDash();
             player.Input.UseDashInput();
-            _dashTimer = player.GetDashDuration();
+            _dashTimer = player.DashDuration;
             player.Rigidbody.useGravity = false;
             PerformDash();
         }
@@ -23,8 +25,9 @@ namespace Orion
         public override void Exit()
         {
             base.Exit();
+            player.LockOrientation = false;
             player.Rigidbody.useGravity = true;
-            player.SetVelocity(new Vector3(player.CurrentVelocity.x, 0, player.CurrentVelocity.z));
+            player.AddForce(_dashMomentum, ForceMode.VelocityChange);
         }
 
         public override void LogicUpdate()
@@ -33,7 +36,7 @@ namespace Orion
             _dashTimer -= Time.deltaTime;
             if (_dashTimer <= 0f)
             {
-                if (player.IsGrounded())
+                if (player.IsGrounded)
                 {
                     stateMachine.ChangeState(player.GroundedState);
                 }
@@ -47,27 +50,23 @@ namespace Orion
         private void PerformDash()
         {
             Vector3 dashDirection = GetDashDirection();
-            float dashForce = player.GetDashForce();
+            float dashForce = player.DashForce;
+
             player.SetVelocity(dashDirection * dashForce);
+            _dashMomentum = player.CurrentVelocity * player.DashEndMomentumDampening;
         }
 
         private Vector3 GetDashDirection()
         {
-            Vector3 cameraForward = player.PlayerCameraTransform.forward;
-            Vector3 cameraRight = player.PlayerCameraTransform.right;
-            cameraForward.y = 0;
-            cameraRight.y = 0;
-
-            Vector3 moveDirection = (cameraForward.normalized * player.Input.MoveInput.y + cameraRight.normalized * player.Input.MoveInput.x).normalized;
-
-            if (moveDirection == Vector3.zero)
+            Vector3 inputDirection = MovementUtilities.GetCameraRelativeMoveDirection(player.PlayerCameraTransform, player.Input.MoveInput);
+            if (inputDirection != Vector3.zero)
             {
-                cameraForward = player.PlayerCameraTransform.forward;
-                cameraForward.y = 0;
-                moveDirection = cameraForward.normalized;
+                return inputDirection;
             }
 
-            return moveDirection;
+            Vector3 playerForward = player.transform.forward;
+            playerForward.y = 0;
+            return playerForward.normalized;
         }
     }
 }

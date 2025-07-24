@@ -8,41 +8,71 @@ namespace Orion
         [Header("Core References")]
         public InputHandler Input;
         public Transform PlayerCameraTransform;
+        public ThirdPersonCameraController CameraController;
         public PlayerAnimationController AnimationController { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
         public CapsuleCollider CapsuleCollider { get; private set; }
 
+        [Header("Effects")]
+        [SerializeField] private ParticleSystem _landingParticles;
+
         [Header("Movement Stats")]
-        [SerializeField] private float _walkSpeed = 5.0f;
-        [SerializeField] private float _runSpeed = 8.0f;
-        [SerializeField] private float _slideSpeedMultiplier = 1.5f;
-        [SerializeField] private float _movementAcceleration = 50.0f;
-        [SerializeField] private float _maxSlopeAngle = 45.0f;
+        [field: SerializeField] public float WalkSpeed { get; private set; } = 5.0f;
+        [field: SerializeField] public float RunSpeed { get; private set; } = 8.0f;
+        [field: SerializeField] public float MovementAcceleration { get; private set; } = 50.0f;
+        [field: SerializeField] public float MaxSlopeAngle { get; private set; } = 45.0f;
+
+        [Header("Rotation Stats")]
+        [field: SerializeField] public float GroundedRotationSpeed { get; private set; } = 15f;
+        [field: SerializeField] public float AirborneRotationSpeed { get; private set; } = 5f;
+
+        [Header("Ground Detection")]
+        [field: SerializeField] public LayerMask GroundLayer { get; private set; }
+        [field: SerializeField] public float GroundCheckDistance { get; private set; } = 0.2f;
+        [Tooltip("The amount of time the character remains in the 'grounded' state after losing contact with the ground. Prevents animation jitter on uneven surfaces.")]
+        [field: SerializeField] public float GroundedLingerTime { get; private set; } = 0.1f;
+
+        [Header("Crouch & Slide Stats")]
+        [field: SerializeField] public float CrouchSpeed { get; private set; } = 3.0f;
+        [field: SerializeField] public float CrouchColliderHeight { get; private set; } = 1.0f;
+        [field: SerializeField] public float SlideForce { get; private set; } = 15.0f;
+        [field: SerializeField] public float SlideDuration { get; private set; } = 0.7f;
+        [field: SerializeField] public float SlideFriction { get; private set; } = 15f;
+        [field: SerializeField] public float SlopeSlideSpeedMultiplier { get; private set; } = 1.5f;
 
         [Header("Dash Stats")]
-        [SerializeField] private float _dashForce = 25.0f;
-        [SerializeField] private float _dashDuration = 0.2f;
+        [field: SerializeField] public float DashForce { get; private set; } = 25.0f;
+        [field: SerializeField] public float DashDuration { get; private set; } = 0.2f;
+        [field: SerializeField, Range(0f, 1f)] public float DashEndMomentumDampening { get; private set; } = 0.5f;
+        [field: SerializeField] public float DashFOV { get; private set; } = 80f;
 
         [Header("Jump Stats")]
-        [SerializeField] private float _jumpForce = 10.0f;
-        [SerializeField] private float _coyoteTime = 0.1f;
-        [SerializeField] private float _jumpBufferTime = 0.1f;
+        [field: SerializeField] public float JumpForce { get; private set; } = 10.0f;
+        [field: SerializeField] public float CoyoteTime { get; private set; } = 0.1f;
+        [field: SerializeField] public float JumpBufferTime { get; private set; } = 0.1f;
 
         [Header("Airborne Stats")]
-        [SerializeField] private float _airControlFactor = 0.5f;
-        [SerializeField] private float _gravityMultiplier = 2.5f;
+        [field: SerializeField] public float AirAcceleration { get; private set; } = 25.0f;
+        [field: SerializeField] public float GravityMultiplier { get; private set; } = 2.5f;
+        [field: SerializeField, Range(0f, 1f)] public float LandingHorizontalDampening { get; private set; } = 0.5f;
+        [field: SerializeField] public float IdleFriction { get; private set; } = 5f;
 
         [Header("Wall Run Stats")]
-        [SerializeField] private float _wallRunSpeed = 7.0f;
-        [SerializeField] private float _wallRunGravityMultiplier = 0.5f;
-        [SerializeField] private float _maxWallRunTime = 2.0f;
-        [SerializeField] private Vector3 _wallJumpForce = new Vector3(5f, 8f, 0f);
-        [SerializeField] private LayerMask _wallRunLayer;
+        [field: SerializeField] public float WallRunSpeed { get; private set; } = 7.0f;
+        [field: SerializeField] public float WallRunUpwardForce { get; private set; } = 20.0f;
+        [field: SerializeField] public float MaxWallRunTime { get; private set; } = 2.0f;
+        [field: SerializeField] public Vector3 WallJumpForce { get; private set; } = new Vector3(8f, 10f, 3f);
+        [field: SerializeField] public float WallExitForwardMomentum { get; private set; } = 5.0f;
+        [field: SerializeField] public float WallExitPushForce { get; private set; } = 3.0f;
+        [field: SerializeField] public LayerMask WallRunLayer { get; private set; }
 
-        [Header("Ledge Detection")]
-        [SerializeField] private Vector3 _ledgeDetectOffset = new Vector3(0, 1.8f, 0.6f);
-        [SerializeField] private float _ledgeDetectRadius = 0.2f;
-        [SerializeField] private LayerMask _ledgeLayer;
+        [Header("Ledge Climb Stats")]
+        [field: SerializeField] public Vector3 LedgeDetectForwardOffset { get; private set; } = new Vector3(0, 1.2f, 0);
+        [field: SerializeField] public float LedgeDetectForwardDistance { get; private set; } = 0.8f;
+        [field: SerializeField] public float LedgeDetectDownDistance { get; private set; } = 1.5f;
+        [field: SerializeField] public float LedgeClimbDuration { get; private set; } = 0.6f;
+        [field: SerializeField] public Vector3 LedgeClimbStandPositionOffset { get; private set; } = new Vector3(0, 0, 0.3f);
+        [field: SerializeField] public LayerMask LedgeLayer { get; private set; }
 
         public StateMachine MovementStateMachine { get; private set; }
         public PlayerGroundedState GroundedState { get; private set; }
@@ -51,31 +81,26 @@ namespace Orion
         public PlayerWallRunState WallRunState { get; private set; }
         public PlayerLedgeClimbState LedgeClimbState { get; private set; }
         public PlayerDashState DashState { get; private set; }
+        public PlayerActiveSlideState ActiveSlideState { get; private set; }
 
-        public Vector3 CurrentVelocity { get; private set; }
+        public bool LockOrientation { get; set; }
+        public Vector3 CurrentVelocity => Rigidbody.linearVelocity;
         public float CoyoteTimeCounter { get; set; }
         public float JumpBufferCounter { get; set; }
+        public bool IsGrounded { get; private set; }
+        public float DefaultColliderHeight { get; private set; }
+
+        private Vector3 _groundHitNormal;
+        private float _groundedLingerTimer;
 
         private void Awake()
         {
-            Input = GetComponent<InputHandler>();
-            Rigidbody = GetComponent<Rigidbody>();
-            CapsuleCollider = GetComponent<CapsuleCollider>();
-            AnimationController = GetComponentInChildren<PlayerAnimationController>();
-
-            MovementStateMachine = new StateMachine();
-
-            GroundedState = new PlayerGroundedState(this, MovementStateMachine);
-            JumpState = new PlayerJumpState(this, MovementStateMachine);
-            FallState = new PlayerFallState(this, MovementStateMachine);
-            WallRunState = new PlayerWallRunState(this, MovementStateMachine);
-            LedgeClimbState = new PlayerLedgeClimbState(this, MovementStateMachine);
-            DashState = new PlayerDashState(this, MovementStateMachine);
+            InitializeComponents();
+            InitializeStateMachine();
         }
 
         private void Start()
         {
-            AnimationController.Initialize(this);
             MovementStateMachine.Initialize(GroundedState);
         }
 
@@ -83,77 +108,160 @@ namespace Orion
         {
             UpdateTimers();
             MovementStateMachine.CurrentState.LogicUpdate();
-            CurrentVelocity = Rigidbody.linearVelocity;
         }
 
         private void FixedUpdate()
         {
+            CheckGroundedStatus();
             MovementStateMachine.CurrentState.PhysicsUpdate();
         }
 
+        private void InitializeComponents()
+        {
+            Input = GetComponent<InputHandler>();
+            Rigidbody = GetComponent<Rigidbody>();
+            CapsuleCollider = GetComponent<CapsuleCollider>();
+            AnimationController = GetComponentInChildren<PlayerAnimationController>();
+            DefaultColliderHeight = CapsuleCollider.height;
+        }
+
+        private void InitializeStateMachine()
+        {
+            MovementStateMachine = new StateMachine();
+            GroundedState = new PlayerGroundedState(this, MovementStateMachine);
+            JumpState = new PlayerJumpState(this, MovementStateMachine);
+            FallState = new PlayerFallState(this, MovementStateMachine);
+            WallRunState = new PlayerWallRunState(this, MovementStateMachine);
+            LedgeClimbState = new PlayerLedgeClimbState(this, MovementStateMachine);
+            DashState = new PlayerDashState(this, MovementStateMachine);
+            ActiveSlideState = new PlayerActiveSlideState(this, MovementStateMachine);
+        }
+
+        // >>> THAY ĐỔI LOGIC <<<
+        // Logic quản lý timer đã được làm lại cho chính xác.
         private void UpdateTimers()
         {
-            CoyoteTimeCounter -= Time.deltaTime;
+            // Jump Buffer luôn được đếm ngược.
             JumpBufferCounter -= Time.deltaTime;
+
+            // Coyote Time chỉ đếm ngược khi người chơi ở trên không.
+            // Khi ở dưới đất, nó luôn được nạp đầy.
+            if (IsGrounded)
+            {
+                CoyoteTimeCounter = CoyoteTime;
+            }
+            else
+            {
+                CoyoteTimeCounter -= Time.deltaTime;
+            }
+        }
+
+        private void HandleLanding(float previousYVelocity)
+        {
+            if (_landingParticles && previousYVelocity < -2f)
+            {
+                _landingParticles.Play();
+            }
+
+            Vector3 horizontalVelocity = new Vector3(CurrentVelocity.x, 0, CurrentVelocity.z);
+            Rigidbody.AddForce(-horizontalVelocity * LandingHorizontalDampening, ForceMode.Impulse);
         }
 
         public void SetVelocity(Vector3 newVelocity)
         {
             Rigidbody.linearVelocity = newVelocity;
-            CurrentVelocity = newVelocity;
+        }
+
+        public void SetVelocityY(float yVelocity)
+        {
+            Rigidbody.linearVelocity = new Vector3(CurrentVelocity.x, yVelocity, CurrentVelocity.z);
+        }
+
+        public void AddForce(Vector3 force, ForceMode mode)
+        {
+            Rigidbody.AddForce(force, mode);
         }
 
         public void ApplyAirResistance(float resistance)
         {
-            if (Mathf.Abs(CurrentVelocity.x) > 0.01f || Mathf.Abs(CurrentVelocity.z) > 0.01f)
+            if (CurrentVelocity.sqrMagnitude < 0.01f) return;
+
+            var horizontalVelocity = new Vector3(CurrentVelocity.x, 0, CurrentVelocity.z);
+            Rigidbody.AddForce(-horizontalVelocity * resistance, ForceMode.Acceleration);
+        }
+
+        public void SetColliderHeight(float newHeight)
+        {
+            Vector3 center = CapsuleCollider.center;
+            center.y = newHeight / 2f;
+            CapsuleCollider.height = newHeight;
+            CapsuleCollider.center = center;
+        }
+
+        public bool CanStandUp()
+        {
+            float castRadius = CapsuleCollider.radius;
+            float castDistance = DefaultColliderHeight - CrouchColliderHeight;
+            Vector3 castOrigin = transform.position + new Vector3(0, castRadius, 0);
+            return !Physics.SphereCast(castOrigin, castRadius, Vector3.up, out _, castDistance);
+        }
+
+        private void CheckGroundedStatus()
+        {
+            bool previouslyGrounded = IsGrounded;
+            float previousYVelocity = CurrentVelocity.y;
+
+            Vector3 castCenter = CapsuleCollider.bounds.center;
+            float castRadius = CapsuleCollider.radius * 0.9f;
+            float castDistance = (CapsuleCollider.height / 2f) - castRadius + GroundCheckDistance;
+
+            bool isHittingGround = Physics.SphereCast(castCenter, castRadius, Vector3.down, out RaycastHit hitInfo, castDistance, GroundLayer);
+
+            if (isHittingGround)
             {
-                var horizontalVelocity = new Vector3(CurrentVelocity.x, 0, CurrentVelocity.z);
-                Rigidbody.AddForce(-horizontalVelocity * resistance, ForceMode.Acceleration);
+                _groundedLingerTimer = GroundedLingerTime;
+                IsGrounded = true;
+                _groundHitNormal = hitInfo.normal;
+            }
+            else
+            {
+                _groundedLingerTimer -= Time.fixedDeltaTime;
+                if (_groundedLingerTimer <= 0f)
+                {
+                    IsGrounded = false;
+                    _groundHitNormal = Vector3.up;
+                }
+            }
+
+            if (!previouslyGrounded && IsGrounded)
+            {
+                HandleLanding(previousYVelocity);
             }
         }
 
-        public bool IsGrounded()
+        public bool IsOnSteepSlope()
         {
-            return Physics.Raycast(transform.position, Vector3.down, CapsuleCollider.height * 0.5f + 0.1f);
+            if (!IsGrounded) return false;
+            float slopeAngle = Vector3.Angle(Vector3.up, _groundHitNormal);
+            return slopeAngle > MaxSlopeAngle;
         }
 
-        public bool IsOnSteepSlope(out Vector3 slopeNormal)
-        {
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, CapsuleCollider.height * 0.5f + 0.2f))
-            {
-                slopeNormal = hit.normal;
-                float slopeAngle = Vector3.Angle(Vector3.up, hit.normal);
-                return slopeAngle > _maxSlopeAngle;
-            }
-            slopeNormal = Vector3.up;
-            return false;
-        }
+        public Vector3 GetGroundNormal() => _groundHitNormal;
 
-        public float GetWalkSpeed() => _walkSpeed;
-        public float GetRunSpeed() => _runSpeed;
-        public float GetSlideSpeedMultiplier() => _slideSpeedMultiplier;
-        public float GetMovementAcceleration() => _movementAcceleration;
-        public float GetDashForce() => _dashForce;
-        public float GetDashDuration() => _dashDuration;
-        public float GetJumpForce() => _jumpForce;
-        public float GetCoyoteTime() => _coyoteTime;
-        public float GetJumpBufferTime() => _jumpBufferTime;
-        public float GetAirControlFactor() => _airControlFactor;
-        public float GetGravityMultiplier() => _gravityMultiplier;
-        public float GetWallRunSpeed() => _wallRunSpeed;
-        public float GetWallRunGravityMultiplier() => _wallRunGravityMultiplier;
-        public float GetMaxWallRunTime() => _maxWallRunTime;
-        public Vector3 GetWallJumpForce() => _wallJumpForce;
-        public LayerMask GetWallRunLayer() => _wallRunLayer;
-        public Vector3 GetLedgeDetectOffset() => _ledgeDetectOffset;
-        public float GetLedgeDetectRadius() => _ledgeDetectRadius;
-        public LayerMask GetLedgeLayer() => _ledgeLayer;
-
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
+            Gizmos.color = Color.yellow;
+            Vector3 castCenter = (Application.isPlaying) ? CapsuleCollider.bounds.center : transform.position + CapsuleCollider.center;
+            float castRadius = (Application.isPlaying) ? CapsuleCollider.radius * 0.9f : GetComponent<CapsuleCollider>().radius * 0.9f;
+            float castDistance = (Application.isPlaying) ? (CapsuleCollider.height / 2f) - castRadius + GroundCheckDistance : (GetComponent<CapsuleCollider>().height / 2f) - castRadius + GroundCheckDistance;
+
+            Gizmos.DrawWireSphere(castCenter, castRadius);
+            Gizmos.DrawWireSphere(castCenter + Vector3.down * castDistance, castRadius);
+
             Gizmos.color = Color.cyan;
-            Vector3 worldLedgeDetectPoint = transform.TransformPoint(_ledgeDetectOffset);
-            Gizmos.DrawWireSphere(worldLedgeDetectPoint, _ledgeDetectRadius);
+            Vector3 forwardRayOrigin = transform.position + LedgeDetectForwardOffset;
+            Vector3 forwardRayEnd = forwardRayOrigin + transform.forward * LedgeDetectForwardDistance;
+            Gizmos.DrawLine(forwardRayOrigin, forwardRayEnd);
         }
     }
 }

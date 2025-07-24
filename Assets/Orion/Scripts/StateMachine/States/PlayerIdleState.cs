@@ -27,7 +27,7 @@ namespace Orion
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-            player.ApplyAirResistance(5f);
+            player.ApplyAirResistance(player.IdleFriction);
         }
     }
 }

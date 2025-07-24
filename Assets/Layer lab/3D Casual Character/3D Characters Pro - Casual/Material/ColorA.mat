@@ -16,7 +16,9 @@ Material:
   - _FAKELIGHT_ON
   - _SURFACETYPE_OPAQUE
   m_InvalidKeywords:
+  - _AURA_ON
   - _OUTLINE_SCALE_WITH_DISTANCE
+  - _SURFACETYPE_TOON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -28,6 +30,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AuraNoiseTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: e8b9ab60b2bbe694f9cbf954cd2e9267, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -94,6 +100,17 @@ Material:
     - _AlphaClip: 0
     - _AlphaClipMode: 0
     - _AlphaToMask: 0
+    - _AuraBrightness: 1.22
+    - _AuraFadeEnd: -100
+    - _AuraFadeStart: 100
+    - _AuraNoiseOpacity: 10
+    - _AuraRimEdge: 0.068
+    - _AuraRimPower: 0.93
+    - _AuraSpeedX: 1
+    - _AuraSpeedY: 1
+    - _AuraToggle: 1
+    - _AuraWidth: 0.061
+    - _AuraZOffset: -0.06
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BlendOp: 0
@@ -113,16 +130,16 @@ Material:
     - _EnableEmission: 1
     - _EnvironmentReflections: 1
     - _FakeLightMode: 1
-    - _FresnelOutlinePower: 5
-    - _FresnelOutlineSharpness: 2
+    - _FresnelOutlinePower: 100
+    - _FresnelOutlineSharpness: 10
     - _FresnelOutlineToggle: 0
-    - _FresnelOutlineWidth: 0.1
+    - _FresnelOutlineWidth: 1
     - _FresnelPower: 5
     - _GlassSpecularIntensity: 1
     - _GlassSpecularPower: 20
-    - _GlintScale: 20
-    - _GlintSpeed: 2
-    - _GlintThreshold: 0.95
+    - _GlintScale: 50
+    - _GlintSpeed: -10
+    - _GlintThreshold: 0.5
     - _GlintToggle: 0
     - _GlossMapScale: 1
     - _Glossiness: 0
@@ -148,8 +165,8 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _SurfaceType: 0
-    - _ToonRampOffset: 0.6
-    - _ToonRampSmoothness: 0.001
+    - _ToonRampOffset: 0.311
+    - _ToonRampSmoothness: 0.237
     - _TranslucencyStrength: 1
     - _UVSec: 0
     - _WindAmplitude: 0.1
@@ -157,16 +174,19 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _AmbientColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _AmbientColor: {r: 0, g: 0.023117065, b: 1, a: 1}
+    - _AuraInnerColor: {r: 0, g: 0, b: 1, a: 1}
+    - _AuraNoiseScale: {r: 1, g: 1, b: 0, a: 0}
+    - _AuraRimColor: {r: 0, g: 1, b: 1, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
-    - _EmissionColor: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FakeLightColor: {r: 1, g: 1, b: 1, a: 1}
     - _FakeLightDirection: {r: 5, g: 5, b: 5, a: 0}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
-    - _FresnelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FresnelOutlineColor: {r: 2.9960787, g: 0.616572, b: 0, a: 1}
     - _GlassColor: {r: 0.8, g: 0.9, b: 1, a: 0.5}
-    - _GlintColor: {r: 1, g: 1, b: 0.5, a: 1}
+    - _GlintColor: {r: 0.7490197, g: 0.16194686, b: 0, a: 1}
     - _HiColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 0.29999998, b: 0.29999998, a: 1}

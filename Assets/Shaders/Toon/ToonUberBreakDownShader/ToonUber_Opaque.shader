@@ -55,7 +55,7 @@ Shader "Bill's Toon/Opaque"
         [Toggle(_OUTLINEGLINT_ON)] _GlintToggle("Enable Glint Effect", Float) = 0
         [HDR] _GlintColor("Glint Color", Color) = (1, 1, 0.5, 1)
         _GlintScale("Glint Scale", Float) = 20.0
-        _GlintSpeed("Glint Speed", Range(0.1, 10.0)) = 2.0
+        _GlintSpeed("Glint Speed", Range(-10.0, 10.0)) = 2.0
         _GlintThreshold("Glint Threshold", Range(0.5, 0.99)) = 0.95
     }
     SubShader

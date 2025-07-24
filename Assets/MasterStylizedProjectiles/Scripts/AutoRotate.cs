@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AutoRotate : MonoBehaviour
+namespace MasterStylizedExplosions
 {
-    public Vector3 RotateAngle;
-    private void Update()
+    public class AutoRotate : MonoBehaviour
     {
-        transform.Rotate(RotateAngle * Time.deltaTime, Space.Self);
+        public Vector3 RotateAngle;
+        private void Update()
+        {
+            transform.Rotate(RotateAngle * Time.deltaTime, Space.Self);
+        }
     }
 }

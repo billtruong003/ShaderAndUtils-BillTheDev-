@@ -1,8 +1,6 @@
-using UnityEngine;
-
 namespace Orion
 {
-    public class PlayerFallState : PlayerAirborneBaseState
+    public class PlayerFallState : PlayerAirborneState
     {
         public PlayerFallState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine)
         {
@@ -12,7 +10,7 @@ namespace Orion
         {
             base.LogicUpdate();
 
-            if (player.IsGrounded())
+            if (player.IsGrounded)
             {
                 stateMachine.ChangeState(player.GroundedState);
             }

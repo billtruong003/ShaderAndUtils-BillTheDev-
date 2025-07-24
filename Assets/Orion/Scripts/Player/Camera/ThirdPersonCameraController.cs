@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 namespace Orion
 {
@@ -6,23 +7,29 @@ namespace Orion
     {
         [Header("GENERAL SETTINGS")]
         [SerializeField] private Transform _followTarget;
+        [SerializeField] private Camera _playerCamera;
 
-        [Header("FREE LOOK SETTINGS")]
+        [Header("ROTATION & LOOK SETTINGS")]
+        [SerializeField] private float _mouseSensitivity = 200f;
+        [SerializeField] private Vector2 _verticalAngleLimits = new Vector2(-40f, 80f);
+        [SerializeField] private float _rotationSmoothTime = 0.12f;
+        [SerializeField] private float _lockOnSmoothTime = 0.08f;
+
+        [Header("FRAMING & DISTANCE")]
         [SerializeField] private Vector3 _freeLookFraming = new Vector3(0f, 1.5f, 0f);
         [SerializeField] private float _freeLookDistance = 5.0f;
-        [SerializeField] private float _mouseSensitivity = 100f;
-        [SerializeField] private Vector2 _verticalAngleLimits = new Vector2(-40f, 80f);
-        [SerializeField] private float _freeLookRotationSmoothing = 0.1f;
-
-        [Header("LOCK-ON SETTINGS")]
         [SerializeField] private Vector3 _lockOnFraming = new Vector3(0.5f, 1.2f, 0f);
         [SerializeField] private float _lockOnDistance = 4.0f;
-        [SerializeField] private float _lockOnRotationSmoothing = 0.05f;
 
         [Header("COLLISION HANDLING")]
         [SerializeField] private LayerMask _collisionLayers;
         [SerializeField] private float _cameraRadius = 0.2f;
-        [SerializeField] private float _collisionSmoothing = 0.1f;
+        [SerializeField] private float _collisionSmoothTime = 0.1f;
+
+        [Header("DYNAMIC FOV")]
+        [SerializeField] private float _defaultFOV = 60f;
+        [SerializeField] private float _sprintFOV = 70f;
+        [SerializeField] private float _fovChangeDuration = 0.4f;
 
         private bool _isLockedOn;
         private Transform _lockOnTarget;
@@ -30,9 +37,10 @@ namespace Orion
         private float _yaw;
         private float _pitch;
 
-        private Vector3 _currentRotationVelocity;
         private float _currentDistance;
         private float _distanceSmoothVelocity;
+        private Vector3 _rotationSmoothVelocity;
+        private Coroutine _fovCoroutine;
 
         private const string MouseXInput = "Mouse X";
         private const string MouseYInput = "Mouse Y";
@@ -43,9 +51,19 @@ namespace Orion
             _lockOnTarget = target;
         }
 
+        public void AdjustFieldOfView(float targetFov)
+        {
+            if (_playerCamera == null) return;
+            if (_fovCoroutine != null) StopCoroutine(_fovCoroutine);
+            _fovCoroutine = StartCoroutine(ChangeFovRoutine(targetFov));
+        }
+
+        public void ResetFieldOfView() => AdjustFieldOfView(_defaultFOV);
+        public void SetSprintFieldOfView() => AdjustFieldOfView(_sprintFOV);
+
         private void Start()
         {
-            if (!_followTarget)
+            if (!_followTarget || !TryInitializeCamera())
             {
                 enabled = false;
                 return;
@@ -59,13 +77,31 @@ namespace Orion
         {
             if (!_followTarget) return;
 
+            ProcessInput();
+
             CameraStateParameters stateParams = DetermineCameraStateParameters();
             Quaternion targetRotation = CalculateTargetRotation(stateParams);
 
-            float finalDistance = ResolveCollisions(targetRotation, stateParams.Framing, stateParams.Distance);
-            Vector3 finalPosition = CalculateFinalPosition(targetRotation, stateParams.Framing, finalDistance);
+            Quaternion finalRotation = SmoothRotation(targetRotation, stateParams.RotationSmoothTime);
 
-            transform.SetPositionAndRotation(finalPosition, targetRotation);
+            float finalDistance = ResolveCollisions(finalRotation, stateParams.Framing, stateParams.Distance);
+            Vector3 finalPosition = CalculateFinalPosition(finalRotation, stateParams.Framing, finalDistance);
+
+            transform.SetPositionAndRotation(finalPosition, finalRotation);
+        }
+
+        private bool TryInitializeCamera()
+        {
+            if (_playerCamera == null)
+            {
+                _playerCamera = Camera.main;
+            }
+            if (_playerCamera != null)
+            {
+                _playerCamera.fieldOfView = _defaultFOV;
+                return true;
+            }
+            return false;
         }
 
         private void InitializeCursor()
@@ -78,8 +114,20 @@ namespace Orion
         {
             _currentDistance = _freeLookDistance;
             Vector3 initialAngles = transform.eulerAngles;
-            _pitch = initialAngles.x;
             _yaw = initialAngles.y;
+            _pitch = initialAngles.x;
+        }
+
+        private void ProcessInput()
+        {
+            if (_isLockedOn) return;
+
+            float mouseX = Input.GetAxis(MouseXInput) * _mouseSensitivity * Time.deltaTime;
+            float mouseY = Input.GetAxis(MouseYInput) * _mouseSensitivity * Time.deltaTime;
+
+            _yaw += mouseX;
+            _pitch -= mouseY;
+            _pitch = Mathf.Clamp(_pitch, _verticalAngleLimits.x, _verticalAngleLimits.y);
         }
 
         private CameraStateParameters DetermineCameraStateParameters()
@@ -87,10 +135,9 @@ namespace Orion
             bool canLockOn = _isLockedOn && _lockOnTarget != null;
             if (canLockOn)
             {
-                return new CameraStateParameters(_lockOnDistance, _lockOnFraming);
+                return new CameraStateParameters(_lockOnDistance, _lockOnFraming, _lockOnSmoothTime);
             }
-
-            return new CameraStateParameters(_freeLookDistance, _freeLookFraming);
+            return new CameraStateParameters(_freeLookDistance, _freeLookFraming, _rotationSmoothTime);
         }
 
         private Quaternion CalculateTargetRotation(CameraStateParameters stateParams)
@@ -98,83 +145,69 @@ namespace Orion
             bool canLockOn = _isLockedOn && _lockOnTarget != null;
             if (canLockOn)
             {
-                return ProcessLockOnRotation();
+                Vector3 directionToTarget = (_lockOnTarget.position - _followTarget.position).normalized;
+                return Quaternion.LookRotation(directionToTarget, Vector3.up);
             }
 
-            return ProcessFreeLookRotation();
+            return Quaternion.Euler(_pitch, _yaw, 0f);
         }
 
-        private Quaternion ProcessFreeLookRotation()
+        private Quaternion SmoothRotation(Quaternion targetRotation, float smoothTime)
         {
-            float mouseX = Input.GetAxis(MouseXInput) * _mouseSensitivity * Time.deltaTime;
-            float mouseY = Input.GetAxis(MouseYInput) * _mouseSensitivity * Time.deltaTime;
-
-            _yaw += mouseX;
-            _pitch -= mouseY;
-            _pitch = Mathf.Clamp(_pitch, _verticalAngleLimits.x, _verticalAngleLimits.y);
-
-            Vector3 targetEulerAngles = new Vector3(_pitch, _yaw);
-            Vector3 smoothedEulerAngles = Vector3.SmoothDamp(
-                new Vector3(_pitch, _yaw),
-                targetEulerAngles,
-                ref _currentRotationVelocity,
-                _freeLookRotationSmoothing
-            );
-
-            return Quaternion.Euler(smoothedEulerAngles);
+            return Quaternion.Slerp(transform.rotation, targetRotation, 1f - Mathf.Exp(-smoothTime * 10f / Time.deltaTime));
         }
 
-        private Quaternion ProcessLockOnRotation()
+        private float ResolveCollisions(Quaternion currentRotation, Vector3 framing, float targetDistance)
         {
-            Vector3 directionToTarget = (_lockOnTarget.position - _followTarget.position).normalized;
-            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-
-            return Quaternion.Slerp(transform.rotation, targetRotation, _lockOnRotationSmoothing * Time.deltaTime * 10f);
-        }
-
-        private float ResolveCollisions(Quaternion targetRotation, Vector3 framing, float targetDistance)
-        {
-            Vector3 rayStartPoint = _followTarget.position + targetRotation * framing;
-            Vector3 rayDirection = targetRotation * -Vector3.forward;
+            Vector3 rayStartPoint = _followTarget.position + currentRotation * framing;
+            Vector3 rayDirection = currentRotation * (-Vector3.forward);
 
             bool collisionDetected = Physics.SphereCast(
-                rayStartPoint,
-                _cameraRadius,
-                rayDirection,
-                out RaycastHit hit,
-                targetDistance,
-                _collisionLayers
+                rayStartPoint, _cameraRadius, rayDirection,
+                out RaycastHit hit, targetDistance, _collisionLayers
             );
 
             float desiredDistance = collisionDetected ? hit.distance : targetDistance;
 
             _currentDistance = Mathf.SmoothDamp(
-                _currentDistance,
-                desiredDistance,
-                ref _distanceSmoothVelocity,
-                _collisionSmoothing
+                _currentDistance, desiredDistance, ref _distanceSmoothVelocity, _collisionSmoothTime
             );
 
             return _currentDistance;
         }
 
-        private Vector3 CalculateFinalPosition(Quaternion targetRotation, Vector3 framing, float distance)
+        private Vector3 CalculateFinalPosition(Quaternion currentRotation, Vector3 framing, float distance)
         {
-            Vector3 basePosition = _followTarget.position + targetRotation * framing;
-            Vector3 offset = targetRotation * (-Vector3.forward) * distance;
-
+            Vector3 basePosition = _followTarget.position + currentRotation * framing;
+            Vector3 offset = currentRotation * Vector3.forward * -distance;
             return basePosition + offset;
+        }
+
+        private IEnumerator ChangeFovRoutine(float targetFov)
+        {
+            float startFov = _playerCamera.fieldOfView;
+            float timer = 0f;
+
+            while (timer < _fovChangeDuration)
+            {
+                timer += Time.deltaTime;
+                float progress = Mathf.Clamp01(timer / _fovChangeDuration);
+                _playerCamera.fieldOfView = Mathf.Lerp(startFov, targetFov, progress);
+                yield return null;
+            }
         }
 
         private readonly struct CameraStateParameters
         {
             public readonly float Distance;
             public readonly Vector3 Framing;
+            public readonly float RotationSmoothTime;
 
-            public CameraStateParameters(float distance, Vector3 framing)
+            public CameraStateParameters(float distance, Vector3 framing, float rotationSmoothTime)
             {
                 Distance = distance;
                 Framing = framing;
+                RotationSmoothTime = rotationSmoothTime;
             }
         }
     }

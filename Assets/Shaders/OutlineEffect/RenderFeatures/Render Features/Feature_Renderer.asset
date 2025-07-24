@@ -12,15 +12,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aefbbfbe76beef947a1c8888b59f71c2, type: 3}
   m_Name: AdvancedEdgeDetectionFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
+    algorithm: 2
     renderPassEvent: 600
-    outlineThickness: 0.0005
     outlineColor: {r: 0, g: 0, b: 0, a: 1}
+    outlineThickness: 3
     depthSensitivity: 0
     normalSensitivity: 0.3
     luminanceSensitivity: 0
-    outlineSoftness: 0.146
+  edgeDetectionShader: {fileID: 0}
+--- !u!114 &-1653587101718923537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbd6e526a1bb489a8df34cbfcfca6bfc, type: 3}
+  m_Name: OutlineRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  FeatureSettings:
+    RenderPassEvent: 300
+    LayerMask:
+      serializedVersion: 2
+      m_Bits: 1075314687
+    RenderingLayerMask:
+      serializedVersion: 0
+      m_Bits: 3
+    OverrideMaterial: {fileID: -876546973899608171, guid: 6c897a44b62e6d84e9b0f6d5238a158e, type: 3}
+    BlitMaterial: {fileID: -876546973899608171, guid: 4f3bc6b888d3080448e0c3bb6fc9deb0, type: 3}
+    ClearDepth: 0
+  MaterialSettings:
+    OutlineScale: 4.86
+    RobertsCrossMultiplier: 100
+    DepthThreshold: 10
+    NormalThreshold: 0.4
+    SteepAngleThreshold: 0.2
+    SteepAngleMultiplier: 25
+    OutlineColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48,7 +81,9 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 3899579887225231287}
   - {fileID: -3807376484010879209}
-  m_RendererFeatureMap: b757511f3f171e3617175b98427b29cb
+  - {fileID: -1653587101718923537}
+  - {fileID: 2525045749868263658}
+  m_RendererFeatureMap: b757511f3f171e3617175b98427b29cbef36e0c44a470de9eaf88132bbc30a23
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -74,6 +109,28 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 1
   m_IntermediateTextureMode: 0
+--- !u!114 &2525045749868263658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aefbbfbe76beef947a1c8888b59f71c2, type: 3}
+  m_Name: EdgeDetectionFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    algorithm: 3
+    renderPassEvent: 500
+    outlineColor: {r: 0, g: 0, b: 0, a: 1}
+    outlineThickness: 1
+    depthSensitivity: 0.1
+    normalSensitivity: 0.88
+    luminanceSensitivity: 0.1
+  edgeDetectionShader: {fileID: 4800000, guid: 3d8607ad1cbd45642b2e05ae14903f34, type: 3}
 --- !u!114 &3899579887225231287
 MonoBehaviour:
   m_ObjectHideFlags: 0

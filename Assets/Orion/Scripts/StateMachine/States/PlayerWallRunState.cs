@@ -16,8 +16,9 @@ namespace Orion
         public override void Enter()
         {
             base.Enter();
-            _wallRunTimer = player.GetMaxWallRunTime();
-            player.SetVelocity(new Vector3(player.CurrentVelocity.x, 0, player.CurrentVelocity.z));
+            player.LockOrientation = true;
+            _wallRunTimer = player.MaxWallRunTime;
+            player.SetVelocityY(0);
             FindWall();
             player.AnimationController.SetWallRunning(true, _isWallOnRight);
         }
@@ -25,7 +26,16 @@ namespace Orion
         public override void Exit()
         {
             base.Exit();
+            player.LockOrientation = false;
             player.AnimationController.SetWallRunning(false, _isWallOnRight);
+            player.Rigidbody.useGravity = true;
+
+            if (stateMachine.CurrentState != player.JumpState)
+            {
+                Vector3 exitMomentum = _wallForward * player.WallExitForwardMomentum;
+                Vector3 pushOffForce = _wallNormal * player.WallExitPushForce;
+                player.AddForce(exitMomentum + pushOffForce, ForceMode.VelocityChange);
+            }
         }
 
         public override void LogicUpdate()
@@ -33,7 +43,7 @@ namespace Orion
             base.LogicUpdate();
             _wallRunTimer -= Time.deltaTime;
 
-            if (_wallRunTimer <= 0 || !IsWallNearby() || player.IsGrounded())
+            if (_wallRunTimer <= 0f || !IsWallNearby() || player.IsGrounded)
             {
                 stateMachine.ChangeState(player.FallState);
                 return;
@@ -48,36 +58,51 @@ namespace Orion
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
+            ApplyWallRunForces();
+        }
 
-            Vector3 velocity = _wallForward * player.GetWallRunSpeed();
-            velocity.y = player.Rigidbody.linearVelocity.y;
-            player.Rigidbody.linearVelocity = velocity;
+        private void ApplyWallRunForces()
+        {
+            player.Rigidbody.useGravity = false;
 
-            float gravity = Physics.gravity.y * player.GetWallRunGravityMultiplier();
-            player.Rigidbody.AddForce(new Vector3(0, gravity, 0), ForceMode.Acceleration);
+            Vector3 targetVelocity = _wallForward * player.WallRunSpeed;
+            Vector3 currentHorizontalVelocity = new Vector3(player.CurrentVelocity.x, 0, player.CurrentVelocity.z);
+            Vector3 velocityChange = targetVelocity - currentHorizontalVelocity;
+
+            player.AddForce(velocityChange, ForceMode.VelocityChange);
+
+            float timerRatio = _wallRunTimer / player.MaxWallRunTime;
+            float dynamicUpwardForce = Mathf.Lerp(0f, player.WallRunUpwardForce, timerRatio * timerRatio);
+
+            player.AddForce(Vector3.up * dynamicUpwardForce, ForceMode.Force);
         }
 
         private void FindWall()
         {
-            Vector3 right = player.PlayerCameraTransform.right;
+            Vector3 right = player.transform.right;
             right.y = 0;
 
-            if (Physics.Raycast(player.transform.position, right, out RaycastHit rightHit, 1f, player.GetWallRunLayer()))
+            if (Physics.Raycast(player.transform.position, right, out RaycastHit rightHit, 1f, player.WallRunLayer))
             {
                 _wallNormal = rightHit.normal;
                 _isWallOnRight = true;
             }
-            else if (Physics.Raycast(player.transform.position, -right, out RaycastHit leftHit, 1f, player.GetWallRunLayer()))
+            else if (Physics.Raycast(player.transform.position, -right, out RaycastHit leftHit, 1f, player.WallRunLayer))
             {
                 _wallNormal = leftHit.normal;
                 _isWallOnRight = false;
             }
 
+            UpdateWallForwardDirection();
+        }
+
+        private void UpdateWallForwardDirection()
+        {
             _wallForward = Vector3.Cross(_wallNormal, Vector3.up).normalized;
 
             Vector3 cameraForward = player.PlayerCameraTransform.forward;
             cameraForward.y = 0;
-            if (Vector3.Dot(cameraForward, _wallForward) < 0)
+            if (Vector3.Dot(cameraForward.normalized, _wallForward) < 0)
             {
                 _wallForward = -_wallForward;
             }
@@ -85,17 +110,20 @@ namespace Orion
 
         private bool IsWallNearby()
         {
-            return Physics.Raycast(player.transform.position, -_wallNormal, 1.2f, player.GetWallRunLayer());
+            return Physics.Raycast(player.transform.position, -_wallNormal, 1.2f, player.WallRunLayer);
         }
 
         private void PerformWallJump()
         {
             player.Input.UseJumpInput();
 
-            Vector3 wallJumpForce = player.GetWallJumpForce();
-            Vector3 finalForce = _wallNormal * wallJumpForce.x + Vector3.up * wallJumpForce.y;
+            Vector3 wallJumpForce = player.WallJumpForce;
 
-            player.SetVelocity(finalForce);
+            Vector3 lateralForce = _wallNormal * wallJumpForce.x;
+            Vector3 upwardForce = Vector3.up * wallJumpForce.y;
+            Vector3 forwardForce = _wallForward * wallJumpForce.z;
+
+            player.SetVelocity(lateralForce + upwardForce + forwardForce);
             stateMachine.ChangeState(player.JumpState);
         }
     }

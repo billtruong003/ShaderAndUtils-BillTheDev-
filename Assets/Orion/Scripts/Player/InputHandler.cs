@@ -11,6 +11,9 @@ namespace Orion
         public bool TetherButtonWasPressed { get; private set; }
         public bool SprintIsHeld { get; private set; }
         public bool DashWasPressed { get; private set; }
+        public bool CrouchWasPressed { get; private set; }
+        public bool CrouchIsHeld { get; private set; }
+
 
         public void OnMove(InputAction.CallbackContext context)
         {
@@ -47,8 +50,18 @@ namespace Orion
             }
         }
 
+        public void OnCrouch(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                CrouchWasPressed = true;
+            }
+            CrouchIsHeld = context.performed;
+        }
+
         public void UseJumpInput() => JumpWasPressed = false;
         public void UseTetherInput() => TetherButtonWasPressed = false;
         public void UseDashInput() => DashWasPressed = false;
+        public void UseCrouchInput() => CrouchWasPressed = false;
     }
 }

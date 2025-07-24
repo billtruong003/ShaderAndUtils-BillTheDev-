@@ -2,10 +2,24 @@ using UnityEngine;
 
 namespace Orion
 {
-    public class PlayerRunState : State
+    public class PlayerRunState : PlayerGroundedMovementState
     {
+        protected override float TargetSpeed => player.RunSpeed;
+
         public PlayerRunState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine)
         {
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            player.CameraController.SetSprintFieldOfView();
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            player.CameraController.ResetFieldOfView();
         }
 
         public override void LogicUpdate()
@@ -23,44 +37,17 @@ namespace Orion
                 return;
             }
 
-            if (player.IsOnSteepSlope(out _))
+            if (player.IsOnSteepSlope())
             {
-                stateMachine.ChangeState(player.GroundedState.SlideState);
+                stateMachine.ChangeState(player.GroundedState.SlopeSlideState);
                 return;
             }
-        }
 
-        public override void PhysicsUpdate()
-        {
-            base.PhysicsUpdate();
-            MovePlayer();
-        }
-
-        private void MovePlayer()
-        {
-            Vector3 moveDirection = GetCameraRelativeMoveDirection();
-            float targetSpeed = player.GetRunSpeed();
-            Vector3 targetVelocity = moveDirection * targetSpeed;
-
-            Vector3 currentHorizontalVelocity = new Vector3(player.Rigidbody.linearVelocity.x, 0, player.Rigidbody.linearVelocity.z);
-
-            Vector3 velocityChange = targetVelocity - currentHorizontalVelocity;
-            float acceleration = player.GetMovementAcceleration();
-
-            player.Rigidbody.AddForce(velocityChange * acceleration, ForceMode.Acceleration);
-        }
-
-        private Vector3 GetCameraRelativeMoveDirection()
-        {
-            Vector3 forward = player.PlayerCameraTransform.forward;
-            Vector3 right = player.PlayerCameraTransform.right;
-
-            forward.y = 0;
-            right.y = 0;
-            forward.Normalize();
-            right.Normalize();
-
-            return (forward * player.Input.MoveInput.y + right * player.Input.MoveInput.x).normalized;
+            if (player.Input.CrouchIsHeld)
+            {
+                stateMachine.ChangeState(player.GroundedState.CrouchState);
+                return;
+            }
         }
     }
 }
