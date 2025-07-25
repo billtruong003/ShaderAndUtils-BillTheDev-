@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66a6cf5e818e544cc985238fe9c70b24, type: 3}
+  m_Name: NewSpiderIKSettings
+  m_EditorClassIdentifier: 
+  MoveSpeed: 5
+  TurnSpeed: 200
+  BodyOrientationSmoothing: 8
+  StepDistanceThreshold: 0.8
+  StepHeight: 0.5
+  StepDuration: 0.2
+  StepPredictionMultiplier: 1.5
+  StanceRadiusOffset: 0.4
+  GroundLayer:
+    serializedVersion: 2
+    m_Bits: 65536
+  RaycastHeight: 2
+  RaycastDistance: 5

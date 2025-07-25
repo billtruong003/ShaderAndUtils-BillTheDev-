@@ -1,13 +1,11 @@
-// File: Assets/MyIndieGame/Scripts/VisualEffects/AfterImageController.cs (VERSION 2 - Frame Perfect)
 using Sirenix.OdinInspector;
-using System.Collections; // THÊM MỚI để dùng Coroutine
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [AddComponentMenu("My Indie Game/Visual Effects/After Image Controller")]
 public sealed class AfterImageController : MonoBehaviour
 {
-    // ... (Toàn bộ các enum và class lồng nhau giữ nguyên: ActivationMode, ColorSettings, PooledAfterImage) ...
     #region Enums and Nested Classes
 
     public enum ActivationMode
@@ -48,31 +46,34 @@ public sealed class AfterImageController : MonoBehaviour
         public readonly GameObject Instance;
         public readonly MeshFilter MeshFilter;
         public readonly Renderer Renderer;
-        public float FadeValue;
+        public float ActivationTimestamp; // New: To track when it was created
 
         public PooledAfterImage(GameObject instance)
         {
             Instance = instance;
             MeshFilter = instance.GetComponent<MeshFilter>();
             Renderer = instance.GetComponent<Renderer>();
-            FadeValue = 0f;
+            ActivationTimestamp = 0f;
         }
 
         public void Activate(Vector3 position, Quaternion rotation)
         {
             Instance.transform.SetPositionAndRotation(position, rotation);
             Instance.SetActive(true);
-            FadeValue = 1f;
+            ActivationTimestamp = Time.time; // New: Set creation time
         }
 
         public void Deactivate()
         {
-            if (MeshFilter.mesh != null)
+            if (Instance.activeInHierarchy)
             {
-                MeshFilter.mesh.Clear();
+                if (MeshFilter.mesh != null)
+                {
+                    MeshFilter.mesh.Clear();
+                }
+                Instance.SetActive(false);
+                ActivationTimestamp = 0f;
             }
-            Instance.SetActive(false);
-            FadeValue = 0f;
         }
 
         public bool IsActive => Instance.activeInHierarchy;
@@ -80,7 +81,6 @@ public sealed class AfterImageController : MonoBehaviour
 
     #endregion
 
-    // ... (Toàn bộ các biến SerializeField giữ nguyên) ...
     [Title("After Image Controller", "Manages the creation and fading of after-images.")]
     [InfoBox("This effect is performance-intensive due to mesh baking and combining in real-time. Use judiciously and keep the pool size reasonable.")]
 
@@ -107,7 +107,7 @@ public sealed class AfterImageController : MonoBehaviour
     [SerializeField] private float movementThreshold = 0.01f;
 
     [BoxGroup("Activation")]
-    [MinValue(0.01)]
+    [MinValue(0.001)]
     [SerializeField] private float activationDelay = 0.05f;
 
     [BoxGroup("Pooling")]
@@ -115,7 +115,8 @@ public sealed class AfterImageController : MonoBehaviour
     [SerializeField] private int poolSize = 10;
 
     [BoxGroup("Appearance")]
-    [MinValue(0.01)]
+    [MinValue(0.001)]
+    [Tooltip("Total time for an after-image to fade from newest to oldest before being removed.")]
     [SerializeField] private float fadeDuration = 0.5f;
 
     [BoxGroup("Appearance")]
@@ -128,9 +129,9 @@ public sealed class AfterImageController : MonoBehaviour
 
     [BoxGroup("Appearance")]
     [SerializeField] private ColorSettings colorSettings;
-    // ...
 
     private readonly List<PooledAfterImage> _pool = new List<PooledAfterImage>();
+    private readonly List<PooledAfterImage> _activeImages = new List<PooledAfterImage>(); // New: Tracks active images in order
     private GameObject _poolParent;
     private SkinnedMeshRenderer[] _sourceSkinnedRenderers;
     private MeshRenderer[] _sourceMeshRenderers;
@@ -139,8 +140,8 @@ public sealed class AfterImageController : MonoBehaviour
     private float _activationTimer;
     private Vector3 _previousPosition;
     private bool _isInitialized;
+    private MaterialPropertyBlock _matBlock; // Optimization: reuse property block
 
-    // ... (Start, OnEnable, OnDisable, OnDestroy giữ nguyên) ...
     #region Unity Lifecycle
 
     private void Start()
@@ -165,25 +166,24 @@ public sealed class AfterImageController : MonoBehaviour
     }
     #endregion
 
-    // THAY ĐỔI LỚN: LateUpdate giờ chỉ xử lý kích hoạt và fade, không tạo ảnh trực tiếp
     private void LateUpdate()
     {
         if (!_isInitialized) return;
 
-        // Luôn cập nhật fade cho các ảnh đang hoạt động
-        UpdateActiveImages();
-
-        // Xử lý logic kích hoạt
         HandleActivationTimer();
+
+        // Change: Logic is now split. Activation check first.
         if (ShouldCreateAfterImage())
         {
-            // Thay vì gọi hàm tạo ảnh, ta khởi động coroutine
+            // Change: Use WaitForEndOfFrame for more accurate mesh baking
             StartCoroutine(CreateAfterImageAtFrameEnd());
-            _activationTimer = activationDelay; // Reset timer ngay lập tức
+            _activationTimer = activationDelay;
         }
+
+        // Change: Update happens every frame regardless of creation
+        UpdateActiveImages();
     }
 
-    // ... (Initialize và các hàm public giữ nguyên) ...
     #region Public API
 
     [Button("Trigger Effect", ButtonSizes.Medium)]
@@ -202,6 +202,7 @@ public sealed class AfterImageController : MonoBehaviour
     {
         if (!ValidateSetup()) return;
 
+        _matBlock = new MaterialPropertyBlock();
         InitializePool();
         CollectSourceRenderers();
 
@@ -255,23 +256,24 @@ public sealed class AfterImageController : MonoBehaviour
             Destroy(_poolParent);
         }
         _pool.Clear();
+        _activeImages.Clear(); // New: Clear active list as well
     }
 
     #endregion
 
-    // HÀM MỚI: Coroutine để tạo ảnh vào cuối frame
     private IEnumerator CreateAfterImageAtFrameEnd()
     {
-        // ĐỢI CHO ĐẾN KHI FRAME ĐÃ RENDER XONG
-        yield return new WaitForSeconds(0.1f);
+        // Change: Waits until rendering updates are complete for the frame, which is better for baking meshes.
+        yield return new WaitForEndOfFrame();
 
-        // Bây giờ, tất cả vị trí và tư thế đều là cuối cùng và chính xác
         PooledAfterImage image = GetAvailableImageFromPool();
         if (image == null) yield break;
 
-        // Các bước còn lại giống hệt như trước
         BakeAndCombineMeshes(image.MeshFilter);
         ApplyMaterialProperties(image.Renderer);
+
+        // New: Add to active list
+        _activeImages.Add(image);
         image.Activate(afterImageOrigin.position, afterImageOrigin.rotation);
     }
 
@@ -285,7 +287,6 @@ public sealed class AfterImageController : MonoBehaviour
         }
     }
 
-    // HÀM MỚI: Tách logic kiểm tra điều kiện ra riêng
     private bool ShouldCreateAfterImage()
     {
         if (_activationTimer > 0f) return false;
@@ -294,11 +295,11 @@ public sealed class AfterImageController : MonoBehaviour
         {
             case ActivationMode.OnMovement:
                 float movementSqrMagnitude = (afterImageOrigin.position - _previousPosition).sqrMagnitude;
-                _previousPosition = afterImageOrigin.position; // Cập nhật vị trí cũ ở đây
+                _previousPosition = afterImageOrigin.position;
                 return movementSqrMagnitude > (movementThreshold * movementThreshold);
             case ActivationMode.Always:
                 return true;
-            case ActivationMode.OnCommand: // OnCommand sẽ không kích hoạt tự động
+            case ActivationMode.OnCommand:
             default:
                 return false;
         }
@@ -337,42 +338,43 @@ public sealed class AfterImageController : MonoBehaviour
 
     private void ApplyMaterialProperties(Renderer targetRenderer)
     {
-        MaterialPropertyBlock block = new MaterialPropertyBlock();
-        targetRenderer.GetPropertyBlock(block);
+        targetRenderer.GetPropertyBlock(_matBlock);
 
         Color finalColor = GetColorFromSettings();
-        block.SetColor(colorShaderProperty, finalColor);
-        block.SetFloat(fadeShaderProperty, 1f);
+        _matBlock.SetColor(colorShaderProperty, finalColor);
+        // The fade value will be set in UpdateActiveImages, so we just need to set the color here.
+        // We can set it to 1 initially to ensure it's visible for the first frame.
+        _matBlock.SetFloat(fadeShaderProperty, 1f);
 
-        targetRenderer.SetPropertyBlock(block);
+        targetRenderer.SetPropertyBlock(_matBlock);
     }
 
+    // --- MAJOR CHANGE IN FADING LOGIC ---
     private void UpdateActiveImages()
     {
-        if (fadeDuration <= 0) return;
-        float fadeDelta = Time.deltaTime / fadeDuration;
+        if (_activeImages.Count == 0) return;
 
-        foreach (var image in _pool)
+        // Step 1: Remove images that are too old
+        // Use a while loop in case multiple images expire in the same frame
+        while (_activeImages.Count > 0 && (Time.time - _activeImages[0].ActivationTimestamp) > fadeDuration)
         {
-            if (!image.IsActive) continue;
+            _activeImages[0].Deactivate();
+            _activeImages.RemoveAt(0); // Most efficient way to remove the first item
+        }
 
-            image.FadeValue -= fadeDelta;
+        // Step 2: Update the fade on the remaining active images based on their order
+        for (int i = 0; i < _activeImages.Count; i++)
+        {
+            PooledAfterImage image = _activeImages[i];
 
-            if (image.FadeValue <= 0f)
-            {
-                image.Deactivate();
-            }
-            else
-            {
-                MaterialPropertyBlock block = new MaterialPropertyBlock();
-                image.Renderer.GetPropertyBlock(block);
+            // Calculate fade: oldest (i=0) is 0, newest (i=Count-1) is 1
+            float fadeValue = (_activeImages.Count <= 1)
+                ? 1.0f
+                : (float)i / (_activeImages.Count - 1);
 
-                // THAY ĐỔI DÒNG NÀY:
-                // Thay vì gửi trực tiếp FadeValue (1 -> 0), ta gửi 1.0f - FadeValue (0 -> 1)
-                block.SetFloat(fadeShaderProperty, 1.0f - image.FadeValue);
-
-                image.Renderer.SetPropertyBlock(block);
-            }
+            image.Renderer.GetPropertyBlock(_matBlock);
+            _matBlock.SetFloat(fadeShaderProperty, fadeValue);
+            image.Renderer.SetPropertyBlock(_matBlock);
         }
     }
 
@@ -380,24 +382,28 @@ public sealed class AfterImageController : MonoBehaviour
 
     #region Helper Methods
 
+    // --- CHANGE IN POOLING LOGIC ---
     private PooledAfterImage GetAvailableImageFromPool()
     {
+        // First, try to find a truly inactive image from the main pool
         foreach (var image in _pool)
         {
             if (!image.IsActive) return image;
         }
 
-        PooledAfterImage oldestImage = null;
-        float lowestFade = float.MaxValue;
-        foreach (var image in _pool)
+        // If the pool is full, "steal" the oldest active image.
+        // The old logic of checking FadeValue is gone. We now know the oldest is always at the start of _activeImages.
+        if (_activeImages.Count > 0)
         {
-            if (image.FadeValue < lowestFade)
-            {
-                lowestFade = image.FadeValue;
-                oldestImage = image;
-            }
+            PooledAfterImage oldestImage = _activeImages[0];
+            _activeImages.RemoveAt(0); // Remove from active list before reusing
+            oldestImage.Deactivate(); // Deactivate it properly
+            return oldestImage;
         }
-        return oldestImage;
+
+        // This should rarely happen if pool size is sufficient
+        Debug.LogWarning("After Image Pool is full and no active images could be recycled. Consider increasing pool size.");
+        return null;
     }
 
     private void DeactivateAllImages()
@@ -410,6 +416,7 @@ public sealed class AfterImageController : MonoBehaviour
                 image.Deactivate();
             }
         }
+        _activeImages.Clear(); // New: Must clear this list
     }
 
     private Color GetColorFromSettings()

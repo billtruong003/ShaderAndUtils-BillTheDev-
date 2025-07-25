@@ -32,13 +32,13 @@ public sealed class AdvancedEdgeDetectionFeature : ScriptableRendererFeature
         [Range(1, 10)] public float outlineThickness = 3;
 
         [Tooltip("Độ nhạy với sự thay đổi về chiều sâu.")]
-        [Range(0.1f, 100f)] public float depthSensitivity = 20f;
+        [Range(0f, 100f)] public float depthSensitivity = 20f;
 
         [Tooltip("Độ nhạy với sự thay đổi về pháp tuyến bề mặt.")]
-        [Range(0.1f, 10f)] public float normalSensitivity = 1f;
+        [Range(0f, 10f)] public float normalSensitivity = 1f;
 
         [Tooltip("Độ nhạy với sự thay đổi về độ sáng.")]
-        [Range(0.1f, 5f)] public float luminanceSensitivity = 1f;
+        [Range(0f, 5f)] public float luminanceSensitivity = 1f;
     }
 
     [SerializeField]
