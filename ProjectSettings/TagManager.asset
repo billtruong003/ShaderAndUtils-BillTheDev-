@@ -4,39 +4,42 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Missile
-  - PlayerFinger
+  - Tornado
+  - Grass
+  - Collide
   - Animal
-  - Water
-  - Fly
   - Climb
+  - Fly
+  - Water
   - Stair
   - WallRun
+  - Missile
+  - Weapon
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Enemy
+  - Post Processing
   - Water
   - UI
-  - Player
+  - Vehicles
+  - Vehicle Wheels
+  - Ground Surfaces
+  - Buildings
+  - Obstacles
   - Grabbing
   - Grabbable
   - Hand
   - HandPlayer
-  - Head
-  - Outlines
-  - MiniMap
-  - Wall
   - BodyPart
-  - Ground
   - WallRun
-  - Ledge
+  - ClimbLedge
+  - 
   - 
   - Animal
   - 
   - 
-  - 
+  - Enemy
   - 
   - 
   - 
@@ -51,10 +54,3 @@ TagManager:
     locked: 0
   m_RenderingLayers:
   - Default
-  - Light Layer 1
-  - Light Layer 2
-  - Light Layer 3
-  - Light Layer 4
-  - Light Layer 5
-  - Light Layer 6
-  - Light Layer 7

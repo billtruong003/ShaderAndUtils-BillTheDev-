@@ -30,15 +30,29 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _GridThickness: 0.01
-    - _GridTiling: 280
+    - _Glossiness: 1
+    - _GridDotSize: 0.2
+    - _GridDotSoftness: 1
+    - _GridLineSoftness: 1
+    - _GridLineThickness: 0.025
+    - _GridThickness: 0.05
+    - _GridTiling: 0.5
     - _GridToggle: 1
     - _Metallic: 0
+    - _RimPower: 0.1
+    - _RimThreshold: 0
+    - _ShadowSmoothness: 0.001
+    - _ShadowThreshold: 0.754
     - _Smoothness: 0.5
-    - _ToonStep: 0.494
+    - _SpecularThreshold: 1
+    - _ToonStep: 0
     m_Colors:
-    - _BaseColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    - _BaseColor: {r: 0, g: 3.9215686, b: 5.9607844, a: 1}
     - _GridColor: {r: 0.13725491, g: 0.13725491, b: 0.13725491, a: 1}
-    - _ShadowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GridDotColor: {r: 0, g: 3.9215686, b: 5.9607844, a: 1}
+    - _GridLineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

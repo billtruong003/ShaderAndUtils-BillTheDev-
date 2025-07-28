@@ -8,6 +8,7 @@ namespace Orion
         private Vector3 _wallNormal;
         private Vector3 _wallForward;
         private bool _isWallOnRight;
+        public bool IsWallOnRight => _isWallOnRight;
 
         public PlayerWallRunState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine)
         {

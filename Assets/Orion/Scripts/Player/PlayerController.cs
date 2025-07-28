@@ -74,6 +74,8 @@ namespace Orion
         [field: SerializeField] public Vector3 LedgeClimbStandPositionOffset { get; private set; } = new Vector3(0, 0, 0.3f);
         [field: SerializeField] public LayerMask LedgeLayer { get; private set; }
 
+        public State CurrentState => MovementStateMachine.CurrentState;
+        public bool IsWallRunningOnRight => WallRunState.IsWallOnRight;
         public StateMachine MovementStateMachine { get; private set; }
         public PlayerGroundedState GroundedState { get; private set; }
         public PlayerJumpState JumpState { get; private set; }

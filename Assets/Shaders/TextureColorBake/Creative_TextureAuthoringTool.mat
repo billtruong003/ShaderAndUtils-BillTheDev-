@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Creative_TextureAuthoringTool
+  m_Shader: {fileID: 4800000, guid: 8c8e8617fa7cdc747a2601eccfe232fd, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - ENABLE_UV_WARP
+  - ENABLE_WORLD_EFFECTS
+  m_InvalidKeywords:
+  - _OUTPUT_MODE_SELECT_COMPOSITE
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: fbcadf8e8794644c9ba6a7221566a107, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseMap:
+        m_Texture: {fileID: 2800000, guid: 4931d31dee91b4c1d9a132f68ee03897, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _WarpMap:
+        m_Texture: {fileID: 2800000, guid: 18857cd14a0352f478bd53ac25cf0e71, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AODirections: 32
+    - _AODistanceFalloff: 5
+    - _AOIntensity: 0.05
+    - _AORadius: 0.0513
+    - _AOSamples: 64
+    - _CurvatureBias: -1
+    - _CurvatureKernelScale: 1
+    - _CurvatureSharpness: 1
+    - _CurvatureStrength: 2.9
+    - _DebugCategory: 0
+    - _DebugView_Advanced: 4
+    - _DebugView_Core: 2
+    - _DebugView_Masks: 9
+    - _DenoiseDepthSensitivity: 0.872
+    - _DenoiseRadius: 1
+    - _DenoiseSpatialSigma: 10
+    - _DirtGravityInfluence: 2
+    - _DirtLevel: 5
+    - _DirtMetallic: 0.371
+    - _DirtNoiseInfluence: 2
+    - _DirtNoiseTiling: 5
+    - _DirtSmoothness: 0.896
+    - _DitherStrength: 0
+    - _EdgeAlgorithm: 1
+    - _EdgeSoftness: 0.001
+    - _EdgeThreshold: 1.094
+    - _EnableDenoising: 0
+    - _EnableUVWarp: 1
+    - _EnableWorldEffects: 1
+    - _HeightBrightness: -0.189
+    - _HeightContrast: 1
+    - _HeightCurve: 0.45
+    - _NoiseTiling: 1
+    - _NormalStrength: 15
+    - _OUTPUT_MODE_SELECT: 0
+    - _OutputMode: 6
+    - _WarpStrength: 0
+    - _WarpTiling: 0.5
+    - _WearExposureInfluence: 0.855
+    - _WearLevel: 3.82
+    - _WearMetallic: 1
+    - _WearNoiseInfluence: 1.459
+    - _WearNoiseTiling: 1
+    - _WearSmoothness: 1
+    - _WorldEffectAngleThreshold: 0.309
+    - _WorldEffectHardness: 4.65
+    - _WorldEffectIntensity: 0.53
+    - _WorldEffectMetallic: 1
+    - _WorldEffectProjectionScale: 0.68
+    - _WorldEffectSmoothness: 1
+    m_Colors:
+    - _DirtColor: {r: 0.31132078, g: 0.27934024, b: 0.2599235, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _WearColor: {r: 0, g: 0, b: 0, a: 1}
+    - _WorldEffectColor: {r: 0.103773594, g: 0.103773594, b: 0.103773594, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

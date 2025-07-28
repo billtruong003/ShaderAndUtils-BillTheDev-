@@ -8,11 +8,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Material.001
-  m_Shader: {fileID: 4800000, guid: 4a3ff0f9a5b0048b59fb56b1c2adb3b1, type: 3}
+  m_Shader: {fileID: 4800000, guid: 6e8c1a326e3b1494f9a7435e15cecad3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _ENABLE_HUE_EMISSION
+  - _ENABLE_REPLACEMENT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -48,8 +50,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _IdMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: fbcadf8e8794644c9ba6a7221566a107, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5ed428c834b4d214eaee11c30a0e1f05, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -82,6 +88,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AOIntensity: 1
+    - _AORadius: 0.1
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
@@ -90,25 +98,30 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorDifferenceTolerance: 12.8
+    - _ColorDifferenceTolerance: 100
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EmissionIntensity: 10
+    - _EmissionIntensity: 19.4
+    - _EnableHueEmission: 1
+    - _EnableReplacement: 1
     - _EnvironmentReflections: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HueThreshold: 0.25
+    - _HueThreshold: 0.233
+    - _IdTolerance: 0.0438
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RimAmount: 0.716
+    - _RimThreshold: 0.1
     - _SaturationThreshold: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -118,16 +131,22 @@ Material:
     - _Surface: 0
     - _TransitionSoftness: 20
     - _UVSec: 0
+    - _UseIdMap: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
+    - _AmbientColor: {r: 0.4, g: 0.4, b: 0.4, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BrightnessRange: {r: 0, g: 0.5, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 1367.1202, g: 501.94852, b: 0, a: 0}
+    - _EmissionColor: {r: 1825.2128, g: 1825.2128, b: 1825.2128, a: 0}
+    - _HueTargetColor: {r: 1, g: 0, b: 0, a: 1}
     - _ReplacementColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _TargetColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 1}
+    - _SpecularColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+    - _TargetColor: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
+    - _TargetIdColor: {r: 1, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &8750082411024831787
