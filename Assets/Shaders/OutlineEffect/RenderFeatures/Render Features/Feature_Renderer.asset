@@ -121,14 +121,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aefbbfbe76beef947a1c8888b59f71c2, type: 3}
   m_Name: EdgeDetectionFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
-    algorithm: 0
+    algorithm: 2
     renderPassEvent: 500
     outlineColor: {r: 0, g: 0, b: 0, a: 1}
     outlineThickness: 1
-    depthSensitivity: 5
-    normalSensitivity: 1.7
+    depthSensitivity: 0
+    normalSensitivity: 0.25
     luminanceSensitivity: 0
   edgeDetectionShader: {fileID: 4800000, guid: 3d8607ad1cbd45642b2e05ae14903f34, type: 3}
 --- !u!114 &3899579887225231287
