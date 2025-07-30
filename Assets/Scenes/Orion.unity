@@ -519,7 +519,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.6070751, y: -0.15837216, z: -6.1060166}
-  m_LocalScale: {x: 150.26, y: 150.26, z: 150.26}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -542,20 +542,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerController: {fileID: 1127012379}
-  _enableFootIK: 1
+  _enableIK: 1
+  _ikBlendSpeed: 15
   _footIKPositionWeight: 0.3
   _footIKRotationWeight: 0
   _footRaycastDistance: 1.2
   _footRaycastOriginOffset: 0.5
   _footYOffset: 0.05
+  _footForwardOffset: 0.15
   _ikLayerMask:
     serializedVersion: 2
     m_Bits: 196608
-  _enableHandIK: 1
   _handIKPositionWeight: 1
   _handIKRotationWeight: 0
   _handRaycastDistance: 1.5
-  _handRaycastOriginOffset: {x: 0, y: 1, z: 0}
+  _handPlacementOffset: 0.1
 --- !u!1 &713975739
 GameObject:
   m_ObjectHideFlags: 0

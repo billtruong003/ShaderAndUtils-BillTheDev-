@@ -7,31 +7,46 @@ namespace Orion
     {
         [Header("Dependencies")]
         [SerializeField] private PlayerController _playerController;
+        private Animator _animator;
+
+        [Header("IK Blending Settings")]
+        [SerializeField] private bool _enableIK = true;
+        [SerializeField] private float _ikBlendSpeed = 15f;
 
         [Header("Foot IK Settings")]
-        [SerializeField] private bool _enableFootIK = true;
         [SerializeField, Range(0f, 1f)] private float _footIKPositionWeight = 1f;
         [SerializeField, Range(0f, 1f)] private float _footIKRotationWeight = 1f;
         [SerializeField] private float _footRaycastDistance = 1.2f;
         [SerializeField] private float _footRaycastOriginOffset = 0.5f;
         [SerializeField] private float _footYOffset = 0.05f;
+        [SerializeField] private float _footForwardOffset = 0.15f;
         [SerializeField] private LayerMask _ikLayerMask;
 
         [Header("Hand IK Settings")]
-        [SerializeField] private bool _enableHandIK = true;
         [SerializeField, Range(0f, 1f)] private float _handIKPositionWeight = 1f;
         [SerializeField, Range(0f, 1f)] private float _handIKRotationWeight = 1f;
         [SerializeField] private float _handRaycastDistance = 1.5f;
-        [SerializeField] private Vector3 _handRaycastOriginOffset = new Vector3(0, 1.5f, 0);
+        [SerializeField] private float _handPlacementOffset = 0.1f;
 
-        private Animator _animator;
+        // Blending state variables
+        private float _currentLeftFootWeight;
+        private float _currentRightFootWeight;
+        private float _currentLeftHandWeight;
+        private float _currentRightHandWeight;
+        private float _targetLeftFootWeight;
+        private float _targetRightFootWeight;
+        private float _targetLeftHandWeight;
+        private float _targetRightHandWeight;
 
+        // Velocity references for SmoothDamp
+        private float _weightVelocityLF, _weightVelocityRF, _weightVelocityLH, _weightVelocityRH;
+
+        // Debug data
         private readonly IKDebugData _leftFootDebugData = new IKDebugData();
         private readonly IKDebugData _rightFootDebugData = new IKDebugData();
         private readonly IKDebugData _leftHandDebugData = new IKDebugData();
         private readonly IKDebugData _rightHandDebugData = new IKDebugData();
 
-        [System.Serializable]
         private class IKDebugData
         {
             public bool IsActive;
@@ -43,12 +58,6 @@ namespace Orion
             public Vector3 HitNormal;
             public Vector3 TargetIKPosition;
             public Vector3 OriginalLimbPosition;
-
-            public void Reset()
-            {
-                IsActive = false;
-                HitFound = false;
-            }
         }
 
         private void Awake()
@@ -57,173 +66,160 @@ namespace Orion
             if (_playerController == null)
             {
                 enabled = false;
+                _enableIK = false;
             }
+        }
+
+        private void Update()
+        {
+            if (!_enableIK) return;
+            UpdateIKTargetWeights();
+            SmoothIKWeights();
         }
 
         private void OnAnimatorIK(int layerIndex)
         {
-            if (!_playerController || !_animator) return;
+            if (!_enableIK || !_animator) return;
 
-            _leftFootDebugData.Reset();
-            _rightFootDebugData.Reset();
-            _leftHandDebugData.Reset();
-            _rightHandDebugData.Reset();
+            ResetAllDebugData();
 
-            if (_enableFootIK)
-            {
-                HandleFootIK();
-            }
-
-            if (_enableHandIK)
-            {
-                HandleHandIK();
-            }
+            ProcessFootIK(AvatarIKGoal.LeftFoot, _leftFootDebugData, _currentLeftFootWeight);
+            ProcessFootIK(AvatarIKGoal.RightFoot, _rightFootDebugData, _currentRightFootWeight);
+            ProcessHandIK(AvatarIKGoal.LeftHand, _leftHandDebugData, _currentLeftHandWeight, -transform.right);
+            ProcessHandIK(AvatarIKGoal.RightHand, _rightHandDebugData, _currentRightHandWeight, transform.right);
         }
 
-        private void HandleFootIK()
+        private void UpdateIKTargetWeights()
         {
-            bool shouldApplyIK = _playerController.IsGrounded || _playerController.CurrentState == _playerController.WallRunState;
-            if (!shouldApplyIK)
-            {
-                ResetIKWeight(AvatarIKGoal.LeftFoot);
-                ResetIKWeight(AvatarIKGoal.RightFoot);
-                return;
-            }
+            bool isGrounded = _playerController.IsGrounded;
+            bool isWallRunning = _playerController.CurrentState == _playerController.WallRunState;
 
-            ApplyIKForFoot(AvatarIKGoal.LeftFoot, _leftFootDebugData);
-            ApplyIKForFoot(AvatarIKGoal.RightFoot, _rightFootDebugData);
+            _targetLeftFootWeight = (isGrounded || (isWallRunning && !_playerController.IsWallRunningOnRight)) ? 1f : 0f;
+            _targetRightFootWeight = (isGrounded || (isWallRunning && _playerController.IsWallRunningOnRight)) ? 1f : 0f;
+
+            _targetLeftHandWeight = (isWallRunning && !_playerController.IsWallRunningOnRight) ? 1f : 0f;
+            _targetRightHandWeight = (isWallRunning && _playerController.IsWallRunningOnRight) ? 1f : 0f;
         }
 
-        private void ApplyIKForFoot(AvatarIKGoal foot, IKDebugData debugData)
+        private void SmoothIKWeights()
         {
-            debugData.IsActive = true;
+            float blendDuration = 1f / _ikBlendSpeed;
+            float deltaTime = Time.deltaTime;
+
+            _currentLeftFootWeight = Mathf.SmoothDamp(_currentLeftFootWeight, _targetLeftFootWeight, ref _weightVelocityLF, blendDuration, Mathf.Infinity, deltaTime);
+            _currentRightFootWeight = Mathf.SmoothDamp(_currentRightFootWeight, _targetRightFootWeight, ref _weightVelocityRF, blendDuration, Mathf.Infinity, deltaTime);
+            _currentLeftHandWeight = Mathf.SmoothDamp(_currentLeftHandWeight, _targetLeftHandWeight, ref _weightVelocityLH, blendDuration, Mathf.Infinity, deltaTime);
+            _currentRightHandWeight = Mathf.SmoothDamp(_currentRightHandWeight, _targetRightHandWeight, ref _weightVelocityRH, blendDuration, Mathf.Infinity, deltaTime);
+        }
+
+        private void ProcessFootIK(AvatarIKGoal foot, IKDebugData debugData, float weight)
+        {
             debugData.OriginalLimbPosition = _animator.GetIKPosition(foot);
+            debugData.IsActive = weight > 0.01f;
+
+            _animator.SetIKPositionWeight(foot, weight * _footIKPositionWeight);
+            _animator.SetIKRotationWeight(foot, weight * _footIKRotationWeight);
+
+            if (!debugData.IsActive) return;
 
             Vector3 rayOrigin = debugData.OriginalLimbPosition + Vector3.up * _footRaycastOriginOffset;
-
             debugData.RaycastOrigin = rayOrigin;
             debugData.RaycastDirection = Vector3.down;
             debugData.RaycastLength = _footRaycastDistance;
 
-            bool hitFound = Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, _footRaycastDistance, _ikLayerMask);
-            debugData.HitFound = hitFound;
+            debugData.HitFound = Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, _footRaycastDistance, _ikLayerMask);
 
-            if (hitFound)
+            if (debugData.HitFound)
             {
-                _animator.SetIKPositionWeight(foot, _footIKPositionWeight);
-                _animator.SetIKRotationWeight(foot, _footIKRotationWeight);
-
-                Vector3 targetPosition = hit.point + new Vector3(0, _footYOffset, 0);
-                _animator.SetIKPosition(foot, targetPosition);
-
+                Vector3 targetPosition = CalculateIntelligentFootPosition(foot, debugData.OriginalLimbPosition, hit);
                 Quaternion targetRotation = Quaternion.FromToRotation(Vector3.up, hit.normal) * _animator.GetIKRotation(foot);
+
+                _animator.SetIKPosition(foot, targetPosition);
                 _animator.SetIKRotation(foot, targetRotation);
 
-                debugData.HitPoint = hit.point;
-                debugData.HitNormal = hit.normal;
-                debugData.TargetIKPosition = targetPosition;
-            }
-            else
-            {
-                ResetIKWeight(foot);
+                UpdateDebugHitData(debugData, hit, targetPosition);
             }
         }
 
-        // >>> LOGIC ĐÃ ĐƯỢC CẤU TRÚC LẠI HOÀN TOÀN <<<
-        private void HandleHandIK()
+        private void ProcessHandIK(AvatarIKGoal hand, IKDebugData debugData, float weight, Vector3 raycastDirection)
         {
-            bool isWallRunning = _playerController.CurrentState == _playerController.WallRunState;
+            debugData.OriginalLimbPosition = _animator.GetIKPosition(hand);
+            debugData.IsActive = weight > 0.01f;
 
-            // Luôn cập nhật vị trí gốc của tay cho Gizmos
-            _leftHandDebugData.OriginalLimbPosition = _animator.GetIKPosition(AvatarIKGoal.LeftHand);
-            _rightHandDebugData.OriginalLimbPosition = _animator.GetIKPosition(AvatarIKGoal.RightHand);
+            _animator.SetIKPositionWeight(hand, weight * _handIKPositionWeight);
+            _animator.SetIKRotationWeight(hand, weight * _handIKRotationWeight);
 
-            if (!isWallRunning)
-            {
-                ResetIKWeight(AvatarIKGoal.LeftHand);
-                ResetIKWeight(AvatarIKGoal.RightHand);
-                return;
-            }
+            if (!debugData.IsActive) return;
 
-            bool isWallOnRight = _playerController.IsWallRunningOnRight;
-            if (isWallOnRight)
-            {
-                ApplyIKForHand(AvatarIKGoal.RightHand, _rightHandDebugData);
-                ResetIKWeight(AvatarIKGoal.LeftHand);
-            }
-            else
-            {
-                ApplyIKForHand(AvatarIKGoal.LeftHand, _leftHandDebugData);
-                ResetIKWeight(AvatarIKGoal.RightHand);
-            }
-        }
-
-        private void ApplyIKForHand(AvatarIKGoal hand, IKDebugData debugData)
-        {
-            debugData.IsActive = true;
-
-            bool isRightHand = (hand == AvatarIKGoal.RightHand);
-            Vector3 raycastDirection = isRightHand ? transform.right : -transform.right;
-            Vector3 raycastOrigin = transform.position + _handRaycastOriginOffset;
-
-            debugData.RaycastOrigin = raycastOrigin;
+            Vector3 rayOrigin = debugData.OriginalLimbPosition - raycastDirection * 0.2f + Vector3.up * 0.1f; // Start raycast slightly behind the hand
+            debugData.RaycastOrigin = rayOrigin;
             debugData.RaycastDirection = raycastDirection;
             debugData.RaycastLength = _handRaycastDistance;
 
-            bool hitFound = Physics.Raycast(raycastOrigin, raycastDirection, out RaycastHit hit, _handRaycastDistance, _ikLayerMask);
-            debugData.HitFound = hitFound;
+            debugData.HitFound = Physics.Raycast(rayOrigin, raycastDirection, out RaycastHit hit, _handRaycastDistance, _ikLayerMask);
 
-            if (hitFound)
+            if (debugData.HitFound)
             {
-                _animator.SetIKPositionWeight(hand, _handIKPositionWeight);
-                _animator.SetIKRotationWeight(hand, _handIKRotationWeight);
-
-                Vector3 targetPosition = hit.point;
-                _animator.SetIKPosition(hand, targetPosition);
-
-                // Sử dụng pháp tuyến thực tế của tường để xoay bàn tay
+                Vector3 targetPosition = hit.point + hit.normal * _handPlacementOffset;
                 Quaternion targetRotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
+
+                _animator.SetIKPosition(hand, targetPosition);
                 _animator.SetIKRotation(hand, targetRotation);
 
-                debugData.HitPoint = hit.point;
-                debugData.HitNormal = hit.normal;
-                debugData.TargetIKPosition = targetPosition;
-            }
-            else
-            {
-                ResetIKWeight(hand);
+                UpdateDebugHitData(debugData, hit, targetPosition);
             }
         }
-        // >>> KẾT THÚC THAY ĐỔI <<<
 
-        private void ResetIKWeight(AvatarIKGoal goal)
+        private Vector3 CalculateIntelligentFootPosition(AvatarIKGoal foot, Vector3 originalFootPosition, RaycastHit hit)
         {
-            _animator.SetIKPositionWeight(goal, 0);
-            _animator.SetIKRotationWeight(goal, 0);
+            Vector3 targetPosition = hit.point;
+
+            HumanBodyBones bone = (foot == AvatarIKGoal.LeftFoot) ? HumanBodyBones.LeftFoot : HumanBodyBones.RightFoot;
+            Transform ankleTransform = _animator.GetBoneTransform(bone);
+
+            Vector3 horizontalOffset = Vector3.ProjectOnPlane(originalFootPosition - ankleTransform.position, Vector3.up);
+
+            targetPosition += horizontalOffset;
+            targetPosition.y += _footYOffset;
+
+            float slopeAngle = Vector3.Angle(Vector3.up, hit.normal);
+            if (slopeAngle > 1f)
+            {
+                Vector3 forwardDirection = Vector3.ProjectOnPlane(transform.forward, hit.normal).normalized;
+                targetPosition += forwardDirection * _footForwardOffset * Mathf.Sin(slopeAngle * Mathf.Deg2Rad);
+            }
+
+            return targetPosition;
+        }
+
+        private void ResetAllDebugData()
+        {
+            _leftFootDebugData.IsActive = false;
+            _rightFootDebugData.IsActive = false;
+            _leftHandDebugData.IsActive = false;
+            _rightHandDebugData.IsActive = false;
+        }
+
+        private void UpdateDebugHitData(IKDebugData data, RaycastHit hit, Vector3 targetPos)
+        {
+            data.HitPoint = hit.point;
+            data.HitNormal = hit.normal;
+            data.TargetIKPosition = targetPos;
         }
 
         private void OnDrawGizmosSelected()
         {
             if (!Application.isPlaying || _animator == null) return;
 
-            DrawIKGizmosForLimb(_leftFootDebugData, Color.green, "Left Foot");
-            DrawIKGizmosForLimb(_rightFootDebugData, Color.cyan, "Right Foot");
-            DrawIKGizmosForLimb(_leftHandDebugData, Color.magenta, "Left Hand");
-            DrawIKGizmosForLimb(_rightHandDebugData, Color.yellow, "Right Hand");
+            DrawIKGizmosForLimb(_leftFootDebugData, Color.green);
+            DrawIKGizmosForLimb(_rightFootDebugData, Color.cyan);
+            DrawIKGizmosForLimb(_leftHandDebugData, Color.magenta);
+            DrawIKGizmosForLimb(_rightHandDebugData, Color.yellow);
         }
 
-        private void DrawIKGizmosForLimb(IKDebugData debugData, Color gizmoColor, string limbName)
+        private void DrawIKGizmosForLimb(IKDebugData debugData, Color gizmoColor)
         {
-            // Vẽ vị trí gốc của chi (nếu không hoạt động)
-            if (!debugData.IsActive)
-            {
-                if (limbName.Contains("Hand")) // Chỉ vẽ cho tay để tránh rối
-                {
-                    Gizmos.color = Color.gray;
-                    Gizmos.DrawWireSphere(debugData.OriginalLimbPosition, 0.05f);
-                }
-                return;
-            }
+            if (!debugData.IsActive) return;
 
             Gizmos.color = gizmoColor;
             Gizmos.DrawWireSphere(debugData.RaycastOrigin, 0.05f);
@@ -231,13 +227,10 @@ namespace Orion
             if (debugData.HitFound)
             {
                 Gizmos.DrawLine(debugData.RaycastOrigin, debugData.HitPoint);
-
                 Gizmos.color = Color.white;
                 Gizmos.DrawSphere(debugData.HitPoint, 0.03f);
-
                 Gizmos.color = Color.blue;
                 Gizmos.DrawRay(debugData.HitPoint, debugData.HitNormal * 0.3f);
-
                 Gizmos.color = gizmoColor;
                 Gizmos.DrawCube(debugData.TargetIKPosition, Vector3.one * 0.1f);
             }
