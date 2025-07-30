@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5980986578008110427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cd886cb566070f4d8b62d6df8c12993, type: 3}
+  m_Name: XRayRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    OccluderLayerMask:
+      m_Bits: 1
 --- !u!114 &-3807376484010879209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,7 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aefbbfbe76beef947a1c8888b59f71c2, type: 3}
   m_Name: EdgeDetectionFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     algorithm: 2
     renderPassEvent: 500
@@ -129,7 +145,7 @@ MonoBehaviour:
     outlineThickness: 1
     depthSensitivity: 0
     normalSensitivity: 0.25
-    luminanceSensitivity: 0
+    luminanceSensitivity: 0.75
   edgeDetectionShader: {fileID: 4800000, guid: 3d8607ad1cbd45642b2e05ae14903f34, type: 3}
 --- !u!114 &3899579887225231287
 MonoBehaviour:
@@ -152,6 +168,24 @@ MonoBehaviour:
       surfaceData: 2
     screenSpaceSettings:
       normalBlend: 0
+--- !u!114 &4015388684882384338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bced2d5942ce2e243b13d3b0f5d25dca, type: 3}
+  m_Name: XRayStencilWriterFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    objectLayerMask:
+      m_Bits: 0
+    xrayMaterial: {fileID: 0}
+    passEvent: 300
 --- !u!114 &4240944545590055798
 MonoBehaviour:
   m_ObjectHideFlags: 0
