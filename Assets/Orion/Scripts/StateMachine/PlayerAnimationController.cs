@@ -1,3 +1,5 @@
+// Assets/Orion/Scripts/StateMachine/PlayerAnimationController.cs
+
 using UnityEngine;
 
 namespace Orion
@@ -17,6 +19,15 @@ namespace Orion
         private static readonly int JumpHash = Animator.StringToHash("jump");
         private static readonly int DashHash = Animator.StringToHash("dash");
         private static readonly int SlideHash = Animator.StringToHash("slide");
+
+        private static readonly int IsWeaponDrawnHash = Animator.StringToHash("isWeaponDrawn");
+        private static readonly int DrawWeaponHash = Animator.StringToHash("drawWeapon");
+        private static readonly int AttackHash = Animator.StringToHash("attack");
+        private static readonly int AttackComboStepHash = Animator.StringToHash("attackComboStep");
+        private static readonly int IsParryingHash = Animator.StringToHash("isParrying");
+        private static readonly int HeavyAttackHash = Animator.StringToHash("heavyAttack");
+        private static readonly int TakeDamageHash = Animator.StringToHash("takeDamage");
+        private static readonly int HitDirectionHash = Animator.StringToHash("hitDirection");
 
         private void Awake()
         {
@@ -69,5 +80,23 @@ namespace Orion
         public void TriggerJump() => _animator.SetTrigger(JumpHash);
         public void TriggerDash() => _animator.SetTrigger(DashHash);
         public void TriggerSlide() => _animator.SetTrigger(SlideHash);
+
+        public void SetWeaponDrawn(bool isDrawn) => _animator.SetBool(IsWeaponDrawnHash, isDrawn);
+        public void TriggerDrawWeapon() => _animator.SetTrigger(DrawWeaponHash);
+
+        public void TriggerAttack(int comboStep)
+        {
+            _animator.SetInteger(AttackComboStepHash, comboStep);
+            _animator.SetTrigger(AttackHash);
+        }
+
+        public void TriggerHeavyAttack() => _animator.SetTrigger(HeavyAttackHash);
+        public void SetParrying(bool isParrying) => _animator.SetBool(IsParryingHash, isParrying);
+
+        public void TriggerTakeDamage(float direction)
+        {
+            _animator.SetFloat(HitDirectionHash, direction);
+            _animator.SetTrigger(TakeDamageHash);
+        }
     }
 }

@@ -1,7 +1,15 @@
+// Assets/Orion/Scripts/Player/PlayerController.cs
+
 using UnityEngine;
 
 namespace Orion
 {
+    public enum WeaponState
+    {
+        Sheathed,
+        Drawn
+    }
+
     [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(InputHandler))]
     public class PlayerController : MonoBehaviour
     {
@@ -29,7 +37,6 @@ namespace Orion
         [Header("Ground Detection")]
         [field: SerializeField] public LayerMask GroundLayer { get; private set; }
         [field: SerializeField] public float GroundCheckDistance { get; private set; } = 0.2f;
-        [Tooltip("The amount of time the character remains in the 'grounded' state after losing contact with the ground. Prevents animation jitter on uneven surfaces.")]
         [field: SerializeField] public float GroundedLingerTime { get; private set; } = 0.1f;
 
         [Header("Crouch & Slide Stats")]
@@ -74,8 +81,15 @@ namespace Orion
         [field: SerializeField] public Vector3 LedgeClimbStandPositionOffset { get; private set; } = new Vector3(0, 0, 0.3f);
         [field: SerializeField] public LayerMask LedgeLayer { get; private set; }
 
+        [Header("Combat Stats")]
+        [field: SerializeField] public float MaxParryFocus { get; private set; } = 100f;
+        [field: SerializeField] public float ParryFocusGain { get; private set; } = 35f;
+        [field: SerializeField] public float AttackComboWindow { get; private set; } = 0.5f;
+
         public State CurrentState => MovementStateMachine.CurrentState;
         public bool IsWallRunningOnRight => WallRunState.IsWallOnRight;
+        public bool IsWallRunning => MovementStateMachine.CurrentState == WallRunState;
+
         public StateMachine MovementStateMachine { get; private set; }
         public PlayerGroundedState GroundedState { get; private set; }
         public PlayerJumpState JumpState { get; private set; }
@@ -84,6 +98,10 @@ namespace Orion
         public PlayerLedgeClimbState LedgeClimbState { get; private set; }
         public PlayerDashState DashState { get; private set; }
         public PlayerActiveSlideState ActiveSlideState { get; private set; }
+        public PlayerDrawWeaponState DrawWeaponState { get; private set; }
+        public PlayerAttackState AttackState { get; private set; }
+        public PlayerParryState ParryState { get; private set; }
+        public PlayerDamagedState DamagedState { get; private set; }
 
         public bool LockOrientation { get; set; }
         public Vector3 CurrentVelocity => Rigidbody.linearVelocity;
@@ -91,6 +109,10 @@ namespace Orion
         public float JumpBufferCounter { get; set; }
         public bool IsGrounded { get; private set; }
         public float DefaultColliderHeight { get; private set; }
+
+        public WeaponState CurrentWeaponState { get; set; } = WeaponState.Sheathed;
+        public float CurrentParryFocus { get; set; }
+        public int AttackComboCounter { get; set; }
 
         private Vector3 _groundHitNormal;
         private float _groundedLingerTimer;
@@ -137,17 +159,16 @@ namespace Orion
             LedgeClimbState = new PlayerLedgeClimbState(this, MovementStateMachine);
             DashState = new PlayerDashState(this, MovementStateMachine);
             ActiveSlideState = new PlayerActiveSlideState(this, MovementStateMachine);
+            DrawWeaponState = new PlayerDrawWeaponState(this, MovementStateMachine);
+            AttackState = new PlayerAttackState(this, MovementStateMachine);
+            ParryState = new PlayerParryState(this, MovementStateMachine);
+            DamagedState = new PlayerDamagedState(this, MovementStateMachine);
         }
 
-        // >>> THAY ĐỔI LOGIC <<<
-        // Logic quản lý timer đã được làm lại cho chính xác.
         private void UpdateTimers()
         {
-            // Jump Buffer luôn được đếm ngược.
             JumpBufferCounter -= Time.deltaTime;
 
-            // Coyote Time chỉ đếm ngược khi người chơi ở trên không.
-            // Khi ở dưới đất, nó luôn được nạp đầy.
             if (IsGrounded)
             {
                 CoyoteTimeCounter = CoyoteTime;
@@ -249,6 +270,29 @@ namespace Orion
         }
 
         public Vector3 GetGroundNormal() => _groundHitNormal;
+
+        public bool HasMaxParryFocus() => CurrentParryFocus >= MaxParryFocus;
+
+        public void AddParryFocus()
+        {
+            CurrentParryFocus = Mathf.Clamp(CurrentParryFocus + ParryFocusGain, 0, MaxParryFocus);
+        }
+
+        public void ResetParryFocus()
+        {
+            CurrentParryFocus = 0f;
+        }
+
+        public void OnTakeDamage(Vector3 attackSourcePosition)
+        {
+            if (MovementStateMachine.CurrentState == DamagedState) return;
+
+            Vector3 directionToAttacker = (transform.position - attackSourcePosition).normalized;
+            float dotProduct = Vector3.Dot(transform.right, directionToAttacker);
+
+            DamagedState.SetHitDirection(dotProduct > 0 ? 1f : -1f);
+            MovementStateMachine.ChangeState(DamagedState);
+        }
 
         private void OnDrawGizmosSelected()
         {

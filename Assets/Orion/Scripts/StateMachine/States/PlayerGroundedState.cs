@@ -1,3 +1,5 @@
+// Assets/Orion/Scripts/StateMachine/States/PlayerGroundedState.cs
+
 namespace Orion
 {
     public class PlayerGroundedState : State
@@ -39,6 +41,27 @@ namespace Orion
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            if (player.Input.DrawWeaponWasPressed)
+            {
+                stateMachine.ChangeState(player.DrawWeaponState);
+                return;
+            }
+
+            if (player.CurrentWeaponState == WeaponState.Drawn)
+            {
+                if (player.Input.ParryIsHeld)
+                {
+                    stateMachine.ChangeState(player.ParryState);
+                    return;
+                }
+
+                if (player.Input.AttackWasPressed || (player.Input.HeavyAttackWasPressed && player.HasMaxParryFocus()))
+                {
+                    stateMachine.ChangeState(player.AttackState);
+                    return;
+                }
+            }
 
             if (player.Input.JumpWasPressed)
             {

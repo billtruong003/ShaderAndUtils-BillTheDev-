@@ -139,13 +139,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 0
   settings:
-    algorithm: 2
+    algorithm: 3
     renderPassEvent: 500
     outlineColor: {r: 0, g: 0, b: 0, a: 1}
     outlineThickness: 1
     depthSensitivity: 0
-    normalSensitivity: 0.25
-    luminanceSensitivity: 0.75
+    normalSensitivity: 1
+    luminanceSensitivity: 0
   edgeDetectionShader: {fileID: 4800000, guid: 3d8607ad1cbd45642b2e05ae14903f34, type: 3}
 --- !u!114 &3899579887225231287
 MonoBehaviour:

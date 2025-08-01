@@ -14,6 +14,12 @@ namespace Orion
         public bool CrouchWasPressed { get; private set; }
         public bool CrouchIsHeld { get; private set; }
 
+        // --- NEW COMBAT INPUTS ---
+        public bool DrawWeaponWasPressed { get; private set; }
+        public bool AttackWasPressed { get; private set; }
+        public bool HeavyAttackWasPressed { get; private set; }
+        public bool ParryIsHeld { get; private set; }
+
 
         public void OnMove(InputAction.CallbackContext context)
         {
@@ -59,9 +65,43 @@ namespace Orion
             CrouchIsHeld = context.performed;
         }
 
+        // --- NEW COMBAT INPUT METHODS ---
+        public void OnDrawWeapon(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                DrawWeaponWasPressed = true;
+            }
+        }
+
+        public void OnAttack(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                AttackWasPressed = true;
+            }
+        }
+
+        public void OnHeavyAttack(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                HeavyAttackWasPressed = true;
+            }
+        }
+
+        public void OnParry(InputAction.CallbackContext context)
+        {
+            ParryIsHeld = context.performed;
+        }
+
+
         public void UseJumpInput() => JumpWasPressed = false;
         public void UseTetherInput() => TetherButtonWasPressed = false;
         public void UseDashInput() => DashWasPressed = false;
         public void UseCrouchInput() => CrouchWasPressed = false;
+        public void UseDrawWeaponInput() => DrawWeaponWasPressed = false;
+        public void UseAttackInput() => AttackWasPressed = false;
+        public void UseHeavyAttackInput() => HeavyAttackWasPressed = false;
     }
 }
