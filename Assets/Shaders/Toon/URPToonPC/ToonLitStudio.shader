@@ -1,9 +1,16 @@
-Shader "Toon/Lit Studio"
+Shader "Toon/Lit Studio Advanced"
 {
     Properties
     {
-        [Header(Main Shading Ramp)]
+        [Header(Surface Properties)]
         _BaseMap("Base Map (Albedo)", 2D) = "white" {}
+        [Toggle(_NORMALMAP_ON)] _EnableNormalMap("Enable Normal Map", Float) = 0
+        [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
+        _BumpScale("Normal Intensity", Range(0, 2)) = 1.0
+        [Toggle(_ALPHATEST_ON)] _EnableAlphaClip("Enable Alpha Clipping", Float) = 0
+        _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
+
+        [Header(Main Shading Ramp)]
         _HighlightColor("Highlight Color", Color) = (1,1,1,1)
         _MidtoneColor("Midtone Color", Color) = (0.8, 0.8, 0.8, 1)
         _ShadowColor("Shadow Color", Color) = (0.4, 0.4, 0.4, 1)
@@ -53,17 +60,24 @@ Shader "Toon/Lit Studio"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalPipeline" "Queue"="Geometry" }
+        Tags { "RenderType"="TransparentCutout" "RenderPipeline"="UniversalPipeline" "Queue"="AlphaTest" }
+
+        HLSLINCLUDE
+            #include "Assets\Shaders\Toon\URPToonPC\Includes\ToonLitStudioCore.hlsl"
+        ENDHLSL
 
         Pass
         {
             Name "ForwardLit"
             Tags { "LightMode"="UniversalForward" }
+            Cull Off // Tắt Cull để render 2 mặt, hữu ích cho tóc
 
             HLSLPROGRAM
-            #pragma vertex Vert
+            #pragma vertex MainVert
             #pragma fragment Frag
 
+            #pragma shader_feature_local_fragment _NORMALMAP_ON
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _USE_FAKE_LIGHT
             #pragma shader_feature_local_fragment _GRADIENT_AMBIENT_ON
             #pragma shader_feature_local_fragment _ADDITIONAL_LIGHTS_ON
@@ -72,65 +86,13 @@ Shader "Toon/Lit Studio"
             #pragma shader_feature_local_fragment _SPECULAR_ON
             #pragma shader_feature_local_fragment _RIM_LIGHT_ON
 
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-
-            struct Attributes
+            half4 Frag(Varyings input) : SV_TARGET
             {
-                float4 positionOS   : POSITION;
-                float3 normalOS     : NORMAL;
-                float2 uv           : TEXCOORD0;
-            };
-
-            struct Varyings
-            {
-                float4 positionCS   : SV_POSITION;
-                float3 positionWS   : TEXCOORD0;
-                float3 normalWS     : TEXCOORD1;
-                float2 uv           : TEXCOORD2;
-                half4 shadowCoord   : TEXCOORD3;
-            };
-
-            CBUFFER_START(UnityPerMaterial)
-                sampler2D _BaseMap; float4 _BaseMap_ST;
-                half4 _HighlightColor, _MidtoneColor, _ShadowColor;
-                half _HighlightThreshold, _ShadowThreshold, _RampSmoothness;
-                half4 _FakeLightDirection;
-                half4 _CustomShadowColor; half _ShadowTintInfluence;
-                half4 _SkyColor, _GroundColor; half _AmbientGradientPower;
-                half _AdditionalLightInfluence;
-                sampler2D _HatchingMap; half _HatchingTiling; half _HatchingVisibility;
-                sampler2D _MatcapMap; half _MatcapBlendMode; half4 _MatcapTint; half _MatcapIntensity;
-                half4 _SpecularColor; half _SpecularThreshold, _SpecularSmoothness;
-                half4 _RimColor; half _RimPower, _RimThreshold;
-            CBUFFER_END
-
-            Varyings Vert(Attributes input)
-            {
-                Varyings output;
-                VertexPositionInputs positionInputs = GetVertexPositionInputs(input.positionOS.xyz);
-                output.positionCS = positionInputs.positionCS;
-                output.positionWS = positionInputs.positionWS;
-                output.normalWS = TransformObjectToWorldNormal(input.normalOS);
-                output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
-                output.shadowCoord = GetShadowCoord(positionInputs);
-                return output;
-            }
-
-            half3 CalculateToonRamp(half NdotL, half3 lightColor)
-            {
-                half smoothness = _RampSmoothness * 0.5;
-                half highlightFactor = smoothstep(_HighlightThreshold - smoothness, _HighlightThreshold + smoothness, NdotL);
-                half shadowFactor = smoothstep(_ShadowThreshold - smoothness, _ShadowThreshold + smoothness, NdotL);
-                half3 rampColor = lerp(_ShadowColor.rgb, _MidtoneColor.rgb, shadowFactor);
-                rampColor = lerp(rampColor, _HighlightColor.rgb, highlightFactor);
-                return rampColor * lightColor;
-            }
-            
-            half4 Frag(Varyings input) : SV_Target
-            {
-                half3 normalWS = normalize(input.normalWS);
-                float3 viewDirWS = SafeNormalize(_WorldSpaceCameraPos - input.positionWS);
+                ApplyAlphaClip(input.uv);
+                
                 half4 baseColor = tex2D(_BaseMap, input.uv);
+                half3 normalWS = GetWorldNormal(input);
+                float3 viewDirWS = SafeNormalize(_WorldSpaceCameraPos - input.positionWS);
                 half3 finalLighting = half3(0,0,0);
                 
                 Light mainLight = GetMainLight(input.shadowCoord);
@@ -154,9 +116,8 @@ Shader "Toon/Lit Studio"
                     {
                         Light addLight = GetAdditionalLight(i, input.positionWS, input.shadowCoord);
                         half addNdotL = saturate(dot(normalWS, addLight.direction));
-                        half attenuation = addLight.distanceAttenuation * addLight.shadowAttenuation;
                         half3 addColor = CalculateToonRamp(addNdotL, addLight.color);
-                        finalLighting += addColor * attenuation * _AdditionalLightInfluence;
+                        finalLighting += addColor * addLight.distanceAttenuation * addLight.shadowAttenuation * _AdditionalLightInfluence;
                     }
                 #endif
 
@@ -184,9 +145,9 @@ Shader "Toon/Lit Studio"
                     float3 viewNormal = mul((float3x3)UNITY_MATRIX_V, normalWS);
                     float2 matcapUV = viewNormal.xy * 0.5 + 0.5;
                     half3 matcapColor = tex2D(_MatcapMap, matcapUV).rgb * _MatcapTint.rgb * _MatcapIntensity;
-                    if (_MatcapBlendMode < 0.5) finalColor += matcapColor; // Add
-                    else if (_MatcapBlendMode < 1.5) finalColor *= matcapColor; // Multiply
-                    else finalColor = lerp(finalColor, matcapColor, _MatcapTint.a); // Lerp
+                    if (_MatcapBlendMode < 0.5) finalColor += matcapColor;
+                    else if (_MatcapBlendMode < 1.5) finalColor *= matcapColor;
+                    else finalColor = lerp(finalColor, matcapColor, _MatcapTint.a);
                 #endif
 
                 #if _RIM_LIGHT_ON
@@ -201,50 +162,28 @@ Shader "Toon/Lit Studio"
 
                 return half4(finalColor, baseColor.a);
             }
-
             ENDHLSL
         }
+        
         Pass
         {
             Name "DepthNormals"
             Tags { "LightMode"="DepthNormals" }
 
             ZWrite On
-            Cull Back
+            Cull Off
 
             HLSLPROGRAM
-            #pragma vertex DepthNormalsVert
+            #pragma vertex MainVert
             #pragma fragment DepthNormalsFrag
-
-            #pragma shader_feature_local _ALPHACLIP_ON
-            #pragma shader_feature_local _SURFACETYPE_FOLIAGE
             
-            #include "Assets/Shaders/Toon/ToonUberBreakDownShader/Includes/ToonUberCore.hlsl"
+            #pragma shader_feature_local_fragment _NORMALMAP_ON
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
 
-            struct VaryingsDepthNormals
-            {
-                float4 positionCS   : SV_POSITION;
-                float3 normalWS     : TEXCOORD0;
-                float2 uv           : TEXCOORD1;
-            };
-            
-            VaryingsDepthNormals DepthNormalsVert(Attributes v)
-            {
-                VaryingsDepthNormals o;
-                #if defined(_SURFACETYPE_FOLIAGE)
-                    ApplyWind(v.positionOS.xyz, v.color);
-                #endif
-                o.positionCS = TransformObjectToHClip(v.positionOS.xyz);
-                o.normalWS = TransformObjectToWorldNormal(v.normalOS);
-                o.uv = TRANSFORM_TEX(v.uv, _BaseMap);
-                return o;
-            }
-
-            half4 DepthNormalsFrag(VaryingsDepthNormals i) : SV_TARGET
+            half4 DepthNormalsFrag(Varyings i) : SV_TARGET
             {
                 ApplyAlphaClip(i.uv);
-                
-                float3 normalWS = normalize(i.normalWS);
+                half3 normalWS = GetWorldNormal(i);
                 return float4(normalWS * 0.5 + 0.5, 1.0);
             }
             ENDHLSL

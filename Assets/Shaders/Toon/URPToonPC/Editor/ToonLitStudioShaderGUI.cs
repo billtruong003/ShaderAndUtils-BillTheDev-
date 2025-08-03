@@ -7,10 +7,11 @@ public class ToonLitStudioShaderGUI : ShaderGUI
     private MaterialEditor editor;
     private MaterialProperty[] properties;
 
+    private bool showSurfaceProps = true;
     private bool showMainRamp = true;
     private bool showLighting = true;
     private bool showArtistic = true;
-    private bool showSurface = true;
+    private bool showSurfaceEffects = true;
 
     private GUIStyle headerStyle;
     private GUIStyle sectionStyle;
@@ -45,11 +46,14 @@ public class ToonLitStudioShaderGUI : ShaderGUI
         this.editor = materialEditor;
         this.properties = properties;
         InitializeStyles();
-        DrawHeader("TOON LIT SHADER - STUDIO");
+
+        DrawHeader("TOON LIT SHADER - STUDIO ADVANCED");
+
+        DrawSurfacePropertiesSection();
         DrawMainRampSection();
         DrawLightingSection();
         DrawArtisticSection();
-        DrawSurfaceSection();
+        DrawSurfaceEffectsSection();
     }
 
     private void DrawHeader(string text)
@@ -73,19 +77,46 @@ public class ToonLitStudioShaderGUI : ShaderGUI
 
     private MaterialProperty FindProp(string name) => FindProperty(name, properties);
 
+    private void DrawSurfacePropertiesSection()
+    {
+        DrawSectionToggle("Surface Properties", ref showSurfaceProps);
+        if (showSurfaceProps)
+        {
+            EditorGUILayout.Space();
+            editor.TexturePropertySingleLine(new GUIContent("Base Map (Albedo)"), FindProp("_BaseMap"));
+
+            editor.ShaderProperty(FindProp("_EnableNormalMap"), "Enable Normal Map");
+            if (FindProp("_EnableNormalMap").floatValue > 0.5f)
+            {
+                EditorGUI.indentLevel++;
+                editor.TexturePropertySingleLine(new GUIContent("Normal Map"), FindProp("_BumpMap"));
+                editor.ShaderProperty(FindProp("_BumpScale"), "Normal Intensity");
+                EditorGUI.indentLevel--;
+            }
+
+            EditorGUILayout.Space();
+            editor.ShaderProperty(FindProp("_EnableAlphaClip"), "Enable Alpha Clipping");
+            if (FindProp("_EnableAlphaClip").floatValue > 0.5f)
+            {
+                EditorGUI.indentLevel++;
+                editor.ShaderProperty(FindProp("_Cutoff"), "Alpha Cutoff");
+                EditorGUI.indentLevel--;
+            }
+            EditorGUILayout.Space();
+        }
+    }
+
     private void DrawMainRampSection()
     {
         DrawSectionToggle("Main Shading Ramp", ref showMainRamp);
         if (showMainRamp)
         {
             EditorGUILayout.Space();
-            editor.TexturePropertySingleLine(new GUIContent("Base Map (Albedo)"), FindProp("_BaseMap"));
             editor.ColorProperty(FindProp("_HighlightColor"), "Highlight Color");
             editor.ColorProperty(FindProp("_MidtoneColor"), "Midtone Color");
             editor.ColorProperty(FindProp("_ShadowColor"), "Shadow Color");
             EditorGUILayout.Space();
 
-            // --- SỬA LỖI: Quay lại 2 slider độc lập với logic "đẩy" thông minh ---
             MaterialProperty shadowProp = FindProp("_ShadowThreshold");
             MaterialProperty highlightProp = FindProp("_HighlightThreshold");
 
@@ -95,7 +126,6 @@ public class ToonLitStudioShaderGUI : ShaderGUI
             editor.ShaderProperty(shadowProp, "Shadow Threshold");
             editor.ShaderProperty(highlightProp, "Highlight Threshold");
 
-            // Logic "đẩy" để slider không bị kẹt
             if (shadowProp.floatValue != oldShadowVal && shadowProp.floatValue > highlightProp.floatValue)
             {
                 highlightProp.floatValue = shadowProp.floatValue;
@@ -104,7 +134,6 @@ public class ToonLitStudioShaderGUI : ShaderGUI
             {
                 shadowProp.floatValue = highlightProp.floatValue;
             }
-            // --- KẾT THÚC SỬA LỖI ---
 
             editor.ShaderProperty(FindProp("_RampSmoothness"), "Ramp Smoothness");
             EditorGUILayout.Space();
@@ -174,9 +203,8 @@ public class ToonLitStudioShaderGUI : ShaderGUI
                 editor.TexturePropertySingleLine(new GUIContent("MatCap Map"), FindProp("_MatcapMap"));
 
                 var blendModeProp = FindProp("_MatcapBlendMode");
-                var currentMode = (MatcapBlendMode)blendModeProp.floatValue;
-                var newMode = (MatcapBlendMode)EditorGUILayout.EnumPopup("Blend Mode", currentMode);
-                if (newMode != currentMode)
+                var newMode = (MatcapBlendMode)EditorGUILayout.EnumPopup("Blend Mode", (MatcapBlendMode)blendModeProp.floatValue);
+                if ((float)newMode != blendModeProp.floatValue)
                 {
                     blendModeProp.floatValue = (float)newMode;
                 }
@@ -189,10 +217,10 @@ public class ToonLitStudioShaderGUI : ShaderGUI
         }
     }
 
-    private void DrawSurfaceSection()
+    private void DrawSurfaceEffectsSection()
     {
-        DrawSectionToggle("Surface Effects", ref showSurface);
-        if (showSurface)
+        DrawSectionToggle("Surface Effects", ref showSurfaceEffects);
+        if (showSurfaceEffects)
         {
             EditorGUILayout.Space();
             editor.ShaderProperty(FindProp("_EnableSpecular"), "Enable Specular Reflection");

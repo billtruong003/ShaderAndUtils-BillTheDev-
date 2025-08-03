@@ -22,6 +22,43 @@ MonoBehaviour:
   gain:
     m_OverrideState: 1
     m_Value: {x: 1, y: 1, z: 1, w: 0}
+--- !u!114 &-8312324219039098242
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da3cd3ac279593e47b4962e18757022d, type: 3}
+  m_Name: OutlineEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  outlineColor:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  outlineStrength:
+    m_OverrideState: 1
+    m_Value: 1
+  outlineWidth:
+    m_OverrideState: 1
+    m_Value: 2
+  outlineCutoffValue:
+    m_OverrideState: 1
+    m_Value: 0.001
+  outlineNearFadeOutLimits:
+    m_OverrideState: 1
+    m_Value: {x: 0.0001, y: 0.0001}
+  outlineFarFadeOutLimits:
+    m_OverrideState: 1
+    m_Value: {x: 10000, y: 10000}
+  fillStrength:
+    m_OverrideState: 1
+    m_Value: 1
+  fillColor:
+    m_OverrideState: 1
+    m_Value: {r: 0.90588, g: 0.90588, b: 0.83922, a: 1}
 --- !u!114 &-8270506406425502121
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -510,7 +547,7 @@ MonoBehaviour:
   - {fileID: -6288072647309666549}
   - {fileID: 7518938298396184218}
   - {fileID: -1410297666881709256}
-  - {fileID: 7446962686747778502}
+  - {fileID: -8312324219039098242}
 --- !u!114 &853819529557874667
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -899,6 +936,43 @@ MonoBehaviour:
   intensity:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &6396062328600100578
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da3cd3ac279593e47b4962e18757022d, type: 3}
+  m_Name: OutlineEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  outlineColor:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  outlineStrength:
+    m_OverrideState: 1
+    m_Value: 1
+  outlineWidth:
+    m_OverrideState: 1
+    m_Value: 2
+  outlineCutoffValue:
+    m_OverrideState: 1
+    m_Value: 0.001
+  outlineNearFadeOutLimits:
+    m_OverrideState: 1
+    m_Value: {x: 0.0001, y: 0.0001}
+  outlineFarFadeOutLimits:
+    m_OverrideState: 1
+    m_Value: {x: 10000, y: 10000}
+  fillStrength:
+    m_OverrideState: 1
+    m_Value: 1
+  fillColor:
+    m_OverrideState: 1
+    m_Value: {r: 0.90588, g: 0.90588, b: 0.83922, a: 1}
 --- !u!114 &6940869943325143175
 MonoBehaviour:
   m_ObjectHideFlags: 3

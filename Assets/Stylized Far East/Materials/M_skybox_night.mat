@@ -8,10 +8,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_skybox_night
-  m_Shader: {fileID: 108, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: aa099c4455b06b84d9e6180954f03d90, type: 3}
   m_Parent: {fileID: 2100000, guid: 2e435e6adc968e6458240111ffcb69ad, type: 2}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _FAKELIGHT_ON
   m_InvalidKeywords:
   - _MAPPING_LATITUDE_LONGITUDE_LAYOUT
   - _MIRRORONBACK_ON
@@ -36,3 +37,4 @@ Material:
     m_Colors:
     - _Tint: {r: 0.28279638, g: 0.320412, b: 0.38679248, a: 0.5}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

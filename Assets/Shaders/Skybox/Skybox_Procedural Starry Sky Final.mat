@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Skybox_Procedural Starry Sky Final
+  m_Shader: {fileID: 4800000, guid: f7d2e8e11e11a8748a7cbd96134cf25d, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _SKY_MODE_GRADIENT
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _NebulaTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _HorizonExponent: 2.5
+    - _NebulaIntensity: 0.3
+    - _NebulaScrollSpeed: 0.01
+    - _NebulaTiling: 0.2
+    - _SKY_MODE: 0
+    - _StarDensity: 0.995
+    - _StarIntensity: 1.5
+    - _StarTwinkleSpeed: 2
+    - _UseNebula: 0
+    m_Colors:
+    - _HorizonColor: {r: 0.14999998, g: 0.09999997, b: 0.19999996, a: 1}
+    - _NebulaColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SolidColor: {r: 0.079999976, g: 0.079999976, b: 0.17999998, a: 1}
+    - _TopColor: {r: 0.049999982, g: 0.049999982, b: 0.14999998, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

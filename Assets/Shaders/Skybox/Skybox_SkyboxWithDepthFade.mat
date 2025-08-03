@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Skybox_SkyboxWithDepthFade
+  m_Shader: {fileID: 4800000, guid: f7d2e8e11e11a8748a7cbd96134cf25d, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _SKY_MODE_GRADIENT
+  - _USE_NEBULA
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _NebulaTexture:
+        m_Texture: {fileID: 2800000, guid: b44ea59463ef6d941872d19b3faf784d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SkyboxTexture:
+        m_Texture: {fileID: 8900000, guid: dfd0286b4a7bd6441aa30628e9dce384, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarTexture:
+        m_Texture: {fileID: 2800000, guid: 33f1b3f760b6f1049a07253ffcab6b04, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _FadeEndDistance: 359.91
+    - _FadeExponent: 1.12
+    - _FadeStartDistance: 60.2
+    - _HorizonExponent: 1.16
+    - _NebulaIntensity: 0.95
+    - _NebulaScrollSpeed: 0.05
+    - _NebulaTiling: 1
+    - _SKY_MODE: 0
+    - _StarDensity: 0.9917
+    - _StarIntensity: 5
+    - _StarTiling: 100
+    - _StarTwinkleSpeed: 10
+    - _UseGradient: 0
+    - _UseNebula: 1
+    m_Colors:
+    - _BaseColor: {r: 0.42352942, g: 0.42352942, b: 0.42352942, a: 0.5}
+    - _HorizonColor: {r: 0, g: 0.042005725, b: 0.4339623, a: 1}
+    - _NebulaColor: {r: 0.079197526, g: 1, b: 0, a: 1}
+    - _SkyColor: {r: 0.19849297, g: 0.14484692, b: 0.3301887, a: 1}
+    - _SolidColor: {r: 0, g: 0, b: 1, a: 1}
+    - _TopColor: {r: 0.39646342, g: 0.0980392, b: 0.4, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
