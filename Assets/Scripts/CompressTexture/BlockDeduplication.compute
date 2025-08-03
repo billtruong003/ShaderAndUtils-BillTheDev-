@@ -1,0 +1,94 @@
+// Assets/Shaders/BlockDeduplication.compute
+#pragma kernel CalculateHashes
+#pragma kernel ReconstructImage
+
+// -- Inputs --
+Texture2D<float4> SourceTexture; // Sẽ được dùng bởi cả 2 kernel
+//StructuredBuffer<uint2> BlockIndexMap; // x = unique atlas index, y = original block index
+StructuredBuffer<uint2> BlockIndexMap;
+
+// -- Outputs --
+RWStructuredBuffer<uint2> Hashes; // Perceptual hash (64 bits) for each block
+RWTexture2D<float4> ResultTexture;
+
+// -- Parameters --
+uint Width;
+uint Height;
+uint BlockSize; // Should be 8
+
+// --- Kernel 1: Calculate Hashes ---
+// Logic này đã đúng và không thay đổi.
+[numthreads(8, 8, 1)]
+void CalculateHashes(uint3 id : SV_DispatchThreadID, uint3 groupID : SV_GroupID, uint3 groupThreadID : SV_GroupThreadID)
+{
+    groupshared float lumaValues[64];
+    uint index = groupThreadID.y * BlockSize + groupThreadID.x;
+    lumaValues[index] = dot(SourceTexture[id.xy].rgb, float3(0.299, 0.587, 0.114));
+    GroupMemoryBarrierWithGroupSync();
+
+    if (index == 0)
+    {
+        float totalLuma = 0;
+        for (uint i = 0; i < 64; i++) { totalLuma += lumaValues[i]; }
+        lumaValues[0] = totalLuma / 64.0;
+    }
+    GroupMemoryBarrierWithGroupSync();
+    
+    float averageLuma = lumaValues[0];
+    
+    uint2 hash = uint2(0, 0);
+    if (lumaValues[index] >= averageLuma)
+    {
+        if (index < 32) { hash.x = 1 << index; }
+        else { hash.y = 1 << (index - 32); }
+    }
+
+    groupshared uint2 hashParts[64];
+    hashParts[index] = hash;
+    GroupMemoryBarrierWithGroupSync();
+
+    if (index == 0)
+    {
+        uint2 finalHash = uint2(0, 0);
+        for(uint j = 0; j < 64; j++) { finalHash.x |= hashParts[j].x; finalHash.y |= hashParts[j].y; }
+        uint blockIndex = groupID.y * (Width / BlockSize) + groupID.x;
+        Hashes[blockIndex] = finalHash;
+    }
+}
+
+
+// --- SỬA LỖI LOGIC TRIỆT ĐỂ CHO KERNEL 2 ---
+// Tái tạo ảnh bằng cách đọc lại từ SourceTexture dựa trên bản đồ chỉ mục
+[numthreads(8, 8, 1)]
+void ReconstructImage(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= Width || id.y >= Height) return;
+
+    // 1. Tìm khối hiện tại mà pixel này thuộc về.
+    uint currentBlockX = id.x / BlockSize;
+    uint currentBlockY = id.y / BlockSize;
+    uint currentBlockIndex = currentBlockY * (Width / BlockSize) + currentBlockX;
+
+    // 2. Tra cứu bản đồ để tìm ra index GỐC của khối ĐẠI DIỆN.
+    // Dữ liệu này được C# chuẩn bị sẵn trong thành phần .y của map.
+    uint representativeBlockOriginalIndex = BlockIndexMap[currentBlockIndex].y;
+
+    // 3. Chuyển index gốc của khối đại diện về tọa độ 2D (dạng khối).
+    uint representativeBlockX = representativeBlockOriginalIndex % (Width / BlockSize);
+    uint representativeBlockY = representativeBlockOriginalIndex / (Width / BlockSize);
+    
+    // 4. Tính tọa độ pixel góc trên bên trái của khối đại diện đó.
+    uint representativeTopLeftX = representativeBlockX * BlockSize;
+    uint representativeTopLeftY = representativeBlockY * BlockSize;
+
+    // 5. Tìm vị trí tương đối của pixel hiện tại bên trong khối 8x8 của nó.
+    uint intraBlockOffsetX = id.x % BlockSize;
+    uint intraBlockOffsetY = id.y % BlockSize;
+
+    // 6. Tọa độ cuối cùng để lấy mẫu chính là vị trí của khối đại diện cộng với vị trí tương đối.
+    uint finalSampleX = representativeTopLeftX + intraBlockOffsetX;
+    uint finalSampleY = representativeTopLeftY + intraBlockOffsetY;
+
+    // 7. Đọc màu từ SourceTexture tại tọa độ đã tính và ghi vào kết quả.
+    ResultTexture[id.xy] = SourceTexture[uint2(finalSampleX, finalSampleY)];
+}

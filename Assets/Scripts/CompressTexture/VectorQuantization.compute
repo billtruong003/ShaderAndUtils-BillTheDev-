@@ -1,0 +1,43 @@
+// Assets/Shaders/VectorQuantization.compute
+#pragma kernel KMeans
+
+// SỬA LỖI: Đổi tên để rõ ràng, đây là đầu vào
+Texture2D<float4> PixelsInput; 
+
+// RWStructuredBuffer cho codebook vẫn chính xác
+RWStructuredBuffer<float4> Codebook;
+
+int Width;
+int Height;
+int CodebookSize;
+
+// RWTexture2D cho đầu ra vẫn chính xác
+RWTexture2D<float4> Result;
+
+[numthreads(8,8,1)]
+void KMeans (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= Width || id.y >= Height)
+    {
+        return;
+    }
+    
+    // Đọc pixel từ texture đầu vào
+    float4 currentPixel = PixelsInput[id.xy]; 
+    float minDistance = 1000000.0;
+    int closestIndex = 0;
+    
+    // Tìm màu gần nhất trong codebook
+    for (int i = 0; i < CodebookSize; i++)
+    {
+        float dist = distance(currentPixel, Codebook[i]);
+        if (dist < minDistance)
+        {
+            minDistance = dist;
+            closestIndex = i;
+        }
+    }
+    
+    // Ghi màu từ codebook vào texture đầu ra
+    Result[id.xy] = Codebook[closestIndex];
+}
