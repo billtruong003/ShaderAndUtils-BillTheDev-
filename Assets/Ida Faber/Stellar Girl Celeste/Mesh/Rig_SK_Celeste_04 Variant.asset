@@ -1,0 +1,1072 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c9c04639ae548bdb0a8e927492d029d, type: 3}
+  m_Name: Rig_SK_Celeste_04 Variant
+  m_EditorClassIdentifier: 
+  targetAnimator: {fileID: 9100000, guid: c889102d37279a84b961fbae6aea6c6f, type: 2}
+  inputConfig: {fileID: 0}
+  rigHierarchy:
+  - name: SK_Celeste_04 Variant
+    index: 0
+    isVirtual: 0
+  - name: HEAD_01
+    index: 1
+    isVirtual: 0
+  - name: SK_CELESTE_CARUNCLE_01
+    index: 2
+    isVirtual: 0
+  - name: SK_CELESTE_EYES_01
+    index: 3
+    isVirtual: 0
+  - name: SK_CELESTE_HEAD_01
+    index: 4
+    isVirtual: 0
+  - name: SK_CELESTE_LASHES_01
+    index: 5
+    isVirtual: 0
+  - name: SK_CELESTE_TEETH_01
+    index: 6
+    isVirtual: 0
+  - name: root
+    index: 7
+    isVirtual: 0
+  - name: ik_foot_root
+    index: 8
+    isVirtual: 0
+  - name: ik_foot_l
+    index: 9
+    isVirtual: 0
+  - name: ik_foot_r
+    index: 10
+    isVirtual: 0
+  - name: ik_hand_root
+    index: 11
+    isVirtual: 0
+  - name: ik_hand_gun
+    index: 12
+    isVirtual: 0
+  - name: ik_hand_l
+    index: 13
+    isVirtual: 0
+  - name: ik_hand_r
+    index: 14
+    isVirtual: 0
+  - name: pelvis
+    index: 15
+    isVirtual: 0
+  - name: spine_01
+    index: 16
+    isVirtual: 0
+  - name: skirt_back_01_l
+    index: 17
+    isVirtual: 0
+  - name: skirt_back_02_l
+    index: 18
+    isVirtual: 0
+  - name: skirt_back_03_l
+    index: 19
+    isVirtual: 0
+  - name: skirt_back_04_l
+    index: 20
+    isVirtual: 0
+  - name: skirt_back_05_l
+    index: 21
+    isVirtual: 0
+  - name: skirt_back_06_l
+    index: 22
+    isVirtual: 0
+  - name: skirt_back_01_r
+    index: 23
+    isVirtual: 0
+  - name: skirt_back_02_r
+    index: 24
+    isVirtual: 0
+  - name: skirt_back_03_r
+    index: 25
+    isVirtual: 0
+  - name: skirt_back_04_r
+    index: 26
+    isVirtual: 0
+  - name: skirt_back_05_r
+    index: 27
+    isVirtual: 0
+  - name: skirt_front_01_l
+    index: 28
+    isVirtual: 0
+  - name: skirt_front_02_l
+    index: 29
+    isVirtual: 0
+  - name: skirt_front_03_l
+    index: 30
+    isVirtual: 0
+  - name: skirt_front_04_l
+    index: 31
+    isVirtual: 0
+  - name: skirt_front_05_l
+    index: 32
+    isVirtual: 0
+  - name: skirt_front_06_l
+    index: 33
+    isVirtual: 0
+  - name: skirt_front_01_r
+    index: 34
+    isVirtual: 0
+  - name: skirt_front_02_r
+    index: 35
+    isVirtual: 0
+  - name: skirt_front_03_r
+    index: 36
+    isVirtual: 0
+  - name: skirt_front_04_r
+    index: 37
+    isVirtual: 0
+  - name: skirt_front_05_r
+    index: 38
+    isVirtual: 0
+  - name: skirt_front_06_r
+    index: 39
+    isVirtual: 0
+  - name: skirt_side_01_l
+    index: 40
+    isVirtual: 0
+  - name: skirt_side_02_l
+    index: 41
+    isVirtual: 0
+  - name: skirt_side_03_l
+    index: 42
+    isVirtual: 0
+  - name: skirt_side_04_l
+    index: 43
+    isVirtual: 0
+  - name: skirt_side_05_l
+    index: 44
+    isVirtual: 0
+  - name: skirt_side_06_l
+    index: 45
+    isVirtual: 0
+  - name: skirt_side_01_r
+    index: 46
+    isVirtual: 0
+  - name: skirt_side_02_r
+    index: 47
+    isVirtual: 0
+  - name: skirt_side_03_r
+    index: 48
+    isVirtual: 0
+  - name: skirt_side_04_r
+    index: 49
+    isVirtual: 0
+  - name: skirt_side_05_r
+    index: 50
+    isVirtual: 0
+  - name: skirt_side_06_r
+    index: 51
+    isVirtual: 0
+  - name: spine_02
+    index: 52
+    isVirtual: 0
+  - name: breast_l
+    index: 53
+    isVirtual: 0
+  - name: breast_r
+    index: 54
+    isVirtual: 0
+  - name: spine_03
+    index: 55
+    isVirtual: 0
+  - name: clavicle_l
+    index: 56
+    isVirtual: 0
+  - name: upperarm_l
+    index: 57
+    isVirtual: 0
+  - name: lowerarm_l
+    index: 58
+    isVirtual: 0
+  - name: hand_l
+    index: 59
+    isVirtual: 0
+  - name: index_01_l
+    index: 60
+    isVirtual: 0
+  - name: index_02_l
+    index: 61
+    isVirtual: 0
+  - name: index_03_l
+    index: 62
+    isVirtual: 0
+  - name: middle_01_l
+    index: 63
+    isVirtual: 0
+  - name: middle_02_l
+    index: 64
+    isVirtual: 0
+  - name: middle_03_l
+    index: 65
+    isVirtual: 0
+  - name: pinky_01_l
+    index: 66
+    isVirtual: 0
+  - name: pinky_02_l
+    index: 67
+    isVirtual: 0
+  - name: pinky_03_l
+    index: 68
+    isVirtual: 0
+  - name: ring_01_l
+    index: 69
+    isVirtual: 0
+  - name: ring_02_l
+    index: 70
+    isVirtual: 0
+  - name: ring_03_l
+    index: 71
+    isVirtual: 0
+  - name: thumb_01_l
+    index: 72
+    isVirtual: 0
+  - name: thumb_02_l
+    index: 73
+    isVirtual: 0
+  - name: thumb_03_l
+    index: 74
+    isVirtual: 0
+  - name: lowerarm_twist_01_l
+    index: 75
+    isVirtual: 0
+  - name: upperarm_twist_01_l
+    index: 76
+    isVirtual: 0
+  - name: clavicle_r
+    index: 77
+    isVirtual: 0
+  - name: upperarm_r
+    index: 78
+    isVirtual: 0
+  - name: lowerarm_r
+    index: 79
+    isVirtual: 0
+  - name: hand_r
+    index: 80
+    isVirtual: 0
+  - name: index_01_r
+    index: 81
+    isVirtual: 0
+  - name: index_02_r
+    index: 82
+    isVirtual: 0
+  - name: index_03_r
+    index: 83
+    isVirtual: 0
+  - name: middle_01_r
+    index: 84
+    isVirtual: 0
+  - name: middle_02_r
+    index: 85
+    isVirtual: 0
+  - name: middle_03_r
+    index: 86
+    isVirtual: 0
+  - name: pinky_01_r
+    index: 87
+    isVirtual: 0
+  - name: pinky_02_r
+    index: 88
+    isVirtual: 0
+  - name: pinky_03_r
+    index: 89
+    isVirtual: 0
+  - name: ring_01_r
+    index: 90
+    isVirtual: 0
+  - name: ring_02_r
+    index: 91
+    isVirtual: 0
+  - name: ring_03_r
+    index: 92
+    isVirtual: 0
+  - name: thumb_01_r
+    index: 93
+    isVirtual: 0
+  - name: thumb_02_r
+    index: 94
+    isVirtual: 0
+  - name: thumb_03_r
+    index: 95
+    isVirtual: 0
+  - name: lowerarm_twist_01_r
+    index: 96
+    isVirtual: 0
+  - name: upperarm_twist_01_r
+    index: 97
+    isVirtual: 0
+  - name: neck_01
+    index: 98
+    isVirtual: 0
+  - name: head
+    index: 99
+    isVirtual: 0
+  - name: eye_l
+    index: 100
+    isVirtual: 0
+  - name: eye_r
+    index: 101
+    isVirtual: 0
+  - name: hair_back_01_l
+    index: 102
+    isVirtual: 0
+  - name: hair_back_02_l
+    index: 103
+    isVirtual: 0
+  - name: hair_back_03_l
+    index: 104
+    isVirtual: 0
+  - name: hair_back_04_l
+    index: 105
+    isVirtual: 0
+  - name: hair_back_05_l
+    index: 106
+    isVirtual: 0
+  - name: hair_back_06_l
+    index: 107
+    isVirtual: 0
+  - name: hair_back_07_l
+    index: 108
+    isVirtual: 0
+  - name: hair_back_01_mid
+    index: 109
+    isVirtual: 0
+  - name: hair_back_02_mid
+    index: 110
+    isVirtual: 0
+  - name: hair_back_03_mid
+    index: 111
+    isVirtual: 0
+  - name: hair_back_04_mid
+    index: 112
+    isVirtual: 0
+  - name: hair_back_05_mid
+    index: 113
+    isVirtual: 0
+  - name: hair_back_06_mid
+    index: 114
+    isVirtual: 0
+  - name: hair_back_07_mid
+    index: 115
+    isVirtual: 0
+  - name: hair_back_01_r
+    index: 116
+    isVirtual: 0
+  - name: hair_back_02_r
+    index: 117
+    isVirtual: 0
+  - name: hair_back_03_r
+    index: 118
+    isVirtual: 0
+  - name: hair_back_04_r
+    index: 119
+    isVirtual: 0
+  - name: hair_back_05_r
+    index: 120
+    isVirtual: 0
+  - name: hair_back_06_r
+    index: 121
+    isVirtual: 0
+  - name: hair_back_07_r
+    index: 122
+    isVirtual: 0
+  - name: hair_front_01_l
+    index: 123
+    isVirtual: 0
+  - name: hair_front_02_l
+    index: 124
+    isVirtual: 0
+  - name: hair_front_03_l
+    index: 125
+    isVirtual: 0
+  - name: hair_front_04_l
+    index: 126
+    isVirtual: 0
+  - name: hair_front_05_l
+    index: 127
+    isVirtual: 0
+  - name: hair_front_06_l
+    index: 128
+    isVirtual: 0
+  - name: hair_front_01_r
+    index: 129
+    isVirtual: 0
+  - name: hair_front_02_r
+    index: 130
+    isVirtual: 0
+  - name: hair_front_03_r
+    index: 131
+    isVirtual: 0
+  - name: hair_front_04_r
+    index: 132
+    isVirtual: 0
+  - name: hair_front_05_r
+    index: 133
+    isVirtual: 0
+  - name: hair_front_06_r
+    index: 134
+    isVirtual: 0
+  - name: hair_ponytail_01
+    index: 135
+    isVirtual: 0
+  - name: hair_ponytail_02
+    index: 136
+    isVirtual: 0
+  - name: hair_ponytail_03
+    index: 137
+    isVirtual: 0
+  - name: hair_ponytail_04
+    index: 138
+    isVirtual: 0
+  - name: hair_ponytail_05
+    index: 139
+    isVirtual: 0
+  - name: hair_ponytail_06
+    index: 140
+    isVirtual: 0
+  - name: hair_ponytail_07
+    index: 141
+    isVirtual: 0
+  - name: thigh_l
+    index: 142
+    isVirtual: 0
+  - name: calf_l
+    index: 143
+    isVirtual: 0
+  - name: calf_twist_01_l
+    index: 144
+    isVirtual: 0
+  - name: foot_l
+    index: 145
+    isVirtual: 0
+  - name: ball_l
+    index: 146
+    isVirtual: 0
+  - name: thigh_twist_01_l
+    index: 147
+    isVirtual: 0
+  - name: thigh_r
+    index: 148
+    isVirtual: 0
+  - name: calf_r
+    index: 149
+    isVirtual: 0
+  - name: calf_twist_01_r
+    index: 150
+    isVirtual: 0
+  - name: foot_r
+    index: 151
+    isVirtual: 0
+  - name: ball_r
+    index: 152
+    isVirtual: 0
+  - name: thigh_twist_01_r
+    index: 153
+    isVirtual: 0
+  - name: SK_CELESTE_BODY_NECK
+    index: 154
+    isVirtual: 0
+  - name: SK_CELESTE_HAIR_01
+    index: 155
+    isVirtual: 0
+  - name: SK_CELESTE_SUIT
+    index: 156
+    isVirtual: 0
+  rigElementChains:
+  - chainName: SK_Celeste_04 Variant
+    elementChain:
+    - name: SK_Celeste_04 Variant
+      index: 0
+      isVirtual: 0
+  - chainName: HEAD_01
+    elementChain:
+    - name: HEAD_01
+      index: 1
+      isVirtual: 0
+  - chainName: SK_CELESTE_CARUNCLE_01
+    elementChain:
+    - name: SK_CELESTE_CARUNCLE_01
+      index: 2
+      isVirtual: 0
+  - chainName: SK_CELESTE_EYES_01
+    elementChain:
+    - name: SK_CELESTE_EYES_01
+      index: 3
+      isVirtual: 0
+  - chainName: SK_CELESTE_HEAD_01
+    elementChain:
+    - name: SK_CELESTE_HEAD_01
+      index: 4
+      isVirtual: 0
+  - chainName: SK_CELESTE_LASHES_01
+    elementChain:
+    - name: SK_CELESTE_LASHES_01
+      index: 5
+      isVirtual: 0
+  - chainName: SK_CELESTE_TEETH_01
+    elementChain:
+    - name: SK_CELESTE_TEETH_01
+      index: 6
+      isVirtual: 0
+  - chainName: root
+    elementChain:
+    - name: root
+      index: 7
+      isVirtual: 0
+  - chainName: ik_foot_root
+    elementChain:
+    - name: ik_foot_root
+      index: 8
+      isVirtual: 0
+  - chainName: ik_foot_l
+    elementChain:
+    - name: ik_foot_l
+      index: 9
+      isVirtual: 0
+  - chainName: ik_foot_r
+    elementChain:
+    - name: ik_foot_r
+      index: 10
+      isVirtual: 0
+  - chainName: ik_hand_root
+    elementChain:
+    - name: ik_hand_root
+      index: 11
+      isVirtual: 0
+    - name: ik_hand_gun
+      index: 12
+      isVirtual: 0
+  - chainName: ik_hand_l
+    elementChain:
+    - name: ik_hand_l
+      index: 13
+      isVirtual: 0
+  - chainName: ik_hand_r
+    elementChain:
+    - name: ik_hand_r
+      index: 14
+      isVirtual: 0
+  - chainName: pelvis
+    elementChain:
+    - name: pelvis
+      index: 15
+      isVirtual: 0
+  - chainName: spine_01
+    elementChain:
+    - name: spine_01
+      index: 16
+      isVirtual: 0
+  - chainName: skirt_back_01_l
+    elementChain:
+    - name: skirt_back_01_l
+      index: 17
+      isVirtual: 0
+    - name: skirt_back_02_l
+      index: 18
+      isVirtual: 0
+    - name: skirt_back_03_l
+      index: 19
+      isVirtual: 0
+    - name: skirt_back_04_l
+      index: 20
+      isVirtual: 0
+    - name: skirt_back_05_l
+      index: 21
+      isVirtual: 0
+    - name: skirt_back_06_l
+      index: 22
+      isVirtual: 0
+  - chainName: skirt_back_01_r
+    elementChain:
+    - name: skirt_back_01_r
+      index: 23
+      isVirtual: 0
+    - name: skirt_back_02_r
+      index: 24
+      isVirtual: 0
+    - name: skirt_back_03_r
+      index: 25
+      isVirtual: 0
+    - name: skirt_back_04_r
+      index: 26
+      isVirtual: 0
+    - name: skirt_back_05_r
+      index: 27
+      isVirtual: 0
+  - chainName: skirt_front_01_l
+    elementChain:
+    - name: skirt_front_01_l
+      index: 28
+      isVirtual: 0
+    - name: skirt_front_02_l
+      index: 29
+      isVirtual: 0
+    - name: skirt_front_03_l
+      index: 30
+      isVirtual: 0
+    - name: skirt_front_04_l
+      index: 31
+      isVirtual: 0
+    - name: skirt_front_05_l
+      index: 32
+      isVirtual: 0
+    - name: skirt_front_06_l
+      index: 33
+      isVirtual: 0
+  - chainName: skirt_front_01_r
+    elementChain:
+    - name: skirt_front_01_r
+      index: 34
+      isVirtual: 0
+    - name: skirt_front_02_r
+      index: 35
+      isVirtual: 0
+    - name: skirt_front_03_r
+      index: 36
+      isVirtual: 0
+    - name: skirt_front_04_r
+      index: 37
+      isVirtual: 0
+    - name: skirt_front_05_r
+      index: 38
+      isVirtual: 0
+    - name: skirt_front_06_r
+      index: 39
+      isVirtual: 0
+  - chainName: skirt_side_01_l
+    elementChain:
+    - name: skirt_side_01_l
+      index: 40
+      isVirtual: 0
+    - name: skirt_side_02_l
+      index: 41
+      isVirtual: 0
+    - name: skirt_side_03_l
+      index: 42
+      isVirtual: 0
+    - name: skirt_side_04_l
+      index: 43
+      isVirtual: 0
+    - name: skirt_side_05_l
+      index: 44
+      isVirtual: 0
+    - name: skirt_side_06_l
+      index: 45
+      isVirtual: 0
+  - chainName: skirt_side_01_r
+    elementChain:
+    - name: skirt_side_01_r
+      index: 46
+      isVirtual: 0
+    - name: skirt_side_02_r
+      index: 47
+      isVirtual: 0
+    - name: skirt_side_03_r
+      index: 48
+      isVirtual: 0
+    - name: skirt_side_04_r
+      index: 49
+      isVirtual: 0
+    - name: skirt_side_05_r
+      index: 50
+      isVirtual: 0
+    - name: skirt_side_06_r
+      index: 51
+      isVirtual: 0
+  - chainName: spine_02
+    elementChain:
+    - name: spine_02
+      index: 52
+      isVirtual: 0
+  - chainName: breast_l
+    elementChain:
+    - name: breast_l
+      index: 53
+      isVirtual: 0
+  - chainName: breast_r
+    elementChain:
+    - name: breast_r
+      index: 54
+      isVirtual: 0
+  - chainName: spine_03
+    elementChain:
+    - name: spine_03
+      index: 55
+      isVirtual: 0
+  - chainName: clavicle_l
+    elementChain:
+    - name: clavicle_l
+      index: 56
+      isVirtual: 0
+    - name: upperarm_l
+      index: 57
+      isVirtual: 0
+    - name: lowerarm_l
+      index: 58
+      isVirtual: 0
+    - name: hand_l
+      index: 59
+      isVirtual: 0
+  - chainName: index_01_l
+    elementChain:
+    - name: index_01_l
+      index: 60
+      isVirtual: 0
+    - name: index_02_l
+      index: 61
+      isVirtual: 0
+    - name: index_03_l
+      index: 62
+      isVirtual: 0
+  - chainName: middle_01_l
+    elementChain:
+    - name: middle_01_l
+      index: 63
+      isVirtual: 0
+    - name: middle_02_l
+      index: 64
+      isVirtual: 0
+    - name: middle_03_l
+      index: 65
+      isVirtual: 0
+  - chainName: pinky_01_l
+    elementChain:
+    - name: pinky_01_l
+      index: 66
+      isVirtual: 0
+    - name: pinky_02_l
+      index: 67
+      isVirtual: 0
+    - name: pinky_03_l
+      index: 68
+      isVirtual: 0
+  - chainName: ring_01_l
+    elementChain:
+    - name: ring_01_l
+      index: 69
+      isVirtual: 0
+    - name: ring_02_l
+      index: 70
+      isVirtual: 0
+    - name: ring_03_l
+      index: 71
+      isVirtual: 0
+  - chainName: thumb_01_l
+    elementChain:
+    - name: thumb_01_l
+      index: 72
+      isVirtual: 0
+    - name: thumb_02_l
+      index: 73
+      isVirtual: 0
+    - name: thumb_03_l
+      index: 74
+      isVirtual: 0
+  - chainName: clavicle_r
+    elementChain:
+    - name: clavicle_r
+      index: 77
+      isVirtual: 0
+    - name: upperarm_r
+      index: 78
+      isVirtual: 0
+    - name: lowerarm_r
+      index: 79
+      isVirtual: 0
+    - name: hand_r
+      index: 80
+      isVirtual: 0
+  - chainName: index_01_r
+    elementChain:
+    - name: index_01_r
+      index: 81
+      isVirtual: 0
+    - name: index_02_r
+      index: 82
+      isVirtual: 0
+    - name: index_03_r
+      index: 83
+      isVirtual: 0
+  - chainName: middle_01_r
+    elementChain:
+    - name: middle_01_r
+      index: 84
+      isVirtual: 0
+    - name: middle_02_r
+      index: 85
+      isVirtual: 0
+    - name: middle_03_r
+      index: 86
+      isVirtual: 0
+  - chainName: pinky_01_r
+    elementChain:
+    - name: pinky_01_r
+      index: 87
+      isVirtual: 0
+    - name: pinky_02_r
+      index: 88
+      isVirtual: 0
+    - name: pinky_03_r
+      index: 89
+      isVirtual: 0
+  - chainName: ring_01_r
+    elementChain:
+    - name: ring_01_r
+      index: 90
+      isVirtual: 0
+    - name: ring_02_r
+      index: 91
+      isVirtual: 0
+    - name: ring_03_r
+      index: 92
+      isVirtual: 0
+  - chainName: thumb_01_r
+    elementChain:
+    - name: thumb_01_r
+      index: 93
+      isVirtual: 0
+    - name: thumb_02_r
+      index: 94
+      isVirtual: 0
+    - name: thumb_03_r
+      index: 95
+      isVirtual: 0
+  - chainName: neck_01
+    elementChain:
+    - name: neck_01
+      index: 98
+      isVirtual: 0
+    - name: head
+      index: 99
+      isVirtual: 0
+  - chainName: eye_l
+    elementChain:
+    - name: eye_l
+      index: 100
+      isVirtual: 0
+  - chainName: eye_r
+    elementChain:
+    - name: eye_r
+      index: 101
+      isVirtual: 0
+  - chainName: hair_back_01_l
+    elementChain:
+    - name: hair_back_01_l
+      index: 102
+      isVirtual: 0
+    - name: hair_back_02_l
+      index: 103
+      isVirtual: 0
+    - name: hair_back_03_l
+      index: 104
+      isVirtual: 0
+    - name: hair_back_04_l
+      index: 105
+      isVirtual: 0
+    - name: hair_back_05_l
+      index: 106
+      isVirtual: 0
+    - name: hair_back_06_l
+      index: 107
+      isVirtual: 0
+    - name: hair_back_07_l
+      index: 108
+      isVirtual: 0
+  - chainName: hair_back_01_mid
+    elementChain:
+    - name: hair_back_01_mid
+      index: 109
+      isVirtual: 0
+    - name: hair_back_02_mid
+      index: 110
+      isVirtual: 0
+    - name: hair_back_03_mid
+      index: 111
+      isVirtual: 0
+    - name: hair_back_04_mid
+      index: 112
+      isVirtual: 0
+    - name: hair_back_05_mid
+      index: 113
+      isVirtual: 0
+    - name: hair_back_06_mid
+      index: 114
+      isVirtual: 0
+    - name: hair_back_07_mid
+      index: 115
+      isVirtual: 0
+  - chainName: hair_back_01_r
+    elementChain:
+    - name: hair_back_01_r
+      index: 116
+      isVirtual: 0
+    - name: hair_back_02_r
+      index: 117
+      isVirtual: 0
+    - name: hair_back_03_r
+      index: 118
+      isVirtual: 0
+    - name: hair_back_04_r
+      index: 119
+      isVirtual: 0
+    - name: hair_back_05_r
+      index: 120
+      isVirtual: 0
+    - name: hair_back_06_r
+      index: 121
+      isVirtual: 0
+    - name: hair_back_07_r
+      index: 122
+      isVirtual: 0
+  - chainName: hair_front_01_l
+    elementChain:
+    - name: hair_front_01_l
+      index: 123
+      isVirtual: 0
+    - name: hair_front_02_l
+      index: 124
+      isVirtual: 0
+    - name: hair_front_03_l
+      index: 125
+      isVirtual: 0
+    - name: hair_front_04_l
+      index: 126
+      isVirtual: 0
+    - name: hair_front_05_l
+      index: 127
+      isVirtual: 0
+    - name: hair_front_06_l
+      index: 128
+      isVirtual: 0
+  - chainName: hair_front_01_r
+    elementChain:
+    - name: hair_front_01_r
+      index: 129
+      isVirtual: 0
+    - name: hair_front_02_r
+      index: 130
+      isVirtual: 0
+    - name: hair_front_03_r
+      index: 131
+      isVirtual: 0
+    - name: hair_front_04_r
+      index: 132
+      isVirtual: 0
+    - name: hair_front_05_r
+      index: 133
+      isVirtual: 0
+    - name: hair_front_06_r
+      index: 134
+      isVirtual: 0
+  - chainName: hair_ponytail_01
+    elementChain:
+    - name: hair_ponytail_01
+      index: 135
+      isVirtual: 0
+    - name: hair_ponytail_02
+      index: 136
+      isVirtual: 0
+    - name: hair_ponytail_03
+      index: 137
+      isVirtual: 0
+    - name: hair_ponytail_04
+      index: 138
+      isVirtual: 0
+    - name: hair_ponytail_05
+      index: 139
+      isVirtual: 0
+    - name: hair_ponytail_06
+      index: 140
+      isVirtual: 0
+    - name: hair_ponytail_07
+      index: 141
+      isVirtual: 0
+  - chainName: thigh_l
+    elementChain:
+    - name: thigh_l
+      index: 142
+      isVirtual: 0
+    - name: calf_l
+      index: 143
+      isVirtual: 0
+    - name: foot_l
+      index: 145
+      isVirtual: 0
+    - name: ball_l
+      index: 146
+      isVirtual: 0
+  - chainName: thigh_r
+    elementChain:
+    - name: thigh_r
+      index: 148
+      isVirtual: 0
+    - name: calf_r
+      index: 149
+      isVirtual: 0
+    - name: foot_r
+      index: 151
+      isVirtual: 0
+    - name: ball_r
+      index: 152
+      isVirtual: 0
+  - chainName: SK_CELESTE_BODY_NECK
+    elementChain:
+    - name: SK_CELESTE_BODY_NECK
+      index: 154
+      isVirtual: 0
+  - chainName: SK_CELESTE_HAIR_01
+    elementChain:
+    - name: SK_CELESTE_HAIR_01
+      index: 155
+      isVirtual: 0
+  - chainName: SK_CELESTE_SUIT
+    elementChain:
+    - name: SK_CELESTE_SUIT
+      index: 156
+      isVirtual: 0
+  - chainName: PelvisChain
+    elementChain:
+    - name: pelvis
+      index: 15
+      isVirtual: 0
+  - chainName: SpineRootChain
+    elementChain:
+    - name: spine_01
+      index: 16
+      isVirtual: 0
+  - chainName: RightHandChain
+    elementChain:
+    - name: hand_r
+      index: 80
+      isVirtual: 0
+  - chainName: LeftHandChain
+    elementChain:
+    - name: hand_l
+      index: 59
+      isVirtual: 0
+  - chainName: RightFootChain
+    elementChain:
+    - name: foot_r
+      index: 151
+      isVirtual: 0
+  - chainName: LeftFootChain
+    elementChain:
+    - name: foot_l
+      index: 145
+      isVirtual: 0
+  rigCurves: []
+  rigDepths: 0000000001000000020000000200000002000000020000000200000001000000020000000300000003000000020000000300000004000000040000000200000003000000040000000500000006000000070000000800000009000000040000000500000006000000070000000800000004000000050000000600000007000000080000000900000004000000050000000600000007000000080000000900000004000000050000000600000007000000080000000900000004000000050000000600000007000000080000000900000004000000050000000500000005000000060000000700000008000000090000000a0000000b0000000c0000000a0000000b0000000c0000000a0000000b0000000c0000000a0000000b0000000c0000000a0000000b0000000c0000000900000008000000060000000700000008000000090000000a0000000b0000000c0000000a0000000b0000000c0000000a0000000b0000000c0000000a0000000b0000000c0000000a0000000b0000000c00000009000000080000000600000007000000080000000800000008000000090000000a0000000b0000000c0000000d0000000e00000008000000090000000a0000000b0000000c0000000d0000000e00000008000000090000000a0000000b0000000c0000000d0000000e00000008000000090000000a0000000b0000000c0000000d00000008000000090000000a0000000b0000000c0000000d00000008000000090000000a0000000b0000000c0000000d0000000e000000030000000400000005000000050000000600000004000000030000000400000005000000050000000600000004000000010000000100000001000000
