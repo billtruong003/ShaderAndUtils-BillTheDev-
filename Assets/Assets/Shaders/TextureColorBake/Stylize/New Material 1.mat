@@ -24,12 +24,11 @@ Material:
   m_Shader: {fileID: 4800000, guid: 4f13e14d8306b624ea96397666afa28c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - ENABLE_DENOISING
-  - _OUTPUT_MODE_SELECT_DEBUG
+  m_ValidKeywords: []
   m_InvalidKeywords:
   - _FAKELIGHT_ON
   - _OUTLINE_SCALE_WITH_DISTANCE
+  - _OUTPUT_MODE_SELECT_COMPOSITE
   - _SURFACETYPE_OPAQUE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -112,9 +111,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AODistanceFalloff: 0.53
-    - _AOIntensity: 0.05
-    - _AORadius: 0.0122
+    - _AODistanceFalloff: 1
+    - _AOIntensity: 5
+    - _AORadius: 0.001
     - _AOSamples: 32
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
@@ -127,33 +126,33 @@ Material:
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
-    - _CurvatureBias: -0.54
+    - _CurvatureBias: -1
     - _CurvatureKernelScale: 1
-    - _CurvatureStrength: 5
+    - _CurvatureStrength: 0.1
     - _Cutoff: 0.5
     - _DebugCategory: 2
     - _DebugView_Advanced: 4
     - _DebugView_Core: 3
-    - _DebugView_Masks: 7
+    - _DebugView_Masks: 9
     - _DenoiseDepthSensitivity: 1
-    - _DenoiseRadius: 1
+    - _DenoiseRadius: 8
     - _DenoiseSpatialSigma: 10
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DirtGravityInfluence: 1.37
-    - _DirtLevel: 5
-    - _DirtMetallic: 0.48
-    - _DirtNoiseInfluence: 2
-    - _DirtNoiseTiling: 0.1
-    - _DirtSmoothness: 0.38
+    - _DirtGravityInfluence: 0
+    - _DirtLevel: 0
+    - _DirtMetallic: 0
+    - _DirtNoiseInfluence: 0
+    - _DirtNoiseTiling: 0
+    - _DirtSmoothness: 0
     - _DistanceFadeEnd: 50
     - _DistanceFadeStart: 10
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EdgeSoftness: 0.49
-    - _EdgeThreshold: 0.25
+    - _EdgeSoftness: 0.752
+    - _EdgeThreshold: 0.7
     - _EmissionMode: 0
-    - _EnableDenoising: 1
+    - _EnableDenoising: 0
     - _EnableUVWarp: 0
     - _EnableWorldEffects: 0
     - _EnvironmentReflections: 1
@@ -169,13 +168,13 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HeightBrightness: -0.02
-    - _HeightContrast: 0.48
-    - _HeightCurve: 0.77
+    - _HeightBrightness: 0
+    - _HeightContrast: 0.5
+    - _HeightCurve: 1.17
     - _HighlightOffset: 0.932
     - _Metallic: 0
-    - _NormalStrength: 5
-    - _OUTPUT_MODE_SELECT: 1
+    - _NormalStrength: 3
+    - _OUTPUT_MODE_SELECT: 0
     - _OcclusionStrength: 1
     - _Offset: 0.485
     - _OutlineScaleWithDistance: 1
@@ -194,14 +193,14 @@ Material:
     - _ToonRampOffset: 0
     - _ToonRampSmoothness: 0
     - _TranslucencyStrength: 1
-    - _WarpStrength: 0.005
-    - _WarpTiling: 0.5
-    - _WearExposureInfluence: 1
-    - _WearLevel: 5
-    - _WearMetallic: 0.44
-    - _WearNoiseInfluence: 2
-    - _WearNoiseTiling: 1
-    - _WearSmoothness: 0.38
+    - _WarpStrength: 0
+    - _WarpTiling: 0
+    - _WearExposureInfluence: 0
+    - _WearLevel: 0
+    - _WearMetallic: 0
+    - _WearNoiseInfluence: 0
+    - _WearNoiseTiling: 0
+    - _WearSmoothness: 0
     - _WindAmplitude: 0.1
     - _WindFrequency: 2
     - _WorkflowMode: 1

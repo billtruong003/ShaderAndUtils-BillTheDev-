@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fcd8d21891d4d84e80c26ca749376a0, type: 3}
+  m_Name: BakeAOSettings
+  m_EditorClassIdentifier: 
+  shadersThatSupportBakeAO:
+  - {fileID: 4800000, guid: e41419617b41d104e8bc115c97dfad17, type: 3}
+  - {fileID: 4800000, guid: 726d7f6bfb59fca45a0ace614a6ac445, type: 3}
+  - {fileID: 4800000, guid: 349aaf21afe1e2845bdbe5c784504782, type: 3}
+  shaderRemap:
+  - nonBakeAOShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+    bakeAOShader: {fileID: 4800000, guid: e41419617b41d104e8bc115c97dfad17, type: 3}
+  - nonBakeAOShader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
+    bakeAOShader: {fileID: 4800000, guid: 726d7f6bfb59fca45a0ace614a6ac445, type: 3}
+  - nonBakeAOShader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
+    bakeAOShader: {fileID: 4800000, guid: 726d7f6bfb59fca45a0ace614a6ac445, type: 3}
+  layersInteraction:
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
+  - serializedVersion: 2
+    m_Bits: 4294967295
