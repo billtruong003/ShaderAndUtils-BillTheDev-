@@ -112,12 +112,12 @@ MonoBehaviour:
   proceduralShotPattern: {fileID: 0}
   audioSFX:
     shooting:
-    - {fileID: 8300000, guid: f651108008a11ef4198deb6ab94131ea, type: 3}
-    holster: {fileID: 8300000, guid: b2c939ee2ab26a14b81d51fe66235d2f, type: 3}
-    unholster: {fileID: 8300000, guid: e433732217f5a9944a24887aa41cfe99, type: 3}
+    - {fileID: 8300000, guid: b883c27c88428884fb3a10dcc42b8b47, type: 3}
+    holster: {fileID: 8300000, guid: 482611fe6bc559142a00be6e726b4862, type: 3}
+    unholster: {fileID: 8300000, guid: 482611fe6bc559142a00be6e726b4862, type: 3}
     reload: {fileID: 8300000, guid: 5959d65463fbfe342a9219287eb7315f, type: 3}
     emptyMagReload: {fileID: 8300000, guid: bd56520de0451944eb2bec300c6a43c3, type: 3}
-    emptyMagShoot: {fileID: 8300000, guid: bd56520de0451944eb2bec300c6a43c3, type: 3}
+    emptyMagShoot: {fileID: 8300000, guid: c266e86e5ec11e344bf66dede26cbc46, type: 3}
   pitchVariationFiringSFX: 0.15
   grapplesFromTip: 0
   camShakeAmount: 0.1
@@ -126,10 +126,10 @@ MonoBehaviour:
   applyFOVEffectOnShooting: 0
   FOVValueToSubtract: 0
   AimingFOVValueToSubtract: 0
-  amountOfShootAnimations: 1
+  amountOfShootAnimations: 2
   bulletTrail: {fileID: 0}
   damagePerHit: 20
-  attackRate: 0.7
+  attackRate: 0.8
   hitDelay: 0.05
   attackRange: 1
   dontShowMagazine: 0

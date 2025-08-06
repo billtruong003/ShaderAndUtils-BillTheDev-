@@ -26,7 +26,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: _name
-    value: Katana
+    value: Unarm
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: description
@@ -67,7 +67,7 @@ Preset:
   - target: {fileID: 0}
     propertyPath: weaponObject
     value: 
-    objectReference: {fileID: 0}
+    objectReference: {fileID: 8068143084115016006, guid: b06deea86ac35bf4ab00bfb47ba719d7, type: 3}
   - target: {fileID: 0}
     propertyPath: shootStyle
     value: 2
@@ -409,17 +409,17 @@ Preset:
     value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
-    propertyPath: audioSFX.shooting.Array.data[0]
+    propertyPath: 'audioSFX.shooting.Array.data[0]'
     value: 
-    objectReference: {fileID: 8300000, guid: e996a527a4e727e48a73fb2abdaad31a, type: 3}
+    objectReference: {fileID: 8300000, guid: b883c27c88428884fb3a10dcc42b8b47, type: 3}
   - target: {fileID: 0}
     propertyPath: audioSFX.holster
     value: 
-    objectReference: {fileID: 8300000, guid: b2c939ee2ab26a14b81d51fe66235d2f, type: 3}
+    objectReference: {fileID: 8300000, guid: 482611fe6bc559142a00be6e726b4862, type: 3}
   - target: {fileID: 0}
     propertyPath: audioSFX.unholster
     value: 
-    objectReference: {fileID: 8300000, guid: e433732217f5a9944a24887aa41cfe99, type: 3}
+    objectReference: {fileID: 8300000, guid: 482611fe6bc559142a00be6e726b4862, type: 3}
   - target: {fileID: 0}
     propertyPath: audioSFX.reload
     value: 
@@ -431,7 +431,7 @@ Preset:
   - target: {fileID: 0}
     propertyPath: audioSFX.emptyMagShoot
     value: 
-    objectReference: {fileID: 8300000, guid: bd56520de0451944eb2bec300c6a43c3, type: 3}
+    objectReference: {fileID: 8300000, guid: c266e86e5ec11e344bf66dede26cbc46, type: 3}
   - target: {fileID: 0}
     propertyPath: pitchVariationFiringSFX
     value: 0.15
@@ -466,7 +466,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: amountOfShootAnimations
-    value: 3
+    value: 2
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: bulletTrail
@@ -478,7 +478,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: attackRate
-    value: 0.7
+    value: 0.3
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: hitDelay
@@ -486,7 +486,7 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: attackRange
-    value: 2
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: dontShowMagazine
@@ -495,9 +495,14 @@ Preset:
   - target: {fileID: 0}
     propertyPath: currentPreset
     value: 
-    objectReference: {fileID: 2655988077585873504, guid: 3a7cd1713623be04a830335a5dbbde78, type: 2}
+    objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: presetName
     value: MeleePreset
     objectReference: {fileID: 0}
   m_ExcludedProperties: []
+  m_CoupledType:
+    m_NativeTypeID: 0
+    m_ManagedTypePPtr: {fileID: 0}
+    m_ManagedTypeFallback: 
+  m_CoupledProperties: []
