@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Toon_Advanced Dissolve & Swap
+  m_Shader: {fileID: 4800000, guid: fc53e0aa4185b424da800b4fe2f8eb65, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _DISSOLVE_ON
+  - _DISSOLVE_TYPE_VERTEX_COLOR
+  - _NORMALMAP_ON
+  - _RIM_LIGHT_ON
+  - _SPECULAR_ON
+  - _SWAP_NORMAL_ON
+  - _SWAP_ON
+  m_InvalidKeywords:
+  - _MATCAP_ON
+  - _METALLICSPECGLOSSMAP
+  - _NORMALMAP
+  - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+  - _SWAPSHAPE_TYPE_MASK
+  - _VFX_ON
+  m_LightmapFlags: 6
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 91540c000d965804b9e138f0deb5f16b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: e6a9f0fa9a3381d43879637e00ab884e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissolveMap:
+        m_Texture: {fileID: 2800000, guid: a803a6ba5581743b4961ddacf788e57b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SwapAlbedo:
+        m_Texture: {fileID: 2800000, guid: c4c8376f528f43741921d3899f901583, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SwapMap:
+        m_Texture: {fileID: 2800000, guid: e9a1b673936732547a85144a4e4296f0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SwapNormalMap:
+        m_Texture: {fileID: 2800000, guid: e6a9f0fa9a3381d43879637e00ab884e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BumpScale: 2
+    - _Cutoff: 0.5
+    - _DissolveEdgeHardness: 1
+    - _DissolveEdgeWidth: 0.033
+    - _DissolveMapTiling: 1
+    - _DissolveProgress: -0.1
+    - _DissolveType: 4
+    - _EnableAlphaClip: 0
+    - _EnableDissolve: 1
+    - _EnableNormalMap: 1
+    - _EnableRimLight: 1
+    - _EnableSpecular: 1
+    - _EnableSwap: 1
+    - _EnableSwapNormal: 1
+    - _EnableVFX: 1
+    - _HighlightThreshold: 0.73
+    - _RampSmoothness: 0.5
+    - _RimPower: 6.74
+    - _ShadowThreshold: 0.5
+    - _SpecularSmoothness: 0.5
+    - _SpecularThreshold: 0.772
+    - _SwapEdgeHardness: 1
+    - _SwapProgress: 1
+    - _SwapShapeType: 0
+    m_Colors:
+    - _DissolveEdgeColor: {r: 388.02353, g: 0, b: 0, a: 1}
+    - _DissolveVector: {r: 0, g: 0, b: 0, a: 0}
+    - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MidtoneColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ShadowColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SwapVector: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

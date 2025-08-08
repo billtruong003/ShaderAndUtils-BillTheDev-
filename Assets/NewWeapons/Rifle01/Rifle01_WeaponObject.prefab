@@ -528,6 +528,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.028147135, y: 0.0003073347, z: 0.00018775417}
     m_Extent: {x: 0.028100941, y: 0.00032392412, z: 0.0044913497}
   m_DirtyAABB: 0
+--- !u!1 &2110595670309885736
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8861947705188034738}
+  m_Layer: 6
+  m_Name: SwayPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8861947705188034738
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110595670309885736}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.1244, y: -0.303, z: 0.331}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1626974497693598368}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2171730976623797689
 GameObject:
   m_ObjectHideFlags: 0
@@ -768,7 +799,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2601720189597460784}
   serializedVersion: 2
-  m_LocalRotation: {x: -6.211317e-15, y: 1, z: -0.00000008146034, w: -0.0000000754979}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 1.678634, z: -0.085166976}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1614,6 +1645,7 @@ Transform:
   m_Children:
   - {fileID: 3035678031078957907}
   - {fileID: 7245244800980016006}
+  - {fileID: 8861947705188034738}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1696620078763505015
@@ -1636,7 +1668,7 @@ MonoBehaviour:
   magazineSize: 0
   bulletsLeftInMagazine: 0
   totalBullets: 0
-  headBone: {fileID: 0}
+  headBone: {fileID: 7148427908625533695}
   defaultAttachments:
     defaultAttachmentsList: []
   compatibleAttachments:
@@ -1669,21 +1701,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69ffffe3034af4e4a850cd39dd05f25e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  swayMethod: 0
-  amount: 0.02
-  maxAmount: 0.06
+  swayMethod: 1
+  amount: 0.08
+  maxAmount: 0.1
   smoothAmount: 6
   tiltAmount: 4
   maxTiltAmount: 5
   smoothTiltAmount: 12
-  pivot: {fileID: 0}
-  swaySpeed: 0
-  swayMovementAmount: {x: 0, y: 0}
-  swayRotationAmount: {x: 0, y: 0}
-  swayTiltAmount: 0
-  tiltRot: {x: 0, y: 0, z: 0}
-  tiltPosOffset: {x: 0, y: 0, z: 0}
-  tiltSpeed: 8
+  pivot: {fileID: 8861947705188034738}
+  swaySpeed: 10
+  swayMovementAmount: {x: 0.1, y: 0.05}
+  swayRotationAmount: {x: 0.2, y: 0.5}
+  swayTiltAmount: 2
+  tiltRot: {x: 0, y: 0, z: 20}
+  tiltPosOffset: {x: 0, y: 0, z: -0.1}
+  tiltSpeed: 4
 --- !u!1 &4691892108148923151
 GameObject:
   m_ObjectHideFlags: 0
@@ -1948,6 +1980,7 @@ GameObject:
   m_Component:
   - component: {fileID: 342714507479343494}
   - component: {fileID: 8254001483159901026}
+  - component: {fileID: 3867646413683758415}
   m_Layer: 6
   m_Name: Hands_Automatic_Rifle01(Clone)
   m_TagString: Untagged
@@ -2011,6 +2044,73 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3867646413683758415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5493378155533441300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boneShape: 1
+  drawBones: 1
+  drawTripods: 0
+  boneSize: 1
+  tripodSize: 1
+  boneColor: {r: 0, g: 0, b: 1, a: 0.5}
+  m_Transforms:
+  - {fileID: 1378797469644677502}
+  - {fileID: 6770464603798955134}
+  - {fileID: 6184419486053499407}
+  - {fileID: 7409251388757129233}
+  - {fileID: 418018601522327828}
+  - {fileID: 5717799420396171875}
+  - {fileID: 6030242462982304125}
+  - {fileID: 6444093335267941558}
+  - {fileID: 744870544745190159}
+  - {fileID: 7634323986957027758}
+  - {fileID: 7634800660119878166}
+  - {fileID: 1375137003325134260}
+  - {fileID: 2034731843839313522}
+  - {fileID: 5340697600921223068}
+  - {fileID: 4901806620488353606}
+  - {fileID: 6353700095061131542}
+  - {fileID: 84436143979226436}
+  - {fileID: 5583241055777468456}
+  - {fileID: 7553183809804344635}
+  - {fileID: 4158020147944449027}
+  - {fileID: 2707317105972879847}
+  - {fileID: 8967311268380514662}
+  - {fileID: 8877355369716100203}
+  - {fileID: 1681113076212159258}
+  - {fileID: 4810180591044553454}
+  - {fileID: 2328305566724732014}
+  - {fileID: 2140107775093821042}
+  - {fileID: 1154254144728860459}
+  - {fileID: 307785091295181009}
+  - {fileID: 6024430428235034844}
+  - {fileID: 9021365493600114811}
+  - {fileID: 2629560538240930836}
+  - {fileID: 6452709502292322319}
+  - {fileID: 2253869996411806374}
+  - {fileID: 5981462250643480280}
+  - {fileID: 9069495393825138431}
+  - {fileID: 5043161473808479808}
+  - {fileID: 7011634674411275977}
+  - {fileID: 3440249117336607922}
+  - {fileID: 5088528000291555244}
+  - {fileID: 1771607066514529060}
+  - {fileID: 4579635085357463418}
+  - {fileID: 8791916194062488137}
+  - {fileID: 8179593915640616699}
+  - {fileID: 7074898989228508885}
+  - {fileID: 5852785419522863833}
+  - {fileID: 3854311594993827508}
+  - {fileID: 2545438502595654111}
 --- !u!1 &5689208618554367479
 GameObject:
   m_ObjectHideFlags: 0

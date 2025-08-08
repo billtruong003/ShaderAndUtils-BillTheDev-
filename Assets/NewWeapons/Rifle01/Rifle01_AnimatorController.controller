@@ -825,7 +825,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Run_Anim
-  m_Speed: 1
+  m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 4825879089607568175}
@@ -952,7 +952,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Idle
-  m_Speed: 1
+  m_Speed: 2
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -1483,7 +1483,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -1072163760590475279}
-    m_Position: {x: 570, y: 40, z: 0}
+    m_Position: {x: 560, y: 40, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4238222380546358743}
     m_Position: {x: 570, y: 150, z: 0}
@@ -1492,19 +1492,19 @@ AnimatorStateMachine:
     m_Position: {x: 570, y: 100, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1467577813126399300}
-    m_Position: {x: 560, y: 200, z: 0}
+    m_Position: {x: 560, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5628838592438181989}
-    m_Position: {x: 790, y: 250, z: 0}
+    m_Position: {x: 820, y: 310, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5299549774618036440}
-    m_Position: {x: 570, y: 250, z: 0}
+    m_Position: {x: 470, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3209239633635505441}
-    m_Position: {x: 790, y: 200, z: 0}
+    m_Position: {x: 890, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8434567295232255118}
-    m_Position: {x: 260, y: 40, z: 0}
+    m_Position: {x: 190, y: 50, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1669652097317492224}
     m_Position: {x: 260, y: -20, z: 0}
@@ -1802,7 +1802,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 1069049327602447057, guid: 65566698055dc6448b58585395a1a4b8, type: 3}
+  m_Motion: {fileID: 7400000, guid: 99d928cbfa9e0754589c0efdf2c10b9d, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -2126,7 +2126,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Walk_Anim
-  m_Speed: 1
+  m_Speed: 1.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -8898886447066865352}

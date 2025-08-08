@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CleanCode_Uber Master Shader
+  m_Shader: {fileID: 4800000, guid: f435ec1fe5a474db387f5be73a9d58ca, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _ALPHACLIP_ON
+  - _DISSOLVETYPE_RADIAL
+  - _DISSOLVE_LOCALSPACE_ON
+  - _LIGHTINGMODEL_BASIC_TOON
+  - _SWAP_LOCALSPACE_ON
+  - _TEXTURE_SWAP_ON
+  - _ZWRITE_ON
+  m_InvalidKeywords:
+  - _USE_TIME_ANIMATION
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 91540c000d965804b9e138f0deb5f16b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissolveNoiseTex:
+        m_Texture: {fileID: 2800000, guid: 9ce92e0b408f84565b797d36803be899, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Metal_Ramp:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SecondaryAlbedoMap:
+        m_Texture: {fileID: 2800000, guid: f0688700ffed1a347bae677afb141514, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SwapNoiseMap:
+        m_Texture: {fileID: 2800000, guid: 9ce92e0b408f84565b797d36803be899, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SwapShapeMask:
+        m_Texture: {fileID: 2800000, guid: bf69fe7bc0f403c4a87f786040e07ecb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaClipMode: 1
+    - _AlphaFadeRange: 0.5
+    - _BlingFresnelPower: 2
+    - _BlingIntensity: 2
+    - _BlingScale: 50
+    - _BlingSpeed: 1
+    - _BlingThreshold: 0.95
+    - _BlingWorldSpace: 0
+    - _Bling_RimMax: 1
+    - _Bling_RimMin: 0
+    - _Bling_RimPower: 3
+    - _Bling_SpecOffset: 0.95
+    - _Bling_SpecSmoothness: 0.05
+    - _BounceWaveWidth: 5
+    - _CullMode: 2
+    - _Cutoff: 0.5
+    - _DissolveEdgeWidth: 0.1
+    - _DissolveNoiseScale: 15
+    - _DissolveNoiseStrength: 0.25
+    - _DissolveThreshold: 1.21
+    - _DissolveType: 2
+    - _EnableBlingEffect: 1
+    - _EnableDissolve: 0
+    - _EnableShatterEffect: 0
+    - _EnableTextureSwap: 1
+    - _EnableVertexDisplacement: 1
+    - _LightingModel: 2
+    - _Metal_Brightness: 1.3
+    - _Metal_HighlightOffset: 0.9
+    - _Metal_Offset: 0.8
+    - _Metal_RimPower: 6
+    - _PatternFrequency: 10
+    - _PatternType: 0
+    - _RadialDirection: 1
+    - _ShatterLiftSpeed: 1
+    - _ShatterOffsetStrength: 0.5
+    - _ShatterStrength: 1
+    - _ShatterTriggerRange: 0.1
+    - _SwapEffectRadius: 2
+    - _SwapLineWidth: 0.023
+    - _SwapNoiseScale: 1
+    - _SwapNoiseStrength: 0.9
+    - _SwapPatternFrequency: 10
+    - _SwapPatternType: 2
+    - _SwapProgress: -0.21
+    - _SwapRadiusNoiseCutoff: -4.81
+    - _SwapShape: 1
+    - _SwapTransitionHardness: 100
+    - _SwapType: 0
+    - _TimeScale: 1
+    - _ToonRampOffset: 0.723
+    - _ToonRampSmoothness: 0.631
+    - _Toon_RimMax: 1
+    - _Toon_RimMin: 0
+    - _Toon_RimPower: 10
+    - _Toon_SpecOffset: 1
+    - _Toon_SpecSmoothness: 0.162
+    - _UseLocalSpace: 1
+    - _UseSaturateDisplacement: 1
+    - _UseSwapLocalSpace: 1
+    - _UseTimeAnimation: 1
+    - _VertexDisplacement: 0.5
+    - _ZWrite: 1
+    m_Colors:
+    - _AmbientColor: {r: 0, g: 0, b: 0, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BlingColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Bling_RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Bling_SpecColor: {r: 1, g: 1, b: 1, a: 1}
+    - _DissolveDirection: {r: 0, g: 0, b: 0, a: 0}
+    - _DissolveEdgeColor: {r: 16, g: 0.5007584, b: 0, a: 1}
+    - _Metal_HiColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Metal_RimColor: {r: 1, g: 0.3, b: 0.3, a: 1}
+    - _Metal_SpecuColor: {r: 0.8, g: 0.45, b: 0.2, a: 1}
+    - _ShadowTint: {r: 0.1509434, g: 0.1509434, b: 0.1509434, a: 1}
+    - _SwapDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _SwapEffectCenter: {r: 0, g: 0, b: 0, a: 0}
+    - _SwapEffectExtents: {r: 1, g: 1, b: 1, a: 0}
+    - _SwapLineColor: {r: 0.6083564, g: 0, b: 3.9999995, a: 1}
+    - _SwapNoiseScrollSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
+    - _Toon_RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Toon_SpecColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

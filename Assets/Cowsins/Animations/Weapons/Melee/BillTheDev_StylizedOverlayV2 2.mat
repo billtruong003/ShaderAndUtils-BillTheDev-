@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BillTheDev_StylizedOverlayV2 2
+  m_Shader: {fileID: 4800000, guid: 9895d30aee6434b7a839b3a521f2fed2, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _NORMAL_MAP_ON
+  - _OVERLAY_TYPE_CRYSTAL
+  - _PARALLAX_OCCLUSION_ON
+  - _REFRACTION_ON
+  - _VERTEX_DISPLACEMENT_ON
+  m_InvalidKeywords:
+  - _OVERLAYTYPE_CRYSTAL
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 0af043b66791bcd41a1a103c4751661a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _POMHeightMap:
+        m_Texture: {fileID: 2800000, guid: 9f2547d049378e845943853daafff6a2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SnowToonRamp:
+        m_Texture: {fileID: 2800000, guid: f4760acbc2c214212a664adabc785224, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TransitionNoiseMap:
+        m_Texture: {fileID: 2800000, guid: 9df0b28d50ad14e668b4ebcc0bfea90c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BlingDensity: 1
+    - _BlingHardness: 512
+    - _BlingScale: 200
+    - _BlingSpeed: 10
+    - _BumpScale: 2
+    - _ChromaticAberration: 0.00641
+    - _CrystalCellBorderWidth: 0.081
+    - _CrystalCellJitter: 0.56
+    - _CrystalCellScale: 20
+    - _DisplacementStrength: 0.01
+    - _EdgePulseSpeed: 11.3
+    - _EdgePulseStrength: 0.592
+    - _EdgeRefractionStrength: 0.0388
+    - _EdgeSpecularPower: 64
+    - _EdgeWidth: 0.75
+    - _EnableNormalMap: 1
+    - _EnablePOM: 1
+    - _EnableRefraction: 1
+    - _EnableVertexDisplacement: 1
+    - _IceInternalFogDensity: 2.82
+    - _OverlayType: 2
+    - _POMDepth: 0.1
+    - _POMLayers: 8
+    - _SnowGlitterDensity: 0.9
+    - _SnowGlitterHardness: 1024
+    - _SnowGlitterScale: 100
+    - _SnowRimPower: 4.94
+    - _SnowSubsurfaceFactor: 8
+    - _TransitionHardness: 167
+    - _TransitionNoiseScale: 0
+    - _TransitionNoiseStrength: 1
+    - _TransitionProgress: 1
+    - _TriplanarFalloff: 10
+    m_Colors:
+    - _BlingColor: {r: 1024, g: 1024, b: 1024, a: 1}
+    - _CrystalBorderColor: {r: 0.19925265, g: 0, b: 0.3584906, a: 1}
+    - _CrystalCellColor: {r: 0.4326439, g: 0, b: 1, a: 1}
+    - _EdgeColor: {r: 0.4740572, g: 0, b: 1, a: 1}
+    - _EdgeSpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _IceBaseColor: {r: 0.42857122, g: 0, b: 1, a: 0.5}
+    - _IceInternalFogColor: {r: 0.5359523, g: 0.2028302, b: 1, a: 1}
+    - _OverlayDirection: {r: 0, g: 2, b: 0, a: 0}
+    - _SnowBaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SnowDeepColor: {r: 0.7311321, g: 0.9747936, b: 1, a: 1}
+    - _SnowGlitterColor: {r: 0.5617647, g: 0.5617647, b: 0.7490196, a: 1}
+    - _SnowRimColor: {r: 0.8254717, g: 0.92991376, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
