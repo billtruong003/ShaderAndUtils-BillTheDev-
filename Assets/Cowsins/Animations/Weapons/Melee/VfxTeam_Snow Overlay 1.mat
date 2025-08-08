@@ -7,102 +7,101 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: VfxTeam_Snow Overlay
+  m_Name: VfxTeam_Snow Overlay 1
   m_Shader: {fileID: 4800000, guid: b687961d7fed744b0bc615b4da460543, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _OVERLAY_TYPE_SNOW
-  - _REFRACTION_ON
+  - _OVERLAY_TYPE_ICE
   m_InvalidKeywords:
   - _CRYSTALSHAPE_WORLEY
-  - _NOISESOURCE_VORONOI
-  - _OVERLAYTYPE_SNOW
+  - _NOISESOURCE_DEFAULT
+  - _OVERLAYTYPE_ICE
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: _PrimaryToonRamp
+  m_LockedProperties: _NoiseMap
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _HeightMap:
-        m_Texture: {fileID: 2800000, guid: 57e9e92fd03983b41bdbda66dc81e6b2, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseMap:
-        m_Texture: {fileID: 2800000, guid: e38401949bf84a249b2f95cf9c6d1726, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3584f2bf4afb5284d91edb6a29126e62, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PrimaryToonRamp:
-        m_Texture: {fileID: 2800000, guid: c755faa3a4b9cd34694d54c650952df5, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SnowToonRamp:
-        m_Texture: {fileID: 2800000, guid: c755faa3a4b9cd34694d54c650952df5, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BlingDensity: 0.9739
-    - _BlingHardness: 256
-    - _BlingScale: 25
-    - _BlingSpeed: 0.5
+    - _BlingDensity: -0.095
+    - _BlingHardness: 512
+    - _BlingScale: 100
+    - _BlingSpeed: 0.05
     - _ChromaticAberration: 0.005
     - _CrystalCellHardness: 0.1
     - _CrystalCellJitter: 1
     - _CrystalCellScale: 10
     - _CrystalShape: 1
-    - _DisplacementHeight: 0.0174
-    - _DisplacementTiling: 1
-    - _EdgePulseSpeed: 5
-    - _EdgePulseStrength: 0.5
-    - _EdgeRefractionStrength: 0.02
-    - _EdgeSpecularPower: 155
-    - _EdgeWidth: 0.448
-    - _EnableRefraction: 1
-    - _HeightmapTiling: 1.7
-    - _NoiseSource: 1
-    - _NoiseTiling: 2
-    - _NormalStrength: 2
+    - _DisplacementHeight: 0.0434
+    - _DisplacementTiling: 5
+    - _EdgePulseSpeed: 0
+    - _EdgePulseStrength: 0
+    - _EdgeRefractionStrength: 0
+    - _EdgeSpecularPower: 1
+    - _EdgeWidth: 1
+    - _EnableRefraction: 0
+    - _HeightmapTiling: 1
+    - _NoiseSource: 0
+    - _NoiseTiling: 3.5
+    - _NormalStrength: 1
     - _ObjectHeight: 1
-    - _OverlayType: 0
-    - _ParallaxHeight: 0.1674
-    - _ParallaxSteps: 44.5
+    - _OverlayType: 1
+    - _ParallaxHeight: 0.05
+    - _ParallaxSteps: 32
     - _PrimaryRimPower: 0.1
-    - _RefractionStrength: 0.15
-    - _RimPower: 4.98
-    - _SSSPower: 8.17
-    - _SSSStrength: 1.291
-    - _Smoothness: 0.86
-    - _SnowRimPower: 0.2
+    - _RefractionStrength: 0.05
+    - _RimPower: 3
+    - _SSSPower: 4
+    - _SSSStrength: 1
+    - _Smoothness: 0.8
+    - _SnowRimPower: 3
     - _SparkleDensity: 0.98
     - _SparkleParallaxDepth: 2
     - _SparkleScale: 35
     - _SparkleSpeed: 0.2
     - _ThicknessMax: 0.5
     - _TransitionHardness: 100
-    - _TransitionProgress: -0.112
+    - _TransitionProgress: 0.988
     - _WorleyCellDensity: 5
     m_Colors:
     - _BaseColor: {r: 0.9, g: 0.9, b: 1, a: 1}
-    - _BlingColor: {r: 1, g: 1.2, b: 1.5, a: 1}
+    - _BlingColor: {r: 1, g: 1, b: 1, a: 1}
     - _CrystalCellColor: {r: 0.1, g: 0.2, b: 0.3, a: 1}
-    - _EdgeColor: {r: 0.5, g: 0.9, b: 1, a: 1}
+    - _EdgeColor: {r: 0.34765455, g: 0.3443396, b: 1, a: 1}
     - _EdgeSpecularColor: {r: 1, g: 1, b: 1, a: 1}
-    - _IceBaseColor: {r: 0.7, g: 0.8, b: 1, a: 0.5}
+    - _IceBaseColor: {r: 0.5613208, g: 0.83324784, b: 1, a: 1}
     - _OverlayDirection: {r: 0, g: 1, b: 0, a: 0}
-    - _PrimaryBaseColor: {r: 0, g: 0.77020216, b: 1, a: 1}
-    - _PrimaryRimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _PrimaryTopColor: {r: 0.0035758018, g: 0, b: 1, a: 1}
+    - _PrimaryBaseColor: {r: 0, g: 0.6973686, b: 1, a: 1}
+    - _PrimaryRimColor: {r: 0.3915094, g: 0.8162599, b: 1, a: 1}
+    - _PrimaryTopColor: {r: 1, g: 1, b: 1, a: 1}
     - _RefractionColor: {r: 0.5, g: 0.9, b: 1, a: 1}
     - _RimColor: {r: 0.5, g: 0.8, b: 1, a: 1}
     - _SSSColor: {r: 0.4, g: 0.8, b: 1, a: 1}
-    - _SnowBaseColor: {r: 0, g: 0.5937941, b: 1, a: 1}
-    - _SnowRimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SnowTopColor: {r: 0.4198113, g: 0.8153944, b: 1, a: 1}
+    - _SnowBaseColor: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - _SnowRimColor: {r: 0.5, g: 0.8, b: 1, a: 1}
+    - _SnowTopColor: {r: 1, g: 1, b: 1, a: 1}
     - _SparkleColor: {r: 1, g: 1.5, b: 2, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _SubsurfaceColor: {r: 0.7, g: 0.9, b: 1, a: 1}

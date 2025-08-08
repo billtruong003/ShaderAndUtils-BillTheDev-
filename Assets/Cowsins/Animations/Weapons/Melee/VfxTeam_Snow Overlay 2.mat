@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: VfxTeam_Snow Overlay 2
+  m_Shader: {fileID: 4800000, guid: b687961d7fed744b0bc615b4da460543, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _OVERLAY_TYPE_CRYSTAL
+  - _REFRACTION_ON
+  m_InvalidKeywords:
+  - _CRYSTALSHAPE_WORLEY
+  - _NOISESOURCE_DEFAULT
+  - _OVERLAYTYPE_CRYSTAL
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _NoiseMap:
+        m_Texture: {fileID: 2800000, guid: 5766ecf8a393d4a97b3b30dccf32b971, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SnowToonRamp:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BlingDensity: 0.55
+    - _BlingHardness: 1
+    - _BlingScale: 3000
+    - _BlingSpeed: 1
+    - _CrystalCellHardness: 0.231
+    - _CrystalCellJitter: 0.5
+    - _CrystalCellScale: 15
+    - _DisplacementHeight: 0.0325
+    - _EdgePulseSpeed: 20
+    - _EdgePulseStrength: 0
+    - _EdgeRefractionStrength: 0.1
+    - _EdgeSpecularPower: 17.3
+    - _EdgeWidth: 0.01
+    - _EnableRefraction: 1
+    - _NoiseTiling: 10
+    - _OverlayType: 2
+    - _SnowRimPower: 3
+    - _TransitionHardness: 100
+    - _TransitionProgress: -0.42
+    m_Colors:
+    - _BlingColor: {r: 496.22998, g: 0, b: 1024, a: 1}
+    - _CrystalCellColor: {r: 0.48426104, g: 0, b: 1, a: 1}
+    - _EdgeColor: {r: 0.35299397, g: 0, b: 1, a: 1}
+    - _EdgeSpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _IceBaseColor: {r: 0.27302456, g: 0, b: 1, a: 0.5}
+    - _OverlayDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _SnowBaseColor: {r: 0.8, g: 0.8, b: 1, a: 1}
+    - _SnowRimColor: {r: 0.5, g: 0.8, b: 1, a: 1}
+    - _SnowTopColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
