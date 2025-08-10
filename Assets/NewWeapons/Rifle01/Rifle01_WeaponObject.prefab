@@ -1668,7 +1668,7 @@ MonoBehaviour:
   magazineSize: 0
   bulletsLeftInMagazine: 0
   totalBullets: 0
-  headBone: {fileID: 7148427908625533695}
+  headBone: {fileID: 0}
   defaultAttachments:
     defaultAttachmentsList: []
   compatibleAttachments:
@@ -1702,19 +1702,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swayMethod: 1
-  amount: 0.08
-  maxAmount: 0.1
-  smoothAmount: 6
-  tiltAmount: 4
-  maxTiltAmount: 5
-  smoothTiltAmount: 12
+  adsSwayReduction: 0.1
+  aimingSmoothMultiplier: 4
+  idleSwaySpeed: 1
+  idleSwayAmplitude: {x: 0.005, y: 0.005, z: 0}
+  idleRotationSwayAmplitude: {x: 0.2, y: 0.2, z: 0.5}
+  simple_PositionAmount: 0.02
+  simple_MaxPositionAmount: 0.06
+  simple_SmoothAmount: 6
+  simple_TiltAmount: 4
+  simple_MaxTiltAmount: 5
+  simple_SmoothTiltAmount: 12
   pivot: {fileID: 8861947705188034738}
-  swaySpeed: 10
-  swayMovementAmount: {x: 0.1, y: 0.05}
-  swayRotationAmount: {x: 0.2, y: 0.5}
-  swayTiltAmount: 2
-  tiltRot: {x: 0, y: 0, z: 20}
-  tiltPosOffset: {x: 0, y: 0, z: -0.1}
+  pivot_SwaySpeed: 10
+  pivot_MovementAmount: {x: 1, y: 1}
+  pivot_RotationAmount: {x: 1, y: 1}
+  pivot_TiltAmount: 2
+  tiltRotation: {x: 5, y: 0, z: -5}
+  tiltPositionOffset: {x: 0, y: -0.05, z: 0}
   tiltSpeed: 4
 --- !u!1 &4691892108148923151
 GameObject:

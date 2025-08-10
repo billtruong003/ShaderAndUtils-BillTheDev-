@@ -120,11 +120,11 @@ MonoBehaviour:
   m_ShadowTransparentReceive: 1
   m_RenderingMode: 0
   m_DepthPrimingMode: 0
-  m_CopyDepthMode: 1
+  m_CopyDepthMode: 0
   m_DepthAttachmentFormat: 0
-  m_DepthTextureFormat: 0
+  m_DepthTextureFormat: 93
   m_AccurateGbufferNormals: 1
-  m_IntermediateTextureMode: 0
+  m_IntermediateTextureMode: 1
 --- !u!114 &2525045749868263658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,3 +201,16 @@ MonoBehaviour:
   m_Active: 1
   settings: {viewSpaceNormalMaterial: {fileID: 2100000, guid: 662e7b3a65e81d94dbb9c77c053aa8a6, type: 2}, screenSpaceOutlineMaterial: {fileID: 2100000, guid: ccd06407f781c3e499fb0eac9886ea35, type: 2}, renderPassEvent: 300}
   cleanOutlineVolume: {fileID: 0}
+--- !u!114 &5851262326826874197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0242f8fe04c27041ab653b76c0b3f5c, type: 3}
+  m_Name: FullscreenTextureFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1

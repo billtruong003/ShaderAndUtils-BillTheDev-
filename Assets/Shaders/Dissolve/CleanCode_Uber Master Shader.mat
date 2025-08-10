@@ -13,11 +13,14 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHACLIP_ON
+  - _BLING_EFFECT_ON
+  - _DISPLACEMENT_SATURATE_ON
   - _DISSOLVETYPE_RADIAL
   - _DISSOLVE_LOCALSPACE_ON
   - _LIGHTINGMODEL_BASIC_TOON
   - _SWAP_LOCALSPACE_ON
   - _TEXTURE_SWAP_ON
+  - _VERTEX_DISPLACEMENT_ON
   - _ZWRITE_ON
   m_InvalidKeywords:
   - _USE_TIME_ANIMATION
@@ -101,7 +104,7 @@ Material:
     - _SwapNoiseStrength: 0.9
     - _SwapPatternFrequency: 10
     - _SwapPatternType: 2
-    - _SwapProgress: -0.21
+    - _SwapProgress: -2
     - _SwapRadiusNoiseCutoff: -4.81
     - _SwapShape: 1
     - _SwapTransitionHardness: 100

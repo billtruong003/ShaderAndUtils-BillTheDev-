@@ -25,7 +25,7 @@ Shader "Custom/LightweightVolumetricNoiseFog"
         {
             // --- Cài đặt trạng thái render ---
             Blend SrcAlpha OneMinusSrcAlpha // Alpha blending tiêu chuẩn
-            Cull Off                       // Không cull mặt sau (quan trọng cho các object bao quanh camera)
+            Cull Front                       // Không cull mặt sau (quan trọng cho các object bao quanh camera)
             ZWrite Off                     // Không ghi vào depth buffer
             ZTest LEqual                   // Render nếu ở phía trước hoặc tại cùng một điểm
 

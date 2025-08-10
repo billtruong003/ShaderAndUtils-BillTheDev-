@@ -1,5 +1,5 @@
 /// <summary>
-/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+/// This script belongs to cowsins as a part of the cowsins FPS Engine. All rights reserved. 
 /// </summary>
 using cowsins;
 using UnityEngine;
@@ -12,196 +12,193 @@ namespace cowsins
 {
     public class WeaponSpecificEffects : MonoBehaviour
     {
-        #region WeaponSway
-        #region shared
-        [System.Serializable]
         public enum SwayMethod
         {
             Simple, PivotBased
         }
-        public SwayMethod swayMethod;
-        public delegate void Sway();
 
-        public Sway sway;
-        #endregion
-        #region simple
-        [Header("Position")]
-        [SerializeField] private float amount = 0.02f;
+        [Header("CONFIGURATION")]
+        [SerializeField] private SwayMethod swayMethod;
 
-        [SerializeField] private float maxAmount = 0.06f;
+        [Header("AIMING MODIFIERS")]
+        [Tooltip("Reduces sway intensity when aiming. 0 means no sway, 1 means full sway.")]
+        [SerializeField, Range(0, 1)] private float adsSwayReduction = 0.1f;
+        [Tooltip("How much faster the weapon stabilizes when aiming. Higher values mean a quicker 'lock' into ADS state.")]
+        [SerializeField] private float aimingSmoothMultiplier = 4.0f;
 
-        [SerializeField] private float smoothAmount = 6f;
+        [Header("PROCEDURAL IDLE SWAY")]
+        [SerializeField] private float idleSwaySpeed = 1f;
+        [SerializeField] private Vector3 idleSwayAmplitude = new Vector3(0.005f, 0.005f, 0f);
+        [SerializeField] private Vector3 idleRotationSwayAmplitude = new Vector3(0.2f, 0.2f, 0.5f);
 
+        [Header("SIMPLE SWAY - REACTIVE")]
+        [SerializeField] private float simple_PositionAmount = 0.02f;
+        [SerializeField] private float simple_MaxPositionAmount = 0.06f;
+        [SerializeField] private float simple_SmoothAmount = 6f;
+        [SerializeField] private float simple_TiltAmount = 4f;
+        [SerializeField] private float simple_MaxTiltAmount = 5f;
+        [SerializeField] private float simple_SmoothTiltAmount = 12f;
 
-        [Header("Tilting")]
-        [SerializeField] private float tiltAmount = 4f;
-
-        [SerializeField] private float maxTiltAmount = 5f;
-
-        [SerializeField] private float smoothTiltAmount = 12f;
-
-        private Vector3 initialPosition;
-
-        private Quaternion initialRotation;
-
-        private float InputX;
-
-        private float InputY;
-
-        private float playerMultiplier;
-        #endregion
-        #region pivotBased
+        [Header("PIVOT SWAY - REACTIVE")]
         [SerializeField] private Transform pivot;
+        [SerializeField] private float pivot_SwaySpeed = 10f;
+        [SerializeField] private Vector2 pivot_MovementAmount = Vector2.one;
+        [SerializeField] private Vector2 pivot_RotationAmount = Vector2.one;
+        [SerializeField] private float pivot_TiltAmount = 2f;
 
-        [SerializeField] private float swaySpeed;
-
-        [SerializeField] private Vector2 swayMovementAmount;
-
-        [SerializeField] private Vector2 swayRotationAmount;
-
-        [SerializeField] private float swayTiltAmount;
-        #endregion
-        #endregion
-
-        #region CrouchTilt
-        [SerializeField] private Vector3 tiltRot, tiltPosOffset;
+        [Header("CROUCH TILT")]
+        [SerializeField] private Vector3 tiltRotation = new Vector3(5, 0, -5);
+        [SerializeField] private Vector3 tiltPositionOffset = new Vector3(0, -0.05f, 0);
         [SerializeField] private float tiltSpeed = 8f;
 
-        private Vector3 originalLocalPos;
-        private Quaternion originalLocalRot;
+        private delegate void SwayAction();
+        private SwayAction applySway;
+
+        private Vector3 initialPosition;
+        private Quaternion initialRotation;
         private Coroutine tiltCoroutine;
 
-        #endregion
+        private Vector2 perlinNoise;
+        private Vector2 swayInput;
 
-        private PlayerDependencies playerDependencies;
-        private IPlayerMovementEventsProvider playerMovementProvider; // IPlayerMovementEventsProvider is implemented in PlayerMovement.cs
-        private IWeaponBehaviourProvider weaponController; // IWeaponBehaviourProvider is implemented in WeaponController.cs
-        private IPlayerControlProvider playerControl; // IPlayerControlProvider is implemented in PlayerControl.cs
+        private IPlayerMovementEventsProvider playerMovementProvider;
+        private IWeaponBehaviourProvider weaponController;
+        private IPlayerControlProvider playerControl;
 
         private void Start()
         {
-            playerDependencies = FindObjectOfType<PlayerDependencies>();
-            weaponController = playerDependencies.WeaponBehaviour;
-            playerMovementProvider = playerDependencies.PlayerMovementEvents;
-            playerControl = playerDependencies.PlayerControl;
-            // Sway Set-up
-            if (swayMethod == SwayMethod.Simple)
-            {
-                initialPosition = transform.localPosition;
-                initialRotation = transform.localRotation;
-                sway = SimpleSway;
-            }
-            else
-            {
-                sway = PivotSway;
-            }
-
-            // Crouch Tilt Set-up
-            originalLocalRot  = transform.localRotation;
-            originalLocalPos = transform.localPosition;
-            
-            playerMovementProvider.AddCrouchListener(HandleCrouch);
-            playerMovementProvider.AddUncrouchListener(HandleUnCrouch);
+            InitializeDependencies();
+            InitializeSwayMethod();
+            InitializeState();
+            SubscribeToEvents();
         }
 
         private void OnDisable()
         {
-            if (playerMovementProvider != null)
-            {
-                playerMovementProvider.RemoveCrouchListener(HandleCrouch);
-                playerMovementProvider.RemoveUncrouchListener(HandleUnCrouch);
-            }
+            UnsubscribeFromEvents();
         }
-
 
         private void Update()
         {
             if (!playerControl.IsControllable) return;
-            sway?.Invoke();
-        }
-        #region Weapon Sway Methods
 
-        private void SimpleSway()
+            UpdatePerlinNoise();
+            applySway?.Invoke();
+        }
+
+        private void InitializeDependencies()
         {
-            CalculateSway();
-            MoveSway();
-            TiltSway();
+            var playerDependencies = FindFirstObjectByType<PlayerDependencies>();
+            weaponController = playerDependencies.WeaponBehaviour;
+            playerMovementProvider = playerDependencies.PlayerMovementEvents;
+            playerControl = playerDependencies.PlayerControl;
         }
-        private void CalculateSway()
+
+        private void InitializeSwayMethod()
         {
-            InputX = -InputManager.mousex / 10 - 2 * InputManager.controllerx;
-            InputY = -InputManager.mousey / 10 - 2 * InputManager.controllery;
-
-            if (weaponController.IsAiming) playerMultiplier = 5f;
-            else playerMultiplier = 1f;
+            applySway = swayMethod == SwayMethod.Simple ? (SwayAction)ApplySimpleSway : ApplyPivotSway;
         }
 
-        private void MoveSway()
+        private void InitializeState()
         {
-            float moveX = Mathf.Clamp(InputX * amount, -maxAmount, maxAmount) / playerMultiplier;
-            float moveY = Mathf.Clamp(InputY * amount, -1, 1) / playerMultiplier;
-
-            Vector3 finalPosition = new Vector3(moveX, moveY, 0);
-
-            transform.localPosition = Vector3.Lerp(transform.localPosition, finalPosition + initialPosition, Time.fixedDeltaTime * smoothAmount * playerMultiplier);
+            initialPosition = transform.localPosition;
+            initialRotation = transform.localRotation;
         }
 
-        private void TiltSway()
+        private void SubscribeToEvents()
         {
-            float moveX = Mathf.Clamp(InputX * tiltAmount, -maxTiltAmount, maxTiltAmount) / playerMultiplier;
-
-            Quaternion finalRotation = Quaternion.Euler(0, 0, moveX);
-
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, finalRotation * initialRotation, Time.fixedDeltaTime * smoothTiltAmount * playerMultiplier);
+            if (playerMovementProvider == null) return;
+            playerMovementProvider.AddCrouchListener(HandleCrouch);
+            playerMovementProvider.AddUncrouchListener(HandleUnCrouch);
         }
 
-        private void PivotSway()
+        private void UnsubscribeFromEvents()
         {
-            HandleSwayLocation();
-            HandleSwayRotation();
+            if (playerMovementProvider == null) return;
+            playerMovementProvider.RemoveCrouchListener(HandleCrouch);
+            playerMovementProvider.RemoveUncrouchListener(HandleUnCrouch);
         }
-        private void HandleSwayRotation()
+
+        private void UpdatePerlinNoise()
         {
-            var right = Camera.main.transform.right;
-            right.y = 0f;
-            right.Normalize();
-
-            // HANDLE HORIZONTAL ROTATION
-            transform.RotateAround(pivot.position, new Vector3(0, 1, 0), Time.fixedDeltaTime * swayRotationAmount.x * -InputManager.mousex);
-            // HANDLE VERTICAL ROTATION
-            transform.RotateAround(pivot.position, right, Time.fixedDeltaTime * swayRotationAmount.y * InputManager.mousey);
-            // HANDLE TILT ROTATION
-            Quaternion swayRot = Quaternion.Lerp(transform.localRotation,
-                Quaternion.Euler(new Vector3(transform.localRotation.eulerAngles.x, transform.localRotation.eulerAngles.y, InputManager.mousex * swayTiltAmount)),
-                Time.deltaTime * swaySpeed);
-
-            swayRot = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(Vector3.zero), Time.deltaTime * swaySpeed);
-
-            transform.localRotation = swayRot;
+            float time = Time.time * idleSwaySpeed;
+            perlinNoise.x = (Mathf.PerlinNoise(time, 0) - 0.5f) * 2f;
+            perlinNoise.y = (Mathf.PerlinNoise(0, time) - 0.5f) * 2f;
         }
 
-        private void HandleSwayLocation()
+        private void CalculateSwayInputs()
         {
-            Vector3 finalPosition = new Vector3(-InputManager.mousex, InputManager.mousey, 0) / 100;
-            finalPosition.x = Mathf.Clamp(finalPosition.x, -1, 1) * swayMovementAmount.x;
-            finalPosition.y = Mathf.Clamp(finalPosition.y, -1, 1) * swayMovementAmount.y;
-
-            transform.localPosition = Vector3.Lerp(transform.localPosition, finalPosition, swaySpeed * Time.deltaTime);
+            swayInput.x = -InputManager.mousex / 10 - 2 * InputManager.controllerx;
+            swayInput.y = -InputManager.mousey / 10 - 2 * InputManager.controllery;
         }
 
-        #endregion
+        private float GetCurrentSwayMultiplier()
+        {
+            return weaponController.IsAiming ? adsSwayReduction : 1f;
+        }
 
-        #region Crouch Tilt Methods
+        private float GetCurrentSmoothMultiplier()
+        {
+            return weaponController.IsAiming ? aimingSmoothMultiplier : 1f;
+        }
+
+        private void ApplySimpleSway()
+        {
+            CalculateSwayInputs();
+            float swayMultiplier = GetCurrentSwayMultiplier();
+            float smoothMultiplier = GetCurrentSmoothMultiplier();
+
+            float moveX = Mathf.Clamp(swayInput.x * simple_PositionAmount, -simple_MaxPositionAmount, simple_MaxPositionAmount);
+            float moveY = Mathf.Clamp(swayInput.y * simple_PositionAmount, -simple_MaxPositionAmount, simple_MaxPositionAmount);
+
+            Vector3 reactivePosSway = new Vector3(moveX, moveY, 0);
+            Vector3 proceduralPosSway = new Vector3(perlinNoise.x * idleSwayAmplitude.x, perlinNoise.y * idleSwayAmplitude.y, 0);
+            Vector3 totalPosSway = (reactivePosSway + proceduralPosSway) * swayMultiplier;
+            Vector3 finalPosition = initialPosition + totalPosSway;
+
+            transform.localPosition = Vector3.Lerp(transform.localPosition, finalPosition, Time.deltaTime * simple_SmoothAmount * smoothMultiplier);
+
+            float tiltX = Mathf.Clamp(swayInput.x * simple_TiltAmount, -simple_MaxTiltAmount, simple_MaxTiltAmount);
+            Quaternion reactiveRotSway = Quaternion.Euler(0, 0, tiltX);
+            Quaternion proceduralRotSway = Quaternion.Euler(perlinNoise.y * idleRotationSwayAmplitude.x, perlinNoise.x * idleRotationSwayAmplitude.y, perlinNoise.x * -idleRotationSwayAmplitude.z);
+            Quaternion totalRotSway = Quaternion.SlerpUnclamped(Quaternion.identity, proceduralRotSway * reactiveRotSway, swayMultiplier);
+            Quaternion finalRotation = initialRotation * totalRotSway;
+
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, finalRotation, Time.deltaTime * simple_SmoothTiltAmount * smoothMultiplier);
+        }
+
+        private void ApplyPivotSway()
+        {
+            if (pivot == null) return;
+
+            CalculateSwayInputs();
+            float swayMultiplier = GetCurrentSwayMultiplier();
+            float smoothMultiplier = GetCurrentSmoothMultiplier();
+
+            Vector3 reactivePosSway = new Vector3(-swayInput.x * pivot_MovementAmount.x, -swayInput.y * pivot_MovementAmount.y, 0) * 0.1f;
+            Vector3 proceduralPosSway = new Vector3(perlinNoise.x * idleSwayAmplitude.x, perlinNoise.y * idleSwayAmplitude.y, 0);
+            Vector3 totalPosSway = (reactivePosSway + proceduralPosSway) * swayMultiplier;
+            Vector3 targetPosition = totalPosSway;
+
+            transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, Time.deltaTime * pivot_SwaySpeed * smoothMultiplier);
+
+            Quaternion proceduralRot = Quaternion.Euler(perlinNoise.y * idleRotationSwayAmplitude.x, perlinNoise.x * idleRotationSwayAmplitude.y, perlinNoise.x * -idleRotationSwayAmplitude.z);
+            Quaternion reactiveRot = Quaternion.Euler(swayInput.y * pivot_RotationAmount.y, -swayInput.x * pivot_RotationAmount.x, -swayInput.x * pivot_TiltAmount);
+            Quaternion totalSwayRotation = Quaternion.SlerpUnclamped(Quaternion.identity, reactiveRot * proceduralRot, swayMultiplier);
+            Quaternion targetRotation = initialRotation * totalSwayRotation;
+
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotation, Time.deltaTime * pivot_SwaySpeed * smoothMultiplier);
+        }
 
         private void HandleCrouch()
         {
             if (!weaponController.IsAiming)
-                StartCrouchTilt(tiltRot, originalLocalPos + tiltPosOffset);
+                StartCrouchTilt(tiltRotation, initialPosition + tiltPositionOffset);
         }
 
         private void HandleUnCrouch()
         {
-            StartCrouchTilt(originalLocalRot.eulerAngles, originalLocalPos);
+            StartCrouchTilt(initialRotation.eulerAngles, initialPosition);
         }
 
         private void StartCrouchTilt(Vector3 targetRot, Vector3 targetPos)
@@ -213,68 +210,93 @@ namespace cowsins
         private IEnumerator TiltRoutine(Vector3 targetRotation, Vector3 targetPosition)
         {
             Quaternion targetQuat = Quaternion.Euler(targetRotation);
+            float interpolant = 0f;
 
-            while (Quaternion.Angle(transform.localRotation, targetQuat) > 0.1f ||
-                   Vector3.Distance(transform.localPosition, targetPosition) > 0.01f)
+            while (interpolant < 1.0f)
             {
-                transform.localRotation = Quaternion.Lerp(transform.localRotation, targetQuat, Time.deltaTime * tiltSpeed);
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, targetQuat, Time.deltaTime * tiltSpeed);
                 transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, Time.deltaTime * tiltSpeed);
+
+                interpolant = Mathf.Max(
+                    1 - (Quaternion.Angle(transform.localRotation, targetQuat) / 180f),
+                    1 - (Vector3.Distance(transform.localPosition, targetPosition) / 1f)
+                );
+
                 yield return null;
             }
+
+            transform.localRotation = targetQuat;
+            transform.localPosition = targetPosition;
         }
 
+        public void SetAimingModifiers(float reduction, float multiplier)
+        {
+            adsSwayReduction = Mathf.Clamp01(reduction);
+            aimingSmoothMultiplier = Mathf.Max(1f, multiplier);
+        }
 
-        #endregion
-
+        public void ResetAimingModifiers()
+        {
+            adsSwayReduction = 1.0f;
+            aimingSmoothMultiplier = 1.0f;
+        }
     }
+
 #if UNITY_EDITOR
     [CustomEditor(typeof(WeaponSpecificEffects))]
     public class WeaponSpecificEffectsEditor : Editor
     {
-        override public void OnInspectorGUI()
+        public override void OnInspectorGUI()
         {
             serializedObject.Update();
             var myScript = target as WeaponSpecificEffects;
 
-            EditorGUILayout.LabelField("WEAPON SWAY", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("CONFIGURATION", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("swayMethod"));
-            EditorGUILayout.Space(10f);
+            EditorGUILayout.Space(10);
 
-            if (myScript.swayMethod == WeaponSpecificEffects.SwayMethod.Simple)
+            EditorGUILayout.LabelField("AIMING MODIFIERS", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("adsSwayReduction"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("aimingSmoothMultiplier"));
+            EditorGUILayout.Space(10);
+
+            EditorGUILayout.LabelField("PROCEDURAL IDLE SWAY", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("idleSwaySpeed"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("idleSwayAmplitude"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("idleRotationSwayAmplitude"));
+            EditorGUILayout.Space(15);
+
+            EditorGUILayout.LabelField("REACTIVE SWAY SETTINGS", EditorStyles.boldLabel);
+            EditorGUI.indentLevel++;
+            if ((WeaponSpecificEffects.SwayMethod)serializedObject.FindProperty("swayMethod").enumValueIndex == WeaponSpecificEffects.SwayMethod.Simple)
             {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.LabelField("POSITION");
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("amount"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("maxAmount"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("smoothAmount"));
-                EditorGUILayout.LabelField("ROTATION");
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("tiltAmount"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("maxTiltAmount"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("smoothTiltAmount"));
-                EditorGUI.indentLevel--;
+                EditorGUILayout.LabelField("Simple Sway", EditorStyles.miniBoldLabel);
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("simple_PositionAmount"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("simple_MaxPositionAmount"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("simple_SmoothAmount"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("simple_TiltAmount"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("simple_MaxTiltAmount"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("simple_SmoothTiltAmount"));
             }
             else
             {
-                EditorGUI.indentLevel++;
+                EditorGUILayout.LabelField("Pivot Sway", EditorStyles.miniBoldLabel);
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("pivot"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("swaySpeed"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("swayMovementAmount"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("swayRotationAmount"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("swayTiltAmount"));
-                EditorGUI.indentLevel--;
-
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("pivot_SwaySpeed"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("pivot_MovementAmount"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("pivot_RotationAmount"));
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("pivot_TiltAmount"));
             }
-            EditorGUILayout.Space(15f);
+            EditorGUI.indentLevel--;
+            EditorGUILayout.Space(15);
+
             EditorGUILayout.LabelField("CROUCH TILT", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("tiltRot"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("tiltPosOffset"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("tiltRotation"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("tiltPositionOffset"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("tiltSpeed"));
-            EditorGUILayout.Space(5f);
 
             serializedObject.ApplyModifiedProperties();
-
         }
     }
 #endif
-
 }

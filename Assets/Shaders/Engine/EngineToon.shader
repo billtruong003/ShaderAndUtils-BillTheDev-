@@ -459,7 +459,7 @@ Shader "Custom/ToonUberShader_WithEngine_Fixed"
                 VertexPositionInputs positionInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 VertexNormalInputs normalInputs = GetVertexNormalInputs(input.normalOS);
                 
-                output.positionCS = GetShadowPositionHClip(positionInputs, normalInputs);
+                output.positionCS = GetShadowCoord(positionInputs, normalInputs);
                 output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 return output;
             }

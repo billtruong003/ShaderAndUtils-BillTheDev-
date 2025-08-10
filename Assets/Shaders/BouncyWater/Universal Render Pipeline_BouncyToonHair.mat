@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Universal Render Pipeline_BouncyToonHair
+  m_Shader: {fileID: 4800000, guid: 532d85d4268dade4eb21bc81801d5bc4, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _BOUNCY_ON
+  - _SPECULAR_ON
+  m_InvalidKeywords:
+  - _RIMLIGHT_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 31a90870cec1f9842a85d438ba1c8c64, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ToonRamp:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Alpha: 1
+    - _BounceAmplitude: 0.1
+    - _BounceFrequency: 1
+    - _BounceSpeed: 1
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _EnableBouncy: 1
+    - _EnableRim: 0
+    - _EnableRimLight: 1
+    - _EnableSmoothEdges: 0
+    - _EnableSpecular: 1
+    - _EnableTransparency: 0
+    - _MaskChannel: 0
+    - _RimIntensity: 1
+    - _RimSmoothness: 0.01
+    - _RimThreshold: 0.863
+    - _ShadowThreshold: 0.5
+    - _SmoothEdges: 0
+    - _SpecularIntensity: 1
+    - _SpecularSmoothness: 0.0483
+    - _SpecularThreshold: 0.973
+    - _ToonRampSmoothness: 0.001
+    - _ToonRampThreshold: 0.553
+    - _WaveAmplitude: 0.005
+    - _WaveFrequency: 0.2
+    - _WaveSpeed: 1
+    m_Colors:
+    - _BaseColor: {r: 0, g: 0.54663897, b: 1, a: 0.6156863}
+    - _RimColor: {r: 0.3160377, g: 0.81372494, b: 1, a: 0.57254905}
+    - _SpecularColor: {r: 0.33490568, g: 0.6633539, b: 1, a: 1}
+    - _WaveAxis: {r: 0, g: 1, b: 0, a: 0}
+    - _WindDirection: {r: 1, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

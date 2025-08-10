@@ -1,5 +1,3 @@
-
-// Shader "Custom/URP/ToonShaderInteractive_URP_Modern"
 Shader "Custom/URP/ToonShaderInteractive_URP_Modern"
 {
     Properties
