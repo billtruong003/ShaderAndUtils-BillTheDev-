@@ -26,21 +26,27 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ADDITIONAL_LIGHTS_ON
+  - _GRADIENT_AMBIENT_ON
+  - _HATCHING_ON
   - _NORMALMAP_ON
+  - _RIM_LIGHT_ON
   m_InvalidKeywords:
   - _BLING_EFFECT_ON
+  - _BLING_WORLDSPACE_ON
   - _DISPLACEMENT_SATURATE_ON
   - _DISSOLVETYPE_LINEAR
   - _DISSOLVE_LOCALSPACE_ON
   - _DISSOLVE_ON
-  - _LIGHTINGMODEL_BASIC_TOON
+  - _LIGHTINGMODEL_STUDIO_TOON
+  - _STUDIO_GRADIENT_AMBIENT_ON
+  - _STUDIO_RIM_LIGHT_ON
   - _USE_TIME_ANIMATION
   - _VERTEX_DISPLACEMENT_ON
   - _ZWRITE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -131,19 +137,19 @@ Material:
     - _AmbientGradientPower: 1
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BlingFresnelPower: 2
-    - _BlingIntensity: 2
-    - _BlingScale: 50
-    - _BlingSpeed: 1
-    - _BlingThreshold: 0.95
-    - _BlingWorldSpace: 0
+    - _BlingFresnelPower: 0.1
+    - _BlingIntensity: 10
+    - _BlingScale: 10000
+    - _BlingSpeed: 5
+    - _BlingThreshold: 0.787
+    - _BlingWorldSpace: 1
     - _Bling_RimMax: 1
-    - _Bling_RimMin: 0
-    - _Bling_RimPower: 3
-    - _Bling_SpecOffset: 0.95
+    - _Bling_RimMin: 0.415
+    - _Bling_RimPower: 10
+    - _Bling_SpecOffset: 1
     - _Bling_SpecSmoothness: 0.05
     - _BounceWaveWidth: 5
-    - _BumpScale: 2
+    - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -153,7 +159,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DisplacementWaveWidth: 0.1
     - _DissolveEdgeWidth: 0.1
-    - _DissolveThreshold: -2
+    - _DissolveThreshold: -0.84
     - _DissolveType: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
@@ -163,11 +169,11 @@ Material:
     - _EnableBlingEffect: 1
     - _EnableDissolve: 1
     - _EnableEmission: 0
-    - _EnableGradientAmbient: 0
-    - _EnableHatching: 0
+    - _EnableGradientAmbient: 1
+    - _EnableHatching: 1
     - _EnableMatcap: 0
     - _EnableNormalMap: 1
-    - _EnableRimLight: 0
+    - _EnableRimLight: 1
     - _EnableShatterEffect: 0
     - _EnableSpecular: 0
     - _EnableVertexDisplacement: 1
@@ -178,7 +184,7 @@ Material:
     - _HatchingTiling: 1
     - _HatchingVisibility: 1
     - _HighlightThreshold: 0.8
-    - _LightingModel: 2
+    - _LightingModel: 3
     - _LocalSpace: 0
     - _MatcapBlendMode: 0
     - _MatcapIntensity: 1
@@ -213,18 +219,18 @@ Material:
     - _SpecularThreshold: 0.95
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _StudioToon_AmbientGradientPower: 1
-    - _StudioToon_HighlightThreshold: 0.6769231
+    - _StudioToon_AmbientGradientPower: 5
+    - _StudioToon_HighlightThreshold: 0.38076925
     - _StudioToon_RampSmoothness: 0.05
-    - _StudioToon_RimPower: 3
-    - _StudioToon_RimThreshold: 0.5
-    - _StudioToon_ShadowThreshold: 0.23846154
-    - _StudioToon_SpecularSmoothness: 0.02
-    - _StudioToon_SpecularThreshold: 0.95
+    - _StudioToon_RimPower: 10
+    - _StudioToon_RimThreshold: 1
+    - _StudioToon_ShadowThreshold: 0.12307693
+    - _StudioToon_SpecularSmoothness: 1
+    - _StudioToon_SpecularThreshold: 0.188
     - _Surface: 0
     - _TimeScale: 1
-    - _ToonRampOffset: 0.145
-    - _ToonRampSmoothness: 0.691
+    - _ToonRampOffset: 0.478
+    - _ToonRampSmoothness: 1
     - _UVSec: 0
     - _UseFakeLight: 0
     - _UseLocalSpace: 1
@@ -237,8 +243,8 @@ Material:
     m_Colors:
     - _AmbientColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _BlingColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Bling_RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BlingColor: {r: 4.9245777, g: 0.7724193, b: 0, a: 1}
+    - _Bling_RimColor: {r: 1, g: 0.23506618, b: 0, a: 1}
     - _Bling_SpecColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CustomShadowColor: {r: 0, g: 0, b: 0, a: 1}

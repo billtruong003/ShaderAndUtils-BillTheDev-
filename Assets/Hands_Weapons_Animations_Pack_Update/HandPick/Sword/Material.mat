@@ -29,16 +29,20 @@ Material:
   - _DISSOLVETYPE_LINEAR
   - _DISSOLVE_LOCALSPACE_ON
   - _DISSOLVE_ON
+  - _HATCHING_ON
   - _LIGHTINGMODEL_STUDIO_TOON
+  - _NORMALMAP_ON
+  - _STUDIO_GRADIENT_AMBIENT_ON
   - _VERTEX_DISPLACEMENT_ON
   m_InvalidKeywords:
   - _DISPLACEMENT_SATURATE_ON
+  - _GRADIENT_AMBIENT_ON
   - _USE_TIME_ANIMATION
   - _ZWRITE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses:
@@ -52,7 +56,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: f12915d31e2cb344ca1b2657025a40d4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -71,8 +75,16 @@ Material:
         m_Texture: {fileID: 2800000, guid: ba253272e3fef774e8e85601ae9debdc, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _HatchingMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: ba253272e3fef774e8e85601ae9debdc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatcapMap:
+        m_Texture: {fileID: 2800000, guid: 479493ee25e0f624c87849ede236a0e4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Metal_Ramp:
@@ -114,6 +126,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _AddPrecomputedVelocity: 0
+    - _AdditionalLightInfluence: 1
     - _AlphaClip: 0
     - _AlphaClipMode: 0
     - _AlphaFadeRange: 0.5
@@ -132,7 +145,7 @@ Material:
     - _Bling_SpecOffset: 0.95
     - _Bling_SpecSmoothness: 0.05
     - _BounceWaveWidth: 5
-    - _BumpScale: 1
+    - _BumpScale: 2
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -140,17 +153,21 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DisplacementWaveWidth: 0.1
-    - _DissolveEdgeWidth: 0.1
+    - _DisplacementWaveWidth: 0.005
+    - _DissolveEdgeWidth: 0.25
     - _DissolveThreshold: -2
     - _DissolveType: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EdgeWidth: 0.02
+    - _EnableAdditionalLights: 0
     - _EnableBlingEffect: 1
     - _EnableDissolve: 1
     - _EnableEmission: 0
-    - _EnableGradientAmbient: 0
+    - _EnableGradientAmbient: 1
+    - _EnableHatching: 1
+    - _EnableMatcap: 0
+    - _EnableNormalMap: 1
     - _EnableRimLight: 0
     - _EnableShatterEffect: 0
     - _EnableSpecular: 0
@@ -159,16 +176,20 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _HatchingTiling: 1
+    - _HatchingVisibility: 1
     - _LightingModel: 3
     - _LocalSpace: 0
+    - _MatcapBlendMode: 0
+    - _MatcapIntensity: 0.14
     - _Metal_Brightness: 1.3
     - _Metal_HighlightOffset: 0.9
     - _Metal_Offset: 0.8
     - _Metal_RimPower: 6
     - _Metallic: 0
     - _Mode: 0
-    - _NoiseScale: 20
-    - _NoiseStrength: 0.25
+    - _NoiseScale: 2
+    - _NoiseStrength: 0.05
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _PatternFrequency: 10
@@ -176,6 +197,7 @@ Material:
     - _QueueOffset: 0
     - _RadialDirection: 1
     - _ReceiveShadows: 1
+    - _ShadowTintInfluence: 0.2
     - _ShatterLiftSpeed: 1
     - _ShatterOffsetStrength: 0.5
     - _ShatterStrength: 1
@@ -186,11 +208,11 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _StudioToon_AmbientGradientPower: 1
-    - _StudioToon_HighlightThreshold: 0.6769231
+    - _StudioToon_HighlightThreshold: 0.8
     - _StudioToon_RampSmoothness: 0.05
-    - _StudioToon_RimPower: 3
+    - _StudioToon_RimPower: 3.35
     - _StudioToon_RimThreshold: 0.5
-    - _StudioToon_ShadowThreshold: 0.23846154
+    - _StudioToon_ShadowThreshold: 0.4
     - _StudioToon_SpecularSmoothness: 0.02
     - _StudioToon_SpecularThreshold: 0.95
     - _Surface: 0
@@ -198,6 +220,7 @@ Material:
     - _ToonRampOffset: 0.145
     - _ToonRampSmoothness: 0.691
     - _UVSec: 0
+    - _UseFakeLight: 0
     - _UseLocalSpace: 1
     - _UseSaturateDisplacement: 1
     - _UseTimeAnimation: 1
@@ -212,11 +235,14 @@ Material:
     - _Bling_RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _Bling_SpecColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _CustomShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _Direction: {r: 0, g: 1, b: 0, a: 0}
-    - _DissolveDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _DissolveDirection: {r: 0, g: -1, b: 0, a: 0}
     - _DissolveEdgeColor: {r: 11.984315, g: 0.5746042, b: 0, a: 1}
     - _EdgeColor: {r: 1, g: 0.5, b: 0, a: 1}
     - _EmissionColor: {r: 2, g: 0.26697102, b: 0, a: 0}
+    - _FakeLightDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _MatcapTint: {r: 0, g: 0, b: 0, a: 1}
     - _Metal_HiColor: {r: 1, g: 1, b: 1, a: 1}
     - _Metal_RimColor: {r: 1, g: 0.3, b: 0.3, a: 1}
     - _Metal_SpecuColor: {r: 0.8, g: 0.45, b: 0.2, a: 1}
@@ -227,7 +253,7 @@ Material:
     - _StudioToon_MidtoneColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
     - _StudioToon_RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _StudioToon_ShadowColor: {r: 0.4, g: 0.4, b: 0.4, a: 1}
-    - _StudioToon_SkyColor: {r: 0.2, g: 0.3, b: 0.4, a: 1}
+    - _StudioToon_SkyColor: {r: 0.07058824, g: 0.15294118, b: 0.23529412, a: 1}
     - _StudioToon_SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ToonRampTinting: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

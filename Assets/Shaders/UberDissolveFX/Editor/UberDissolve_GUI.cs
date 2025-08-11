@@ -22,6 +22,7 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
 
     private enum LightingModel { Unlit = 0, StandardLit = 1, BasicToon = 2, StudioToon = 3, ToonBling = 4 }
     private enum DissolveType { Noise = 0, Linear = 1, Radial = 2, Pattern = 3, AlphaBlend = 4, Shatter = 5 }
+    private enum MatcapBlendMode { Add, Multiply, Lerp }
 
     public override void OnGUI(MaterialEditor editor, MaterialProperty[] props)
     {
@@ -77,6 +78,7 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
 
     #region Find Properties
     private MaterialProperty lightingModel, baseMap, baseColor, cullMode, alphaClipMode, cutoff;
+    private MaterialProperty enableNormalMap, bumpMap, bumpScale;
     private MaterialProperty enableEmission, emissionMap, emissionColor;
     private MaterialProperty enableDissolve, dissolveType, dissolveThreshold, useTimeAnimation, timeScale, useLocalSpace, dissolveDirection, radialDirection;
     private MaterialProperty noiseTex, noiseScale, noiseStrength, dissolveEdgeWidth, dissolveEdgeColor;
@@ -84,13 +86,22 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
     private MaterialProperty enableVertexDisplacement, enableShatterEffect, vertexDisplacement, displacementWaveWidth;
     private MaterialProperty shatterStrength, shatterLiftSpeed, shatterOffsetStrength, shatterTriggerRange;
     private MaterialProperty toonRampOffset, toonRampSmoothness, shadowTint;
-    private MaterialProperty studioEnableGradientAmbient, studioHighlightColor, studioMidtoneColor, studioShadowColor;
+
+    // Studio Toon
+    private MaterialProperty studioHighlightColor, studioMidtoneColor, studioShadowColor;
     private MaterialProperty studioHighlightThreshold, studioShadowThreshold, studioRampSmoothness;
-    private MaterialProperty studioSkyColor, studioGroundColor, studioAmbientGradientPower;
+    private MaterialProperty studioEnableGradientAmbient, studioSkyColor, studioGroundColor, studioAmbientGradientPower;
     private MaterialProperty studioEnableSpecular, studioSpecularColor, studioSpecularThreshold, studioSpecularSmoothness;
     private MaterialProperty studioEnableRim, studioRimColor, studioRimPower, studioRimThreshold;
+    private MaterialProperty useFakeLight, fakeLightDirection, customShadowColor, shadowTintInfluence;
+    private MaterialProperty enableAdditionalLights, additionalLightInfluence;
+    private MaterialProperty enableHatching, hatchingMap, hatchingTiling, hatchingVisibility;
+    private MaterialProperty enableMatcap, matcapMap, matcapBlendMode, matcapTint, matcapIntensity;
+
+    // Toon Bling
     private MaterialProperty blingSpecColor, blingSpecSmoothness, blingSpecOffset, blingRimColor, blingRimPower, blingRimMin, blingRimMax;
     private MaterialProperty enableBlingEffect, blingWorldSpace, blingColor, blingIntensity, blingScale, blingSpeed, blingFresnelPower, blingThreshold;
+
     private MaterialProperty zWrite;
 
     private void FindAllProperties()
@@ -101,6 +112,9 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
         cullMode = FindProperty("_CullMode", properties);
         alphaClipMode = FindProperty("_AlphaClipMode", properties);
         cutoff = FindProperty("_Cutoff", properties);
+        enableNormalMap = FindProperty("_EnableNormalMap", properties);
+        bumpMap = FindProperty("_BumpMap", properties);
+        bumpScale = FindProperty("_BumpScale", properties);
         enableEmission = FindProperty("_EnableEmission", properties);
         emissionMap = FindProperty("_EmissionMap", properties);
         emissionColor = FindProperty("_EmissionColor", properties);
@@ -131,13 +145,15 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
         toonRampOffset = FindProperty("_ToonRampOffset", properties);
         toonRampSmoothness = FindProperty("_ToonRampSmoothness", properties);
         shadowTint = FindProperty("_ShadowTint", properties);
-        studioEnableGradientAmbient = FindProperty("_EnableGradientAmbient", properties);
+
+        // Studio Toon
         studioHighlightColor = FindProperty("_StudioToon_HighlightColor", properties);
         studioMidtoneColor = FindProperty("_StudioToon_MidtoneColor", properties);
         studioShadowColor = FindProperty("_StudioToon_ShadowColor", properties);
         studioHighlightThreshold = FindProperty("_StudioToon_HighlightThreshold", properties);
         studioShadowThreshold = FindProperty("_StudioToon_ShadowThreshold", properties);
         studioRampSmoothness = FindProperty("_StudioToon_RampSmoothness", properties);
+        studioEnableGradientAmbient = FindProperty("_EnableGradientAmbient", properties);
         studioSkyColor = FindProperty("_StudioToon_SkyColor", properties);
         studioGroundColor = FindProperty("_StudioToon_GroundColor", properties);
         studioAmbientGradientPower = FindProperty("_StudioToon_AmbientGradientPower", properties);
@@ -149,6 +165,23 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
         studioRimColor = FindProperty("_StudioToon_RimColor", properties);
         studioRimPower = FindProperty("_StudioToon_RimPower", properties);
         studioRimThreshold = FindProperty("_StudioToon_RimThreshold", properties);
+        useFakeLight = FindProperty("_UseFakeLight", properties);
+        fakeLightDirection = FindProperty("_FakeLightDirection", properties);
+        customShadowColor = FindProperty("_CustomShadowColor", properties);
+        shadowTintInfluence = FindProperty("_ShadowTintInfluence", properties);
+        enableAdditionalLights = FindProperty("_EnableAdditionalLights", properties);
+        additionalLightInfluence = FindProperty("_AdditionalLightInfluence", properties);
+        enableHatching = FindProperty("_EnableHatching", properties);
+        hatchingMap = FindProperty("_HatchingMap", properties);
+        hatchingTiling = FindProperty("_HatchingTiling", properties);
+        hatchingVisibility = FindProperty("_HatchingVisibility", properties);
+        enableMatcap = FindProperty("_EnableMatcap", properties);
+        matcapBlendMode = FindProperty("_MatcapBlendMode", properties);
+        matcapMap = FindProperty("_MatcapMap", properties);
+        matcapTint = FindProperty("_MatcapTint", properties);
+        matcapIntensity = FindProperty("_MatcapIntensity", properties);
+
+        // Toon Bling
         blingSpecColor = FindProperty("_Bling_SpecColor", properties);
         blingSpecSmoothness = FindProperty("_Bling_SpecSmoothness", properties);
         blingSpecOffset = FindProperty("_Bling_SpecOffset", properties);
@@ -164,6 +197,7 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
         blingSpeed = FindProperty("_BlingSpeed", properties);
         blingFresnelPower = FindProperty("_BlingFresnelPower", properties);
         blingThreshold = FindProperty("_BlingThreshold", properties);
+
         zWrite = FindProperty("_ZWrite", properties);
     }
     #endregion
@@ -183,6 +217,13 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
         if (alphaClipMode.floatValue > 0.5f)
         {
             DrawProperty(cutoff.displayName, cutoff, 1);
+        }
+
+        materialEditor.ShaderProperty(enableNormalMap, "Enable Normal Map");
+        if (enableNormalMap.floatValue > 0.5f)
+        {
+            DrawProperty("Normal Map", bumpMap, 1);
+            DrawProperty("Normal Intensity", bumpScale, 1);
         }
     }
 
@@ -293,15 +334,23 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
         float highlightVal = studioHighlightThreshold.floatValue;
         var label = new GUIContent("Ramp Thresholds", "Left: Shadow | Right: Highlight");
 
-        EditorGUI.BeginChangeCheck();
-        EditorGUILayout.MinMaxSlider(label, ref shadowVal, ref highlightVal, 0.0f, 1.0f);
-        if (EditorGUI.EndChangeCheck())
+        materialEditor.ShaderProperty(studioShadowThreshold, "Shadow Threshold");
+        materialEditor.ShaderProperty(studioHighlightThreshold, "Highlight Threshold");
+        if (studioShadowThreshold.floatValue > studioHighlightThreshold.floatValue)
         {
-            studioShadowThreshold.floatValue = shadowVal;
-            studioHighlightThreshold.floatValue = highlightVal;
+            studioHighlightThreshold.floatValue = studioShadowThreshold.floatValue;
         }
 
         DrawProperty("Ramp Smoothness", studioRampSmoothness);
+
+        DrawHeader("Studio Toon - Lighting Control", 12);
+        DrawProperty(useFakeLight.displayName, useFakeLight);
+        if (useFakeLight.floatValue > 0.5f)
+        {
+            DrawProperty("Fake Direction", fakeLightDirection, 1);
+        }
+        DrawProperty(customShadowColor.displayName, customShadowColor);
+        DrawProperty(shadowTintInfluence.displayName, shadowTintInfluence);
 
         DrawHeader("Studio Toon - Ambient", 12);
         DrawProperty(studioEnableGradientAmbient.displayName, studioEnableGradientAmbient);
@@ -312,7 +361,7 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
             DrawProperty("Gradient Power", studioAmbientGradientPower, 1);
         }
 
-        DrawHeader("Studio Toon - Effects", 12);
+        DrawHeader("Studio Toon - Surface Effects", 12);
         DrawProperty(studioEnableSpecular.displayName, studioEnableSpecular);
         if (studioEnableSpecular.floatValue > 0.5f)
         {
@@ -327,6 +376,38 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
             DrawProperty("Color & Intensity (A)", studioRimColor, 1);
             DrawProperty("Power", studioRimPower, 1);
             DrawProperty("Threshold", studioRimThreshold, 1);
+        }
+
+        DrawHeader("Studio Toon - Advanced Effects", 12);
+        DrawProperty(enableHatching.displayName, enableHatching);
+        if (enableHatching.floatValue > 0.5f)
+        {
+            DrawProperty("Hatching Map", hatchingMap, 1);
+            DrawProperty("Tiling", hatchingTiling, 1);
+            DrawProperty("Visibility", hatchingVisibility, 1);
+        }
+        EditorGUILayout.Space();
+        DrawProperty(enableMatcap.displayName, enableMatcap);
+        if (enableMatcap.floatValue > 0.5f)
+        {
+            DrawProperty("MatCap Map", matcapMap, 1);
+
+            var blendModeProp = matcapBlendMode;
+            var newMode = (MatcapBlendMode)EditorGUILayout.EnumPopup("Blend Mode", (MatcapBlendMode)blendModeProp.floatValue);
+            if ((float)newMode != blendModeProp.floatValue)
+            {
+                blendModeProp.floatValue = (float)newMode;
+            }
+
+            DrawProperty("Tint & Lerp Alpha", matcapTint, 1);
+            DrawProperty("Intensity", matcapIntensity, 1);
+        }
+
+        DrawHeader("Studio Toon - Additional Lights", 12);
+        DrawProperty(enableAdditionalLights.displayName, enableAdditionalLights);
+        if (enableAdditionalLights.floatValue > 0.5f)
+        {
+            DrawProperty("Influence", additionalLightInfluence, 1);
         }
     }
 
@@ -382,6 +463,8 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
         SetKeyword("_LIGHTINGMODEL_STUDIO_TOON", currentLighting == LightingModel.StudioToon);
         SetKeyword("_LIGHTINGMODEL_TOON_BLING", currentLighting == LightingModel.ToonBling);
 
+        bool isStudioToon = currentLighting == LightingModel.StudioToon;
+
         bool dissolveOn = enableDissolve.floatValue > 0.5f;
         SetKeyword("_DISSOLVE_ON", dissolveOn);
         if (dissolveOn)
@@ -403,9 +486,14 @@ public class Shmackle_UberDissolve_GUI : ShaderGUI
         SetKeyword("_BLING_EFFECT_ON", currentLighting == LightingModel.ToonBling && enableBlingEffect.floatValue > 0.5f);
         SetKeyword("_BLING_WORLDSPACE_ON", currentLighting == LightingModel.ToonBling && enableBlingEffect.floatValue > 0.5f && blingWorldSpace.floatValue > 0.5f);
 
-        SetKeyword("_STUDIO_GRADIENT_AMBIENT_ON", currentLighting == LightingModel.StudioToon && studioEnableGradientAmbient.floatValue > 0.5f);
-        SetKeyword("_STUDIO_SPECULAR_ON", currentLighting == LightingModel.StudioToon && studioEnableSpecular.floatValue > 0.5f);
-        SetKeyword("_STUDIO_RIM_LIGHT_ON", currentLighting == LightingModel.StudioToon && studioEnableRim.floatValue > 0.5f);
+        SetKeyword("_NORMALMAP_ON", enableNormalMap.floatValue > 0.5f);
+        SetKeyword("_USE_FAKE_LIGHT", isStudioToon && useFakeLight.floatValue > 0.5f);
+        SetKeyword("_STUDIO_GRADIENT_AMBIENT_ON", isStudioToon && studioEnableGradientAmbient.floatValue > 0.5f);
+        SetKeyword("_STUDIO_SPECULAR_ON", isStudioToon && studioEnableSpecular.floatValue > 0.5f);
+        SetKeyword("_STUDIO_RIM_LIGHT_ON", isStudioToon && studioEnableRim.floatValue > 0.5f);
+        SetKeyword("_ADDITIONAL_LIGHTS_ON", isStudioToon && enableAdditionalLights.floatValue > 0.5f);
+        SetKeyword("_HATCHING_ON", isStudioToon && enableHatching.floatValue > 0.5f);
+        SetKeyword("_MATCAP_ON", isStudioToon && enableMatcap.floatValue > 0.5f);
 
         SetKeyword("_ALPHACLIP_ON", alphaClipMode.floatValue > 0.5f);
         SetKeyword("_EMISSION_ON", enableEmission.floatValue > 0.5f);

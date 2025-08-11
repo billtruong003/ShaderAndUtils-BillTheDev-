@@ -10,6 +10,7 @@ struct Attributes
     float4 positionOS   : POSITION;
     float2 uv           : TEXCOORD0;
     float3 normalOS     : NORMAL;
+    float4 tangentOS    : TANGENT;
 };
 
 struct Varyings
@@ -21,6 +22,9 @@ struct Varyings
     float3 viewDirWS        : TEXCOORD3;
     float  dissolveValue    : TEXCOORD4;
     float  perVertexNoise   : TEXCOORD5;
+    half4  shadowCoord      : TEXCOORD6;
+    float3 tangentWS        : TEXCOORD7;
+    float3 bitangentWS      : TEXCOORD8;
 };
 
 CBUFFER_START(UnityPerMaterial)
@@ -52,6 +56,9 @@ CBUFFER_START(UnityPerMaterial)
     half   _ToonRampOffset;
     half   _ToonRampSmoothness;
     half4  _ShadowTint;
+    
+    // Studio Toon
+    float4 _BumpMap_ST; half _BumpScale;
     half4 _StudioToon_HighlightColor, _StudioToon_MidtoneColor, _StudioToon_ShadowColor;
     half _StudioToon_HighlightThreshold, _StudioToon_ShadowThreshold, _StudioToon_RampSmoothness;
     half4 _StudioToon_SkyColor, _StudioToon_GroundColor;
@@ -60,6 +67,13 @@ CBUFFER_START(UnityPerMaterial)
     half _StudioToon_SpecularThreshold, _StudioToon_SpecularSmoothness;
     half4 _StudioToon_RimColor;
     half _StudioToon_RimPower, _StudioToon_RimThreshold;
+    half4 _FakeLightDirection;
+    half4 _CustomShadowColor; half _ShadowTintInfluence;
+    half _AdditionalLightInfluence;
+    half _HatchingTiling; half _HatchingVisibility;
+    half _MatcapBlendMode; half4 _MatcapTint; half _MatcapIntensity;
+
+    // Toon Bling
     half4  _Bling_SpecColor;
     half   _Bling_SpecSmoothness;
     half   _Bling_SpecOffset;
@@ -78,6 +92,9 @@ CBUFFER_END
 TEXTURE2D(_BaseMap);        SAMPLER(sampler_BaseMap);
 TEXTURE2D(_EmissionMap);    SAMPLER(sampler_EmissionMap);
 TEXTURE2D(_NoiseTex);       SAMPLER(sampler_NoiseTex);
+TEXTURE2D(_BumpMap);        SAMPLER(sampler_BumpMap);
+TEXTURE2D(_HatchingMap);    SAMPLER(sampler_HatchingMap);
+TEXTURE2D(_MatcapMap);      SAMPLER(sampler_MatcapMap);
 
 #include "UberDissolve_Functions.hlsl"
 

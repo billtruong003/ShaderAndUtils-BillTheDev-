@@ -12,6 +12,9 @@ Shader "Shmackle/Uber Dissolve FX"
         [Enum(UnityEngine.Rendering.CullMode)] _CullMode ("Culling Mode", Float) = 2
         [Toggle(_ALPHACLIP_ON)] _AlphaClipMode("Enable Alpha Clip", Float) = 0
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
+        [Toggle(_NORMALMAP_ON)] _EnableNormalMap("Enable Normal Map", Float) = 0
+        [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
+        _BumpScale("Normal Intensity", Range(0, 2)) = 1.0
 
         [Header(Emission)]
         [Toggle(_EMISSION_ON)] _EnableEmission("Enable Emission", Float) = 0
@@ -59,13 +62,19 @@ Shader "Shmackle/Uber Dissolve FX"
         [HDR] _ShadowTint("Shadow Tint", Color) = (0.1, 0.1, 0.2, 1.0)
         
         [Header(Studio Toon Lighting)]
-        [Toggle(_STUDIO_GRADIENT_AMBIENT_ON)] _EnableGradientAmbient("Enable Gradient Ambient", Float) = 0
         _StudioToon_HighlightColor("Highlight Color", Color) = (1,1,1,1)
         _StudioToon_MidtoneColor("Midtone Color", Color) = (0.8, 0.8, 0.8, 1)
         _StudioToon_ShadowColor("Shadow Color", Color) = (0.4, 0.4, 0.4, 1)
         _StudioToon_HighlightThreshold("Highlight Threshold", Range(0, 1)) = 0.8
         _StudioToon_ShadowThreshold("Shadow Threshold", Range(0, 1)) = 0.4
         _StudioToon_RampSmoothness("Ramp Smoothness", Range(0.001, 1)) = 0.05
+        [Toggle(_USE_FAKE_LIGHT)] _UseFakeLight("Use Fake Light Direction", Float) = 0
+        _FakeLightDirection("Fake Light Direction", Vector) = (0, 1, 0, 0)
+        _CustomShadowColor("Main Light Custom Shadow Color", Color) = (0,0,0,1)
+        _ShadowTintInfluence("Light Color On Shadow", Range(0, 1)) = 0.2
+        
+        [Header(Studio Toon Ambient)]
+        [Toggle(_STUDIO_GRADIENT_AMBIENT_ON)] _EnableGradientAmbient("Enable Gradient Ambient", Float) = 0
         _StudioToon_SkyColor("Sky Color (Ambient)", Color) = (0.2, 0.3, 0.4, 1)
         _StudioToon_GroundColor("Ground Color (Ambient)", Color) = (0.1, 0.1, 0.1, 1)
         _StudioToon_AmbientGradientPower("Ambient Gradient Power", Range(0.1, 5)) = 1.0
@@ -79,6 +88,21 @@ Shader "Shmackle/Uber Dissolve FX"
         _StudioToon_RimColor("Rim Color", Color) = (1,1,1,1)
         _StudioToon_RimPower("Rim Power", Range(1, 10)) = 3.0
         _StudioToon_RimThreshold("Rim Threshold", Range(0, 1)) = 0.5
+        
+        [Header(Studio Toon Advanced Effects)]
+        [Toggle(_HATCHING_ON)] _EnableHatching("Enable Shadow Hatching", Float) = 0
+        _HatchingMap("Hatching Map", 2D) = "gray" {}
+        _HatchingTiling("Hatching Tiling", Float) = 1.0
+        _HatchingVisibility("Hatching Visibility", Range(0, 1)) = 1.0
+        [Toggle(_MATCAP_ON)] _EnableMatcap("Enable MatCap", Float) = 0
+        [Enum(Add,0,Multiply,1,Lerp,2)]_MatcapBlendMode("MatCap Blend Mode", Float) = 0.0
+        _MatcapMap("MatCap Map", 2D) = "gray" {}
+        _MatcapTint("MatCap Tint & Lerp Alpha", Color) = (1,1,1,1)
+        _MatcapIntensity("MatCap Intensity", Range(0, 5)) = 1.0
+
+        [Header(Studio Toon Additional Lights)]
+        [Toggle(_ADDITIONAL_LIGHTS_ON)] _EnableAdditionalLights("Enable Additional Lights", Float) = 1
+        _AdditionalLightInfluence("Additional Light Influence", Range(0, 1)) = 1.0
         
         [Header(Toon Bling Lighting)]
         [Toggle(_BLING_EFFECT_ON)] _EnableBlingEffect ("Enable Bling Effect", Float) = 1
@@ -119,16 +143,21 @@ Shader "Shmackle/Uber Dissolve FX"
             #pragma fragment frag
 
             #pragma shader_feature_local_fragment _ALPHACLIP_ON
+            #pragma shader_feature_local_fragment _NORMALMAP_ON
             #pragma shader_feature_local_fragment _EMISSION_ON
             #pragma shader_feature_local _DISSOLVE_ON
             #pragma shader_feature_local _DISSOLVE_LOCALSPACE_ON
             #pragma shader_feature_local _VERTEX_DISPLACEMENT_ON
             #pragma shader_feature_local _SHATTER_EFFECT_ON
             
+            #pragma shader_feature_local_fragment _USE_FAKE_LIGHT
             #pragma shader_feature_local_fragment _STUDIO_GRADIENT_AMBIENT_ON
             #pragma shader_feature_local_fragment _STUDIO_SPECULAR_ON
             #pragma shader_feature_local_fragment _STUDIO_RIM_LIGHT_ON
-            
+            #pragma shader_feature_local_fragment _ADDITIONAL_LIGHTS_ON
+            #pragma shader_feature_local_fragment _HATCHING_ON
+            #pragma shader_feature_local_fragment _MATCAP_ON
+
             #pragma shader_feature_local_fragment _BLING_EFFECT_ON
             #pragma shader_feature_local_fragment _BLING_WORLDSPACE_ON
             
@@ -138,7 +167,8 @@ Shader "Shmackle/Uber Dissolve FX"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
-
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHTS
+            
             #include "Includes/UberDissolve_Core.hlsl"
 
             Varyings vert(Attributes input)
@@ -171,9 +201,16 @@ Shader "Shmackle/Uber Dissolve FX"
                     #endif
                 #endif
 
-                output.positionWS = TransformObjectToWorld(displacedPositionOS);
-                output.positionCS = TransformWorldToHClip(output.positionWS);
-                output.normalWS = TransformObjectToWorldNormal(input.normalOS);
+                VertexPositionInputs positionInputs = GetVertexPositionInputs(displacedPositionOS);
+                VertexNormalInputs normalInputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
+
+                output.positionWS = positionInputs.positionWS;
+                output.positionCS = positionInputs.positionCS;
+                output.normalWS = normalInputs.normalWS;
+                output.tangentWS = normalInputs.tangentWS;
+                output.bitangentWS = normalInputs.bitangentWS;
+                output.shadowCoord = GetShadowCoord(positionInputs);
+
                 output.viewDirWS = SafeNormalize(_WorldSpaceCameraPos.xyz - output.positionWS);
                 output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 
@@ -196,7 +233,7 @@ Shader "Shmackle/Uber Dissolve FX"
                 #elif defined(_LIGHTINGMODEL_BASIC_TOON)
                     surfaceColor = CalculateLighting_BasicToon(albedo.rgb, input.normalWS, input.positionWS);
                 #elif defined(_LIGHTINGMODEL_STUDIO_TOON)
-                    surfaceColor = CalculateLighting_StudioToon(albedo.rgb, input.normalWS, input.viewDirWS, input.positionWS);
+                    surfaceColor = CalculateLighting_StudioToon(albedo.rgb, input);
                 #elif defined(_LIGHTINGMODEL_TOON_BLING)
                     surfaceColor = CalculateLighting_ToonBling(albedo.rgb, input.normalWS, input.viewDirWS, input.positionWS, input.uv);
                 #endif
@@ -276,7 +313,7 @@ Shader "Shmackle/Uber Dissolve FX"
                     clip(alpha - _Cutoff);
                 #endif
 
-                #if defined(_DISSOLVE_ON)
+                #if defined(_DISSOLVE_on)
                     half noiseTexSample = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, i.uv * _NoiseScale).r;
                     half pixelPerturbation = (noiseTexSample - 0.5h) * _NoiseStrength;
                     half perturbedDissolveValue = i.dissolveValue + pixelPerturbation;
@@ -292,6 +329,8 @@ Shader "Shmackle/Uber Dissolve FX"
             }
             ENDHLSL
         }
+        
+        UsePass "Universal Render Pipeline/Lit/DepthNormals"
     }
     CustomEditor "Shmackle_UberDissolve_GUI"
 }

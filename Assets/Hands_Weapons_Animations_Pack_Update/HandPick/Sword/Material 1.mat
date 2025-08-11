@@ -25,7 +25,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ADDITIONAL_LIGHTS_ON
+  - _GRADIENT_AMBIENT_ON
+  - _HATCHING_ON
   - _NORMALMAP_ON
   m_InvalidKeywords:
   - _BLING_EFFECT_ON
@@ -128,7 +129,7 @@ Material:
     - _AlphaClipMode: 0
     - _AlphaFadeRange: 0.5
     - _AlphaToMask: 0
-    - _AmbientGradientPower: 1
+    - _AmbientGradientPower: 5
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BlingFresnelPower: 2
@@ -143,7 +144,7 @@ Material:
     - _Bling_SpecOffset: 0.95
     - _Bling_SpecSmoothness: 0.05
     - _BounceWaveWidth: 5
-    - _BumpScale: 1
+    - _BumpScale: 2
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -158,13 +159,13 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EdgeWidth: 0.02
-    - _EnableAdditionalLights: 1
+    - _EnableAdditionalLights: 0
     - _EnableAlphaClip: 0
     - _EnableBlingEffect: 1
     - _EnableDissolve: 1
     - _EnableEmission: 0
-    - _EnableGradientAmbient: 0
-    - _EnableHatching: 0
+    - _EnableGradientAmbient: 1
+    - _EnableHatching: 1
     - _EnableMatcap: 0
     - _EnableNormalMap: 1
     - _EnableRimLight: 0
@@ -258,7 +259,7 @@ Material:
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShadowColor: {r: 0.4, g: 0.4, b: 0.4, a: 1}
     - _ShadowTint: {r: 0.1, g: 0.1, b: 0.2, a: 1}
-    - _SkyColor: {r: 0.2, g: 0.3, b: 0.4, a: 1}
+    - _SkyColor: {r: 0.070087224, g: 0.15134306, b: 0.23584908, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _StudioToon_GroundColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
