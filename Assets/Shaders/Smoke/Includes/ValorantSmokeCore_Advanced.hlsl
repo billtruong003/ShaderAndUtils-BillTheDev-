@@ -5,7 +5,8 @@
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
-    // General
+    // Formation and Quality
+    float _Progress;
     float _SphereRadius;
     int _RaymarchSteps;
     float _DensityMultiplier;
@@ -23,6 +24,10 @@ CBUFFER_START(UnityPerMaterial)
     float _CoreNoiseScale;
     float4 _CoreScrollSpeed;
     
+    // Proximity Effect
+    float _ProximityDetailBoost;
+    float _ProximityDensityMultiplier;
+
     // Warp Effect
     float _WarpScale;
     float _WarpStrength;
@@ -87,6 +92,13 @@ bool raySphereIntersect(float3 rayOriginOS, float3 rayDirectionOS, out float ent
     return solveQuadratic(a, b, c, entryDist, exitDist);
 }
 
+float GetCameraProximityFactor(float3 cameraPosOS)
+{
+    float distFromCenter = length(cameraPosOS);
+    float proximity = 1.0 - saturate(distFromCenter / _SphereRadius);
+    return smoothstep(0.0, 1.0, proximity);
+}
+
 float SampleFractalNoise(float3 position, float scale, float4 scrollSpeed)
 {
     float3 timeShiftedPos = position + _Time.y * scrollSpeed.xyz;
@@ -95,7 +107,7 @@ float SampleFractalNoise(float3 position, float scale, float4 scrollSpeed)
     #if _ENABLE_WARP
         float3 warpOffsetCoords = timeShiftedPos * _WarpScale;
         float3 warpVector = SAMPLE_TEXTURE3D_LOD(_WarpTexture, sampler_NoiseTexture, warpOffsetCoords, 0).rgb * 2.0 - 1.0;
-        mainNoiseCoords += warpVector * _WarpStrength;
+        mainNoiseCoords += warpVector * _WarpStrength * _Progress;
     #endif
     
     float fbm = 0;
@@ -108,13 +120,17 @@ float SampleFractalNoise(float3 position, float scale, float4 scrollSpeed)
         amplitude *= 0.5;
         frequency *= 2.0;
     }
-    return saturate(fbm);
+
+    float formationCarve = 1.0 - _Progress;
+    float remappedNoise = saturate((fbm - formationCarve) / (1.0 - formationCarve));
+    return remappedNoise;
 }
 
-SmokeSample GetSmokeLayerPropertiesAtPosition(float3 positionOS, float3 worldPos, Light mainLight)
+SmokeSample GetSmokeLayerPropertiesAtPosition(float3 positionOS, float3 worldPos, Light mainLight, float proximityFactor)
 {
     SmokeSample finalSample = (SmokeSample)0;
     float distFromCenter = length(positionOS);
+    float proximityDensityBoost = 1.0 + proximityFactor * _ProximityDensityMultiplier;
     
     #if _ENABLE_SHELL
         float shellOuterEdge = _SphereRadius;
@@ -124,8 +140,9 @@ SmokeSample GetSmokeLayerPropertiesAtPosition(float3 positionOS, float3 worldPos
 
         if (shellFalloff > 0.01)
         {
-            float shellNoise = SampleFractalNoise(positionOS, _ShellNoiseScale, _ShellScrollSpeed);
-            finalSample.density = shellNoise * shellFalloff * _ShellDensity;
+            float dynamicShellNoiseScale = lerp(_ShellNoiseScale, _ShellNoiseScale + _ProximityDetailBoost, proximityFactor);
+            float shellNoise = SampleFractalNoise(positionOS, dynamicShellNoiseScale, _ShellScrollSpeed);
+            finalSample.density = shellNoise * shellFalloff * _ShellDensity * proximityDensityBoost;
             finalSample.color = _ShellColor.rgb;
         }
     #endif
@@ -136,8 +153,9 @@ SmokeSample GetSmokeLayerPropertiesAtPosition(float3 positionOS, float3 worldPos
         float coreShapeFalloff = pow(saturate(1.0 - distFromCenter / coreBoundary), _CoreFalloff);
         if (coreShapeFalloff > 0.01)
         {
-            float coreNoise = SampleFractalNoise(positionOS, _CoreNoiseScale, _CoreScrollSpeed);
-            float coreDensity = coreNoise * coreShapeFalloff;
+            float dynamicCoreNoiseScale = lerp(_CoreNoiseScale, _CoreNoiseScale + _ProximityDetailBoost, proximityFactor);
+            float coreNoise = SampleFractalNoise(positionOS, dynamicCoreNoiseScale, _CoreScrollSpeed);
+            float coreDensity = coreNoise * coreShapeFalloff * proximityDensityBoost;
 
             float3 worldLightDir = mainLight.direction;
             float lightDot = saturate(dot(normalize(worldPos), worldLightDir));
@@ -178,6 +196,7 @@ float4 ValorantSmokeFragment(Varyings input)
     float accumulatedDensity = 0;
     float3 lightEnergy = 0;
     Light mainLight = GetMainLight();
+    float proximityFactor = GetCameraProximityFactor(rayOriginOS);
     
     [loop]
     for (int i = 0; i < dynamicSteps; i++)
@@ -186,7 +205,7 @@ float4 ValorantSmokeFragment(Varyings input)
         float3 currentPosOS = rayOriginOS + rayDirectionOS * currentDistOnRay;
         
         float3 worldPos = TransformObjectToWorld(currentPosOS);
-        SmokeSample currentSample = GetSmokeLayerPropertiesAtPosition(currentPosOS, worldPos, mainLight);
+        SmokeSample currentSample = GetSmokeLayerPropertiesAtPosition(currentPosOS, worldPos, mainLight, proximityFactor);
         
         if (currentSample.density > 0.01)
         {

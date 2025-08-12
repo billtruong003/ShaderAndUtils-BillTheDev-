@@ -1,8 +1,9 @@
-Shader "CleanCode/Stylized/ValorantSmokeMultiLayer"
+Shader "CleanCode/Stylized/ValorantSmokeMultiLayer_Advanced"
 {
     Properties
     {
-        [Header(General Shape and Quality)]
+        [Header(Formation and Quality)]
+        _Progress("Formation Progress", Range(0.001, 1)) = 1.0
         _SphereRadius("Sphere Radius", Range(0.1, 10)) = 2.5
         _DensityMultiplier("Global Density Multiplier", Range(0, 100)) = 20
         _RaymarchSteps("Max Raymarch Steps", Range(16, 256)) = 64
@@ -21,6 +22,10 @@ Shader "CleanCode/Stylized/ValorantSmokeMultiLayer"
         _CoreNoiseScale("Core Noise Scale", Float) = 2.0
         _CoreScrollSpeed("Core Scroll Speed", Vector) = (0.1, 0.2, 0.1, 0)
         
+        [Header(Camera Proximity Effect)]
+        _ProximityDetailBoost("Proximity Detail Boost", Range(0, 5)) = 2.0
+        _ProximityDensityMultiplier("Proximity Density Multiplier", Range(0, 5)) = 1.5
+
         [Header(Noise Source and Distortion)]
         _NoiseTexture("Noise Texture (3D)", 3D) = "white" {}
         [Toggle(_ENABLE_WARP)] _EnableWarp("Enable Noise Warp", Float) = 1
@@ -60,7 +65,7 @@ Shader "CleanCode/Stylized/ValorantSmokeMultiLayer"
             #pragma shader_feature_local _ENABLE_SHELL
             #pragma shader_feature_local _ENABLE_WARP
             
-            #include "Includes/ValorantSmokeCore.hlsl"
+            #include "Includes/ValorantSmokeCore_Advanced.hlsl"
 
             Varyings vert(Attributes input)
             {

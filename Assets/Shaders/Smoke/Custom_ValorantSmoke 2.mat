@@ -7,12 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Custom_ValorantSmoke 1
+  m_Name: Custom_ValorantSmoke 2
   m_Shader: {fileID: 4800000, guid: e38d774d41082c840992dcb64d39a251, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ENABLE_SHELL
+  - _ENABLE_WARP
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -55,21 +56,21 @@ Material:
     m_Ints: []
     m_Floats:
     - _CoreFalloff: 5
-    - _CoreNoiseScale: 0.5
+    - _CoreNoiseScale: 1
     - _CoreRadius: 10
-    - _DensityMultiplier: 12
+    - _DensityMultiplier: 2.3
     - _DepthFadeDistance: 0.5
-    - _EdgeHardness: 0.01
+    - _EdgeHardness: 0.214
     - _EdgeSoftness: 1
     - _EnableShell: 1
     - _EnableShell1: 0
     - _EnableShell2: 0
-    - _EnableWarp: 0
+    - _EnableWarp: 1
     - _GlobalDensity: 100
-    - _LightAbsorption: 3.2
+    - _LightAbsorption: 0
     - _NoiseScale: 0.3
-    - _RaymarchSteps: 64
-    - _RimPower: 0.1
+    - _RaymarchSteps: 16
+    - _RimPower: 2.5
     - _Shell1Density: 2.85
     - _Shell1NoiseScale: 2
     - _Shell1Radius: 3.03
@@ -84,18 +85,18 @@ Material:
     - _ShellCellEdgeSoftness: 0.172
     - _ShellCellNoiseScale: 1
     - _ShellDensity: 10
-    - _ShellEdgeSoftness: 0.2
-    - _ShellNoiseScale: 0.5
+    - _ShellEdgeSoftness: 0.18
+    - _ShellNoiseScale: 0.79
     - _ShellThickness: 2
     - _ShellTriplanarBlendSharpness: 1
     - _SphereRadius: 0.5
     - _WarpScale: 0.1
-    - _WarpStrength: 0.101
+    - _WarpStrength: 0.166
     m_Colors:
     - _CoreScrollSpeed: {r: 0.1, g: 0.2, b: 0.1, a: 0}
-    - _EdgeColor: {r: 0, g: 0.5377358, b: 0.06255822, a: 1}
+    - _EdgeColor: {r: 0.5764661, g: 0, b: 1, a: 1}
     - _NoiseScrollSpeed: {r: 0.05, g: 0.05, b: 0.05, a: 0}
-    - _RimColor: {r: 0, g: 0.5568628, b: 0.18064493, a: 0.5882353}
+    - _RimColor: {r: 0.47686756, g: 0, b: 0.5568628, a: 0.5882353}
     - _Shell1Color: {r: 1.1486984, g: 0.2297397, b: 2.297397, a: 1}
     - _Shell1RotationAxis: {r: 0, g: 0, b: 0, a: 0}
     - _Shell1ScrollSpeed: {r: 0, g: 0, b: 0, a: 0}
@@ -103,7 +104,7 @@ Material:
     - _Shell2RotationAxis: {r: 0, g: 0, b: 0, a: 0}
     - _Shell2ScrollSpeed: {r: -0.1, g: 0.1, b: -0.1, a: 0.1}
     - _ShellCellScrollSpeed: {r: 0.5, g: 0.5, b: 0.5, a: 0}
-    - _ShellColor: {r: 0, g: 1.1270249, b: 0.13133483, a: 1}
+    - _ShellColor: {r: 0.10687445, g: 0, b: 0.60839295, a: 1}
     - _ShellScrollSpeed: {r: 0.1, g: 0.1, b: 0.1, a: 0.1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
