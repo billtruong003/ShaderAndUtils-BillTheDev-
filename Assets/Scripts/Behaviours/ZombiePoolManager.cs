@@ -5,10 +5,10 @@ namespace ZombieAI
 {
     public class ZombiePoolManager : MonoBehaviour
     {
-        // Singleton Pattern
         public static ZombiePoolManager Instance { get; private set; }
 
         private Dictionary<string, Queue<GameObject>> _poolDictionary;
+        private Dictionary<string, GameObject> _prefabDictionary;
 
         private void Awake()
         {
@@ -20,26 +20,25 @@ namespace ZombieAI
             {
                 Instance = this;
                 _poolDictionary = new Dictionary<string, Queue<GameObject>>();
+                _prefabDictionary = new Dictionary<string, GameObject>();
             }
         }
 
-        // ZombieDirector sẽ gọi hàm này lúc khởi động
         public void InitializePools(List<ZombieDirector.ZombieSpawnInfo> zombieTypes, int initialSize)
         {
             foreach (var type in zombieTypes)
             {
-                if (!_poolDictionary.ContainsKey(type.ZombiePrefab.name))
+                string poolKey = type.ZombiePrefab.name;
+                if (_poolDictionary.ContainsKey(poolKey)) continue;
+
+                _prefabDictionary[poolKey] = type.ZombiePrefab;
+
+                Queue<GameObject> objectPool = new Queue<GameObject>();
+                for (int i = 0; i < initialSize; i++)
                 {
-                    Queue<GameObject> objectPool = new Queue<GameObject>();
-                    for (int i = 0; i < initialSize; i++)
-                    {
-                        GameObject obj = Instantiate(type.ZombiePrefab);
-                        obj.name = type.ZombiePrefab.name; // Gán tên để nhận dạng
-                        obj.SetActive(false);
-                        objectPool.Enqueue(obj);
-                    }
-                    _poolDictionary.Add(type.ZombiePrefab.name, objectPool);
+                    objectPool.Enqueue(CreateNewZombieInstance(poolKey));
                 }
+                _poolDictionary.Add(poolKey, objectPool);
             }
         }
 
@@ -47,35 +46,33 @@ namespace ZombieAI
         {
             if (!_poolDictionary.ContainsKey(prefabName))
             {
-                Debug.LogWarning($"Pool with name '{prefabName}' doesn't exist.");
+                Debug.LogError($"Pool with name '{prefabName}' doesn't exist.");
                 return null;
             }
 
             Queue<GameObject> poolQueue = _poolDictionary[prefabName];
+            GameObject objectToSpawn;
 
-            // Nếu hết đối tượng trong pool, tạo mới (để tránh lỗi)
-            if (poolQueue.Count == 0)
+            if (poolQueue.Count > 0)
             {
-                // Tìm lại prefab gốc để instantiate
-                // Đây là một cách đơn giản, cách tốt hơn là lưu trữ prefab gốc trong một dictionary khác.
-                // Tuy nhiên, với hệ thống hiện tại, việc này không xảy ra thường xuyên.
-                Debug.LogWarning($"Pool '{prefabName}' ran out of objects. Instantiating a new one.");
-                // For now, we will not dynamically grow the pool to keep it simple.
-                // A better implementation would find the original prefab and instantiate it.
-                return null;
+                objectToSpawn = poolQueue.Dequeue();
+            }
+            else
+            {
+                Debug.LogWarning($"Pool '{prefabName}' ran out of objects. Dynamically creating a new one.");
+                objectToSpawn = CreateNewZombieInstance(prefabName, false);
             }
 
-            GameObject objectToSpawn = poolQueue.Dequeue();
-
-            objectToSpawn.SetActive(true);
             objectToSpawn.transform.position = position;
             objectToSpawn.transform.rotation = rotation;
+            objectToSpawn.SetActive(true);
 
             return objectToSpawn;
         }
 
-        public void ReturnToPool(string prefabName, GameObject objectToReturn)
+        public void ReturnToPool(GameObject objectToReturn)
         {
+            string prefabName = objectToReturn.name;
             if (!_poolDictionary.ContainsKey(prefabName))
             {
                 Debug.LogWarning($"Pool with name '{prefabName}' doesn't exist. Destroying object.");
@@ -85,6 +82,18 @@ namespace ZombieAI
 
             objectToReturn.SetActive(false);
             _poolDictionary[prefabName].Enqueue(objectToReturn);
+        }
+
+        private GameObject CreateNewZombieInstance(string prefabName, bool initiallyInactive = true)
+        {
+            GameObject prefab = _prefabDictionary[prefabName];
+            GameObject newInstance = Instantiate(prefab);
+            newInstance.name = prefabName;
+            if (initiallyInactive)
+            {
+                newInstance.SetActive(false);
+            }
+            return newInstance;
         }
     }
 }

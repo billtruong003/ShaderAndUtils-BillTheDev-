@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 using Sirenix.OdinInspector;
+using System.Linq;
+using BillTheDev.Anim;
 
 namespace ZombieAI
 {
@@ -11,11 +13,11 @@ namespace ZombieAI
         [Required("Zombie must have a Stats asset.")]
         [SerializeField] private ZombieStats stats;
 
-        // --- Public Properties for States ---
         public ZombieStats Stats => stats;
         public Transform PlayerTransform { get; private set; }
         public NavMeshAgent NavMeshAgent { get; private set; }
         public ZombieAnimationManager AnimationManager { get; private set; }
+        public DynamicAnimationEventHub EventHub { get; private set; }
         public ZombieDirector Director { get; private set; }
         public Vector3 AnchorPoint { get; private set; }
         public Vector3 LastHeardSoundPosition { get; private set; }
@@ -24,18 +26,8 @@ namespace ZombieAI
         public bool IsDead { get; private set; }
         public Transform IKTarget { get; set; }
 
-        public void AlreadyDead() => IsDead = true;
         private IState _currentState;
         private CapsuleCollider _collider;
-
-        [Title("Debugging")]
-        [ShowIf("Application.isPlaying")]
-        [Button("Instant Kill", ButtonSizes.Large), GUIColor(1, 0.2f, 0.2f)]
-        private void Debug_InstantKill()
-        {
-            if (IsDead) return;
-            ChangeState(new DeadState(this));
-        }
 
         private void OnEnable()
         {
@@ -49,6 +41,7 @@ namespace ZombieAI
         {
             NavMeshAgent = GetComponent<NavMeshAgent>();
             AnimationManager = GetComponent<ZombieAnimationManager>();
+            EventHub = GetComponent<DynamicAnimationEventHub>();
             _collider = GetComponent<CapsuleCollider>();
         }
 
@@ -60,6 +53,7 @@ namespace ZombieAI
             IsDead = false;
             NavMeshAgent.speed = stats.WanderSpeed;
             NavMeshAgent.angularSpeed = stats.TurnSpeed;
+            gameObject.name = stats.ZombieName;
             ChangeState(new IdleState(this));
         }
 
@@ -79,6 +73,11 @@ namespace ZombieAI
         public void SetAnchorPoint(Vector3 point)
         {
             AnchorPoint = point;
+        }
+
+        public void SetAsDead()
+        {
+            IsDead = true;
         }
 
         public void OnHeardSound(Vector3 soundPosition)
@@ -102,23 +101,23 @@ namespace ZombieAI
             }
         }
 
-        public void AnimationEvent_DealDamage()
+        [Button("Event: Perform Damage Check", ButtonSizes.Medium), GUIColor(0.8f, 0.4f, 0.4f)]
+        public void Event_PerformDamageCheck()
         {
             if (PlayerTransform == null || CurrentAttack == null || IsDead) return;
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerTransform.position);
             if (distanceToPlayer <= CurrentAttack.Range)
             {
-                // PlayerHealth playerHealth = PlayerTransform.GetComponent<PlayerHealth>();
-                // playerHealth?.TakeDamage(CurrentAttack.Damage);
+                // Thực hiện logic gây sát thương cho người chơi tại đây
+                // Ví dụ: PlayerTransform.GetComponent<PlayerHealth>()?.TakeDamage(CurrentAttack.Damage);
+                Debug.Log($"Zombie '{name}' dealt {CurrentAttack.Damage} damage to player.");
             }
         }
 
-        public void AnimationEvent_AttackFinished()
+        [Button("Event: Attack Animation Finished", ButtonSizes.Medium), GUIColor(0.4f, 0.8f, 0.4f)]
+        public void Event_AttackAnimationFinished()
         {
-            if (_currentState is AttackState attackState)
-            {
-                attackState.OnAttackAnimationFinished();
-            }
+            (_currentState as AttackState)?.OnAttackAnimationFinished();
         }
 
         public bool IsPlayerInSight()
@@ -133,30 +132,34 @@ namespace ZombieAI
             return true;
         }
 
-        private void OnAnimatorIK(int layerIndex)
+        public bool IsPlayerInAttackRange(out AttackDefinition availableAttack)
         {
-            if (IsDead || AnimationManager.Animator == null) return;
+            availableAttack = null;
+            if (PlayerTransform == null) return false;
 
-            if (IKTarget != null)
+            var possibleAttacks = Stats.Attacks
+                .Where(a => Vector3.Distance(transform.position, PlayerTransform.position) <= a.Range)
+                .ToList();
+
+            if (possibleAttacks.Any())
             {
-                AnimationManager.Animator.SetLookAtWeight(1.0f, 0.3f, 1.0f, 0.0f, 0.5f);
-                AnimationManager.Animator.SetLookAtPosition(IKTarget.position);
+                availableAttack = possibleAttacks[Random.Range(0, possibleAttacks.Count)];
+                return true;
             }
-            else
-            {
-                AnimationManager.Animator.SetLookAtWeight(0f);
-            }
+
+            return false;
         }
 
-        private void OnDrawGizmosSelected()
+        private void OnAnimatorIK(int layerIndex)
         {
-            if (stats == null) return;
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawWireSphere(AnchorPoint, stats.WanderRadius);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, stats.ViewRange);
-            Gizmos.color = Color.magenta;
-            Gizmos.DrawWireSphere(transform.position, stats.HearingRange);
+            if (IsDead || AnimationManager.Animator == null || IKTarget == null)
+            {
+                AnimationManager.Animator.SetLookAtWeight(0f);
+                return;
+            }
+
+            AnimationManager.Animator.SetLookAtWeight(1.0f, 0.3f, 1.0f, 0.0f, 0.5f);
+            AnimationManager.Animator.SetLookAtPosition(IKTarget.position);
         }
     }
 }
