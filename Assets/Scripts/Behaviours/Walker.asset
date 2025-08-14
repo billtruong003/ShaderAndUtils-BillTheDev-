@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4af099fdd9c7f9b4fbfebde98d325409, type: 3}
+  m_Name: Walker
+  m_EditorClassIdentifier: 
+  ZombieName: Walker
+  MaxHealth: 100
+  ViewRange: 20
+  ViewAngle: 120
+  HearingRange: 30
+  ObstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  CorpseLayer:
+    serializedVersion: 2
+    m_Bits: 67108864
+  WanderSpeed: 1.5
+  ChaseSpeed: 4
+  WanderRadius: 15
+  TurnSpeed: 300
+  Attacks:
+  - AnimationTriggerName: SlapRight
+    Damage: 10
+    Range: 2.5
+    Cooldown: 2
+    AttackSound: {fileID: 0}
+  - AnimationTriggerName: SlapLeft
+    Damage: 10
+    Range: 2.5
+    Cooldown: 2
+    AttackSound: {fileID: 0}
+  WorriedDuration: 5
+  AggroStareDuration: 1.5
+  BitingDuration: 8
+  ScreamDuration: 2.5
+  DamagedRecoveryTime: 0.5
+  TimeToForgetPlayer: 5
+  SearchForCorpseInterval: 5
+  DespawnTimeAfterDeath: 10

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace BillTheDev.Anim
+public class DynamicAnimationEventHub : SerializedMonoBehaviour
 {
-    public class DynamicAnimationEventHub : SerializedMonoBehaviour
-    {
-        [Title("Dynamic Animation Event Hub", "Ánh xạ từ một ID sự kiện sang một danh sách các hành động.")]
-        [InfoBox("Mỗi 'Event ID' (Key) có thể chứa một danh sách nhiều hành động trong 'Hành Động Kích Hoạt' (Value). " +
+    [Title("Dynamic Animation Event Hub", "Ánh xạ từ một ID sự kiện sang một danh sách các hành động.")]
+    [InfoBox("Mỗi 'Event ID' (Key) có thể chứa một danh sách nhiều hành động trong 'Hành Động Kích Hoạt' (Value). " +
                  "UnityEvent bản chất là một danh sách các hàm gọi.", InfoMessageType.None)]
 
         [SerializeField]
@@ -33,4 +31,3 @@ namespace BillTheDev.Anim
             }
         }
     }
-}
