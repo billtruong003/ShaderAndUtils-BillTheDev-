@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using Sirenix.OdinInspector;
 using System.Linq;
-using BillTheDev.Anim;
 
 namespace ZombieAI
 {
