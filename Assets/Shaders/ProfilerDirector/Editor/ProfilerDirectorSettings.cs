@@ -97,7 +97,7 @@ namespace BillTheDev.ProfilerDirector
                 guiHandler = (searchContext) =>
                 {
                     var settings = ProfilerDirectorSettings.Instance;
-                    var editor = Editor.CreateEditor(settings);
+                    var editor = UnityEditor.Editor.CreateEditor(settings);
                     editor.OnInspectorGUI();
                 },
                 keywords = new HashSet<string>(new[] { "Profiler", "Director", "Performance", "GPU", "CPU", "Debug", "Heatmap" })

@@ -1,6 +1,6 @@
 #if UNITY_EDITOR
 /// <summary>
-/// This script belongs to cowsins™ as a part of the cowsins´ FPS Engine. All rights reserved. 
+/// This script belongs to cowsinsï¿½ as a part of the cowsinsï¿½ FPS Engine. All rights reserved. 
 /// </summary>
 using UnityEditor;
 using UnityEngine;
@@ -40,7 +40,7 @@ namespace cowsins
                         EditorGUILayout.Space(5);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("initialWeapons"));
                         if (myScript.initialWeapons.Length > myScript.InventorySize) myScript.initialWeapons = new Weapon_SO[myScript.InventorySize];
-                        if (myScript.initialWeapons.Length == myScript.InventorySize) EditorGUILayout.LabelField("You can´t add more initial weapons. This array can´t be bigger than the inventory size", EditorStyles.helpBox);
+                        if (myScript.initialWeapons.Length == myScript.InventorySize) EditorGUILayout.LabelField("You canï¿½t add more initial weapons. This array canï¿½t be bigger than the inventory size", EditorStyles.helpBox);
                         break;
                     case "References":
                         EditorGUILayout.LabelField("REFERENCES", EditorStyles.boldLabel);
@@ -56,10 +56,10 @@ namespace cowsins
                         EditorGUILayout.Space(2f);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("resizeCrosshair"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("autoReload"));
-                        if(myScript.AutoReload)
+                        if (myScript.AutoReload)
                         {
                             EditorGUI.indentLevel++;
-                            EditorGUILayout.PropertyField(serializedObject.FindProperty("autoReloadDelay")); 
+                            EditorGUILayout.PropertyField(serializedObject.FindProperty("autoReloadDelay"));
                             EditorGUI.indentLevel--;
                         }
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("allowReloadWhileUnholstering"));
@@ -73,10 +73,10 @@ namespace cowsins
                         {
                             EditorGUI.indentLevel++;
                             EditorGUILayout.PropertyField(serializedObject.FindProperty("meleeObject"));
-                            if(myScript.MeleeObject)
+                            if (myScript.MeleeObject)
                             {
                                 EditorGUI.indentLevel++;
-                                EditorGUILayout.LabelField("You can leave ´meleeHeadBone´ unassigned if your camera does not move during your Melee Animations.", EditorStyles.helpBox);
+                                EditorGUILayout.LabelField("You can leave ï¿½meleeHeadBoneï¿½ unassigned if your camera does not move during your Melee Animations.", EditorStyles.helpBox);
                                 EditorGUILayout.PropertyField(serializedObject.FindProperty("meleeHeadBone"));
                                 EditorGUI.indentLevel--;
                             }

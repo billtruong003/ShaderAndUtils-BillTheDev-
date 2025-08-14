@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11bdc60aafe9d4c56bbfdd7b077d8e2a, type: 3}
+  m_Name: New Wide Outline Settings
+  m_EditorClassIdentifier: 
+  injectionPoint: 600
+  showInSceneView: 1
+  materialType: 0
+  customMaterial: {fileID: 0}
+  widthControl: 0
+  sharedWidth: 10
+  gap: 0
+  blendMode: 0
+  useCustomDepthBuffer: 0
+  occludedColor: {r: 0, g: 0, b: 0, a: 1}
+  outlineProfiles:
+  - {fileID: 0}
+  - {fileID: 7256813445757407242}
+--- !u!114 &7256813445757407242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a54c739945d9240adad67003a1a77b5a, type: 3}
+  m_Name: New Outline Profile
+  m_EditorClassIdentifier: 
+  silhouetteMaterial: {fileID: 0}
+  silhouetteMaterialInstanced: {fileID: 0}
+  informationMaterial: {fileID: 0}
+  informationMaterialInstanced: {fileID: 0}
+  isActive: 1
+  customDepthEnabled: 1
+  isWidthControlDisabled: 1
+  renderingLayer:
+    serializedVersion: 0
+    m_Bits: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 1207959551
+  renderQueue: 0
+  occlusion: 0
+  cullingMode: 0
+  closedLoop: 0
+  gpuInstancing: 0
+  vertexAnimation: 0
+  color: {r: 0, g: 1, b: 0, a: 1}
+  width: 65.8
+  alphaCutout: 0
+  alphaCutoutTexture: {fileID: 0}
+  alphaCutoutThreshold: 0.5
+  alphaCutoutUVTransform: {x: 1, y: 1, z: 0, w: 0}

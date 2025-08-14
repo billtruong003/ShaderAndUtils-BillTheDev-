@@ -18,7 +18,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -30,7 +30,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTexture:
-        m_Texture: {fileID: 11700000, guid: d51b1521b7d41824b914440351d70951, type: 2}
+        m_Texture: {fileID: 11700000, guid: a942e4f4b6dd04ae9afaf73ec7ed29bf, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShadowColorRamp:
@@ -43,17 +43,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CoreFalloff: 0.01
+    - _CoreFalloff: 5
     - _CoreNoiseScale: 0.2
     - _DensityMultiplier: 100
-    - _DepthFadeDistance: 1
-    - _EdgeHardness: 0.75
+    - _DepthFadeDistance: 2
+    - _EdgeHardness: 1
     - _EdgeSoftness: 1
     - _EnableShell: 1
     - _EnableWarp: 1
     - _LightAbsorption: 0
     - _Progress: 1
-    - _ProximityDensityMultiplier: 2
+    - _ProximityDensityMultiplier: 0
     - _ProximityDetailBoost: 0
     - _RaymarchSteps: 64
     - _RimPower: 20
@@ -66,9 +66,9 @@ Material:
     - _WarpStrength: 0.115
     m_Colors:
     - _CoreScrollSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
-    - _EdgeColor: {r: 0.19267489, g: 0, b: 0.5283019, a: 0.5}
+    - _EdgeColor: {r: 0, g: 0.15721345, b: 1, a: 0.5}
     - _RimColor: {r: 1, g: 1, b: 1, a: 0.41960785}
-    - _ShellColor: {r: 0, g: 1.4980394, b: 1.2721897, a: 1}
+    - _ShellColor: {r: 0, g: 1.4980392, b: 1.2898122, a: 1}
     - _ShellScrollSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

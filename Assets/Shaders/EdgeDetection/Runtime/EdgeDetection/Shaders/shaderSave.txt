@@ -1,0 +1,560 @@
+***
+
+### **Shaders**
+
+#### `Assets/Shaders/BillTheDev/EdgeDetection/Shaders/DeclareSectioningTexture.hlsl`
+```hlsl
+#ifndef DECLARE_SECTIONING_TEXTURE_INCLUDED
+#define DECLARE_SECTIONING_TEXTURE_INCLUDED
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+TEXTURE2D_X_FLOAT(_CameraSectioningTexture);
+SAMPLER(sampler_CameraSectioningTexture);
+
+uniform float4 _CameraSectioningTexture_TexelSize;
+float4 _CameraSectioningTexture_ST;
+
+float4 SampleSceneSection(float2 uv)
+{
+    return SAMPLE_TEXTURE2D_X(_CameraSectioningTexture, sampler_CameraSectioningTexture, UnityStereoTransformScreenSpaceTex(uv));
+}
+#endif
+```
+
+#### `Assets/Shaders/BillTheDev/EdgeDetection/Shaders/Section.shader`
+```shader
+Shader "Hidden/BillTheDev/EdgeDetection/Section"
+{
+    Properties
+    {
+        _SectionTexture ("Section Texture", 2D) = "white" {}
+        [Toggle(OBJECT_ID)] OBJECT_ID ("Object Id", Float) = 0
+        [Toggle(PARTICLES)] PARTICLES ("Particles", Float) = 0
+        [KeywordEnum(NONE, VERTEX_COLOR, TEXTURE)] INPUT("Input", Float) = 0
+        [KeywordEnum(R, G, B, A)] VERTEX_COLOR_CHANNEL("Vertex Color Channel", Float) = 0
+        [KeywordEnum(R, G, B, A)] TEXTURE_CHANNEL("Texture Channel", Float) = 0
+        [KeywordEnum(UV0, UV1, UV2, UV3)] TEXTURE_UV_SET("Texture UV Set", Float) = 0
+    }
+
+    SubShader
+    {
+        Tags
+        {
+            "RenderPipeline" = "UniversalPipeline"
+            "RenderType" = "Opaque"
+        }
+
+        ZWrite Off
+        Blend Off
+
+        Pass
+        {
+            Name "OBJECT ID"
+
+            HLSLPROGRAM
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
+
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #pragma multi_compile _ DOTS_INSTANCING_ON
+            #if UNITY_PLATFORM_ANDROID || UNITY_PLATFORM_WEBGL || UNITY_PLATFORM_UWP
+                #pragma target 3.5 DOTS_INSTANCING_ON
+            #else
+                #pragma target 4.5 DOTS_INSTANCING_ON
+            #endif
+
+            #pragma multi_compile_local _ OBJECT_ID
+            #pragma multi_compile_local _ PARTICLES
+            #pragma multi_compile_local _ INPUT_VERTEX_COLOR INPUT_TEXTURE
+            #pragma multi_compile_local VERTEX_COLOR_CHANNEL_R VERTEX_COLOR_CHANNEL_G VERTEX_COLOR_CHANNEL_B VERTEX_COLOR_CHANNEL_A
+            #pragma multi_compile_local TEXTURE_CHANNEL_R TEXTURE_CHANNEL_G TEXTURE_CHANNEL_B TEXTURE_CHANNEL_A
+            #pragma multi_compile_local TEXTURE_UV_SET_UV0 TEXTURE_UV_SET_UV1 TEXTURE_UV_SET_UV2 TEXTURE_UV_SET_UV3
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                #if defined(INPUT_VERTEX_COLOR)
+                half4 color : COLOR0;
+                #endif
+                #if !defined(INPUT_TEXTURE) && defined(PARTICLES)
+                float4 uv : TEXCOORD0;
+                #endif
+                #if defined(INPUT_TEXTURE)
+                    #if defined(TEXTURE_UV_SET_UV0)
+                    float4 uv : TEXCOORD0;
+                    #elif defined(TEXTURE_UV_SET_UV1)
+                    float4 uv : TEXCOORD1;
+                    #elif defined(TEXTURE_UV_SET_UV2)
+                    float4 uv : TEXCOORD2;
+                    #elif defined(TEXTURE_UV_SET_UV3)
+                    float4 uv : TEXCOORD3;
+                    #endif
+                #endif
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct Varyings
+            {
+                float4 positionHCS : SV_POSITION;
+                #if defined(INPUT_VERTEX_COLOR)
+                float4 color : COLOR0;
+                #endif
+                #if defined(INPUT_TEXTURE) || defined(PARTICLES)
+                float4 uv : TEXCOORD0;
+                #endif
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            TEXTURE2D(_SectionTexture);
+            SAMPLER(sampler_SectionTexture);
+            CBUFFER_START(UnityPerMaterial)
+                float4 _SectionTexture_ST;
+            CBUFFER_END
+
+            Varyings vert(Attributes IN)
+            {
+                Varyings OUT;
+                UNITY_SETUP_INSTANCE_ID(IN);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+                #if defined(INPUT_VERTEX_COLOR)
+                OUT.color = IN.color;
+                #endif
+                #if defined(INPUT_TEXTURE) || defined(PARTICLES)
+                OUT.uv.xy = TRANSFORM_TEX(IN.uv, _SectionTexture);
+                OUT.uv.zw = IN.uv.zw;
+                #endif
+                return OUT;
+            }
+
+            float hash(float3 p) {
+                return frac(sin(dot(p, float3(12.9898, 78.233, 45.164))) * 43758.5453);
+            }
+
+            half4 frag(Varyings IN) : SV_TARGET
+            {
+                float id = 0.5;
+                #if defined(OBJECT_ID)
+                id = hash(GetAbsolutePositionWS(UNITY_MATRIX_M._m03_m13_m23));
+                #if defined(PARTICLES)
+                float particle_id = frac(dot(IN.uv.zw, IN.uv.zw) * 0.3);
+                id = max(id, particle_id);
+                #endif
+                #endif
+
+                float sample = 0;
+                #if defined(INPUT_VERTEX_COLOR)
+                    #if defined(VERTEX_COLOR_CHANNEL_R)
+                    sample = IN.color.r;
+                    #elif defined(VERTEX_COLOR_CHANNEL_G)
+                    sample = IN.color.g;
+                    #elif defined(VERTEX_COLOR_CHANNEL_B)
+                    sample = IN.color.b;
+                    #elif defined(VERTEX_COLOR_CHANNEL_A)
+                    sample = IN.color.a;
+                    #endif
+                #endif
+
+                #if defined(INPUT_TEXTURE)
+                float4 section = SAMPLE_TEXTURE2D(_SectionTexture, sampler_SectionTexture, IN.uv);
+                    #if defined(TEXTURE_CHANNEL_R)
+                    sample = section.r;
+                    #elif defined(TEXTURE_CHANNEL_G)
+                    sample = section.g;
+                    #elif defined(TEXTURE_CHANNEL_B)
+                    sample = section.b;
+                    #elif defined(TEXTURE_CHANNEL_A)
+                    sample = section.a;
+                    #endif
+                #endif
+
+                #if (defined(INPUT_VERTEX_COLOR) || defined(INPUT_TEXTURE)) && defined(OBJECT_ID)
+                id = lerp(0, (sample + id) * 0.5, sample);
+                #elif (defined(INPUT_VERTEX_COLOR) || defined(INPUT_TEXTURE)) && !defined(OBJECT_ID)
+                id = sample;
+                #endif
+
+                if (sample == 1) id = 1;
+                return half4(id, 0.0, 0.0, 1.0);
+            }
+            ENDHLSL
+        }
+    }
+}
+```
+
+#### `Assets/Shaders/BillTheDev/EdgeDetection/Shaders/SectionMask.shader`
+```shader
+Shader "Hidden/BillTheDev/EdgeDetection/SectionMask"
+{
+    Properties {}
+    SubShader
+    {
+        Tags
+        {
+            "RenderPipeline" = "UniversalPipeline"
+            "RenderType" = "Opaque"
+        }
+
+        ZWrite Off
+        Blend Off
+
+        Pass
+        {
+            Name "MASK"
+
+            HLSLPROGRAM
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
+
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #pragma multi_compile _ DOTS_INSTANCING_ON
+            #if UNITY_PLATFORM_ANDROID || UNITY_PLATFORM_WEBGL || UNITY_PLATFORM_UWP
+                #pragma target 3.5 DOTS_INSTANCING_ON
+            #else
+                #pragma target 4.5 DOTS_INSTANCING_ON
+            #endif
+            
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct Varyings
+            {
+                float4 positionHCS : SV_POSITION;
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+            
+            Varyings vert(Attributes IN)
+            {
+                Varyings OUT;
+                UNITY_SETUP_INSTANCE_ID(IN);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+                return OUT;
+            }
+
+            half4 frag(Varyings IN) : SV_TARGET
+            {
+                return half4(0.0, 0.0, 0.0, 1.0);
+            }
+            ENDHLSL
+        }
+    }
+}
+```
+
+#### `Assets/Shaders/BillTheDev/EdgeDetection/Shaders/EdgeDetection.shader`
+```shader
+Shader "Hidden/BillTheDev/EdgeDetection/Outline"
+{
+    Properties
+    {
+        [Toggle(SECTIONS_MASK)] _SectionsMask ("Sections Mask", Float) = 0
+        _DepthSensitivity ("Depth Sensitivity", Range(0, 50)) = 0
+        _DepthDistanceModulation ("Depth Non-Linearity Factor", Range(0, 3)) = 1
+        _GrazingAngleMaskPower ("Grazing Angle Mask Power", Range(0, 1)) = 1
+        _GrazingAngleMaskHardness("Grazing Angle Mask Hardness", Range(0,1)) = 1
+        [Toggle(DEPTH_MASK)] _DepthMask ("Depth Mask", Float) = 0
+        _NormalSensitivity ("Normals Sensitivity", Range(0, 50)) = 0
+        [Toggle(NORMALS_MASK)] _NormalsMask ("Normals Mask", Float) = 0
+        _LuminanceSensitivity ("Luminance Sensitivity", Range(0, 50)) = 0
+        [Toggle(LUMINANCE_MASK)] _LuminanceMask ("Luminance Mask", Float) = 0
+        [KeywordEnum(Cross, Sobel)] _Operator("Edge Detection Operator", Float) = 0
+        _OutlineThickness ("Outline Thickness", Float) = 1
+        [Toggle(SCALE_WITH_RESOLUTION)] _ResolutionDependent ("Resolution Dependent", Float) = 0
+        _ReferenceResolution ("Reference Resolution", Float) = 1080
+        _OutlineColor ("Outline Color", Color) = (0, 0, 0, 1)
+        [Toggle(OVERRIDE_SHADOW)] _OverrideShadow ("Override Outline Color In Shadow", Float) = 0
+        _OutlineColorShadow ("Outline Color Shadow", Color) = (1, 1, 1, 1)
+        _BackgroundColor ("Background Color", Color) = (0, 0, 0, 0)
+        _FillColor ("Fill Color", Color) = (0, 0, 0, 1)
+        [Toggle(FADE_BY_DISTANCE)] _FadeByDistance ("Fade Outline by Distance", Float) = 0
+        _DistanceFadeStart ("Distance Fade Start", Float) = 100
+        _DistanceFadeDistance ("Distance Fade Distance", Float) = 10
+        _DistanceFadeColor ("Distance Fade Color", Color) = (0, 0, 0, 0)
+        [Toggle(FADE_BY_HEIGHT)] _FadeByHeight ("Fade Outline by height", Float) = 0
+        _HeightFadeStart ("Height Fade Start", Float) = 100
+        _HeightFadeDistance ("Height Fade Distance", Float) = 10
+        _HeightFadeColor ("Height Fade Color", Color) = (0, 0, 0, 0)
+        _SrcBlend ("_SrcBlend", Int) = 0
+        _DstBlend ("_DstBlend", Int) = 0
+    }
+
+    SubShader
+    {
+        Tags { "RenderPipeline" = "UniversalPipeline", "RenderType"="Opaque" }
+        ZWrite Off
+        Cull Off
+
+        HLSLINCLUDE
+        #pragma multi_compile_local _ DEPTH
+        #pragma multi_compile_local _ NORMALS
+        #pragma multi_compile_local _ LUMINANCE
+        #pragma multi_compile_local _ SECTIONS
+        #pragma multi_compile_local _ OVERRIDE_SHADOW
+        #pragma multi_compile_local _ SCALE_WITH_RESOLUTION
+        #pragma multi_compile_local _ FADE_BY_DISTANCE
+        #pragma multi_compile_local _ FADE_BY_HEIGHT
+        #pragma multi_compile_local _ SECTIONS_MASK
+        #pragma multi_compile_local _ DEPTH_MASK
+        #pragma multi_compile_local _ NORMALS_MASK
+        #pragma multi_compile_local _ LUMINANCE_MASK
+        #pragma multi_compile_local OPERATOR_CROSS OPERATOR_SOBEL
+        #pragma shader_feature_local _ DEBUG_DEPTH DEBUG_NORMALS DEBUG_LUMINANCE DEBUG_SECTIONS
+        #pragma shader_feature_local _ DEBUG_SECTIONS_RAW_VALUES
+        ENDHLSL
+
+        Pass
+        {
+            Name "EDGE DETECTION OUTLINE"
+            Blend [_SrcBlend] [_DstBlend]
+
+            HLSLPROGRAM
+            #pragma vertex Vert
+            #pragma fragment frag
+            
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+            #if defined(DEPTH) || defined(OVERRIDE_SHADOW) || defined(FADE_BY_DISTANCE) || defined(FADE_BY_HEIGHT) || defined(DEBUG_DEPTH)
+                #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+            #endif
+            #if defined(NORMALS) || defined(DEPTH) || defined(DEBUG_NORMALS)
+                #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareNormalsTexture.hlsl"
+            #endif
+            #if defined(LUMINANCE) || defined(DEBUG_LUMINANCE)
+                #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
+            #endif
+            #include "Assets/Shaders/BillTheDev/EdgeDetection/Shaders/DeclareSectioningTexture.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+
+            float4 _BackgroundColor, _OutlineColor, _FillColor, _OutlineColorShadow, _DistanceFadeColor, _HeightFadeColor;
+            float _OutlineThickness, _ReferenceResolution;
+            float _DistanceFadeStart, _DistanceFadeDistance;
+            float _HeightFadeStart, _HeightFadeDistance;
+            float _DepthSensitivity, _DepthDistanceModulation, _GrazingAngleMaskPower, _GrazingAngleMaskHardness;
+            float _NormalSensitivity, _LuminanceSensitivity;
+
+            float RobertsCross(float3 samples[4])
+            {
+                const float3 diff1 = samples[1] - samples[2];
+                const float3 diff2 = samples[0] - samples[3];
+                return sqrt(dot(diff1, diff1) + dot(diff2, diff2));
+            }
+
+            float RobertsCross(float samples[4])
+            {
+                const float diff1 = samples[1] - samples[2];
+                const float diff2 = samples[0] - samples[3];
+                return sqrt(diff1 * diff1 + diff2 * diff2);
+            }
+
+            float Sobel(float3 samples[9])
+            {
+                const float3 diff1 = samples[0] - samples[2] + 2 * samples[3] - 2 * samples[5] + samples[6] - samples[8];
+                const float3 diff2 = samples[0] - samples[6] + 2 * samples[1] - 2 * samples[7] + samples[2] - samples[8];
+                return sqrt(dot(diff1, diff1) + dot(diff2, diff2));
+            }
+
+            float Sobel(float samples[9])
+            {
+                const float diff1 = samples[0] - samples[2] + 2 * samples[3] - 2 * samples[5] + samples[6] - samples[8];
+                const float diff2 = samples[0] - samples[6] + 2 * samples[1] - 2 * samples[7] + samples[2] - samples[8];
+                return sqrt(diff1 * diff1 + diff2 * diff2);
+            }
+
+            #if defined(NORMALS)
+            float3 SampleSceneNormalsRemapped(float2 uv) { return SampleSceneNormals(uv) * 0.5 + 0.5; }
+            #endif
+            #if defined(LUMINANCE) || defined(DEBUG_LUMINANCE)
+            float SampleSceneLuminance(float2 uv) { return dot(SampleSceneColor(uv).rgb, float3(0.299, 0.587, 0.114)); }
+            #endif
+
+            half3 HSVToRGB(half3 c)
+            {
+                half4 K = half4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+                half3 p = abs(frac(c.xxx + K.xyz) * 6.0 - K.www);
+                return c.z * lerp(K.xxx, saturate(p - K.xxx), c.y);
+            }
+
+            half4 frag(Varyings IN) : SV_TARGET
+            {
+                float2 uv = IN.texcoord;
+
+                #if defined(DEPTH) || defined(OVERRIDE_SHADOW) || defined(FADE_BY_DISTANCE) || defined(FADE_BY_HEIGHT) || defined(DEBUG_DEPTH)
+                float center_depth = SampleSceneDepth(uv);
+                #if !UNITY_REVERSED_Z
+                center_depth = lerp(UNITY_NEAR_CLIP_VALUE, 1.0, center_depth);
+                #endif
+                float3 positionWS = ComputeWorldSpacePosition(uv, center_depth, UNITY_MATRIX_I_VP);
+                #endif
+
+                #if defined(NORMALS) || defined(DEPTH) || defined(DEBUG_NORMALS)
+                float3 center_normal = SampleSceneNormals(uv);
+                #endif
+
+                bool mask = false;
+                bool fill = false;
+                float section = SampleSceneSection(uv).r;
+                if (section == 1.0) fill = true;
+                if (section == 0.0) mask = true;
+
+                float edge_depth = 0, edge_normal = 0, edge_luminance = 0, edge_section = 0;
+                float2 texel_size = _ScreenParams.rcp;
+
+                #if defined(SCALE_WITH_RESOLUTION)
+                float scaled_thickness = _OutlineThickness * _ScreenParams.y / _ReferenceResolution;
+                #else
+                float scaled_thickness = _OutlineThickness;
+                #endif
+
+                #if defined(OPERATOR_CROSS)
+                    const float half_width_f = floor(scaled_thickness * 0.5);
+                    const float half_width_c = ceil(scaled_thickness * 0.5);
+                    float2 uvs[4];
+                    uvs[0] = uv + texel_size * float2(-half_width_f, half_width_c);
+                    uvs[1] = uv + texel_size * float2(half_width_c, half_width_c);
+                    uvs[2] = uv + texel_size * float2(-half_width_f, -half_width_f);
+                    uvs[3] = uv + texel_size * float2(half_width_c, -half_width_f);
+                    
+                    float3 normal_samples[4];
+                    float depth_samples[4], section_samples[4], luminance_samples[4];
+                    
+                    for (int i = 0; i < 4; i++) {
+                        #if defined(DEPTH)
+                        depth_samples[i] = SampleSceneDepth(uvs[i]);
+                        #endif
+                        #if defined(NORMALS)
+                        normal_samples[i] = SampleSceneNormalsRemapped(uvs[i]);
+                        #endif
+                        #if defined(LUMINANCE)
+                        luminance_samples[i] = SampleSceneLuminance(uvs[i]);
+                        #endif
+                        section_samples[i] = SampleSceneSection(uvs[i]).r;
+                        if(section_samples[i] == 1) fill = true;
+                        if(section_samples[i] == 0) mask = true;
+                    }
+                    #if defined(DEPTH)
+                    edge_depth = mask && defined(DEPTH_MASK) ? 0 : RobertsCross(depth_samples);
+                    #endif
+                    #if defined(NORMALS)
+                    edge_normal = mask && defined(NORMALS_MASK) ? 0 : RobertsCross(normal_samples);
+                    #endif
+                    #if defined(LUMINANCE)
+                    edge_luminance = mask && defined(LUMINANCE_MASK) ? 0 : RobertsCross(luminance_samples);
+                    #endif
+                    #if defined(SECTIONS)
+                    edge_section = mask && defined(SECTIONS_MASK) ? 0 : RobertsCross(section_samples);
+                    #endif
+                #elif defined(OPERATOR_SOBEL)
+                    float scale = floor(scaled_thickness);
+                    float2 uvs[9];
+                    uvs[0] = uv + texel_size * scale * float2(-1, 1); uvs[1] = uv + texel_size * scale * float2(0, 1); uvs[2] = uv + texel_size * scale * float2(1, 1);
+                    uvs[3] = uv + texel_size * scale * float2(-1, 0); uvs[4] = uv;                                     uvs[5] = uv + texel_size * scale * float2(1, 0);
+                    uvs[6] = uv + texel_size * scale * float2(-1, -1);uvs[7] = uv + texel_size * scale * float2(0, -1); uvs[8] = uv + texel_size * scale * float2(1, -1);
+
+                    float3 normal_samples[9];
+                    float depth_samples[9], section_samples[9], luminance_samples[9];
+
+                    for (int i = 0; i < 9; i++) {
+                        #if defined(DEPTH)
+                        depth_samples[i] = SampleSceneDepth(uvs[i]);
+                        #endif
+                        #if defined(NORMALS)
+                        normal_samples[i] = SampleSceneNormalsRemapped(uvs[i]);
+                        #endif
+                        #if defined(LUMINANCE)
+                        luminance_samples[i] = SampleSceneLuminance(uvs[i]);
+                        #endif
+                        section_samples[i] = SampleSceneSection(uvs[i]).r;
+                        if(section_samples[i] == 1) fill = true;
+                        if(section_samples[i] == 0) mask = true;
+                    }
+                    #if defined(DEPTH)
+                    edge_depth = mask && defined(DEPTH_MASK) ? 0 : Sobel(depth_samples);
+                    #endif
+                    #if defined(NORMALS)
+                    edge_normal = mask && defined(NORMALS_MASK) ? 0 : Sobel(normal_samples);
+                    #endif
+                    #if defined(LUMINANCE)
+                    edge_luminance = mask && defined(LUMINANCE_MASK) ? 0 : Sobel(luminance_samples);
+                    #endif
+                    #if defined(SECTIONS)
+                    edge_section = mask && defined(SECTIONS_MASK) ? 0 : Sobel(section_samples);
+                    #endif
+                #endif
+
+                #if defined(DEPTH)
+                float depth_threshold = 1 / _DepthSensitivity;
+                depth_threshold = max(depth_threshold * 0.01, depth_threshold * _DepthDistanceModulation * SampleSceneDepth(uv));
+                float3 viewWS = normalize(_WorldSpaceCameraPos.xyz - positionWS);
+                float fresnel = pow(1.0 - dot(normalize(center_normal), normalize(viewWS)), 1.0);
+                float grazingAngleMask = _GrazingAngleMaskHardness * saturate((fresnel + _GrazingAngleMaskPower - 1) / _GrazingAngleMaskPower);
+                depth_threshold *= (1 + grazingAngleMask);
+                edge_depth = edge_depth > depth_threshold ? 1 : 0;
+                #endif
+
+                #if defined(NORMALS)
+                edge_normal = edge_normal > (1 / _NormalSensitivity) ? 1 : 0;
+                #endif
+                #if defined(LUMINANCE)
+                edge_luminance = edge_luminance > (1 / _LuminanceSensitivity) ? 1 : 0;
+                #endif
+                #if defined(SECTIONS)
+                edge_section = edge_section > 0 ? 1 : 0;
+                #endif
+
+                float edge = max(edge_depth, max(edge_normal, max(edge_luminance, edge_section)));
+
+                #if defined(DEBUG_DEPTH)
+                return lerp(half4(center_depth.xxx, 1), half4(1,1,1,1), edge_depth);
+                #endif
+                #if defined(DEBUG_NORMALS)
+                return lerp(half4(center_normal * 0.5 + 0.5, 1), half4(0,0,0,1), edge_normal);
+                #endif
+                #if defined(DEBUG_LUMINANCE)
+                half luminance = SampleSceneLuminance(uv);
+                return lerp(half4(luminance.xxx, 1), half4(1,0,0,1), edge_luminance);
+                #endif
+                #if defined(DEBUG_SECTIONS)
+                if(fill) return half4(0,1,0,1);
+                if(mask) return half4(0,0,1,1);
+                #if defined(DEBUG_SECTIONS_RAW_VALUES)
+                return lerp(half4(section,0,0,1), half4(1,1,1,1), edge_section);
+                #else
+                half4 section_perceptual = half4(HSVToRGB(half3(section, 0.7, 1.0)), 1.0);
+                return lerp(section_perceptual, half4(0,0,0,1), edge_section);
+                #endif
+                #endif
+                
+                if (fill) return _FillColor;
+
+                float4 line_color = _OutlineColor;
+                #if defined(OVERRIDE_SHADOW)
+                Light mainLight = GetMainLight();
+                float shadow = mainLight.shadowAttenuation;
+                line_color = lerp(line_color, _OutlineColorShadow, 1.0 - shadow);
+                #endif
+                #if defined(FADE_BY_DISTANCE)
+                float dist = length(positionWS - _WorldSpaceCameraPos.xyz);
+                float dist_fade = 1.0 - saturate((dist - _DistanceFadeStart) / _DistanceFadeDistance);
+                line_color = lerp(line_color, _DistanceFadeColor, dist_fade);
+                #endif
+                #if defined(FADE_BY_HEIGHT)
+                float height_fade = 1.0 - saturate((positionWS.y - _HeightFadeStart) / _HeightFadeDistance);
+                line_color = lerp(line_color, _HeightFadeColor, height_fade);
+                #endif
+
+                return lerp(_BackgroundColor, line_color, edge);
+            }
+            ENDHLSL
+        }
+    }
+}
+```
