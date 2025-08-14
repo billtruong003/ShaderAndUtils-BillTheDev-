@@ -13,12 +13,11 @@ using UnityEngine.Rendering.Universal;
 namespace BillTheDev.BillOutline
 {
     [ExcludeFromPreset]
-    [DisallowMultipleRendererFeature("Wide Outline Bill")]
+    [DisallowMultipleRendererFeature("Wide Outline")]
 #if UNITY_6000_0_OR_NEWER
     [SupportedOnRenderer(typeof(UniversalRendererData))]
 #endif
     [Tooltip("Wide Outline renders an outline by generating a signed distance field (SDF) for each object and then sampling it. This creates consistent outlines that smoothly follows the shape of an object.")]
-    [HelpURL("https://github.com/billthedev/Unity-Shaders")]
     public class WideOutline : ScriptableRendererFeature
     {
         private class WideOutlinePass : ScriptableRenderPass
@@ -77,10 +76,10 @@ namespace BillTheDev.BillOutline
                     switch (outline.cullingMode)
                     {
                         case CullingMode.Off:
-                            silhouette.SetFloat(CommonShaderPropertyId.CullMode, (float)UnityEngine.Rendering.CullMode.Off);
+                            silhouette.SetFloat(CommonShaderPropertyId.CullMode, (float)CullMode.Off);
                             break;
                         case CullingMode.Back:
-                            silhouette.SetFloat(CommonShaderPropertyId.CullMode, (float)UnityEngine.Rendering.CullMode.Back);
+                            silhouette.SetFloat(CommonShaderPropertyId.CullMode, (float)CullMode.Back);
                             break;
                     }
 
@@ -111,12 +110,14 @@ namespace BillTheDev.BillOutline
 
                     silhouette.SetFloat(CommonShaderPropertyId.ZWrite, settings.customDepthBuffer ? 1.0f : 0.0f);
 
+                    // Information buffer.
                     if (settings.widthControl == WidthControl.PerOutline) information.EnableKeyword(ShaderFeature.InformationBuffer);
                     else information.DisableKeyword(ShaderFeature.InformationBuffer);
                     if (outline.width > maxwidth) maxwidth = outline.width;
                     information.SetVector(CommonShaderPropertyId.Information, new Vector4(outline.width / 100.0f, 0.0f, 0.0f, 0.0f));
                 }
 
+                // Set outline material properties.
                 var (sourceBlend, destinationBlend) = RenderUtils.GetSrcDstBlend(settings.blendMode);
                 composite.SetInt(CommonShaderPropertyId.BlendModeSource, sourceBlend);
                 composite.SetInt(CommonShaderPropertyId.BlendModeDestination, destinationBlend);
@@ -131,6 +132,7 @@ namespace BillTheDev.BillOutline
                 if (settings.widthControl == WidthControl.PerOutline) composite.EnableKeyword(ShaderFeature.InformationBuffer);
                 else composite.DisableKeyword(ShaderFeature.InformationBuffer);
 
+                // Set custom material properties.
                 if (settings.materialType == MaterialType.Custom && settings.customMaterial != null)
                 {
                     settings.customMaterial.SetFloat(ShaderPropertyId.OutlineWidth, settings.sharedWidth);
@@ -162,11 +164,14 @@ namespace BillTheDev.BillOutline
                 var resourceData = frameData.Get<UniversalResourceData>();
                 var cameraData = frameData.Get<UniversalCameraData>();
 
+                // Ensure that the render pass doesn't blit from the back buffer.
                 if (resourceData.isActiveTargetBackBuffer) return;
 
                 CreateRenderGraphTextures(renderGraph, resourceData, out var silhouetteHandle, out var silhouetteDepthHandle, out var informationHandle, out var pingHandle, out var pongHandle);
                 if (!silhouetteHandle.IsValid() || !silhouetteDepthHandle.IsValid() || !informationHandle.IsValid() || !pingHandle.IsValid() || !pongHandle.IsValid()) return;
 
+                // 1. Mask.
+                // -> Render a mask to the stencil buffer.
                 using (var builder = renderGraph.AddRasterRenderPass<PassData>(ShaderPassName.Mask, out var passData))
                 {
                     builder.SetRenderAttachment(resourceData.activeColorTexture, 0);
@@ -189,6 +194,8 @@ namespace BillTheDev.BillOutline
                     });
                 }
 
+                // 2. Silhouette.
+                // -> Render a silhouette.
                 using (var builder = renderGraph.AddRasterRenderPass<PassData>(ShaderPassName.Silhouette, out var passData))
                 {
                     builder.SetRenderAttachment(silhouetteHandle, 0);
@@ -203,7 +210,7 @@ namespace BillTheDev.BillOutline
                         builder.UseRendererList(rendererListHandle.handle);
                     }
 
-                    builder.AllowGlobalStateModification(true);
+                    builder.AllowGlobalStateModification(true); // vertex animation
                     builder.AllowPassCulling(true);
 
                     builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
@@ -225,10 +232,15 @@ namespace BillTheDev.BillOutline
                     });
                 }
 
+
+
+                // 3. Information.
+                // -> Render the information.
                 if (settings.widthControl == WidthControl.PerOutline)
                 {
                     using var builder = renderGraph.AddRasterRenderPass<PassData>(ShaderPassName.Information, out var passData);
                     builder.SetRenderAttachment(informationHandle, 0);
+                    // builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture);
 
                     builder.SetGlobalTextureAfterPass(informationHandle, ShaderPropertyId.InformationBuffer);
 
@@ -238,7 +250,7 @@ namespace BillTheDev.BillOutline
                         builder.UseRendererList(rendererListHandle.handle);
                     }
 
-                    builder.AllowGlobalStateModification(true);
+                    builder.AllowGlobalStateModification(true); // vertex animation
                     builder.AllowPassCulling(false);
 
                     builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
@@ -250,6 +262,8 @@ namespace BillTheDev.BillOutline
                     });
                 }
 
+                // 3. Flood.
+                // -> Flood the silhouette.
                 using (var builder = renderGraph.AddUnsafePass<PassData>(ShaderPassName.Flood, out _))
                 {
                     builder.UseTexture(silhouetteHandle);
@@ -279,9 +293,11 @@ namespace BillTheDev.BillOutline
                     });
                 }
 
+                // 4. Outline.
+                // -> Render an outline.
                 using (var builder = renderGraph.AddRasterRenderPass<PassData>(ShaderPassName.Outline, out _))
                 {
-                    builder.UseTexture(informationHandle);
+                    builder.UseTexture(informationHandle); // FIXME: needed only for scene view? Need information handle to survive until this pass.
                     builder.UseTexture(pingHandle);
 
                     builder.SetRenderAttachment(resourceData.activeColorTexture, 0);
@@ -342,6 +358,7 @@ namespace BillTheDev.BillOutline
                     blendState.blendState0 = new RenderTargetBlendState(0);
                     renderStateBlock.blendState = blendState;
 
+                    // Set stencil state.
                     var stencilState = StencilState.defaultValue;
                     stencilState.enabled = true;
                     stencilState.SetCompareFunction(CompareFunction.Always);
@@ -544,27 +561,31 @@ namespace BillTheDev.BillOutline
                     autoGenerateMips = false
                 };
 
+                // Silhouette buffer.
                 baseDescriptor.name = Buffer.Silhouette;
-                baseDescriptor.colorFormat = GraphicsFormat.R8G8B8A8_UNorm;
+                baseDescriptor.colorFormat = GraphicsFormat.R8G8B8A8_UNorm; // TODO: Changed to format somewhere in Unity 6 cycle?
                 baseDescriptor.depthBufferBits = DepthBits.None;
                 silhouetteHandle = renderGraph.CreateTexture(baseDescriptor);
 
+                // Silhouette depth buffer.
                 baseDescriptor.name = Buffer.SilhouetteDepth;
-                baseDescriptor.colorFormat = GraphicsFormat.None;
+                baseDescriptor.colorFormat = GraphicsFormat.None; // TODO: Changed to format somewhere in Unity 6 cycle?
                 baseDescriptor.depthBufferBits = DepthBits.Depth32;
                 silhouetteDepthHandle = renderGraph.CreateTexture(baseDescriptor);
 
+                // Information buffer.
                 baseDescriptor.name = Buffer.Information;
-                baseDescriptor.colorFormat = SystemInfo.IsFormatSupported(GraphicsFormat.R16_SNorm, FormatUsage.Render)
+                baseDescriptor.colorFormat = SystemInfo.IsFormatSupported(GraphicsFormat.R16_SNorm, GraphicsFormatUsage.Render)
                     ? GraphicsFormat.R16_SNorm
-                    : GraphicsFormat.R16_SFloat;
+                    : GraphicsFormat.R16_SFloat; // TODO: Changed to format somewhere in Unity 6 cycle?
                 baseDescriptor.depthBufferBits = (int)DepthBits.None;
                 informationHandle = renderGraph.CreateTexture(baseDescriptor);
 
+                // Ping pong buffers.
                 baseDescriptor.name = Buffer.Ping;
-                baseDescriptor.colorFormat = SystemInfo.IsFormatSupported(GraphicsFormat.R16G16_SNorm, FormatUsage.Render)
+                baseDescriptor.colorFormat = SystemInfo.IsFormatSupported(GraphicsFormat.R16G16_SNorm, GraphicsFormatUsage.Render)
                     ? GraphicsFormat.R16G16_SNorm
-                    : GraphicsFormat.R32G32_SFloat;
+                    : GraphicsFormat.R32G32_SFloat; // TODO: Changed to format somewhere in Unity 6 cycle?
                 baseDescriptor.depthBufferBits = (int)DepthBits.None;
                 pingHandle = renderGraph.CreateTexture(baseDescriptor);
                 baseDescriptor.name = Buffer.Pong;
@@ -573,6 +594,7 @@ namespace BillTheDev.BillOutline
 #endif
             private RTHandle cameraDepthRTHandle, silhouetteRTHandle, silhouetteDepthRTHandle, pingRTHandle, pongRTHandle;
 
+#pragma warning disable 618, 672
             public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
             {
                 ConfigureTarget(silhouetteRTHandle, settings.customDepthBuffer ? silhouetteDepthRTHandle : renderingData.cameraData.renderer.cameraDepthTargetHandle);
@@ -598,12 +620,14 @@ namespace BillTheDev.BillOutline
                 };
                 RenderingUtils.ReAllocateIfNeeded(ref silhouetteRTHandle, descriptor, FilterMode.Point, TextureWrapMode.Clamp, name: Buffer.Silhouette);
 
+                // Silhouette depth buffer.
                 var silhouetteDepthDescriptor = renderingData.cameraData.cameraTargetDescriptor;
                 silhouetteDepthDescriptor.graphicsFormat = GraphicsFormat.None;
                 silhouetteDepthDescriptor.depthBufferBits = (int)DepthBits.Depth32;
                 silhouetteDepthDescriptor.msaaSamples = 1;
                 RenderingUtils.ReAllocateIfNeeded(ref silhouetteDepthRTHandle, silhouetteDepthDescriptor, FilterMode.Point, TextureWrapMode.Clamp, name: Buffer.SilhouetteDepth);
 
+                // Ping pong buffers.
                 var pingPongDescriptor = renderingData.cameraData.cameraTargetDescriptor;
                 pingPongDescriptor.graphicsFormat = SystemInfo.IsFormatSupported(GraphicsFormat.R16G16_SNorm, FormatUsage.Render)
                     ? GraphicsFormat.R16G16_SNorm
@@ -616,6 +640,8 @@ namespace BillTheDev.BillOutline
 
             public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
+                // 1. Mask.
+                // -> Render a mask to the stencil buffer.
                 var maskCmd = CommandBufferPool.Get();
 
                 using (new ProfilingScope(maskCmd, maskSampler))
@@ -672,6 +698,8 @@ namespace BillTheDev.BillOutline
                 context.ExecuteCommandBuffer(maskCmd);
                 CommandBufferPool.Release(maskCmd);
 
+                // 2. Silhouette.
+                // -> Render a silhouette.
                 var silhouetteCmd = CommandBufferPool.Get();
 
                 using (new ProfilingScope(silhouetteCmd, silhouetteSampler))
@@ -765,6 +793,8 @@ namespace BillTheDev.BillOutline
                 context.ExecuteCommandBuffer(silhouetteCmd);
                 CommandBufferPool.Release(silhouetteCmd);
 
+                // 3. Flood.
+                // -> Flood the silhouette.
                 var floodCmd = CommandBufferPool.Get();
 
                 using (new ProfilingScope(floodCmd, floodSampler))
@@ -791,6 +821,8 @@ namespace BillTheDev.BillOutline
                 context.ExecuteCommandBuffer(floodCmd);
                 CommandBufferPool.Release(floodCmd);
 
+                // 4. Outline.
+                // -> Render an outline.
                 var outlineCmd = CommandBufferPool.Get();
 
                 using (new ProfilingScope(outlineCmd, outlineSampler))
@@ -801,13 +833,14 @@ namespace BillTheDev.BillOutline
                     CoreUtils.SetRenderTarget(outlineCmd, renderingData.cameraData.renderer.cameraColorTargetHandle,
                         settings.customDepthBuffer
                             ? silhouetteDepthRTHandle
-                            : cameraDepthRTHandle);
+                            : cameraDepthRTHandle); // if using cameraColorRTHandle this does not render in scene view when rendering after post-processing with post-processing enabled
                     Blitter.BlitTexture(outlineCmd, pingRTHandle, Vector2.one, composite, ShaderPass.Outline);
                 }
 
                 context.ExecuteCommandBuffer(outlineCmd);
                 CommandBufferPool.Release(outlineCmd);
             }
+#pragma warning restore 618, 672
 
             public void SetTarget(RTHandle depth)
             {
@@ -826,7 +859,7 @@ namespace BillTheDev.BillOutline
 
             public void Dispose()
             {
-                settings = null;
+                settings = null; // de-reference settings to allow them to be freed from memory
 
                 silhouetteRTHandle?.Release();
                 silhouetteDepthRTHandle?.Release();
@@ -840,6 +873,12 @@ namespace BillTheDev.BillOutline
         private Material maskMaterial, silhouetteMaterial, silhouetteInstancedMaterial, outlineMaterial;
         private WideOutlinePass wideOutlinePass;
 
+        /// <summary>
+        /// Called
+        /// - When the Scriptable Renderer Feature loads the first time.
+        /// - When you enable or disable the Scriptable Renderer Feature.
+        /// - When you change a property in the Inspector window of the Renderer Feature.
+        /// </summary>
         public override void Create()
         {
             if (settings == null) return;
@@ -850,10 +889,15 @@ namespace BillTheDev.BillOutline
             wideOutlinePass ??= new WideOutlinePass();
         }
 
+        /// <summary>
+        /// Called
+        /// - Every frame, once for each camera.
+        /// </summary>
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
             if (settings == null || wideOutlinePass == null) return;
 
+            // Don't render for some views.
             if (renderingData.cameraData.cameraType == CameraType.Preview
                 || renderingData.cameraData.cameraType == CameraType.Reflection
                 || renderingData.cameraData.cameraType == CameraType.SceneView && !settings.ShowInSceneView
@@ -874,6 +918,7 @@ namespace BillTheDev.BillOutline
             if (render) renderer.EnqueuePass(wideOutlinePass);
         }
 
+#pragma warning disable 618, 672
         public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
         {
             if (settings == null || wideOutlinePass == null || renderingData.cameraData.cameraType == CameraType.SceneView && !settings.ShowInSceneView) return;
@@ -884,7 +929,11 @@ namespace BillTheDev.BillOutline
             wideOutlinePass.ConfigureInput(ScriptableRenderPassInput.Depth);
             wideOutlinePass.SetTarget(renderer.cameraDepthTargetHandle);
         }
+#pragma warning restore 618, 672
 
+        /// <summary>
+        /// Clean up resources allocated to the Scriptable Renderer Feature such as materials.
+        /// </summary>
         override protected void Dispose(bool disposing)
         {
             wideOutlinePass?.Dispose();
@@ -894,7 +943,7 @@ namespace BillTheDev.BillOutline
 
         private void OnDestroy()
         {
-            settings = null;
+            settings = null; // de-reference settings to allow them to be freed from memory
             wideOutlinePass?.Dispose();
         }
 

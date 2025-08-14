@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BillTheDev.Editor.BillOutline
 {
-    [CustomEditor(typeof(WideOutline))]
+    [CustomEditor(typeof(Linework.WideOutline.WideOutline))]
     public class WideOutlineEditor : UnityEditor.Editor
     {
         private static class Styles
@@ -16,6 +16,7 @@ namespace BillTheDev.Editor.BillOutline
         }
 
         private SerializedProperty settings;
+
         private bool initialized;
 
         private void Initialize()
@@ -26,13 +27,7 @@ namespace BillTheDev.Editor.BillOutline
 
         public override void OnInspectorGUI()
         {
-            if (!initialized)
-            {
-                Initialize();
-            }
-
-            serializedObject.Update();
-
+            if (!initialized) Initialize();
             EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PropertyField(settings, Styles.Settings);
@@ -41,22 +36,16 @@ namespace BillTheDev.Editor.BillOutline
             {
                 if (GUILayout.Button("Create", EditorStyles.miniButton, GUILayout.Width(70.0f)))
                 {
-                    const string assetPath = "Assets/Shaders/BillTheDev/WideOutline/Wide Outline Settings.asset";
-                    string directoryPath = Path.GetDirectoryName(assetPath);
-
-                    if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
-                    {
-                        Directory.CreateDirectory(directoryPath);
-                    }
+                    const string path = "Assets/Wide Outline Settings.asset";
 
                     var createdSettings = CreateInstance<WideOutlineSettings>();
-                    AssetDatabase.CreateAsset(createdSettings, assetPath);
+                    AssetDatabase.CreateAsset(createdSettings, path);
                     AssetDatabase.SaveAssets();
-                    AssetDatabase.Refresh();
-
-                    settings.objectReferenceValue = createdSettings;
                     EditorUtility.FocusProjectWindow();
                     Selection.activeObject = createdSettings;
+                    EditorUtils.OpenInspectorWindow(createdSettings);
+                    settings.objectReferenceValue = createdSettings;
+                    serializedObject.ApplyModifiedProperties();
                 }
             }
             else
@@ -73,8 +62,6 @@ namespace BillTheDev.Editor.BillOutline
                 EditorGUILayout.Space();
                 EditorGUILayout.HelpBox("No active outlines present. Effect will not render. Open the settings to add/enable outlines.", MessageType.Warning);
             }
-
-            serializedObject.ApplyModifiedProperties();
         }
     }
 }

@@ -1,5 +1,5 @@
 #if !UNITY_6000_0_OR_NEWER
-using BillTheDev.WideOutline.Common.Attributes;
+using BillTheDev.BillOutline.Common.Utils;
 #endif
 using BillTheDev.BillOutline.Common.Utils;
 using UnityEngine;

@@ -6,8 +6,7 @@ using UnityEngine;
 
 namespace BillTheDev.BillOutline
 {
-    [CreateAssetMenu(fileName = "Wide Outline Settings", menuName = "BillTheDev/Wide Outline Settings")]
-    [Icon("Assets/Shaders/BillTheDev/WideOutline/Editor/Common/Icons/d_WideOutline.png")]
+    [CreateAssetMenu(fileName = "Wide Outline Settings", menuName = "Linework/Wide Outline Settings")]
     public class WideOutlineSettings : ScriptableObject
     {
         internal Action OnSettingsChanged;
@@ -16,6 +15,7 @@ namespace BillTheDev.BillOutline
         [SerializeField] private bool showInSceneView = true;
         [SerializeField] private List<Outline> outlines = new(10);
 
+        // Shared settings.
         public MaterialType materialType;
         public Material customMaterial;
         public WidthControl widthControl = WidthControl.Shared;

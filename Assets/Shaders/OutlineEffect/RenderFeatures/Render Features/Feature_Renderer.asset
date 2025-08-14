@@ -35,13 +35,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb8054adf8ce443a286775c93a15246a, type: 3}
   m_Name: WideOutline
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings: {fileID: 11400000, guid: caafbe1ee0c2348e4818e5c4aecdca68, type: 2}
   shaders:
-    mask: {fileID: 4800000, guid: 559b73061fa904b74a426f1557d32c6f, type: 3}
+    mask: {fileID: 4800000, guid: 1ed7bc804a124d559675facf61722b63, type: 3}
     silhouette: {fileID: 4800000, guid: 674fb04b40b1d4681828279ca936df38, type: 3}
-    silhouetteInstanced: {fileID: 4800000, guid: 665d33fd1a3e0404fac7bbe391e38f25, type: 3}
-    outline: {fileID: 4800000, guid: 90865e175cad4ccd80a2e1965c38f3e9, type: 3}
+    silhouetteInstanced: {fileID: 4800000, guid: 85d004b6af6cd48209d21826b2f0a5a3, type: 3}
+    outline: {fileID: 4800000, guid: 045d2181161724cffbbac6d771b2f685, type: 3}
 --- !u!114 &-5980986578008110427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,7 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45dce8d1b0258402e88043727fcdb3e7, type: 3}
   m_Name: EdgeDetection
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings: {fileID: 11400000, guid: 5103d1edbb9ea4d09a9162f140883fea, type: 2}
   shaders:
     section: {fileID: 4800000, guid: d3c0ee565637d4788851ba81e7de1304, type: 3}

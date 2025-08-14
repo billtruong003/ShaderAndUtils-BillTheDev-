@@ -1,38 +1,72 @@
+// SHADER ĐÃ ĐƯỢC SỬA LỖI LOGIC ĐỂ GIỐNG 100% VỚI LINEWORK
 Shader "Hidden/CleanCode/WideOutlineEffect"
 {
     Properties
     {
-        _OuterColor("Outer Color", Color) = (1, 1, 1, 1)
-        _InnerColor("Inner Color", Color) = (1, 1, 1, 0)
-        _OutlineWidth("Outline Width", Range(1, 50)) = 10.0
-        _Gap("Gap", Range(0, 0.99)) = 0.5
+        // Các thuộc tính này giờ sẽ được điều khiển bởi ScriptableObject Settings
+        // nhưng vẫn giữ lại để tương thích với Material Inspector.
+        _OutlineColor("Outline Color", Color) = (1, 0, 0, 1)
+        _OutlineOccludedColor("Occluded Color", Color) = (0, 0, 1, 1)
+        _OutlineWidth("Outline Width", Range(0, 100)) = 10.0
+        _OutlineGap("Outline Gap", Range(0, 1)) = 0.0
     }
 
     SubShader
     {
-        Tags { "RenderPipeline" = "UniversalPipeline" }
+        Tags { "RenderPipeline" = "UniversalPipeline" "RenderType"="Opaque" }
         
         Pass
         {
             Name "Wide Outline Pass"
             Cull Off
-            ZTest Always
+            ZTest Always // ZTest sẽ được ghi đè bởi C#
             ZWrite Off
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend SrcAlpha OneMinusSrcAlpha // Blend mode sẽ được ghi đè bởi C#
+
+            HLSLINCLUDE
+            #define SNORM16_MAX_FLOAT_MINUS_EPSILON ((float)(32768-2) / (float)(32768-1))
+            #define FLOOD_ENCODE_OFFSET float2(1.0, SNORM16_MAX_FLOAT_MINUS_EPSILON)
+            #define FLOOD_ENCODE_SCALE float2(2.0, 1.0 + SNORM16_MAX_FLOAT_MINUS_EPSILON)
+            ENDHLSL
 
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Texture.hlsl"
-            #include "Packages/dev.ameye.linework/Runtime/Common/Shaders/DecodePosition.hlsl"
+            // Thêm các multi_compile cần thiết để khớp với shader gốc
+            #pragma multi_compile_local _ CUSTOM_DEPTH
+            #pragma multi_compile_local _ INFORMATION_BUFFER
 
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+
+            // Các biến và Texture được truyền từ C# (tên phải khớp với file gốc)
+            TEXTURE2D(_BlitTexture); // Đây là JFA buffer, không phải _MainTex
+            SAMPLER(sampler_BlitTexture);
+
+            TEXTURE2D(_SilhouetteBuffer);
+            SAMPLER(sampler_SilhouetteBuffer);
+
+            TEXTURE2D(_InformationBuffer);
+            SAMPLER(sampler_InformationBuffer);
+
+            #if defined(CUSTOM_DEPTH)
+                #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+                TEXTURE2D(_SilhouetteDepthBuffer);
+                SAMPLER(sampler_SilhouetteDepthBuffer);
+                half4 _OutlineOccludedColor;
+            #endif
+
+            CBUFFER_START(UnityPerMaterial)
+                half4 _OutlineColor;
+                float _OutlineWidth;
+                float _OutlineGap;
+                float _RenderScale; // Cần biến này để xử lý Render Scale
+            CBUFFER_END
+            
             struct Attributes
             {
-                float4 positionOS   : POSITION;
-                float2 uv           : TEXCOORD0;
+                uint vertexID : SV_VertexID;
             };
 
             struct Varyings
@@ -40,57 +74,55 @@ Shader "Hidden/CleanCode/WideOutlineEffect"
                 float4 positionCS   : SV_POSITION;
                 float2 uv           : TEXCOORD0;
             };
-
-            TEXTURE2D(_MainTex);
-            SAMPLER(sampler_MainTex);
-            float4 _MainTex_TexelSize;
-
-            CBUFFER_START(UnityPerMaterial)
-                float4 _OuterColor;
-                float4 _InnerColor;
-                float _OutlineWidth;
-                float _Gap;
-            CBUFFER_END
-
+            
             Varyings vert(Attributes input)
             {
                 Varyings output;
-                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
-                output.uv = input.uv;
+                output.positionCS = GetFullScreenTriangleVertexPosition(input.vertexID);
+                output.uv = GetFullScreenTriangleTexCoord(input.vertexID);
                 return output;
             }
 
-            float4 frag(Varyings input) : SV_Target
+            half4 frag(Varyings IN) : SV_Target
             {
-                // SỬA LỖI: Sử dụng _ScreenParams.xy để có được kích thước pixel vật lý chính xác,
-                // thay vì _MainTex_TexelSize.zw có thể không đáng tin cậy khi có Render Scale.
-                float2 physicalResolution = _ScreenParams.xy;
-                float2 physicalPixelCoords = input.uv * physicalResolution;
+                // ---- BẮT ĐẦU SAO CHÉP LOGIC TỪ SHADER GỐC ----
 
-                UnityTexture2D mainTexStruct = UnityBuildTexture2DStructNoScale(_MainTex);
+                int2 uvInt = int2(IN.positionCS.xy);
+                float2 encodedPos = _BlitTexture.Load(int3(uvInt, 0)).rg;
 
-                float2 nearestEdgePhysicalPixel;
-                DecodePosition_float(
-                    physicalPixelCoords, 
-                    physicalResolution, 
-                    mainTexStruct, 
-                    nearestEdgePhysicalPixel
-                );
+                if (encodedPos.y == -1) {
+                    return half4(0, 0, 0, 0);
+                }
 
-                float rawDistance = distance(physicalPixelCoords, nearestEdgePhysicalPixel);
+                float2 nearestPos = (encodedPos + FLOOD_ENCODE_OFFSET) * abs(_ScreenParams.xy) / FLOOD_ENCODE_SCALE;
+                float2 currentPos = IN.positionCS.xy * (1.0 / _RenderScale);
+                half dist = length(nearestPos - currentPos);
 
-                // Thêm 0.5 để căn giữa pixel, cho kết quả mượt hơn
-                float relativeDistance = saturate(1.0 - ((rawDistance - 0.5) / _OutlineWidth));
+                half width = _OutlineWidth;
+                #if defined(INFORMATION_BUFFER)
+                    // Sample từ information buffer nếu dùng chế độ Per-Outline
+                    width = SAMPLE_TEXTURE2D(_InformationBuffer, sampler_InformationBuffer, nearestPos / _ScreenParams.xy).r * 100.0f;
+                #endif
+                
+                half outlineMask = saturate(width - dist + 1.0) - saturate((_OutlineGap * width) - dist + 1.0);
 
-                float4 outlineGradient = lerp(_OuterColor, _InnerColor, relativeDistance);
+                #if defined(CUSTOM_DEPTH)
+                    half depth1 = SAMPLE_TEXTURE2D(_SilhouetteDepthBuffer, sampler_SilhouetteDepthBuffer, nearestPos / _ScreenParams.xy).r;
+                    half depth2 = SampleSceneDepth(IN.uv);
+                    half isOccluded = LinearEyeDepth(depth1, _ZBufferParams) - LinearEyeDepth(depth2, _ZBufferParams) > 0.001;
+                    
+                    half4 objectColor = SAMPLE_TEXTURE2D(_SilhouetteBuffer, sampler_SilhouetteBuffer, nearestPos / _ScreenParams.xy);
+                    half4 finalColor = isOccluded > 0 ? _OutlineOccludedColor : objectColor;
+                    
+                    finalColor.a *= outlineMask;
+                    return finalColor;
+                #else
+                    half4 finalColor = SAMPLE_TEXTURE2D(_SilhouetteBuffer, sampler_SilhouetteBuffer, nearestPos / _ScreenParams.xy);
+                    finalColor.a *= outlineMask;
+                    return finalColor;
+                #endif
 
-                // +1.0 thay vì +0.5 vì JFA distance field đã được bù trừ
-                float outlineMask = saturate(1.0 + _OutlineWidth - rawDistance);
-                float gapMask = step(1.0 - _Gap, relativeDistance);
-
-                float finalAlpha = outlineMask * (1.0 - gapMask);
-
-                return float4(outlineGradient.rgb, outlineGradient.a * finalAlpha);
+                // ---- KẾT THÚC SAO CHÉP LOGIC ----
             }
             ENDHLSL
         }

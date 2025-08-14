@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEditor;
 
-// FILE HỢP NHẤT: Giữ nguyên namespace gốc để dùng chung
 namespace BillTheDev.Editor.BillOutline.Common.Utils
 {
     public static class EditorUtils
@@ -9,30 +8,30 @@ namespace BillTheDev.Editor.BillOutline.Common.Utils
         public static class CommonStyles
         {
             // === General & Wide Outline Styles ===
-            public static readonly GUIContent InjectionPoint = new("Injection Point", "Determines where in the render pipeline the effect is rendered.");
-            public static readonly GUIContent ShowInSceneView = new("Show In Scene View", "Whether to show the effect in the Scene View.");
-            public static readonly GUIContent Outlines = new("Outlines", "The list of outlines to render.");
-            public static readonly GUIContent MaterialType = new("Material Type", "The type of material to use for rendering the outline.");
-            public static readonly GUIContent CustomMaterial = new("Custom Material", "A custom material to use for rendering the outline.");
-            public static readonly GUIContent WidthControl = new("Width Control", "Determines whether the outline width is shared or per-outline.");
-            public static readonly GUIContent OutlineWidth = new("Width", "The width of the outline in pixels.");
-            public static readonly GUIContent OutlineGap = new("Gap", "The gap from the object's edge to the start of the outline.");
-            public static readonly GUIContent OutlineBlendMode = new("Blend Mode", "The blending mode for the outline.");
-            public static readonly GUIContent FixBleeding = new("Fix Bleeding", "Use a custom depth buffer to prevent the outline from bleeding through objects. May impact performance.");
-            public static readonly GUIContent OutlineOccludedColor = new("Occluded Color", "The color of the outline when it is occluded by other objects.");
-            public static readonly GUIContent OutlineLayer = new("Rendering Layer", "The rendering layer mask to use for this outline.");
-            public static readonly GUIContent LayerMask = new("Layer Mask", "The layer mask to use for this outline.");
-            public static readonly GUIContent RenderQueue = new("Render Queue", "The render queue to use for this outline.");
-            public static readonly GUIContent OutlineOcclusion = new("Occlusion", "How the outline should be occluded by other objects.");
-            public static readonly GUIContent ClosedLoop = new("Closed Loop", "Ensures the outline forms a closed loop, which can help with certain occlusion artifacts.");
-            public static readonly GUIContent CullMode = new("Culling", "The culling mode for the outline geometry.");
-            public static readonly GUIContent AlphaCutout = new("Alpha Cutout", "Use an alpha texture to clip parts of the object.");
-            public static readonly GUIContent AlphaCutoutTexture = new("Texture", "The alpha texture to use for cutout.");
-            public static readonly GUIContent AlphaCutoutThreshold = new("Threshold", "The alpha threshold for the cutout.");
-            public static readonly GUIContent AlphaCutoutUVTransform = new("UV Transform", "The tiling and offset for the alpha cutout texture.");
-            public static readonly GUIContent GpuInstancing = new("GPU Instancing", "Use GPU instancing to render the outlines. This can improve performance but may break SRP batching.");
-            public static readonly GUIContent VertexAnimation = new("Vertex Animation", "Indicates that the object has vertex animation. The outline color should be set by the object's shader.");
-            public static readonly GUIContent OutlineColor = new("Color", "The color of the outline.");
+            public static readonly GUIContent InjectionPoint = EditorGUIUtility.TrTextContent("Stage", "Controls when the render pass executes.");
+            public static readonly GUIContent ShowInSceneView = EditorGUIUtility.TrTextContent("Show In Scene View", "Sets whether to render the pass in the scene view.");
+            public static readonly GUIContent Outlines = EditorGUIUtility.TrTextContent("Outlines", "The list of outlines to render.");
+            public static readonly GUIContent MaterialType = EditorGUIUtility.TrTextContent("Type", "The material type to use for the outline effect.");
+            public static readonly GUIContent CustomMaterial = EditorGUIUtility.TrTextContent("Material", "A custom material to use for rendering the outline.");
+            public static readonly GUIContent WidthControl = EditorGUIUtility.TrTextContent("Width Control", "Use a shared width or a width per outline.");
+            public static readonly GUIContent OutlineWidth = EditorGUIUtility.TrTextContent("Width", "The width of the outline.");
+            public static readonly GUIContent OutlineGap = EditorGUIUtility.TrTextContent("Gap", "The gap between the object and the outline.");
+            public static readonly GUIContent OutlineBlendMode = EditorGUIUtility.TrTextContent("Blend", "How to blend the outline with the rest of the scene.");
+            public static readonly GUIContent FixBleeding = EditorGUIUtility.TrTextContent("Fix Bleeding (Experimental)", "Use a custom depth buffer to determine the occlusion state of the outlined pixels.");
+            public static readonly GUIContent OutlineOccludedColor = EditorGUIUtility.TrTextContent("Occluded Color", "The color of the outline when it is occluded.");
+            public static readonly GUIContent OutlineLayer = EditorGUIUtility.TrTextContent("Rendering Layer", "Only mesh renderers on this rendering layer will receive an outline.");
+            public static readonly GUIContent LayerMask = EditorGUIUtility.TrTextContent("Layer Mask", "Only gameobjects on this layer will receive an outline.");
+            public static readonly GUIContent RenderQueue = EditorGUIUtility.TrTextContent("Queue", "Only gameobjects using this render queue will receive an outline.");
+            public static readonly GUIContent OutlineOcclusion = EditorGUIUtility.TrTextContent("Render", "For which occlusion states to render the outline.");
+            public static readonly GUIContent ClosedLoop = EditorGUIUtility.TrTextContent("Closed Loop", "Whether to render a closed loop outline.");
+            public static readonly GUIContent CullMode = EditorGUIUtility.TrTextContent("Cull", "The culling mode for the outline geometry.");
+            public static readonly GUIContent AlphaCutout = EditorGUIUtility.TrTextContent("Alpha Cutout", "Enable alpha cutout.");
+            public static readonly GUIContent AlphaCutoutTexture = EditorGUIUtility.TrTextContent("Texture", "The alpha cutout texture.");
+            public static readonly GUIContent AlphaCutoutThreshold = EditorGUIUtility.TrTextContent("Threshold", "The alpha clip threshold.");
+            public static readonly GUIContent AlphaCutoutUVTransform = EditorGUIUtility.TrTextContent("UV Transform", "The transform applied to the UVs (tiling x, tiling y, offset x, offset y).");
+            public static readonly GUIContent GpuInstancing = EditorGUIUtility.TrTextContent("GPU Instancing", "Use GPU instancing to render this outline layer.");
+            public static readonly GUIContent VertexAnimation = EditorGUIUtility.TrTextContent("Vertex Animation", "Make the outline follow the vertex animation of the mesh.");
+            public static readonly GUIContent OutlineColor = EditorGUIUtility.TrTextContent("Color", "The color of the outline.");
 
             // === Edge Detection Styles ===
             public static readonly GUIContent DebugStage = new("Debug View", "Show specific buffers for debugging.");

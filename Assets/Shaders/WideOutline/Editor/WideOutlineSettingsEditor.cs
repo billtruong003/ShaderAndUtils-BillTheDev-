@@ -1,11 +1,11 @@
 using System;
-using BillTheDev.BillOutline;
 using BillTheDev.BillOutline.Common.Utils;
 using BillTheDev.Editor.BillOutline.Common.Utils;
+using BillTheDev.BillOutline;
 using UnityEditor;
 using UnityEditor.Rendering;
 
-namespace BillTheDev.Editor.BillOutline
+namespace BillTheDev.Editor.WideOutline
 {
     [CustomEditor(typeof(WideOutlineSettings))]
     public class WideOutlineSettingsEditor : UnityEditor.Editor
@@ -108,7 +108,12 @@ namespace BillTheDev.Editor.BillOutline
 
             EditorGUILayout.Space();
 
-            if (occlusionChanged || widthMethodChanged)
+            if (occlusionChanged)
+            {
+                ForceSave();
+            }
+
+            if (widthMethodChanged)
             {
                 ForceSave();
             }

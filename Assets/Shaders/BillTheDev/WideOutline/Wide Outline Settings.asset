@@ -19,10 +19,10 @@ MonoBehaviour:
   materialType: 0
   customMaterial: {fileID: 2100000, guid: 0d49cec29f0b24c43b996c7d354f1086, type: 2}
   widthControl: 0
-  sharedWidth: 22.2
+  sharedWidth: 1.8
   gap: 0
   blendMode: 0
-  customDepthBuffer: 1
+  customDepthBuffer: 0
   occludedColor: {r: 1, g: 0, b: 0.043478012, a: 1}
 --- !u!114 &2768557971908141819
 MonoBehaviour:
@@ -41,7 +41,7 @@ MonoBehaviour:
   informationMaterial: {fileID: 0}
   informationMaterialInstanced: {fileID: 0}
   isActive: 1
-  customDepthEnabled: 1
+  customDepthEnabled: 0
   disableWidthControl: 1
   RenderingLayer:
     serializedVersion: 0
@@ -49,7 +49,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 67108864
-  renderQueue: 2
+  renderQueue: 0
   occlusion: 2
   cullingMode: 1
   closedLoop: 1

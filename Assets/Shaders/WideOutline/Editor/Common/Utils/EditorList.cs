@@ -15,8 +15,7 @@ namespace BillTheDev.Editor.BillOutline.Common.Utils
         private readonly string addItemText, noItemsText, maxItemsText;
         private readonly int maxItems;
 
-        public EditorList(UnityEditor.Editor targetEditor, SerializedProperty items, Action onChangedCallback, string addItemText, string noItemsText, string maxItemsText = "",
-            int maxItems = 0)
+        public EditorList(UnityEditor.Editor targetEditor, SerializedProperty items, Action onChangedCallback, string addItemText, string noItemsText, string maxItemsText = "", int maxItems = 0)
         {
             Items = items;
             this.targetEditor = targetEditor;
@@ -26,7 +25,6 @@ namespace BillTheDev.Editor.BillOutline.Common.Utils
             this.maxItems = maxItems;
             this.maxItemsText = maxItemsText;
             editors = new List<UnityEditor.Editor>();
-
             UpdateEditors();
         }
 
@@ -66,7 +64,6 @@ namespace BillTheDev.Editor.BillOutline.Common.Utils
                 if (GUILayout.Button(addItemText, EditorStyles.miniButton)) AddItem();
             }
         }
-
         private void DrawItem(int index, ref SerializedProperty itemProperty)
         {
             var item = itemProperty.objectReferenceValue;

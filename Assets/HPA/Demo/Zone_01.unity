@@ -9488,6 +9488,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 285198963693517983, guid: 97234e5f6945a45469828e00ff4e8e85, type: 3}
+      propertyPath: m_Layer
+      value: 26
+      objectReference: {fileID: 0}
     - target: {fileID: 1357584702745241490, guid: 97234e5f6945a45469828e00ff4e8e85, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1055.5664
@@ -9536,6 +9540,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: a5b87929eb99a9844a8976a5fdc95367, type: 2}
+    - target: {fileID: 8078621724161792599, guid: 97234e5f6945a45469828e00ff4e8e85, type: 3}
+      propertyPath: m_Layer
+      value: 26
+      objectReference: {fileID: 0}
     - target: {fileID: 9140719853580235305, guid: 97234e5f6945a45469828e00ff4e8e85, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -17231,11 +17239,11 @@ PrefabInstance:
     - target: {fileID: 7734376873853220670, guid: 97234e5f6945a45469828e00ff4e8e85, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 5113008cd8a096e49837ad8f78f1391a, type: 2}
+      objectReference: {fileID: 2100000, guid: 5a64d93b84a394247a7bab9a772f9f32, type: 2}
     - target: {fileID: 9140719853580235305, guid: 97234e5f6945a45469828e00ff4e8e85, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 5113008cd8a096e49837ad8f78f1391a, type: 2}
+      objectReference: {fileID: 2100000, guid: 5a64d93b84a394247a7bab9a772f9f32, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -49723,6 +49731,10 @@ PrefabInstance:
     - target: {fileID: 7825345378758832772, guid: 14949bb43b232ea46956263613e1eecb, type: 3}
       propertyPath: m_Name
       value: LOD_Washing_Machine
+      objectReference: {fileID: 0}
+    - target: {fileID: 9106149091390150266, guid: 14949bb43b232ea46956263613e1eecb, type: 3}
+      propertyPath: m_Layer
+      value: 26
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
