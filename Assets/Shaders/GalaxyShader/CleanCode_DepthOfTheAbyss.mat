@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CleanCode_DepthOfTheAbyss
+  m_Shader: {fileID: 4800000, guid: e2822a60295315447a3f3fb4979c99f9, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AbyssFogTex:
+        m_Texture: {fileID: 2800000, guid: ddb7a48c331a2e54c880f46455ec878f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CausticsTex:
+        m_Texture: {fileID: 2800000, guid: 581fcfd543a4445829bb923bace720da, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CreatureTex:
+        m_Texture: {fileID: 2800000, guid: e9831a053749e6847962b64605047f5e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PlanktonTex:
+        m_Texture: {fileID: 2800000, guid: 53e0be107d5db4ff5b73c869c271a0f2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RimGradientTex:
+        m_Texture: {fileID: 2800000, guid: 98be8ffaee9a16d46951c44ec47a245b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AbyssBrightness: 0.63
+    - _AbyssFogScale: 1.5
+    - _CausticsIntensity: 2.5
+    - _CausticsScale: 1
+    - _CreatureAnimationSpeed: 0.1
+    - _CreatureScale: 0.5
+    - _CreatureVisibility: 1
+    - _PlanktonScale: 2
+    - _PlanktonThreshold: 0.883
+    - _RimPower: 4.9
+    - _ShadowAmount: 0.053
+    - _SpecularHardness: 0.938
+    - _ViewParallaxIntensity: 0
+    m_Colors:
+    - _AbyssFogColor: {r: 0.05, g: 0.1, b: 0.2, a: 1}
+    - _AbyssFogScrollSpeed: {r: -0.004, g: -0.006, b: 0, a: 0}
+    - _CausticsColor: {r: 0.5, g: 0.8, b: 1, a: 1}
+    - _CausticsSpeed: {r: 0.02, g: 0.01, b: 0, a: 0}
+    - _CreatureColor: {r: 0.1, g: 0.8, b: 0.7, a: 1}
+    - _FakeLightDirection: {r: 5, g: 5, b: 0, a: 0}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _PlanktonColor: {r: 1, g: 1, b: 0.8, a: 1}
+    - _PlanktonScrollSpeed: {r: 0.01, g: 0.015, b: 0, a: 0}
+    - _RimColor: {r: 0, g: 0.6805558, b: 1, a: 1}
+    - _ShadowColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _SpecularColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

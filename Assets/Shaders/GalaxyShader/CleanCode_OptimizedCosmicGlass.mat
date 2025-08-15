@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CleanCode_OptimizedCosmicGlass
+  m_Shader: {fileID: 4800000, guid: 423e27e6815e43e4080b2b95cb11b404, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _PARALLAX_ON
+  - _TRIPLANAR_ON
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _NoiseTex1:
+        m_Texture: {fileID: 2800000, guid: af8edf011e1423348a4a2c4fb28dcf79, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex2:
+        m_Texture: {fileID: 2800000, guid: 42c35f09937e44481a4c6e89db888238, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RimGradientTex:
+        m_Texture: {fileID: 2800000, guid: 9096d900cbd764699b502c641edf33d2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarsTex:
+        m_Texture: {fileID: 2800000, guid: fc11b503aaa244024b2c0f98b6585000, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BlendSharpness: 10
+    - _CelSmoothness: 0.001
+    - _EnableParallax: 1
+    - _EnableTriplanar: 1
+    - _GalaxyDepthBias: 0.49
+    - _NoiseScale1: 4.86
+    - _NoiseScale2: 2
+    - _ParallaxDepth: 0
+    - _RimIntensity: 6.1
+    - _RimPower: 1.7
+    - _ShadowAmount: 0.02
+    - _SpecularHardness: 0.963
+    - _SpecularSmoothness: 0.001
+    - _StarsIntensity: 1.7
+    - _StarsScale: 15
+    m_Colors:
+    - _FakeLightDirection: {r: 5, g: 5, b: 0, a: 0}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _NoiseColor1: {r: 0.5833335, g: 0, b: 1, a: 1}
+    - _NoiseColor2: {r: 0.4950261, g: 0, b: 1, a: 1}
+    - _NoiseScrollSpeed1: {r: 0.01, g: 0.015, b: 0, a: 0}
+    - _NoiseScrollSpeed2: {r: -0.02, g: -0.01, b: 0, a: 0}
+    - _RimColor: {r: 0.42180908, g: 0.28773582, b: 1, a: 1}
+    - _ShadowColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _SpecularColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
+    - _StarsScrollSpeed: {r: 0.05, g: 0.05, b: 0.05, a: 0.05}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
