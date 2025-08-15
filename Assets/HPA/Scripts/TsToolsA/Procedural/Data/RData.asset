@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59b2c9a552654104dac8578e377fd391, type: 3}
+  m_Name: RData
+  m_EditorClassIdentifier: 
+  MoreOptions: 0
+  HelpBox: 0
+  currentelectedDatas: 0
+  crossRoadprefab: {fileID: 3647132172821001264, guid: 811d3fa64aff1cb449a83b62927aca33, type: 3}
+  iD: 1216
+  groundOffset: 0.03
+  isGizmosDisplayed: 1
+  currentPrefabSelected: 1
+  isRoadPrefabShown: 1
+  roadPrefabList:
+  - {fileID: 2039640647743856488, guid: fa43a10fb9f6b2e4fbdbfb035357a8d0, type: 3}
+  - {fileID: 2039640647743856488, guid: 0cfc203fa174363479a2ffd25b5d11b0, type: 3}
+  - {fileID: 2039640647743856488, guid: 501d2601a6b2d7c47b9267f49427820d, type: 3}
+  - {fileID: 2039640647743856488, guid: 05c4c843788c4cd499a0ce7daa3952ec, type: 3}
+  - {fileID: 2039640647743856488, guid: 2deda0c33a8ee484894ef95bdf7c84a7, type: 3}
+  - {fileID: 2039640647743856488, guid: b08a98ffa0a3b114e9ecbeaec9c4c23b, type: 3}
+  - {fileID: 2039640647743856488, guid: 9d81005a7cad225498775692ce8e6a36, type: 3}
+  - {fileID: 2039640647743856488, guid: 37af8d7cf2542584dababab4340773d7, type: 3}
+  - {fileID: 6989743066649835243, guid: 34218221c3dc0fd4b8321129c1d8c6f7, type: 3}
+  crossRoadGroundPrefabList:
+  - {fileID: 1098072247684495517, guid: 77272404815fe1a47bc333c9deda8f44, type: 3}
+  - {fileID: 1098072247684495517, guid: 7a2648c5988e2bc4e90597abc1b0885e, type: 3}
+  - {fileID: 1098072247684495517, guid: 39f68668c5a6b794892e88113b9d1b42, type: 3}
+  - {fileID: 8049576792732222200, guid: 47e85c765cf27004ca3911551b2b7e3e, type: 3}
+  - {fileID: 8049576792732222200, guid: c7c7e0b85ade087448f4bc13fe10fb6c, type: 3}
+  - {fileID: 8049576792732222200, guid: 84c079b08ee7e484fb681c074e8f4478, type: 3}
+  pointsList:
+  - points: {x: 19.82663, y: -0.009490967, z: -431.8057}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - points: {x: -20.255219, y: -0.009490967, z: -387.50085}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - points: {x: 51.062958, y: -0.009490967, z: -339.67706}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - points: {x: 39.35257, y: -0.009490967, z: -293.30408}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  curvePosRef: {x: 506.5369, y: 130.39377, z: 377.70197}
+  howManyPointToCopy: 2
+  currentProcedualGD: 0

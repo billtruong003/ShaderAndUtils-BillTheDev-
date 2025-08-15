@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eadbaee43796d7439203d9d8ec46e6e, type: 3}
+  m_Name: CalculateLightmapData
+  m_EditorClassIdentifier: 
+  MoreOptions: 0
+  HelpBox: 0
+  tab: 0
+  projetTabScenePath: Assets/HPA/Demo/
+  sceneThatContainsLight: Gameplay_Scene
+  lightName: SUN_Directional_Light
+  sceneAutoSave: 1
+  sceneToCalculateList:
+  - Procedural
+  - Zone_01
+  - Zone_02
+  - Zone_03
+  - Zone_04
+  - Zone_05
+  - Zone_06
+  - Zone_07
+  - Zone_08
+  - Zone_09
+  otherSceneToOpenList: []
