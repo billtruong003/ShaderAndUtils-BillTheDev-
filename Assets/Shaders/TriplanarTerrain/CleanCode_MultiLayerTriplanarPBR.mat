@@ -1,0 +1,141 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CleanCode_MultiLayerTriplanarPBR
+  m_Shader: {fileID: 4800000, guid: a538d66b91d9be5448e3ece5c5dff32f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _POSTERIZE_BLENDING
+  - _TOON_LIGHTING
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseAlbedo:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseMaskMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseNormal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GrassAlbedo:
+        m_Texture: {fileID: 2800000, guid: 292c666bf3bd6774dba00d3004cfaae9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GrassNormal:
+        m_Texture: {fileID: 2800000, guid: ac64a34c3a533e141bbb3b39d4f56bb3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HatchingTexture:
+        m_Texture: {fileID: 2800000, guid: 7e86780f8818d774781e18cdb159f2f7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LayerA_Albedo:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LayerA_MaskMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LayerA_Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LayerB_Albedo:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LayerB_MaskMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LayerB_Normal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTexture:
+        m_Texture: {fileID: 2800000, guid: 4d7ade311f79748edb0b8f119ed1e0f0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RockAlbedo:
+        m_Texture: {fileID: 2800000, guid: 7332c22810418e940a28b569ff493cf2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RockNormal:
+        m_Texture: {fileID: 2800000, guid: f127ee87898056e47946fab0b9123fc9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecularMask:
+        m_Texture: {fileID: 2800000, guid: b6ef74664ab8d7b4888ea0dd1e75e7cd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ToonRamp:
+        m_Texture: {fileID: 2800000, guid: b2a36388359244326bbf95f04e18cc94, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AxisBlendSharpness: 50
+    - _BaseNormalStrength: 1
+    - _BaseTiling: 1
+    - _BlendSharpness: 50
+    - _EnableHatching: 0
+    - _EnableNoise: 0
+    - _EnableRampLighting: 0
+    - _GrassBlendFalloff: 0.336
+    - _GrassBlendStart: 0.388
+    - _HatchingLightLevel: 0
+    - _HatchingThreshold: 0.358
+    - _HatchingTiling: 6.35
+    - _HighlightThreshold: 0.355
+    - _LayerA_BlendSharpness: 10
+    - _LayerA_BlendThreshold: 0.5
+    - _LayerA_NormalStrength: 1
+    - _LayerA_Tiling: 1
+    - _LayerB_BlendSharpness: 10
+    - _LayerB_BlendThreshold: 0.5
+    - _LayerB_NormalStrength: 1
+    - _LayerB_Tiling: 1
+    - _NoiseInfluence: 0.377
+    - _NoiseScale: 5
+    - _NormalIntensity: 2
+    - _RampSmoothness: 0.5
+    - _RimPower: 10
+    - _ShadowThreshold: 1
+    - _SpecularGloss: 1
+    - _TextureTiling: 1
+    - _Tiling: 0.5
+    - _TriplanarBlendSharpness: 4
+    - _UseLayerA: 0
+    - _UseLayerB: 0
+    m_Colors:
+    - _HatchingColor: {r: 0, g: 0, b: 0, a: 1}
+    - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _LayerA_BlendDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _LayerB_BlendDirection: {r: 0, g: -1, b: 0, a: 0}
+    - _MidtoneColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ShadowColor: {r: 0.03137237, g: 0.03137237, b: 0.14150941, a: 1}
+    - _SpecularTint: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

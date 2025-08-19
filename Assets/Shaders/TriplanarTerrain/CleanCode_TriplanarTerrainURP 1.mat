@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CleanCode_TriplanarTerrainURP 1
+  m_Shader: {fileID: 4800000, guid: e50eb0e33e4338f42ad4c02bb1da6839, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _POSTERIZE_BLENDING
+  - _TOON_LIGHTING
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DetailAlbedo:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GrassAlbedo:
+        m_Texture: {fileID: 2800000, guid: e2e17fda4ba9cdf46a6eb3be98f43b1f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GrassNormal:
+        m_Texture: {fileID: 2800000, guid: d236c102665613c4cb8d1c806e14f066, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HatchingTexture:
+        m_Texture: {fileID: 2800000, guid: 7e86780f8818d774781e18cdb159f2f7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IntersectionBlendTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MacroTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTexture:
+        m_Texture: {fileID: 2800000, guid: 4d7ade311f79748edb0b8f119ed1e0f0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RockAlbedo:
+        m_Texture: {fileID: 2800000, guid: 4243f572ee4f8944bb6b0da2ba5e4ab8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RockNormal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SDFTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _VariationNoise:
+        m_Texture: {fileID: 2800000, guid: fa1af23a297dc9e4ea442b6a8e8a460c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AxisBlendSharpness: 50
+    - _BlendLevels: 10
+    - _BlendSharpness: 50
+    - _CelSharpness: 1
+    - _CelSteps: 4
+    - _DetailInfluence: 0.2
+    - _DetailStrength: 0.5
+    - _DetailTiling: 0.1
+    - _EnableHatching: 0
+    - _EnableNoise: 0
+    - _EnableOutline: 0
+    - _EnablePosterizeBlend: 1
+    - _EnableRampLighting: 0
+    - _EnableToonLighting: 1
+    - _GrassBlendFalloff: 0.187
+    - _GrassBlendStart: 0.366
+    - _GrassSpread: 0.768
+    - _HatchingLightLevel: 0
+    - _HatchingTiling: 6.35
+    - _HatchingVisibility: 0.765
+    - _HighlightThreshold: 0.355
+    - _IntersectionBlendDistance: 0.5
+    - _IntersectionBlendHardness: 20
+    - _IntersectionBlendRange: 0.5
+    - _IntersectionBlendTiling: 2
+    - _MacroIntensity: 0.2
+    - _MacroTiling: 20
+    - _NoiseInfluence: 0.377
+    - _NoiseScale: 5
+    - _NormalIntensity: 0
+    - _NormalStrength: 1
+    - _OutlineThickness: 0.1
+    - _RampSmoothness: 0.5
+    - _SDFBlendDistance: 0.5
+    - _SDFBlendPower: 10
+    - _SDFBlendRange: 0.2
+    - _ShadowThreshold: 1
+    - _TextureTiling: 0.3
+    - _Tiling: 0.5
+    - _VariationIntensity: 0
+    - _VariationScale: 1
+    - _ViewAngleCompensation: 1
+    m_Colors:
+    - _DetailColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GrassBaseColor: {r: 0.9245283, g: 0.9245283, b: 0.9245283, a: 1}
+    - _HatchingColor: {r: 0, g: 0, b: 0, a: 1}
+    - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _IntersectionBlendColor: {r: 1, g: 1, b: 1, a: 1}
+    - _IntersectionOcclusionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _MidtoneColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RockBaseColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 1}
+    - _ShadowColor: {r: 0.03137237, g: 0.03137237, b: 0.14150941, a: 1}
+    - _VariationColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
