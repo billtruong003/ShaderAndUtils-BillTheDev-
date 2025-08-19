@@ -70,6 +70,12 @@ namespace cowsins
     [CreateAssetMenu(fileName = "NewWeapon", menuName = "COWSINS/New Weapon", order = 1)]
     public class Weapon_SO : Item_SO
     {
+        [Header("Inventory Logic")]
+        [Tooltip("Đánh dấu vũ khí này là vĩnh viễn, không thể vứt bỏ (ví dụ: Unarmed).")]
+        public bool isPermanent = false;
+
+        [Tooltip("Tự động xóa vũ khí này và chuyển về vũ khí vĩnh viễn (Unarmed) khi hết sạch đạn.")]
+        public bool destroyOnEmptyAndSwitchToPermanent = false;
         [Tooltip("Attach your weapon prefab here. This weapon prefab will be instantiated on your screen when you equip this weapon.")] public WeaponIdentification weaponObject;
 
         [Tooltip("Type of shooting. Hitscan = Instant hit on shooting." +
@@ -349,6 +355,8 @@ namespace cowsins
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("_name"));
                         EditorGUILayout.LabelField("This represents your first-person weapon in the game.", EditorStyles.helpBox);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("weaponObject"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("isPermanent"));
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("destroyOnEmptyAndSwitchToPermanent"));
                         EditorGUILayout.LabelField("This represents the graphics of your weapon on the ground.", EditorStyles.helpBox);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("pickUpGraphics"));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("icon"));

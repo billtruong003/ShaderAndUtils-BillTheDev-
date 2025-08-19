@@ -35,6 +35,9 @@ namespace cowsins
     {
         #region VARIABLES
         // INVENTORY
+        [Header("Default State")]
+        [Tooltip("SO cho trạng thái không vũ khí, sẽ luôn tồn tại trong kho đồ."), SerializeField]
+        private Weapon_SO unarmedWeaponSO;
         [Tooltip("max amount of weapons you can have"), SerializeField] private int inventorySize;
         [Tooltip("An array that includes all your initial weapons.")] public Weapon_SO[] initialWeapons;
 
@@ -74,7 +77,9 @@ namespace cowsins
         public bool CanMelee => canMelee;
         public GameObject MeleeObject => meleeObject;
         public bool AllowReloadWhileUnholstering => allowReloadWhileUnholstering;
-        public CustomShotMethods[] CustomPrimaryShot => customPrimaryShot;  
+        public CustomShotMethods[] CustomPrimaryShot => customPrimaryShot;
+        public Weapon_SO UnarmedWeaponSO => unarmedWeaponSO;
+        public Weapon_SO TemporarilyReplacedUnarmed => temporarilyReplacedUnarmed;
         #endregion
 
         #region INTERNAL USE
@@ -109,6 +114,7 @@ namespace cowsins
         private WeaponAnimator weaponAnimator;
         private WeaponStates weaponStates;
         private PlayerMultipliers multipliers;
+        private Weapon_SO temporarilyReplacedUnarmed;
 
 #pragma warning disable CS0414
         private bool canShoot;
@@ -176,7 +182,8 @@ namespace cowsins
             GetReferences();
             InitialSettings();
             UIController.instance.CreateInventoryUI(inventorySize);
-            GetInitialWeapons();
+            InitializeInventory();
+            // GetInitialWeapons();
 
             // Subscribe to the method.
             // Each time we click on the attachment UI, we should perform the assignment.
@@ -375,7 +382,11 @@ namespace cowsins
 
         public void Shoot() => id?.Shoot(spread, playerMultipliers.damageMultiplier, aimingCamShakeMultiplier * crouchingCamShakeMultiplier);
 
-        public void ReduceAmmo() => id?.ReduceAmmo();
+        public void ReduceAmmo()
+        {
+            id?.ReduceAmmo();
+            CheckAndHandleConsumableWeapon(); // GỌI HÀM KIỂM TRA SAU KHI TRỪ ĐẠN
+        }
 
         private void OnShoot()
         {
@@ -600,6 +611,48 @@ namespace cowsins
             events.OnFinishReload.Invoke();
         }
 
+        public void ReplaceUnarmedWithMelee(Weapon_SO meleeWeapon, int bullets, int totalBullets, List<AttachmentIdentifier_SO> attachments)
+        {
+            // Tìm vị trí của Unarmed (thường là slot 0)
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                if (inventory[i] != null && inventory[i].weapon.isPermanent)
+                {
+                    // Lưu lại Unarmed SO để có thể khôi phục sau
+                    temporarilyReplacedUnarmed = inventory[i].weapon;
+
+                    // Xóa instance của Unarmed và trang bị vũ khí Melee vào đúng slot đó
+                    ReleaseWeapon(i);
+                    InstantiateWeapon(meleeWeapon, i, bullets, totalBullets, attachments);
+                    CurrentWeaponIndex = i;
+                    SelectWeapon();
+                    return;
+                }
+            }
+        }
+
+        public void RestoreUnarmedWeapon()
+        {
+            if (temporarilyReplacedUnarmed == null) return;
+
+            // Tìm slot đang chứa vũ khí Melee (chính là slot của Unarmed cũ)
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                if (inventory[i] != null && inventory[i].weapon.shootStyle == ShootStyle.Melee)
+                {
+                    // Xóa vũ khí Melee và khôi phục Unarmed
+                    ReleaseWeapon(i);
+                    InstantiateWeapon(temporarilyReplacedUnarmed, i);
+                    CurrentWeaponIndex = i;
+                    SelectWeapon();
+
+                    // Xóa trạng thái đã lưu
+                    temporarilyReplacedUnarmed = null;
+                    return;
+                }
+            }
+        }
+
         private IEnumerator OverheatReload()
         {
             // Currently reloading
@@ -733,11 +786,9 @@ namespace cowsins
         public void SelectWeapon()
         {
             canShoot = false;
-
             crosshair.SpotEnemy(false);
-            events.OnInventorySlotChanged.Invoke(); // Invoke your custom method
+            events.OnInventorySlotChanged.Invoke();
             weapon = null;
-            // Spawn the appropriate weapon in the inventory
 
             foreach (WeaponIdentification weapon_ in inventory)
             {
@@ -745,24 +796,46 @@ namespace cowsins
                 {
                     weapon_.gameObject.SetActive(false);
                     weapon_.Animator.enabled = false;
-                    if (weapon_ == inventory[currentWeaponIndex])
-                    {
-                        weapon = inventory[currentWeaponIndex].weapon;
-
-                        weapon_.Animator.enabled = true;
-                        UnHolster(weapon_.gameObject, true);
-                    }
                 }
             }
+
+            if (inventory[currentWeaponIndex] != null)
+            {
+                weapon = inventory[currentWeaponIndex].weapon;
+                UnHolster(inventory[currentWeaponIndex].gameObject, true);
+            }
+            else // Nếu slot trống, tự động chuyển về Unarmed
+            {
+                SwitchToPermanentWeapon();
+                return; // Dừng lại vì SwitchToPermanentWeapon đã xử lý nốt phần còn lại
+            }
+
             GetWeaponWeightModifier();
-
-            // Handle the UI Animations
             UIController.instance.SelectInventoryUISlot(currentWeaponIndex);
-
             CancelInvoke(nameof(AllowShoot));
+            events.OnEquipWeapon.Invoke();
+        }
 
-            events.OnEquipWeapon.Invoke(); // Invoke your custom method
+        private void InitializeInventory()
+        {
+            if (unarmedWeaponSO == null)
+            {
+                Debug.LogError("Unarmed Weapon SO is not assigned in WeaponController!");
+                return;
+            }
 
+            // Luôn khởi tạo Unarmed ở slot 0
+            InstantiateWeapon(unarmedWeaponSO, 0);
+
+            // Khởi tạo các vũ khí ban đầu khác vào các slot tiếp theo
+            for (int i = 0; i < initialWeapons.Length && i + 1 < inventorySize; i++)
+            {
+                InstantiateWeapon(initialWeapons[i], i + 1);
+            }
+
+            // Chọn vũ khí đầu tiên để bắt đầu (sẽ là Unarmed hoặc vũ khí ở slot 1 nếu có)
+            currentWeaponIndex = (initialWeapons.Length > 0) ? 1 : 0;
+            SelectWeapon();
         }
 
         private void GetInitialWeapons()
@@ -858,15 +931,59 @@ namespace cowsins
 
         public void ReleaseWeapon(int index)
         {
-            Destroy(inventory[index].gameObject);
-            inventory[index] = null;
+            if (inventory[index] != null && inventory[index].weapon.isPermanent) return; // Không cho xóa vũ khí vĩnh viễn
+
+            if (inventory[index] != null)
+            {
+                Destroy(inventory[index].gameObject);
+                inventory[index] = null;
+            }
+
             weapon = null;
             UIController.instance.SetInventoryUISlotWeapon(index, null);
             GetWeaponWeightModifier();
         }
+
+        private void CheckAndHandleConsumableWeapon()
+        {
+            if (weapon == null || !weapon.destroyOnEmptyAndSwitchToPermanent) return;
+
+            bool isCompletelyEmpty = id.bulletsLeftInMagazine <= 0 && (weapon.reloadStyle != ReloadingStyle.defaultReload || !weapon.limitedMagazines || id.totalBullets <= 0);
+
+            if (isCompletelyEmpty)
+            {
+                int weaponIndexToRelease = currentWeaponIndex;
+                SwitchToPermanentWeapon(); // Chuyển sang unarmed trước
+                ReleaseWeapon(weaponIndexToRelease); // Sau đó mới xóa vũ khí cũ
+            }
+        }
+
+        private void SwitchToPermanentWeapon()
+        {
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                if (inventory[i] != null && inventory[i].weapon.isPermanent)
+                {
+                    if (currentWeaponIndex == i) // Nếu đã ở unarmed rồi thì chỉ cần refresh
+                    {
+                        SelectWeapon();
+                        return;
+                    }
+
+                    currentWeaponIndex = i;
+                    SelectWeapon();
+                    return;
+                }
+            }
+            // Fallback trong trường hợp không tìm thấy, dù điều này không nên xảy ra
+            Debug.LogError("No permanent weapon found in inventory!");
+        }
+
         #endregion
 
         #region ATTACHMENTS
+
+
         public void AssignNewAttachment(AttachmentIdentifier_SO attachmentIdentifier_SO) => AssignNewAttachmentToWeapon(attachmentIdentifier_SO, currentWeaponIndex);
 
         public void AssignNewAttachmentToWeapon(AttachmentIdentifier_SO attachmentIdentifier_SO, int index)
@@ -1019,27 +1136,26 @@ namespace cowsins
         /// </summary>
         public void HandleInventory()
         {
-            if (InputManager.reloading) return; // Do not change weapons while reloading
-                                                // Change slot
+            if (InputManager.reloading) return;
+
+            int previousWeaponIndex = currentWeaponIndex;
+
             if (InputManager.scrolling > 0 || InputManager.previousweapon)
             {
-                UIController.instance.StartFadingInventory();
-                ForceAimReset(); // Move Weapon back to the original position
-                if (currentWeaponIndex < inventorySize - 1)
-                {
-                    currentWeaponIndex++;
-                    SelectWeapon();
-                }
+                currentWeaponIndex++;
+                if (currentWeaponIndex >= inventorySize) currentWeaponIndex = 0;
             }
             if (InputManager.scrolling < 0 || InputManager.nextweapon)
             {
+                currentWeaponIndex--;
+                if (currentWeaponIndex < 0) currentWeaponIndex = inventorySize - 1;
+            }
+
+            if (previousWeaponIndex != currentWeaponIndex)
+            {
                 UIController.instance.StartFadingInventory();
-                ForceAimReset(); // Move Weapon back to the original position
-                if (currentWeaponIndex > 0)
-                {
-                    currentWeaponIndex--;
-                    SelectWeapon();
-                }
+                ForceAimReset();
+                SelectWeapon();
             }
         }
 

@@ -7,8 +7,7 @@ namespace ZombieAI
     {
         public static ZombiePoolManager Instance { get; private set; }
 
-        private Dictionary<string, Queue<GameObject>> _poolDictionary;
-        private Dictionary<string, GameObject> _prefabDictionary;
+        private Dictionary<GameObject, Queue<GameObject>> _poolDictionary;
 
         private void Awake()
         {
@@ -19,38 +18,34 @@ namespace ZombieAI
             else
             {
                 Instance = this;
-                _poolDictionary = new Dictionary<string, Queue<GameObject>>();
-                _prefabDictionary = new Dictionary<string, GameObject>();
+                _poolDictionary = new Dictionary<GameObject, Queue<GameObject>>();
             }
         }
 
-        public void InitializePools(List<ZombieDirector.ZombieSpawnInfo> zombieTypes, int initialSize)
+        public void CreatePools(List<GameObject> prefabs, int initialSize)
         {
-            foreach (var type in zombieTypes)
+            foreach (var prefab in prefabs)
             {
-                string poolKey = type.ZombiePrefab.name;
-                if (_poolDictionary.ContainsKey(poolKey)) continue;
+                if (_poolDictionary.ContainsKey(prefab)) continue;
 
-                _prefabDictionary[poolKey] = type.ZombiePrefab;
-
-                Queue<GameObject> objectPool = new Queue<GameObject>();
+                var objectPool = new Queue<GameObject>();
                 for (int i = 0; i < initialSize; i++)
                 {
-                    objectPool.Enqueue(CreateNewZombieInstance(poolKey));
+                    objectPool.Enqueue(CreateNewInstance(prefab));
                 }
-                _poolDictionary.Add(poolKey, objectPool);
+                _poolDictionary.Add(prefab, objectPool);
             }
         }
 
-        public GameObject SpawnFromPool(string prefabName, Vector3 position, Quaternion rotation)
+        public GameObject SpawnFromPool(GameObject prefab, Vector3 position, Quaternion rotation)
         {
-            if (!_poolDictionary.ContainsKey(prefabName))
+            if (!_poolDictionary.ContainsKey(prefab))
             {
-                Debug.LogError($"Pool with name '{prefabName}' doesn't exist.");
+                Debug.LogError($"Pool for prefab '{prefab.name}' doesn't exist.");
                 return null;
             }
 
-            Queue<GameObject> poolQueue = _poolDictionary[prefabName];
+            Queue<GameObject> poolQueue = _poolDictionary[prefab];
             GameObject objectToSpawn;
 
             if (poolQueue.Count > 0)
@@ -59,8 +54,8 @@ namespace ZombieAI
             }
             else
             {
-                Debug.LogWarning($"Pool '{prefabName}' ran out of objects. Dynamically creating a new one.");
-                objectToSpawn = CreateNewZombieInstance(prefabName, false);
+                Debug.LogWarning($"Pool for '{prefab.name}' is empty. Creating a new instance dynamically.");
+                objectToSpawn = CreateNewInstance(prefab, false);
             }
 
             objectToSpawn.transform.position = position;
@@ -70,25 +65,22 @@ namespace ZombieAI
             return objectToSpawn;
         }
 
-        public void ReturnToPool(GameObject objectToReturn)
+        public void ReturnToPool(GameObject objectToReturn, GameObject originalPrefab)
         {
-            string prefabName = objectToReturn.name;
-            if (!_poolDictionary.ContainsKey(prefabName))
+            if (originalPrefab == null || !_poolDictionary.ContainsKey(originalPrefab))
             {
-                Debug.LogWarning($"Pool with name '{prefabName}' doesn't exist. Destroying object.");
+                Debug.LogWarning($"Pool for '{objectToReturn.name}' doesn't exist. Destroying object.");
                 Destroy(objectToReturn);
                 return;
             }
 
             objectToReturn.SetActive(false);
-            _poolDictionary[prefabName].Enqueue(objectToReturn);
+            _poolDictionary[originalPrefab].Enqueue(objectToReturn);
         }
 
-        private GameObject CreateNewZombieInstance(string prefabName, bool initiallyInactive = true)
+        private GameObject CreateNewInstance(GameObject prefab, bool initiallyInactive = true)
         {
-            GameObject prefab = _prefabDictionary[prefabName];
-            GameObject newInstance = Instantiate(prefab);
-            newInstance.name = prefabName;
+            GameObject newInstance = Instantiate(prefab, transform); // Parent to manager for scene clarity
             if (initiallyInactive)
             {
                 newInstance.SetActive(false);

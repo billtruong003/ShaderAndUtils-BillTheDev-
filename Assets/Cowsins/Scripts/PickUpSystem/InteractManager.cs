@@ -1,5 +1,5 @@
 /// <summary>
-/// This script belongs to cowsins� as a part of the cowsins� FPS Engine. All rights reserved. 
+/// This script belongs to cowsins� as a part of the cowsins� FPS Engine. All rights reserved. 
 /// </summary>
 using UnityEngine;
 using UnityEngine.Events;
@@ -238,19 +238,36 @@ namespace cowsins
 
         private void HandleDrop()
         {
-            // Handles weapon dropping by pressing the drop button
+            if (weaponReferences.Weapon != null && weaponReferences.Weapon.isPermanent) return;
+
             if (weaponReferences.Weapon == null || weaponController.Reloading || !weaponController.IsMeleeAvailable || inspecting || !playerControl.IsControllable) return;
 
+            // Lấy WeaponController một lần để sử dụng
+            var wc = weaponController as WeaponController;
+            if (wc == null) return; // An toàn là trên hết
+
+            // Kiểm tra xem có đang trong trạng thái thay thế Unarmed không
+            bool isRestoringUnarmed = wc.TemporarilyReplacedUnarmed != null && weaponReferences.Weapon.shootStyle == ShootStyle.Melee;
+
+            // Tạo vật phẩm dưới đất
             WeaponPickeable pick = Instantiate(weaponGenericPickeable, orientation.Position + orientation.Forward * droppingDistance + transform.right * randomDropOffset, orientation.Rotation) as WeaponPickeable;
             pick.Drop(playerDependencies, orientation);
-            WeaponIdentification wp = weaponReferences.Id; 
-            pick.SetPickeableAttachments(wp);
+            pick.SetPickeableAttachments(weaponReferences.Id);
 
-            weaponController.ReleaseCurrentWeapon();
+            // Quyết định hành động: Khôi phục Unarmed hay chỉ vứt vũ khí
+            if (isRestoringUnarmed)
+            {
+                wc.RestoreUnarmedWeapon();
+            }
+            else
+            {
+                weaponController.ReleaseCurrentWeapon();
+            }
+
             UIController.instance.crosshairShape.ResetCrosshairToDefault();
-
             events.onDrop?.Invoke(pick);
         }
+
         private void ResetInteractTimer() => alreadyInteracted = false;
 
         public void ToggleInspectionState(bool state) => inspecting = state;

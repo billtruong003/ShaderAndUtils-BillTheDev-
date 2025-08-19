@@ -23,7 +23,7 @@ namespace BillTheDev.Editor.WideOutline
         private SerializedProperty occludedColor;
 
         private SerializedProperty outlines;
-        private EditorList<Outline> outlineList;
+        private EditorList<BillTheDev.BillOutline.Outline> outlineList;
 
         private void OnEnable()
         {
@@ -40,7 +40,7 @@ namespace BillTheDev.Editor.WideOutline
             occludedColor = serializedObject.FindProperty(nameof(WideOutlineSettings.occludedColor));
 
             outlines = serializedObject.FindProperty("outlines");
-            outlineList = new EditorList<Outline>(this, outlines, ForceSave, "Add Outline", "No outlines added.");
+            outlineList = new EditorList<BillTheDev.BillOutline.Outline>(this, outlines, ForceSave, "Add Outline", "No outlines added.");
         }
 
         private void OnDisable()

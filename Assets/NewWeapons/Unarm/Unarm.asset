@@ -21,6 +21,8 @@ MonoBehaviour:
   irregularItemIcon: {fileID: 21300000, guid: 56beb5210760fb645a2bbd2b497dcc4d, type: 3}
   applyWeight: 1
   weightMultiplier: 1
+  isPermanent: 1
+  destroyOnEmptyAndSwitchToPermanent: 0
   weaponObject: {fileID: 8068143084115016006, guid: b06deea86ac35bf4ab00bfb47ba719d7, type: 3}
   shootStyle: 2
   shootMethod: 1
@@ -126,10 +128,10 @@ MonoBehaviour:
   applyFOVEffectOnShooting: 0
   FOVValueToSubtract: 0
   AimingFOVValueToSubtract: 0
-  amountOfShootAnimations: 2
+  amountOfShootAnimations: 1
   bulletTrail: {fileID: 0}
   damagePerHit: 20
-  attackRate: 0.8
+  attackRate: 0.9
   hitDelay: 0.05
   attackRange: 1
   dontShowMagazine: 0

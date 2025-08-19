@@ -17,6 +17,7 @@ namespace ZombieAI
             _screamTimer = 0f;
             _context.NavMeshAgent.ResetPath();
             _context.AnimationManager.PlayScream();
+            _context.PlaySound(_context.Stats.ScreamSound);
         }
 
         public void Execute()

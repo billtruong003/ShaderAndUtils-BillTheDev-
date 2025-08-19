@@ -14,11 +14,11 @@ namespace ZombieAI
 
         public void Enter()
         {
-            _context.SetAsDead();
+            _context.SetAsDead(); // This will notify the Director
             _context.NavMeshAgent.enabled = false;
             _context.GetComponent<Collider>().enabled = false;
             _context.AnimationManager.PlayDeath();
-            _context.Director.OnZombieDied();
+            _context.PlaySound(_context.Stats.DeathSound);
 
             _context.StartCoroutine(ReturnToPoolAfterDelay());
         }
@@ -26,7 +26,8 @@ namespace ZombieAI
         private IEnumerator ReturnToPoolAfterDelay()
         {
             yield return new WaitForSeconds(_context.Stats.DespawnTimeAfterDeath);
-            ZombiePoolManager.Instance.ReturnToPool(_context.gameObject);
+            // Crucially, pass the original prefab for correct pooling
+            ZombiePoolManager.Instance.ReturnToPool(_context.gameObject, _context.OriginalPrefab);
         }
 
         public void Execute() { }

@@ -6,7 +6,7 @@ using UnityEditor.Rendering;
 
 namespace BillTheDev.Editor.BillOutline
 {
-    [CustomEditor(typeof(Outline))]
+    [CustomEditor(typeof(BillTheDev.BillOutline.Outline))]
     public class OutlineEditor : UnityEditor.Editor
     {
         private SerializedProperty renderingLayer;
@@ -25,20 +25,20 @@ namespace BillTheDev.Editor.BillOutline
 
         private void OnEnable()
         {
-            renderingLayer = serializedObject.FindProperty(nameof(Outline.RenderingLayer));
-            layerMask = serializedObject.FindProperty(nameof(Outline.layerMask));
-            renderQueue = serializedObject.FindProperty(nameof(Outline.renderQueue));
-            occlusion = serializedObject.FindProperty(nameof(Outline.occlusion));
-            cullMode = serializedObject.FindProperty(nameof(Outline.cullingMode));
-            closedLoop = serializedObject.FindProperty(nameof(Outline.closedLoop));
-            alphaCutout = serializedObject.FindProperty(nameof(Outline.alphaCutout));
-            alphaCutoutTexture = serializedObject.FindProperty(nameof(Outline.alphaCutoutTexture));
-            alphaCutoutThreshold = serializedObject.FindProperty(nameof(Outline.alphaCutoutThreshold));
-            alphaCutoutUVTransform = serializedObject.FindProperty(nameof(Outline.alphaCutoutUVTransform));
-            gpuInstancing = serializedObject.FindProperty(nameof(Outline.gpuInstancing));
-            vertexAnimation = serializedObject.FindProperty(nameof(Outline.vertexAnimation));
-            color = serializedObject.FindProperty(nameof(Outline.color));
-            width = serializedObject.FindProperty(nameof(Outline.width));
+            renderingLayer = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.RenderingLayer));
+            layerMask = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.layerMask));
+            renderQueue = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.renderQueue));
+            occlusion = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.occlusion));
+            cullMode = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.cullingMode));
+            closedLoop = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.closedLoop));
+            alphaCutout = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.alphaCutout));
+            alphaCutoutTexture = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.alphaCutoutTexture));
+            alphaCutoutThreshold = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.alphaCutoutThreshold));
+            alphaCutoutUVTransform = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.alphaCutoutUVTransform));
+            gpuInstancing = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.gpuInstancing));
+            vertexAnimation = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.vertexAnimation));
+            color = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.color));
+            width = serializedObject.FindProperty(nameof(BillTheDev.BillOutline.Outline.width));
             disableWidthControl = serializedObject.FindProperty("disableWidthControl");
             customDepthEnabled = serializedObject.FindProperty("customDepthEnabled");
         }

@@ -17,6 +17,7 @@ namespace ZombieAI
             _recoveryTimer = 0f;
             _context.NavMeshAgent.ResetPath();
             _context.AnimationManager.PlayTakeDamage();
+            _context.PlayRandomSound(_context.Stats.HurtSounds);
         }
 
         public void Execute()

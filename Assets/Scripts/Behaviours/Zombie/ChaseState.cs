@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace ZombieAI
@@ -6,7 +7,7 @@ namespace ZombieAI
     {
         private readonly Zombie _context;
         private float _timeSinceLostSight = 0f;
-
+        private Coroutine _soundCoroutine;
         public ChaseState(Zombie context)
         {
             _context = context;
@@ -16,6 +17,7 @@ namespace ZombieAI
         {
             _context.NavMeshAgent.speed = _context.Stats.ChaseSpeed;
             _context.AnimationManager.SetMovement(1f, 0f);
+            _soundCoroutine = _context.StartCoroutine(ChaseSoundRoutine());
         }
 
         public void Execute()
@@ -40,10 +42,24 @@ namespace ZombieAI
             }
         }
 
+        private IEnumerator ChaseSoundRoutine()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(Random.Range(2f, 5f)); // Âm thanh hung hãn, tần suất cao hơn
+                _context.PlayRandomSound(_context.Stats.ChaseSounds);
+            }
+        }
+
         public void Exit()
         {
             _context.NavMeshAgent.ResetPath();
             _context.AnimationManager.SetMovement(0f, 0f);
+
+            if (_soundCoroutine != null)
+            {
+                _context.StopCoroutine(_soundCoroutine);
+            }
         }
 
         private bool IsCloseEnoughToAttack()

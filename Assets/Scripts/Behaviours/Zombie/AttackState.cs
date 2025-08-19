@@ -61,6 +61,7 @@ namespace ZombieAI
             {
                 _context.CurrentAttack = attackToPerform;
                 _context.AnimationManager.PlayAttack(attackToPerform.AnimationTriggerName);
+                _context.PlaySound(_context.Stats.AttackSound);
                 _attackCooldownTimer = attackToPerform.Cooldown;
                 _isAttackAnimationPlaying = true;
             }

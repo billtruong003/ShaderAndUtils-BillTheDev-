@@ -7,6 +7,7 @@ namespace ZombieAI
     {
         private readonly Zombie _context;
         private float _searchTimer;
+        private Coroutine _soundCoroutine;
 
         public IdleState(Zombie context)
         {

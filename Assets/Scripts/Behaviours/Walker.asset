@@ -24,20 +24,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 67108864
   WanderSpeed: 1.5
-  ChaseSpeed: 4
+  ChaseSpeed: 3
   WanderRadius: 15
   TurnSpeed: 300
   Attacks:
   - AnimationTriggerName: SlapRight
     Damage: 10
     Range: 2.5
-    Cooldown: 2
-    AttackSound: {fileID: 0}
+    Cooldown: 1
   - AnimationTriggerName: SlapLeft
     Damage: 10
     Range: 2.5
+    Cooldown: 1
+  - AnimationTriggerName: Attack1
+    Damage: 10
+    Range: 2
     Cooldown: 2
-    AttackSound: {fileID: 0}
   WorriedDuration: 5
   AggroStareDuration: 1.5
   BitingDuration: 8
@@ -46,3 +48,23 @@ MonoBehaviour:
   TimeToForgetPlayer: 5
   SearchForCorpseInterval: 5
   DespawnTimeAfterDeath: 10
+  PitchVariation: {x: 0.95, y: 1.05}
+  IdleSounds:
+  - {fileID: 8300000, guid: f462d308fc6a648b288adb78161502a5, type: 3}
+  - {fileID: 8300000, guid: 824a492d546744169b7e4460926ebb2a, type: 3}
+  ScreamSound: {fileID: 8300000, guid: 8981e56356c3bd04a88774df81af33e7, type: 3}
+  ChaseSounds:
+  - {fileID: 8300000, guid: 77c5cc64c774c224492dbafe9e1685f6, type: 3}
+  - {fileID: 8300000, guid: a04948b294a8b8840b8800f4c993ab0e, type: 3}
+  - {fileID: 8300000, guid: c8c67075cd9a3754892b50f71bd2fca3, type: 3}
+  AttackSound: {fileID: 8300000, guid: 5055df1d6078baa4bab8f035a8243090, type: 3}
+  HurtSounds:
+  - {fileID: 8300000, guid: 5b29b0de6b62747e68ebf332c8811f35, type: 3}
+  - {fileID: 8300000, guid: 4ab62cbf20de44a4582c40ed442be13a, type: 3}
+  DeathSound: {fileID: 8300000, guid: 441f686a0c189264e857c116b2b7ad16, type: 3}
+  FootstepSounds:
+  - {fileID: 8300000, guid: cfaa31361f7ba4a23b747862467ff938, type: 3}
+  - {fileID: 8300000, guid: 8503c42970d2247a89300b4be374668c, type: 3}
+  BitingSounds:
+  - {fileID: 8300000, guid: 8e4e5a57680164f1197d5c06e7b0c99b, type: 3}
+  - {fileID: 8300000, guid: 00f2fa79439f04ebaad4209df5a78112, type: 3}

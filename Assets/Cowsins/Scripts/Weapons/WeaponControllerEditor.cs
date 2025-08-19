@@ -34,6 +34,8 @@ namespace cowsins
                 {
                     case "Inventory":
                         EditorGUILayout.LabelField("INVENTORY", EditorStyles.boldLabel);
+                        EditorGUILayout.PropertyField(serializedObject.FindProperty("unarmedWeaponSO"));
+                        EditorGUILayout.Space(5);
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("inventorySize"));
                         EditorGUILayout.Space(5);
                         EditorGUILayout.LabelField("Select the weapons you want to spawn with", EditorStyles.helpBox);

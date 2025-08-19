@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace ZombieAI
@@ -9,6 +10,7 @@ namespace ZombieAI
         private Transform _biteTarget;
         private float _bitingTimer;
         private bool _hasReachedCorpse = false;
+        private Coroutine _soundCoroutine;
 
         public BitingState(Zombie context, Transform corpseTransform)
         {
@@ -51,6 +53,9 @@ namespace ZombieAI
                     _context.AnimationManager.PlayBiting();
                     _context.IKTarget = _biteTarget; // Gán mục tiêu IK
                     _bitingTimer = 0f;
+
+                    _soundCoroutine = _context.StartCoroutine(BitingSoundRoutine());
+
                 }
             }
             else
@@ -67,6 +72,20 @@ namespace ZombieAI
         {
             _context.IKTarget = null; // Rất quan trọng: Xóa mục tiêu IK khi thoát
             _context.AnimationManager.SetMovement(0f, 0f);
+
+            if (_soundCoroutine != null)
+            {
+                _context.StopCoroutine(_soundCoroutine);
+            }
+        }
+
+        private IEnumerator BitingSoundRoutine()
+        {
+            while (true)
+            {
+                _context.PlayRandomSound(_context.Stats.BitingSounds);
+                yield return new WaitForSeconds(Random.Range(6, 8)); // Tiếng ăn gặm thường xuyên
+            }
         }
     }
 }

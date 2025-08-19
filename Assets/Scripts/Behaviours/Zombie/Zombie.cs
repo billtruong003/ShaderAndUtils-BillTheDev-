@@ -2,22 +2,26 @@ using UnityEngine;
 using UnityEngine.AI;
 using Sirenix.OdinInspector;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ZombieAI
 {
+    // Giữ nguyên các RequireComponent
     [RequireComponent(typeof(NavMeshAgent), typeof(ZombieAnimationManager), typeof(CapsuleCollider))]
     public class Zombie : MonoBehaviour
     {
         [Title("Configuration")]
         [Required("Zombie must have a Stats asset.")]
         [SerializeField] private ZombieStats stats;
-
+        private AudioSource _audioSource;
         public ZombieStats Stats => stats;
         public Transform PlayerTransform { get; private set; }
         public NavMeshAgent NavMeshAgent { get; private set; }
         public ZombieAnimationManager AnimationManager { get; private set; }
-        public DynamicAnimationEventHub EventHub { get; private set; }
-        public ZombieDirector Director { get; private set; }
+        public AdvancedZombieDirector Director { get; private set; }
+        public GameObject OriginalPrefab { get; private set; }
+        public AdvancedZombieDirector.SpawnZone ParentZone { get; private set; }
+
         public Vector3 AnchorPoint { get; private set; }
         public Vector3 LastHeardSoundPosition { get; private set; }
         public AttackDefinition CurrentAttack { get; set; }
@@ -28,32 +32,43 @@ namespace ZombieAI
         private IState _currentState;
         private CapsuleCollider _collider;
 
-        private void OnEnable()
-        {
-            if (NavMeshAgent != null) NavMeshAgent.enabled = true;
-            if (_collider == null) _collider = GetComponent<CapsuleCollider>();
-            _collider.enabled = true;
-            IKTarget = null;
-        }
-
         private void Awake()
         {
             NavMeshAgent = GetComponent<NavMeshAgent>();
             AnimationManager = GetComponent<ZombieAnimationManager>();
-            EventHub = GetComponent<DynamicAnimationEventHub>();
             _collider = GetComponent<CapsuleCollider>();
+            _audioSource = GetComponent<AudioSource>();
         }
 
-        public void Initialize(Transform player, ZombieDirector director)
+        private void OnEnable()
+        {
+            ResetForPooling();
+        }
+
+        // Thay thế Initialize cũ
+        public void Setup(Transform player, AdvancedZombieDirector director, GameObject prefab, AdvancedZombieDirector.SpawnZone zone)
         {
             PlayerTransform = player;
             Director = director;
+            OriginalPrefab = prefab;
+            ParentZone = zone;
+
             CurrentHealth = stats.MaxHealth;
-            IsDead = false;
             NavMeshAgent.speed = stats.WanderSpeed;
             NavMeshAgent.angularSpeed = stats.TurnSpeed;
-            gameObject.name = stats.ZombieName;
+
+            SetAnchorPoint(transform.position); // Anchor at spawn point
             ChangeState(new IdleState(this));
+        }
+
+        private void ResetForPooling()
+        {
+            if (NavMeshAgent != null) NavMeshAgent.enabled = true;
+            if (_collider == null) _collider = GetComponent<CapsuleCollider>();
+
+            _collider.enabled = true;
+            IKTarget = null;
+            IsDead = false;
         }
 
         private void Update()
@@ -77,8 +92,13 @@ namespace ZombieAI
         public void SetAsDead()
         {
             IsDead = true;
+            Director.OnZombieDied(this, ParentZone);
         }
 
+        // Giữ nguyên các hàm còn lại: OnHeardSound, TakeDamage, Event_PerformDamageCheck, v.v.
+        // ...
+
+        // Giữ nguyên toàn bộ các hàm khác
         public void OnHeardSound(Vector3 soundPosition)
         {
             if (IsDead || !(_currentState is IdleState)) return;
@@ -107,8 +127,6 @@ namespace ZombieAI
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerTransform.position);
             if (distanceToPlayer <= CurrentAttack.Range)
             {
-                // Thực hiện logic gây sát thương cho người chơi tại đây
-                // Ví dụ: PlayerTransform.GetComponent<PlayerHealth>()?.TakeDamage(CurrentAttack.Damage);
                 Debug.Log($"Zombie '{name}' dealt {CurrentAttack.Damage} damage to player.");
             }
         }
@@ -159,6 +177,22 @@ namespace ZombieAI
 
             AnimationManager.Animator.SetLookAtWeight(1.0f, 0.3f, 1.0f, 0.0f, 0.5f);
             AnimationManager.Animator.SetLookAtPosition(IKTarget.position);
+        }
+
+        public void PlaySound(AudioClip clip, float volume = 1.0f)
+        {
+            if (clip == null || _audioSource == null) return;
+
+            _audioSource.pitch = Random.Range(stats.PitchVariation.x, stats.PitchVariation.y);
+            _audioSource.PlayOneShot(clip, volume);
+        }
+
+        public void PlayRandomSound(List<AudioClip> clips, float volume = 1.0f)
+        {
+            if (clips == null || clips.Count == 0) return;
+
+            AudioClip randomClip = clips[Random.Range(0, clips.Count)];
+            PlaySound(randomClip, volume);
         }
     }
 }
