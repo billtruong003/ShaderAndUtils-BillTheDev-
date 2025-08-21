@@ -1,0 +1,265 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: New Material
+  m_Shader: {fileID: 4800000, guid: b58dde7a84fc8414585868dbf41528dd, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_37AAFE25:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_B66AF0E1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamNoiseTex:
+        m_Texture: {fileID: 2800000, guid: 56cd134b2ba31364aab350ffacf9c7fd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamTexture:
+        m_Texture: {fileID: 2800000, guid: c9dbb065f36754ccba29e266e3be32ed, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IntersectionFoamTexture:
+        m_Texture: {fileID: 2800000, guid: a50b14d05a0b63b43a801e50cf8ad932, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Intersection_Foam_Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalsTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normals_Texture:
+        m_Texture: {fileID: 2800000, guid: 26455e1254c4c44469ca0ac04c6b4533, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SurfaceNoiseTex:
+        m_Texture: {fileID: 2800000, guid: ea1efaeb0444bea40b785c5ddcf8e3e7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Surface_Foam_Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _WaveNoiseTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - Vector1_2E11270D: 0.03
+    - Vector1_39D35881: 1
+    - Vector1_3B48FD24: -0.27
+    - Vector1_5AE4170F: 0.15
+    - Vector1_80CAEB23: 0.3
+    - Vector1_8E5091B8: -0.33
+    - Vector1_981A3A67: 0.3
+    - Vector1_C1C7D298: 0.767
+    - Vector1_ECB3F2B8: 0.4
+    - _AddPrecomputedVelocity: 0
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 0
+    - _BlendModePreserveSpecular: 1
+    - _BumpScale: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DepthMax: 2.3
+    - _DepthRange: 1
+    - _Depth_Fade_Distance: 2
+    - _DetailAlbedoMapScale: 1
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _DstBlendAlpha: 0
+    - _EnvironmentReflections: 1
+    - _FoamCutoff: 0.5
+    - _FoamDirection: 0
+    - _FoamDistance: 0.35
+    - _FoamNoiseScale: 5
+    - _FoamSoftness: 0.357
+    - _FoamSpeed: 0.1
+    - _FoamTiling: 1
+    - _GlossMapScale: 0
+    - _Glossiness: 0
+    - _GlossyReflections: 0
+    - _Hardness: 0.5
+    - _HorizonDistance: 1
+    - _Horizon_Distance: 5
+    - _IntersectionFoamCutoff: 0.2
+    - _IntersectionFoamFade: 0.5
+    - _IntersectionThreshold: 0.6
+    - _Intersection_Foam_Color_Blend: 0.5
+    - _Intersection_Foam_Cutoff: 0.5
+    - _Intersection_Foam_Depth: 1.5
+    - _Intersection_Foam_Direction: 0.25
+    - _Intersection_Foam_Fade: 0.8
+    - _Intersection_Foam_Speed: 0.2
+    - _Intersection_Foam_Tiling: 20
+    - _Lighting_Hardness: 0.9
+    - _Lighting_Smoothness: 0.9
+    - _Metallic: 0
+    - _NoiseScale: 2
+    - _NoiseSpeed: 1
+    - _NoiseStrength: 1
+    - _NormalStrength: 1
+    - _NormalsScale: 1
+    - _NormalsSpeed: 0.1
+    - _Normals_Scale: 0.2
+    - _Normals_Speed: 0.2
+    - _Normals_Strength: 1
+    - _OcclusionStrength: 1
+    - _Opacity: 1
+    - _Parallax: 0.005
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _RefractionStrength: 0.1
+    - _Refraction_Scale: 0.1
+    - _Refraction_Speed: 0.1
+    - _Refraction_Strength: 0.02
+    - _ShoreFoamDistance: 0.5
+    - _Smoothness: 0.5
+    - _SmoothnessTextureChannel: 0
+    - _SpecularGloss: 30
+    - _SpecularHighlights: 1
+    - _SpecularThreshold: 0.95
+    - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
+    - _Surface: 0
+    - _SurfaceNoiseScale: 1.5
+    - _SurfaceNoiseStrength: 1
+    - _Surface_Foam_Color_Blend: 0.5
+    - _Surface_Foam_Cutoff: 0.7
+    - _Surface_Foam_Direction: 0.5
+    - _Surface_Foam_Distortion: 2
+    - _Surface_Foam_Speed: 0.1
+    - _Surface_Foam_Tiling: 10
+    - _WaveAmplitude: 0.03
+    - _WaveDirection: 0
+    - _WaveFrequency: 0.39
+    - _WaveHeight: 0.5
+    - _WaveSpeed: 0.5
+    - _Wave_Length: 10
+    - _Wave_Speed: 1
+    - _Wave_Steepness: 0.5
+    - _WorkflowMode: 1
+    - _WorldSpaceUV: 0
+    - _XRMotionVectorsPass: 1
+    - _ZWrite: 1
+    m_Colors:
+    - Color_27D4D743: {r: 0.2735849, g: 0.8226658, b: 1, a: 0}
+    - Color_51A4B6EC: {r: 0, g: 0.7135715, b: 1, a: 0}
+    - Color_C347D0B: {r: 0.4549662, g: 0.6634097, b: 0.6792453, a: 0}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DeepColor: {r: 0.1, g: 0.3, b: 0.5, a: 1}
+    - _Deep_Color: {r: 0.07, g: 0.12, b: 0.25, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
+    - _HorizonColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _Horizon_Color: {r: 0.6, g: 0.8, b: 1, a: 1}
+    - _Intersection_Foam_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ShallowColor: {r: 0.3, g: 0.7, b: 0.8, a: 1}
+    - _Shallow_Color: {r: 0.486, g: 1, b: 0.894, a: 0.784}
+    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _SpecularColor: {r: 0, g: 0.9367819, b: 1, a: 1}
+    - _Specular_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _SurfaceFlowDirection: {r: 0.1, g: 0.1, b: 0.1, a: 0.1}
+    - _Surface_Foam_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Wave_Directions: {r: 0.3, g: 0.4, b: 0.6, a: 0.7}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!114 &3826321701219953877
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 9

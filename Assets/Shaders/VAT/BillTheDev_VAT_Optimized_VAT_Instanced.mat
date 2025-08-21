@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BillTheDev_VAT_Optimized_VAT_Instanced
-  m_Shader: {fileID: 4800000, guid: 5898e79039fc08b4a824dc7f52ab2ac6, type: 3}
+  m_Shader: {fileID: 4800000, guid: ec4dfbb7a28c74b95948d689bbcb6750, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -32,9 +32,20 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _BaseThreshold: 0.7
+    - _HighlightThreshold: 0
+    - _LightIntensity: 1
+    - _MidtoneThreshold: 0.4
+    - _ShadowThreshold: 0.4
+    - _Smoothness: 2.81
     m_Colors:
+    - _BaseColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _FakeLightDirection: {r: -50, g: 50, b: 5, a: 0}
+    - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MidtoneColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _PositionMax: {r: 0, g: 0, b: 0, a: 0}
     - _PositionMin: {r: 0, g: 0, b: 0, a: 0}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

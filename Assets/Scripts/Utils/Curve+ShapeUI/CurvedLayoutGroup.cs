@@ -2,10 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// A custom layout group that arranges child elements along a curve, in a circle, or in a spiral.
-/// Offers advanced controls for rotation, sizing, and distribution.
-/// </summary>
 [AddComponentMenu("Layout/Curved Radial Layout Group", 150)]
 [ExecuteAlways]
 public class CurvedLayoutGroup : LayoutGroup
@@ -17,63 +13,49 @@ public class CurvedLayoutGroup : LayoutGroup
         Spiral,
     }
 
-    [Header("General Settings")]
-    [Tooltip("The type of layout to use.")]
+    public enum LayoutAxis
+    {
+        Horizontal,
+        Vertical
+    }
+
+    [Header("Layout Configuration")]
     public LayoutType layoutType = LayoutType.Curved;
-
-    [Tooltip("An overall position offset for the entire group.")]
     public Vector2 positionOffset = Vector2.zero;
-
-    [Tooltip("An overall rotation offset applied to all children.")]
-    public float rotateOffset = 0f;
-
-    [Tooltip("If true, children will be rotated to align with their direction in the layout.")]
-    public bool rotateTowards = false;
-
-    [Tooltip("If true, inactive children will be ignored by the layout.")]
-    public bool ignoreInactive = true;
+    public float globalRotationOffset = 0f;
+    public bool rotateChildren = false;
+    public bool ignoreInactiveChildren = true;
 
     [Header("Child Sizing")]
-    [Tooltip("If true, the layout group will control the size of its children.")]
     public bool controlChildSize = false;
-    [Tooltip("The size to apply to children if controlChildSize is true.")]
     public Vector2 childSize = new Vector2(100, 100);
 
-    [Header("Animation Curve Settings")]
-    [Tooltip("The curve that defines the shape (for Curved) or modifies the distribution (for Radial/Spiral).")]
-    public AnimationCurve curve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.5f, 1), new Keyframe(1, 0));
-    [Tooltip("Scales the influence of the curve.")]
-    public float curveScale = 1f;
-
     [Header("Curved Layout Settings")]
-    [Tooltip("The total width of the curved layout path.")]
-    public float width = 500f;
-    [Tooltip("The maximum height (amplitude) of the curve.")]
-    public float height = 100f;
-    [Tooltip("The starting point on the curve (0 = start, 1 = end).")]
-    [Range(0, 1)] public float curveStart = 0f;
-    [Tooltip("The ending point on the curve (0 = start, 1 = end).")]
-    [Range(0, 1)] public float curveEnd = 1f;
-    [Tooltip("Flips the layout axis from horizontal (X-based) to vertical (Y-based).")]
-    public bool horizontal = true;
+    public LayoutAxis layoutAxis = LayoutAxis.Horizontal;
+    public float pathWidth = 500f;
+    public float pathHeight = 100f;
+    [Range(0, 1)] public float pathStart = 0f;
+    [Range(0, 1)] public float pathEnd = 1f;
+    public AnimationCurve shapeCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.5f, 1), new Keyframe(1, 0));
+
+    [Header("Radial & Spiral Distribution")]
+    [Tooltip("Modifies radius for Radial layout or distance increment for Spiral layout.")]
+    public AnimationCurve distributionCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 1));
+    public float distributionScale = 1f;
 
     [Header("Radial Layout Settings")]
-    [Tooltip("The starting angle of the circle in degrees.")]
     public float startAngle = 0f;
-    [Tooltip("The ending angle of the circle in degrees.")]
     public float endAngle = 360f;
-    [Tooltip("The radius of the circle.")]
     public float radius = 200f;
-    [Tooltip("If true, the last child will be placed exactly at EndAngle. If false, spacing is divided among all children.")]
-    public bool fitToRange = true;
+    public bool fitToAngleRange = true;
 
     [Header("Spiral Layout Settings")]
-    [Tooltip("The starting angle for the spiral.")]
     public float spiralStartAngle = 0f;
-    [Tooltip("The angle increment for each subsequent child in the spiral.")]
+    public float spiralStartDistance = 0f;
     public float spiralAngleIncrement = 30f;
-    [Tooltip("The distance increment for each subsequent child in the spiral.")]
     public float spiralDistanceIncrement = 10f;
+
+    private readonly List<RectTransform> m_ActiveChildren = new List<RectTransform>();
 
     protected override void OnEnable()
     {
@@ -83,24 +65,13 @@ public class CurvedLayoutGroup : LayoutGroup
 
     public override void CalculateLayoutInputHorizontal()
     {
-        // This layout group controls positions, not necessarily layout sizes.
-        // Let's set a minimal size, but the user should size the RectTransform manually for best results.
         base.CalculateLayoutInputHorizontal();
-        float minWidth = 0;
-        if (layoutType == LayoutType.Curved) minWidth = width;
-        else if (layoutType == LayoutType.Radial) minWidth = radius * 2;
-        // Spiral size is dynamic, hard to predict.
-
-        SetLayoutInputForAxis(minWidth, minWidth, -1, 0);
+        UpdateActiveChildrenList();
+        CalculateLayoutSize();
     }
 
     public override void CalculateLayoutInputVertical()
     {
-        float minHeight = 0;
-        if (layoutType == LayoutType.Curved) minHeight = height * 2; // *2 to account for negative curve values
-        else if (layoutType == LayoutType.Radial) minHeight = radius * 2;
-
-        SetLayoutInputForAxis(minHeight, minHeight, -1, 1);
     }
 
     public override void SetLayoutHorizontal()
@@ -110,175 +81,193 @@ public class CurvedLayoutGroup : LayoutGroup
 
     public override void SetLayoutVertical()
     {
-        // SetLayoutHorizontal handles both axes.
     }
 
 #if UNITY_EDITOR
     protected override void OnValidate()
     {
         base.OnValidate();
-        if (curveEnd < curveStart) curveEnd = curveStart;
-        UpdateLayout();
+        if (pathEnd < pathStart) pathEnd = pathStart;
+        LayoutRebuilder.MarkLayoutForRebuild(rectTransform);
     }
 #endif
 
     public void UpdateLayout()
     {
         if (!IsActive()) return;
-        ArrangeElements();
+        LayoutRebuilder.MarkLayoutForRebuild(rectTransform);
+    }
+
+    private void UpdateActiveChildrenList()
+    {
+        m_ActiveChildren.Clear();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            var child = transform.GetChild(i) as RectTransform;
+            if (child != null && (!ignoreInactiveChildren || child.gameObject.activeInHierarchy))
+            {
+                m_ActiveChildren.Add(child);
+            }
+        }
+    }
+
+    private void CalculateLayoutSize()
+    {
+        if (m_ActiveChildren.Count == 0)
+        {
+            SetLayoutInputForAxis(0, 0, 0, 0);
+            SetLayoutInputForAxis(0, 0, 0, 1);
+            return;
+        }
+
+        Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+        Vector2 max = new Vector2(float.MinValue, float.MinValue);
+
+        for (int i = 0; i < m_ActiveChildren.Count; i++)
+        {
+            RectTransform child = m_ActiveChildren[i];
+            Vector2 position = GetChildPosition(i, m_ActiveChildren.Count);
+            Vector2 size = controlChildSize ? childSize : child.sizeDelta;
+            Vector2 pivotOffset = new Vector2(size.x * child.pivot.x, size.y * child.pivot.y);
+            Vector2 childMin = position - pivotOffset;
+            Vector2 childMax = position - pivotOffset + size;
+
+            min.x = Mathf.Min(min.x, childMin.x);
+            min.y = Mathf.Min(min.y, childMin.y);
+            max.x = Mathf.Max(max.x, childMax.x);
+            max.y = Mathf.Max(max.y, childMax.y);
+        }
+
+        float totalWidth = max.x - min.x;
+        float totalHeight = max.y - min.y;
+
+        SetLayoutInputForAxis(totalWidth, totalWidth, -1, 0);
+        SetLayoutInputForAxis(totalHeight, totalHeight, -1, 1);
     }
 
     private void ArrangeElements()
     {
         m_Tracker.Clear();
-        if (transform.childCount == 0)
-            return;
+        UpdateActiveChildrenList();
 
-        var childRects = new List<RectTransform>();
-        for (int i = 0; i < transform.childCount; i++)
+        if (m_ActiveChildren.Count == 0) return;
+
+        for (int i = 0; i < m_ActiveChildren.Count; i++)
         {
-            var child = (RectTransform)transform.GetChild(i);
-            if (child != null && (!ignoreInactive || child.gameObject.activeInHierarchy))
-            {
-                childRects.Add(child);
-            }
+            RectTransform child = m_ActiveChildren[i];
+            Vector2 position = GetChildPosition(i, m_ActiveChildren.Count);
+            Quaternion rotation = GetChildRotation(position, i, m_ActiveChildren.Count);
+
+            child.anchoredPosition = position;
+            child.rotation = rotation;
+
+            ApplyDrivenProperties(child);
+        }
+    }
+
+    private Vector2 GetChildPosition(int index, int childCount)
+    {
+        switch (layoutType)
+        {
+            case LayoutType.Curved: return GetCurvedPosition(index, childCount);
+            case LayoutType.Radial: return GetRadialPosition(index, childCount);
+            case LayoutType.Spiral: return GetSpiralPosition(index, childCount);
+            default: return Vector2.zero;
+        }
+    }
+
+    private Quaternion GetChildRotation(Vector2 childPosition, int index, int childCount)
+    {
+        if (!rotateChildren)
+        {
+            return Quaternion.Euler(0, 0, globalRotationOffset);
         }
 
-        int childCount = childRects.Count;
-        if (childCount == 0) return;
-
+        float angle = 0;
         switch (layoutType)
         {
             case LayoutType.Curved:
-                SetCurvedLayout(childRects, childCount);
+                float normalizedTime = pathStart + (GetNormalizedIndex(index, childCount) * (pathEnd - pathStart));
+                angle = GetCurveTangentAngle(normalizedTime, 0.01f);
                 break;
             case LayoutType.Radial:
-                SetRadialLayout(childRects, childCount);
+                float totalAngle = endAngle - startAngle;
+                float angleStep = totalAngle / (fitToAngleRange && childCount > 1 ? (childCount - 1) : childCount);
+                angle = startAngle + index * angleStep;
+                angle -= 90f; // Align child's 'up' to the radial direction
                 break;
             case LayoutType.Spiral:
-                SetSpiralLayout(childRects, childCount);
+                float spiralAngle = spiralStartAngle + (index * spiralAngleIncrement);
+                angle = spiralAngle - 90f;
                 break;
         }
+
+        return Quaternion.Euler(0, 0, angle + globalRotationOffset);
     }
 
-    private void SetCurvedLayout(List<RectTransform> children, int count)
+    private Vector2 GetCurvedPosition(int index, int count)
     {
-        for (int i = 0; i < count; i++)
-        {
-            RectTransform child = children[i];
-            float normalizedIndex = (count > 1) ? (float)i / (count - 1) : 0.5f;
+        float normalizedIndex = GetNormalizedIndex(index, count);
+        float time = pathStart + (normalizedIndex * (pathEnd - pathStart));
 
-            // Apply curve range
-            float curveRange = curveEnd - curveStart;
-            float t = curveStart + (normalizedIndex * curveRange);
+        float x = (-pathWidth / 2f) + (time * pathWidth);
+        float y = shapeCurve.Evaluate(time) * pathHeight;
 
-            float x = (-width / 2f) + (t * width);
-            float y = curve.Evaluate(t) * height * curveScale;
-
-            Vector2 position = horizontal ? new Vector2(x, y) : new Vector2(y, x);
-            child.anchoredPosition = position + positionOffset;
-
-            Quaternion rotation = Quaternion.Euler(0, 0, rotateOffset);
-            if (rotateTowards)
-            {
-                // Approximate the derivative to find the tangent angle
-                float tangentAngle = GetCurveTangentAngle(t, 0.01f);
-                rotation = Quaternion.Euler(0, 0, tangentAngle + rotateOffset);
-            }
-            child.rotation = rotation;
-
-            ApplyDrivenProperties(child);
-        }
+        return (layoutAxis == LayoutAxis.Horizontal ? new Vector2(x, y) : new Vector2(y, x)) + positionOffset;
     }
 
-    private float GetCurveTangentAngle(float t, float delta)
+    private float GetCurveTangentAngle(float time, float delta)
     {
-        // Clamp t to avoid going out of bounds of the curve
-        float t1 = Mathf.Clamp01(t - delta);
-        float t2 = Mathf.Clamp01(t + delta);
+        float t1 = Mathf.Clamp01(time - delta);
+        float t2 = Mathf.Clamp01(time + delta);
 
-        // Get points on the curve
-        float x1 = (-width / 2f) + (t1 * width);
-        float y1 = curve.Evaluate(t1) * height * curveScale;
+        float x1 = (-pathWidth / 2f) + (t1 * pathWidth);
+        float y1 = shapeCurve.Evaluate(t1) * pathHeight;
+        Vector2 p1 = (layoutAxis == LayoutAxis.Horizontal) ? new Vector2(x1, y1) : new Vector2(y1, x1);
 
-        float x2 = (-width / 2f) + (t2 * width);
-        float y2 = curve.Evaluate(t2) * height * curveScale;
+        float x2 = (-pathWidth / 2f) + (t2 * pathWidth);
+        float y2 = shapeCurve.Evaluate(t2) * pathHeight;
+        Vector2 p2 = (layoutAxis == LayoutAxis.Horizontal) ? new Vector2(x2, y2) : new Vector2(y2, x2);
 
-        Vector2 dir = horizontal ? new Vector2(x2 - x1, y2 - y1) : new Vector2(y2 - y1, x2 - x1);
-        return Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        Vector2 direction = (p2 - p1).normalized;
+        return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
     }
 
-    private void SetRadialLayout(List<RectTransform> children, int count)
+    private Vector2 GetRadialPosition(int index, int count)
     {
-        if (count == 0) return;
-
         float totalAngle = endAngle - startAngle;
-        // If fitToRange and count > 1, we divide by count-1 to make the last element land on endAngle.
-        // Otherwise, we divide by count to distribute them within the range.
-        float angleStep = totalAngle / (fitToRange && count > 1 ? (count - 1) : count);
+        float angleStep = totalAngle / (fitToAngleRange && count > 1 ? (count - 1) : count);
+        float angle = startAngle + index * angleStep;
+        float radAngle = angle * Mathf.Deg2Rad;
 
-        for (int i = 0; i < count; i++)
-        {
-            RectTransform child = children[i];
-            float t = (count > 1) ? (float)i / (count - 1) : 0.5f;
-            float curveValue = curve.Evaluate(t) * curveScale;
+        float normalizedIndex = GetNormalizedIndex(index, count);
+        float distributionValue = distributionCurve.Evaluate(normalizedIndex) * distributionScale;
+        float currentRadius = radius * distributionValue;
 
-            float angle = startAngle + i * angleStep;
-            float radAngle = angle * Mathf.Deg2Rad;
+        float x = Mathf.Cos(radAngle) * currentRadius;
+        float y = Mathf.Sin(radAngle) * currentRadius;
 
-            float currentRadius = radius * curveValue;
-
-            float x = Mathf.Cos(radAngle) * currentRadius;
-            float y = Mathf.Sin(radAngle) * currentRadius;
-
-            child.anchoredPosition = new Vector2(x, y) + positionOffset;
-
-            Quaternion rotation = Quaternion.Euler(0, 0, rotateOffset);
-            if (rotateTowards)
-            {
-                // Point away from the center
-                rotation = Quaternion.Euler(0, 0, angle + rotateOffset - 90f);
-            }
-            child.rotation = rotation;
-
-            ApplyDrivenProperties(child);
-        }
+        return new Vector2(x, y) + positionOffset;
     }
 
-    private void SetSpiralLayout(List<RectTransform> children, int count)
+    private Vector2 GetSpiralPosition(int index, int count)
     {
-        float currentAngle = spiralStartAngle;
-        float currentDistance = 0f;
+        float normalizedIndex = GetNormalizedIndex(index, count);
+        float distributionValue = distributionCurve.Evaluate(normalizedIndex) * distributionScale;
 
-        for (int i = 0; i < count; i++)
-        {
-            RectTransform child = children[i];
-            float t = (count > 1) ? (float)i / (count - 1) : 0.5f;
-            float curveValue = curve.Evaluate(t) * curveScale;
+        float angle = spiralStartAngle + (index * spiralAngleIncrement);
+        float distance = spiralStartDistance + (index * spiralDistanceIncrement * distributionValue);
 
-            // First child (i=0) is placed at the center, then distance increases.
-            if (i > 0)
-            {
-                currentDistance += spiralDistanceIncrement * curveValue;
-                currentAngle += spiralAngleIncrement;
-            }
+        float radAngle = angle * Mathf.Deg2Rad;
+        float x = Mathf.Cos(radAngle) * distance;
+        float y = Mathf.Sin(radAngle) * distance;
 
-            float radAngle = currentAngle * Mathf.Deg2Rad;
-            float x = Mathf.Cos(radAngle) * currentDistance;
-            float y = Mathf.Sin(radAngle) * currentDistance;
+        return new Vector2(x, y) + positionOffset;
+    }
 
-            child.anchoredPosition = new Vector2(x, y) + positionOffset;
-
-            Quaternion rotation = Quaternion.Euler(0, 0, rotateOffset);
-            if (rotateTowards)
-            {
-                // Point away from the center
-                rotation = Quaternion.Euler(0, 0, currentAngle + rotateOffset - 90f);
-            }
-            child.rotation = rotation;
-
-            ApplyDrivenProperties(child);
-        }
+    private float GetNormalizedIndex(int index, int count)
+    {
+        return (count > 1) ? (float)index / (count - 1) : 0.5f;
     }
 
     private void ApplyDrivenProperties(RectTransform child)

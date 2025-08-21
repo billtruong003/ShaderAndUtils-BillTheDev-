@@ -4,7 +4,7 @@
     {
         _FogColor ("Fog Color (Tint)", Color) = (0.0, 0.1, 0.2, 0.5)
         _FogStrength ("Fog Strength", Range(0.0, 5.0)) = 1.0
-        _FogDepthPower ("Fog Depth Falloff", Range(0.1, 5.0)) = 1.0
+        _FogDepthPower ("Fog Depth Falloff", Range(0.1, 100)) = 1.0
     }
 
     SubShader

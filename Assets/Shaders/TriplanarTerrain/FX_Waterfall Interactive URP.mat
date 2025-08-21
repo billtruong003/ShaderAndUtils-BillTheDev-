@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FX_Waterfall Interactive URP
+  m_Shader: {fileID: 4800000, guid: c3000c6d86a8e4d878f3c8a7b90410f4, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - VERTEX_FLOW
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _ReflectionTex:
+        m_Texture: {fileID: 2800000, guid: 4e697934b01e94695a79c02c4475648d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SideNoiseTex:
+        m_Texture: {fileID: 2800000, guid: 4d7ade311f79748edb0b8f119ed1e0f0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TopNoiseTex:
+        m_Texture: {fileID: 2800000, guid: 56cd134b2ba31364aab350ffacf9c7fd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Amount: 0.76
+    - _Brightness: 0.62
+    - _DepthOffset: -0.2
+    - _EdgeWidth: 0.51
+    - _Foam: 15.2
+    - _Height: 0.116
+    - _HorSpeed: 0.14
+    - _NoiseScale: 0.105
+    - _Reflectivity: 0.6
+    - _RimPower: 13.06
+    - _Softness: 0.5
+    - _SpeedV: 0.5
+    - _Stretch: 3.41
+    - _TopScale: 0.055
+    - _TopSpread: -0.2
+    - _VERTEX: 1
+    - _VertSpeed: 1.5
+    m_Colors:
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimColor: {r: 0.16509432, g: 1, b: 0.7873551, a: 1}
+    - _TColor: {r: 0.4, g: 0.7921569, b: 1, a: 1}
+    - _WaterColor: {r: 0, g: 0.34509805, b: 0.47058824, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
