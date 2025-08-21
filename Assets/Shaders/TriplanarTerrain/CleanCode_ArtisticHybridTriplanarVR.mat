@@ -8,11 +8,19 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CleanCode_ArtisticHybridTriplanarVR
-  m_Shader: {fileID: 4800000, guid: 9475267051e7067409f5dc187c63180e, type: 3}
+  m_Shader: {fileID: 4800000, guid: a538d66b91d9be5448e3ece5c5dff32f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ValidKeywords:
+  - _ARTIST_LIGHTING_RAMP
+  - _LOCAL_HATCHING
+  - _TRIPLANAR_NOISE
+  m_InvalidKeywords:
+  - _PARALLAX_ON
+  - _POSTERIZE_BLENDING
+  - _TOON_LIGHTING
+  - _TRIPLANAR_ON
+  - _WORLD_GRADIENT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -24,7 +32,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _GrassAlbedo:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 292c666bf3bd6774dba00d3004cfaae9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _GrassNormal:
@@ -32,49 +40,98 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HatchingTexture:
+        m_Texture: {fileID: 2800000, guid: b6bee30fd5906b44ea3a2721d431678f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex2:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTexture:
+        m_Texture: {fileID: 2800000, guid: 53e0be107d5db4ff5b73c869c271a0f2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RimGradientTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RockAlbedo:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 49bb128f0a351bb4f8c6f03f6741ea1a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RockNormal:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _StarsTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AxisBlendSharpness: 15
-    - _EnableGradient: 0
-    - _EnableHatching: 0
-    - _EnableNoise: 0
-    - _EnableRampLighting: 0
-    - _GradientEndHeight: 100
-    - _GradientStartHeight: 0
-    - _GrassBlendFalloff: 0.2
-    - _GrassBlendStart: 0.5
-    - _HatchingLightLevel: 0.25
+    - _AxisBlendSharpness: 1
+    - _BlendLevels: 10
+    - _BlendSharpness: 4
+    - _CelSharpness: 1
+    - _CelSmoothness: 0.05
+    - _CelSteps: 8
+    - _EnableGradient: 1
+    - _EnableHatching: 1
+    - _EnableNoise: 1
+    - _EnableOutline: 0
+    - _EnableParallax: 1
+    - _EnablePosterizeBlend: 1
+    - _EnableRampLighting: 1
+    - _EnableToonLighting: 1
+    - _EnableTriplanar: 1
+    - _GalaxyDepthBias: 1
+    - _GradientEndHeight: -0.2
+    - _GradientStartHeight: 0.73
+    - _GrassBlendFalloff: 1
+    - _GrassBlendStart: 0.405
+    - _HatchingLightLevel: 1
     - _HatchingTiling: 5
-    - _HighlightThreshold: 0.8
-    - _NoiseInfluence: 0.1
+    - _HighlightThreshold: 0.754
+    - _NoiseInfluence: 0.846
     - _NoiseScale: 5
-    - _NormalIntensity: 1
-    - _RampSmoothness: 0.05
-    - _ShadowThreshold: 0.4
+    - _NoiseScale1: 1
+    - _NoiseScale2: 1.5
+    - _NormalIntensity: 2
+    - _OutlineThickness: 0.0289
+    - _ParallaxDepth: 0.04
+    - _RampSmoothness: 0.184
+    - _RimIntensity: 1.5
+    - _RimPower: 5
+    - _ShadowAmount: 0.5
+    - _ShadowThreshold: 0.257
+    - _SpecularHardness: 0.95
+    - _SpecularSmoothness: 0.01
+    - _StarsIntensity: 2
+    - _StarsScale: 0.5
     - _TextureTiling: 1
+    - _ViewAngleCompensation: 1
     m_Colors:
-    - _GradientBottomColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FakeLightDirection: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _GradientBottomColor: {r: 0.5801887, g: 0.93951875, b: 1, a: 1}
     - _GradientTopColor: {r: 1, g: 1, b: 1, a: 1}
     - _GrassBaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _HatchingColor: {r: 0, g: 0, b: 0, a: 1}
     - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _MidtoneColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+    - _NoiseColor1: {r: 0.8, g: 0.2, b: 1, a: 1}
+    - _NoiseColor2: {r: 0.2, g: 0.8, b: 1, a: 1}
+    - _NoiseScrollSpeed1: {r: 0.01, g: 0.015, b: 0, a: 0}
+    - _NoiseScrollSpeed2: {r: -0.02, g: -0.01, b: 0, a: 0}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _RockBaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowColor: {r: 0.3, g: 0.3, b: 0.3, a: 1}
+    - _ShadowColor: {r: 0.08754203, g: 0.032974374, b: 0.1792453, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _StarsScrollSpeed: {r: 0.005, g: 0.005, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

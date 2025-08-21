@@ -1,0 +1,127 @@
+#pragma kernel CSMain
+
+struct Boid
+{
+    float3 position;
+    float3 velocity;
+};
+
+// Buffer chỉ đọc, chứa trạng thái của frame trước
+StructuredBuffer<Boid> boidsBufferRead;
+// Buffer ghi, chứa trạng thái mới sẽ được tính toán
+RWStructuredBuffer<Boid> boidsBufferWrite;
+
+uint numBoids;
+float deltaTime;
+
+float maxSpeed;
+float maxForce;
+float separationRadius;
+float alignmentRadius;
+float cohesionRadius;
+
+float separationFactor;
+float alignmentFactor;
+float cohesionFactor;
+
+float3 simulationBoundsCenter;
+float3 simulationBoundsSize;
+
+// Hàm tính toán lực "steer" để điều hướng agent
+float3 Steer(float3 desired, float3 currentVelocity)
+{
+    float3 steer = desired - currentVelocity;
+    float mag = length(steer);
+    if (mag > maxForce)
+    {
+        steer = (steer / mag) * maxForce;
+    }
+    return steer;
+}
+
+// Hàm giữ các boid trong một không gian giới hạn (tái xuất hiện ở cạnh đối diện)
+void WrapAround(inout float3 position)
+{
+    float3 halfBounds = simulationBoundsSize * 0.5;
+    float3 min = simulationBoundsCenter - halfBounds;
+    float3 max = simulationBoundsCenter + halfBounds;
+
+    if (position.x > max.x) position.x = min.x;
+    if (position.x < min.x) position.x = max.x;
+    if (position.y > max.y) position.y = min.y;
+    if (position.y < min.y) position.y = max.y;
+    if (position.z > max.z) position.z = min.z;
+    if (position.z < min.z) position.z = max.z;
+}
+
+[numthreads(64, 1, 1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= numBoids) return;
+
+    Boid currentBoid = boidsBufferRead[id.x];
+    
+    float3 separationForce = float3(0, 0, 0);
+    float3 alignmentSum = float3(0, 0, 0);
+    float3 cohesionSum = float3(0, 0, 0);
+    int separationCount = 0;
+    int alignmentCount = 0;
+    int cohesionCount = 0;
+
+    for (uint i = 0; i < numBoids; ++i)
+    {
+        if (i == id.x) continue;
+
+        Boid otherBoid = boidsBufferRead[i];
+        float d = distance(currentBoid.position, otherBoid.position);
+
+        if (d > 0 && d < separationRadius)
+        {
+            float3 diff = currentBoid.position - otherBoid.position;
+            diff /= d * d; // Càng gần, lực đẩy càng mạnh
+            separationForce += diff;
+            separationCount++;
+        }
+        if (d > 0 && d < alignmentRadius)
+        {
+            alignmentSum += otherBoid.velocity;
+            alignmentCount++;
+        }
+        if (d > 0 && d < cohesionRadius)
+        {
+            cohesionSum += otherBoid.position;
+            cohesionCount++;
+        }
+    }
+    
+    float3 acceleration = float3(0, 0, 0);
+
+    if (separationCount > 0)
+    {
+        separationForce /= separationCount;
+        acceleration += Steer(separationForce, currentBoid.velocity) * separationFactor;
+    }
+    if (alignmentCount > 0)
+    {
+        alignmentSum /= alignmentCount;
+        acceleration += Steer(alignmentSum, currentBoid.velocity) * alignmentFactor;
+    }
+    if (cohesionCount > 0)
+    {
+        cohesionSum /= cohesionCount;
+        cohesionSum -= currentBoid.position; // Vector từ vị trí hiện tại đến trung tâm
+        acceleration += Steer(cohesionSum, currentBoid.velocity) * cohesionFactor;
+    }
+
+    currentBoid.velocity += acceleration * deltaTime;
+    float speed = length(currentBoid.velocity);
+    if (speed > maxSpeed)
+    {
+        currentBoid.velocity = (currentBoid.velocity / speed) * maxSpeed;
+    }
+
+    currentBoid.position += currentBoid.velocity * deltaTime;
+    WrapAround(currentBoid.position);
+
+    boidsBufferWrite[id.x] = currentBoid;
+}

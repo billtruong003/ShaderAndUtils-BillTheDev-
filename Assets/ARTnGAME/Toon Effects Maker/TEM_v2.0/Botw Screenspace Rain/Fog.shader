@@ -1,55 +1,84 @@
-﻿Shader "Custom/DepthGrayscale" {
-	Properties{
-		_MainTex("", 2D) = "white" {}
-		_FogColor("Fog Color", color) = (0,0,0,0)
-		_FogDistance("Fog Distance", float) = 7
-	}
-		SubShader{
-		Tags{ "RenderType" = "Opaque" }
+﻿Shader "Advanced/VolumetricPlaneFog"
+{
+    Properties
+    {
+        _FogColor ("Fog Color (Tint)", Color) = (0.0, 0.1, 0.2, 0.5)
+        _FogStrength ("Fog Strength", Range(0.0, 5.0)) = 1.0
+        _FogDepthPower ("Fog Depth Falloff", Range(0.1, 5.0)) = 1.0
+    }
 
-		Pass{
-			CGPROGRAM
+    SubShader
+    {
+        Tags
+        {
+            "RenderPipeline" = "UniversalPipeline"
+            "RenderType" = "Transparent"
+            "Queue" = "Transparent"
+        }
 
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
+        Pass
+        {
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite Off
+            Cull Off
 
-			sampler2D _CameraDepthNormalsTexture;
-			sampler2D _MainTex;
-			float4 _FogColor;
-			float _FogDistance;
-			float4x4 _CamToWorld;
+            HLSLPROGRAM
+            #pragma vertex Vert
+            #pragma fragment Frag
 
-			float4x4 _CameraMV;
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
-			struct v2f {
-				float4 pos : SV_POSITION;
-				float4 scrPos:TEXCOORD1;
-				float2 uv : TEXCOORD4;
-			};
+            struct Attributes
+            {
+                float4 positionOS   : POSITION;
+            };
 
-			v2f vert(appdata_base v) {
-				v2f o;
-				o.pos = UnityObjectToClipPos(v.vertex);
-				o.scrPos = ComputeScreenPos(o.pos);
-				return o;
-			}
+            struct Varyings
+            {
+                float4 positionCS   : SV_POSITION;
+                float4 screenPos    : TEXCOORD0;
+            };
 
-			half4 frag(v2f i) : COLOR{
-				fixed4 combinedColor;
-				fixed4 orgColor = tex2Dproj(_MainTex, i.scrPos);
+            CBUFFER_START(UnityPerMaterial)
+                float4 _FogColor;
+                float _FogStrength;
+                float _FogDepthPower;
+            CBUFFER_END
 
-				float depthValue;
-				float3 normalValues;
-				DecodeDepthNormal(tex2D(_CameraDepthNormalsTexture, i.scrPos.xy), depthValue, normalValues);
-				normalValues = mul((float3x3)_CamToWorld, normalValues);
+            Varyings Vert(Attributes input)
+            {
+                Varyings output;
+                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.screenPos = ComputeScreenPos(output.positionCS);
+                return output;
+            }
 
-				float fog = depthValue * _FogDistance;
-				fog = clamp(fog, 0, 1);
-				return lerp(orgColor, _FogColor, fog);
-			}
-			ENDCG
-		}
-	}
-	FallBack "Diffuse"
+            float4 Frag(Varyings input) : SV_Target
+            {
+                // Lấy độ sâu của cảnh vật phía sau mặt phẳng sương mù
+                float2 screenUV = input.screenPos.xy / input.screenPos.w;
+                float rawDepth = SampleSceneDepth(screenUV);
+                float sceneDepth = LinearEyeDepth(rawDepth, _ZBufferParams);
+
+                // Độ sâu của chính mặt phẳng sương mù tại điểm ảnh đang vẽ
+                float surfaceDepth = input.screenPos.w;
+
+                // Tính toán khoảng cách chênh lệch và tạo mật độ sương mù
+                float depthDifference = sceneDepth - surfaceDepth;
+                float fogDensity = saturate(depthDifference * _FogStrength);
+                
+                // Áp dụng falloff để kiểm soát độ mềm của cạnh sương mù
+                fogDensity = pow(fogDensity, _FogDepthPower);
+                
+                // Màu cuối cùng là màu sương mù với độ trong suốt dựa trên mật độ
+                float3 finalColor = _FogColor.rgb;
+                float finalAlpha = _FogColor.a * fogDensity;
+
+                return float4(finalColor, finalAlpha);
+            }
+            ENDHLSL
+        }
+    }
+    FallBack "Hidden/Universal Render Pipeline/FallbackError"
 }
