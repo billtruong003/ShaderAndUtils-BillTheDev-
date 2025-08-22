@@ -1,6 +1,6 @@
 // ProfessionalShaderProfiler.cs
 // This script must be placed in an "Editor" folder.
-
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -1192,3 +1192,5 @@ public class ProfilerTreeViewItem : TreeViewItem
 }
 
 #endregion
+
+#endif

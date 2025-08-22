@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor.Recorder;
 using UnityEditor.Recorder.Input;
@@ -99,3 +100,4 @@ public class CameraPathRecorderLeanTween : MonoBehaviour
         Debug.Log($"Recording finished. Video saved to: {Path.GetFullPath(Path.Combine(Application.dataPath, "..", outputFileName))}");
     }
 }
+#endif

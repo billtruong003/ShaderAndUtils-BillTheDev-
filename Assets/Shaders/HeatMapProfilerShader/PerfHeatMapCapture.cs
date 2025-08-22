@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using Unity.Profiling;
 using System.Collections.Generic;
@@ -214,3 +215,4 @@ namespace PerfHeatMap
         }
     }
 }
+#endif

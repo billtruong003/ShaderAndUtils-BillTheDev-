@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 
 namespace PerfHeatMap
@@ -55,3 +56,4 @@ namespace PerfHeatMap
         }
     }
 }
+#endif

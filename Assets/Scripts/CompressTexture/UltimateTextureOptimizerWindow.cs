@@ -1,10 +1,11 @@
-// Assets/Editor/UltimateTextureOptimizerWindow.cs
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using System.IO;
 using System.Collections.Generic;
+
 
 public class UltimateTextureOptimizerWindow : OdinEditorWindow
 {
@@ -348,3 +349,4 @@ public class UltimateTextureOptimizerWindow : OdinEditorWindow
 
     #endregion
 }
+#endif

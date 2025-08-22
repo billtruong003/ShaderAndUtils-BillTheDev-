@@ -117,7 +117,9 @@ namespace ZombieAI
         [Title("Debug Settings")]
         [SerializeField] private bool enableGizmos = true;
 
+#if UNITY_EDITOR
         #region Odin Helper Methods
+
         private void BeginDrawListElement(int index)
         {
             Sirenix.Utilities.Editor.SirenixEditorGUI.BeginBox(this.spawnZones[index].ZoneName);
@@ -128,7 +130,7 @@ namespace ZombieAI
             Sirenix.Utilities.Editor.SirenixEditorGUI.EndBox();
         }
         #endregion
-
+#endif
         // ... (Giữ nguyên các hàm còn lại: Awake, InitializeDirector, Start, v.v.)
         // Mã nguồn các hàm logic không thay đổi
 
