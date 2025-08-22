@@ -124,6 +124,23 @@ namespace OptimizeVariousVAT
         private void Start()
         {
             _planeYPosition = this.transform.position.y;
+            // Thay thế dòng này:
+            // ApplyAgentCount(_initialAgentCount, true);
+            Application.targetFrameRate = 120;
+            // Bằng một coroutine:
+            StartCoroutine(InitializeCrowd());
+        }
+
+        private IEnumerator InitializeCrowd()
+        {
+            // Đợi cho đến khi InstanceManager sẵn sàng
+            while (_instanceManager == null || !_instanceManager.IsInitialized)
+            {
+                Debug.Log("Waiting for VAT_InstanceManager to initialize...");
+                yield return null; // Đợi 1 frame
+            }
+
+            Debug.Log("VAT_InstanceManager is ready. Spawning agents.");
             ApplyAgentCount(_initialAgentCount, true);
         }
 
@@ -212,6 +229,7 @@ namespace OptimizeVariousVAT
                 VAT_BoidsAgent prefab = _instanceManager.GetAgentPrefab(randomTypeIndex);
                 var newAgentGO = Instantiate(prefab, Vector3.zero, Quaternion.identity, this.transform);
                 var agentComponent = newAgentGO.GetComponent<VAT_BoidsAgent>();
+                agentComponent.Initialize(_instanceManager);
                 agentComponent.AgentTypeIndex = randomTypeIndex;
                 newAgentGO.gameObject.SetActive(false);
                 _agentPool.Add(agentComponent);

@@ -185,14 +185,19 @@ Shader "CleanCode/AdvancedToonTerrainVR"
                 return OUT;
             }
 
+            // --- FIX START ---
             half4 fragOutline(Varyings IN) : SV_TARGET
             {
                 #if defined(_TOON_OUTLINE)
                     return _OutlineColor;
                 #else
                     discard;
+                    // Add a dummy return to satisfy the Metal compiler.
+                    // This code is unreachable but required for compilation.
+                    return half4(0, 0, 0, 0); 
                 #endif
             }
+            // --- FIX END ---
             ENDHLSL
         }
     }

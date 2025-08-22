@@ -142,6 +142,5 @@ Shader "BillTheDev/VAT/URP_VAT_Toon_Instanced_FakeLight"
             ENDHLSL
         }
     }
-    FallBack "Universal Render Pipeline/Lit"
     CustomEditor "BillTheDev.Editor.ToonVATInstancedShaderGUI"
 }

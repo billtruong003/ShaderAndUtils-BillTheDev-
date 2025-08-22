@@ -85,9 +85,10 @@ Shader "TextMeshPro/Optimized/Mobile SDF (URP Opaque Cutout)"
                 positionOS.x += _VertexOffsetX;
                 positionOS.y += _VertexOffsetY;
 
-                output.worldPosition = TransformObjectToWorld(positionOS.xyzw);
-                output.positionCS = TransformWorldToHClip(output.worldPosition);
-
+                float3 positionWS = TransformObjectToWorld(positionOS.xyz);
+                output.worldPosition = float4(positionWS, 1.0);
+                output.positionCS = TransformWorldToHClip(positionWS);
+                
                 half scale = abs(input.texcoord0.w) * _GradientScale * (_Sharpness + 1);
                 half weight = lerp(_WeightNormal, _WeightBold, step(input.texcoord0.w, 0)) / 4.0;
                 weight += _FaceDilate * _ScaleRatioA * 0.5;

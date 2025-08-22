@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 
 namespace OptimizeVariousVAT
 {
+    [DefaultExecutionOrder(-100)]
     public class VAT_InstanceManager : MonoBehaviour
     {
         [System.Serializable]
@@ -19,9 +20,8 @@ namespace OptimizeVariousVAT
             public readonly VAT_AnimationData animationData;
             public readonly Material instanceMaterial;
             public readonly MaterialPropertyBlock propertyBlock;
-            public readonly List<ManagedAgent> agents = new List<ManagedAgent>(5000);
-            public readonly List<Matrix4x4> matrices = new List<Matrix4x4>(5000);
-
+            public readonly List<ManagedAgent> agents = new List<ManagedAgent>(50000);
+            public readonly List<Matrix4x4> matrices = new List<Matrix4x4>(50000);
             public Vector4[] animationDataBuffer;
 
             public RenderBatch(Material sourceMaterial, VAT_AnimationData animData, Texture2D albedo)
@@ -72,6 +72,8 @@ namespace OptimizeVariousVAT
         private readonly List<RenderBatch> _renderBatches = new List<RenderBatch>();
         private static readonly int AnimationDataID = Shader.PropertyToID("_AnimationData");
 
+        public bool IsInitialized { get; private set; } = false;
+
         public int GetAgentTypeCount() => _agentTypes.Count;
         public VAT_BoidsAgent GetAgentPrefab(int typeIndex) => (typeIndex >= 0 && typeIndex < _agentTypes.Count) ? _agentTypes[typeIndex].agentPrefab : null;
 
@@ -82,6 +84,8 @@ namespace OptimizeVariousVAT
 
         private void LateUpdate()
         {
+            if (!IsInitialized) return;
+
             float deltaTime = Time.deltaTime;
             foreach (var batch in _renderBatches)
             {
@@ -94,7 +98,17 @@ namespace OptimizeVariousVAT
 
         public void Register(VAT_BoidsAgent agent, int agentTypeIndex)
         {
-            if (agent.StateIndex != -1 || agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count) return;
+            if (!IsInitialized)
+            {
+                Debug.LogError("Cố gắng đăng ký Agent khi InstanceManager chưa được khởi tạo thành công.", agent);
+                return;
+            }
+            if (agent.StateIndex != -1) return; // Agent đã được đăng ký
+            if (agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count)
+            {
+                Debug.LogError($"Không thể đăng ký Agent. AgentTypeIndex không hợp lệ: {agentTypeIndex}. Có thể do cấu hình sai trong danh sách AgentTypes.", agent);
+                return;
+            }
 
             var batch = _renderBatches[agentTypeIndex];
             agent.StateIndex = batch.agents.Count;
@@ -105,7 +119,12 @@ namespace OptimizeVariousVAT
 
         public void Unregister(VAT_BoidsAgent agent, int agentTypeIndex)
         {
-            if (agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count) return;
+            if (!IsInitialized || agent.StateIndex == -1) return;
+            if (agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count)
+            {
+                Debug.LogError($"Không thể hủy đăng ký Agent. AgentTypeIndex không hợp lệ: {agentTypeIndex}.", agent);
+                return;
+            }
 
             var batch = _renderBatches[agentTypeIndex];
             int indexToRemove = agent.StateIndex;
@@ -129,7 +148,7 @@ namespace OptimizeVariousVAT
 
         public void SetAnimationState(int stateIndex, int agentTypeIndex, string clipName, float duration)
         {
-            if (agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count) return;
+            if (!IsInitialized || agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count) return;
 
             var batch = _renderBatches[agentTypeIndex];
             if (stateIndex < 0 || stateIndex >= batch.agents.Count) return;
@@ -148,25 +167,58 @@ namespace OptimizeVariousVAT
             batch.agents[stateIndex] = currentState;
         }
 
+        // Assets/Shaders/VAT/FinalizeForm/VAT_InstanceManager.cs
+
         private void Initialize()
         {
+            // THÊM LOG NGAY ĐẦU
+            Debug.Log("[VAT_MANAGER_DEBUG] Bắt đầu Initialize().");
+
+            IsInitialized = false;
             if (_baseInstancedMaterial == null)
             {
-                this.enabled = false;
+                Debug.LogError("[VAT_MANAGER_DEBUG] Lỗi: _baseInstancedMaterial bị null.", this);
                 return;
             }
 
-            foreach (var agentType in _agentTypes)
+            // THÊM LOG KIỂM TRA LIST
+            if (_agentTypes == null)
             {
-                if (agentType.animationData == null || !agentType.animationData.IsValid() || agentType.agentPrefab == null)
+                Debug.LogError("[VAT_MANAGER_DEBUG] Lỗi: List _agentTypes bị null!");
+                return;
+            }
+            Debug.Log($"[VAT_MANAGER_DEBUG] Tìm thấy {_agentTypes.Count} agent types trong danh sách.");
+
+
+            _renderBatches.Clear();
+            for (int i = 0; i < _agentTypes.Count; i++)
+            {
+                var agentType = _agentTypes[i];
+                // THÊM LOG KIỂM TRA TỪNG THÀNH PHẦN
+                Debug.Log($"[VAT_MANAGER_DEBUG] Đang kiểm tra AgentType #{i}: " +
+                          $"Prefab is null? {(agentType.agentPrefab == null)}. " +
+                          $"AnimData is null? {(agentType.animationData == null)}. " +
+                          $"Albedo is null? {(agentType.albedoTexture == null)}.");
+
+                if (agentType.agentPrefab == null || agentType.animationData == null || !agentType.animationData.IsValid() || agentType.albedoTexture == null)
                 {
-                    Debug.LogError($"AgentTypeDefinition không hợp lệ. Vui lòng kiểm tra lại.", this);
+                    Debug.LogError($"[VAT_MANAGER_DEBUG] AgentTypeDefinition #{i} KHÔNG HỢP LỆ. Bỏ qua.", this);
                     continue;
                 }
-                // Quan trọng: prefab gốc phải luôn ở trạng thái inactive
+
                 agentType.agentPrefab.gameObject.SetActive(false);
                 _renderBatches.Add(new RenderBatch(_baseInstancedMaterial, agentType.animationData, agentType.albedoTexture));
+                Debug.Log($"[VAT_MANAGER_DEBUG] Đã thêm thành công RenderBatch cho AgentType #{i}.");
             }
+
+            if (_renderBatches.Count == 0)
+            {
+                Debug.LogError("[VAT_MANAGER_DEBUG] Lỗi nghiêm trọng: Không có RenderBatch nào được tạo. Tất cả các AgentTypeDefinition đều không hợp lệ.", this);
+                return;
+            }
+
+            Debug.Log($"[VAT_MANAGER_DEBUG] Initialize() thành công! Tổng số RenderBatches được tạo: {_renderBatches.Count}");
+            IsInitialized = true;
         }
 
         private void UpdateAndRenderBatch(RenderBatch batch, float deltaTime)

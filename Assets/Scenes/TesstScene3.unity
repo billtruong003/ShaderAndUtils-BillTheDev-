@@ -12189,7 +12189,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf1d21b08ddd9487782ebf4e5174f33f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _manager: {fileID: 1661624758}
 --- !u!1 &202440414
 GameObject:
   m_ObjectHideFlags: 0
@@ -15126,7 +15125,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &280051346
 Transform:
   m_ObjectHideFlags: 0
@@ -21915,7 +21914,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf1d21b08ddd9487782ebf4e5174f33f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _manager: {fileID: 1323459556}
 --- !u!1 &418719982
 GameObject:
   m_ObjectHideFlags: 0
@@ -23773,7 +23771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animationDataAsset: {fileID: 11400000, guid: 9af0077b37538eb47a5ae6e7c19c701f, type: 2}
-  _sourceMaterial: {fileID: 2100000, guid: 89cde7d000aec684196b666686e8274b, type: 2}
+  _sourceMaterial: {fileID: 2100000, guid: 8da10f561d883471ebdaf718d0043b66, type: 2}
 --- !u!4 &469567734
 Transform:
   m_ObjectHideFlags: 0
@@ -42190,7 +42188,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &816210711
 Transform:
   m_ObjectHideFlags: 0
@@ -63932,7 +63930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97513fd4e5cdd41638df1a617fd93403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _baseInstancedMaterial: {fileID: 2100000, guid: 89cde7d000aec684196b666686e8274b, type: 2}
+  _baseInstancedMaterial: {fileID: 2100000, guid: 8da10f561d883471ebdaf718d0043b66, type: 2}
   _agentTypes:
   - agentPrefab: {fileID: 416878318}
     animationData: {fileID: 11400000, guid: b500915015fab468c894db54b532cd7a, type: 2}
@@ -63961,10 +63959,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4edb6366ec627492baa6360b27c74822, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _updateMode: 1
-  _simulationMode: 0
+  _updateMode: 0
+  _simulationMode: 1
   _coroutineUpdateInterval: 0.06666667
-  _initialAgentCount: 1
+  _initialAgentCount: 10
   _instanceManager: {fileID: 1323459556}
   _spawnBounds: {x: 500, y: 0, z: 100}
   _walkSpeed: 2
@@ -63978,7 +63976,7 @@ MonoBehaviour:
   _chanceToRunInsteadOfWalk: 0.15
   _idleClip: A_Idle_Standing_Masc
   _walkClip: A_Walk_FwdStrafeF_Masc
-  _runClip: A_Walk_FwdStrafeF_Masc
+  _runClip: A_Sprint_F_Masc
   _animationFadeDuration: 0.3
 --- !u!4 &1323459559
 Transform:
@@ -76050,7 +76048,7 @@ Camera:
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
+  m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
 --- !u!4 &1588245964
@@ -76086,7 +76084,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 0
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -80288,7 +80286,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7c43737cd6496447d8237886215e4261, type: 2}
+  - {fileID: 2100000, guid: d30e15b2a6e9848efa7b3af152e5f336, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -80326,13 +80324,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1679582938}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16.8014, y: 0, z: 0.9977398}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -35}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 2133317153}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &1679582942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99879,10 +99877,9 @@ Transform:
   - {fileID: 671762378}
   - {fileID: 1686604379}
   - {fileID: 2144036736}
-  - {fileID: 1679582941}
   - {fileID: 864838856}
-  - {fileID: 280051346}
   - {fileID: 325670984}
+  - {fileID: 280051346}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2142674730
@@ -100254,6 +100251,7 @@ SceneRoots:
   - {fileID: 1588245964}
   - {fileID: 2133317153}
   - {fileID: 1078699633}
+  - {fileID: 1679582941}
   - {fileID: 956405947}
   - {fileID: 1583311370}
   - {fileID: 2066943365}

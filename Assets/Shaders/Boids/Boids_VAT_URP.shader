@@ -169,6 +169,7 @@ Shader "BillTheDev/VAT/Boids_VAT_URP_Final"
             #pragma fragment ShadowFrag
             #pragma multi_compile_instancing
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
             
             struct Attributes
@@ -218,7 +219,6 @@ Shader "BillTheDev/VAT/Boids_VAT_URP_Final"
                 
                 if (blendWeight > 0.001)
                 {
-                    // ĐÂY LÀ DÒNG ĐÃ ĐƯỢC SỬA LỖI
                     float previousAnimTime = UNITY_ACCESS_INSTANCED_PROP(PerInstanceVAT, _PreviousAnimNormalizedTime);
                     float3 previousLocalPosition = DecodeLocalPosition(vertexU, previousAnimTime);
                     localPosition = lerp(previousLocalPosition, localPosition, blendWeight);
@@ -233,8 +233,12 @@ Shader "BillTheDev/VAT/Boids_VAT_URP_Final"
                 
                 float3 positionWS = mul(rotationMatrix, localPosition) + boidData.position;
                 float3 normalWS = normalize(mul(rotationMatrix, input.normalOS));
-
-                output.positionCS = GetShadowCasterPositionCS(positionWS, normalWS);
+                
+                Light mainLight = GetMainLight();
+                float3 lightDirection = mainLight.direction;
+                
+                positionWS = ApplyShadowBias(positionWS, normalWS, lightDirection);
+                output.positionCS = TransformWorldToHClip(positionWS);
 
                 return output;
             }

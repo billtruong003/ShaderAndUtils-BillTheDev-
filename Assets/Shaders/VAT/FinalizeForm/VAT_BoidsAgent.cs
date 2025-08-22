@@ -14,7 +14,12 @@ namespace OptimizeVariousVAT
         [ShowInInspector, ReadOnly]
         public string CurrentAnimation { get; private set; }
 
-        [SerializeField, Required] private VAT_InstanceManager _manager;
+        private VAT_InstanceManager _manager;
+
+        public void Initialize(VAT_InstanceManager manager)
+        {
+            this._manager = manager;
+        }
 
         private void OnEnable()
         {
