@@ -15,14 +15,14 @@ Shader "BillTheDev/VAT/URP_VAT_Toon_Instanced_FakeLight_Mobile"
         _ShadowColor ("Shadow Color", Color) = (0.2, 0.2, 0.2, 1)
         
         [Space(10)]
-        [Range(0, 1)] _HighlightThreshold ("Highlight Threshold", Float) = 0.8
-        [Range(0, 1)] _MidtoneThreshold ("Midtone Threshold", Float) = 0.6
-        [Range(0, 1)] _ShadowThreshold ("Shadow Threshold", Float) = 0.4
-        [Range(0.001, 1)] _Smoothness ("Transition Smoothness", Float) = 0.05
+        _HighlightThreshold ("Highlight Threshold", Float, Range(0, 1)) = 0.8
+        _MidtoneThreshold ("Midtone Threshold", Float, Range(0, 1)) = 0.6
+        _ShadowThreshold ("Shadow Threshold", Float, Range(0, 1)) = 0.4
+        _Smoothness ("Transition Smoothness", Float, Range(0.001, 1)) = 0.05
 
         [Header(Fake Light Properties)]
         _FakeLightDirection ("Fake Light Direction", Vector) = (0.5, 0.5, 0, 0)
-        [Range(0, 5)] _LightIntensity ("Light Intensity", Float) = 1.0
+        _LightIntensity ("Light Intensity", Float, Range(0, 5)) = 1.0
     }
     SubShader
     {

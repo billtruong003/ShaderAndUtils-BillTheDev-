@@ -63930,7 +63930,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97513fd4e5cdd41638df1a617fd93403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _baseInstancedMaterial: {fileID: 2100000, guid: 8da10f561d883471ebdaf718d0043b66, type: 2}
+  _baseInstancedMaterial: {fileID: 2100000, guid: 7c853c75da14be7469d76ee32fcdcd7e, type: 2}
+  _cullingComputeShader: {fileID: 7200000, guid: 871f9900978bcf04393872f60e2c1378, type: 3}
   _agentTypes:
   - agentPrefab: {fileID: 416878318}
     animationData: {fileID: 11400000, guid: b500915015fab468c894db54b532cd7a, type: 2}
@@ -63947,6 +63948,7 @@ MonoBehaviour:
   - agentPrefab: {fileID: 416878318}
     animationData: {fileID: 11400000, guid: 9fba5c654b92f43c5ba0c83bd961f1aa, type: 2}
     albedoTexture: {fileID: 2800000, guid: 6fbc58a658fbc5d42838557f49347cac, type: 3}
+  _agentBoundsRadius: 1
 --- !u!114 &1323459557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63959,12 +63961,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4edb6366ec627492baa6360b27c74822, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _updateMode: 0
-  _simulationMode: 1
+  _updateMode: 1
+  _simulationMode: 0
   _coroutineUpdateInterval: 0.06666667
-  _initialAgentCount: 10
+  _initialAgentCount: 50000
   _instanceManager: {fileID: 1323459556}
-  _spawnBounds: {x: 500, y: 0, z: 100}
+  _spawnBounds: {x: 500, y: 0, z: 500}
   _walkSpeed: 2
   _runSpeed: 6
   _maxSteerForce: 30
@@ -79368,6 +79370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _baseInstancedMaterial: {fileID: 2100000, guid: 89cde7d000aec684196b666686e8274b, type: 2}
+  _cullingComputeShader: {fileID: 0}
   _agentTypes:
   - agentPrefab: {fileID: 202113685}
     animationData: {fileID: 11400000, guid: b500915015fab468c894db54b532cd7a, type: 2}
@@ -79384,6 +79387,7 @@ MonoBehaviour:
   - agentPrefab: {fileID: 202113685}
     animationData: {fileID: 11400000, guid: 9fba5c654b92f43c5ba0c83bd961f1aa, type: 2}
     albedoTexture: {fileID: 2800000, guid: 6fbc58a658fbc5d42838557f49347cac, type: 3}
+  _agentBoundsRadius: 1
 --- !u!114 &1661624759
 MonoBehaviour:
   m_ObjectHideFlags: 0

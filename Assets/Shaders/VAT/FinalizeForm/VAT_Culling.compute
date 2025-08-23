@@ -1,0 +1,86 @@
+// File: Assets/Shaders/VAT/FinalizeForm/VAT_Culling.compute
+
+#pragma kernel CSMain
+
+struct AgentSourceData
+{
+    float3 position;
+};
+
+struct AgentRenderData
+{
+    float4x4 objectToWorld;
+    float4 animationData;
+};
+
+StructuredBuffer<AgentSourceData> _AllAgentDataSource;
+StructuredBuffer<float4> _AllAgentRotationSource;
+StructuredBuffer<float4> _AllAgentAnimationSource;
+RWStructuredBuffer<AgentRenderData> _VisibleAgentDataOutput;
+RWBuffer<uint> _IndirectArgsBuffer;
+
+float4 _FrustumPlanes[6];
+float _AgentBoundsRadius;
+uint _MaxAgents;
+
+// HÀM KIỂM TRA TẦM NHÌN ĐƯỢC KÍCH HOẠT LẠI
+bool IsVisible(float3 worldPos)
+{
+    for (int i = 0; i < 6; i++)
+    {
+        // Thêm bán kính vào để thực hiện Sphere vs Plane check, tránh culling sớm
+        if (dot(float4(worldPos, 1.0), _FrustumPlanes[i]) < -_AgentBoundsRadius)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+float4x4 BuildMatrixFromTRS(float3 pos, float4 rot)
+{
+    float xx = rot.x * rot.x;
+    float xy = rot.x * rot.y;
+    float xz = rot.x * rot.z;
+    float xw = rot.x * rot.w;
+    float yy = rot.y * rot.y;
+    float yz = rot.y * rot.z;
+    float yw = rot.y * rot.w;
+    float zz = rot.z * rot.z;
+    float zw = rot.z * rot.w;
+
+    return float4x4(
+        1.0 - 2.0 * (yy + zz), 2.0 * (xy - zw), 2.0 * (xz + yw), pos.x,
+        2.0 * (xy + zw), 1.0 - 2.0 * (xx + zz), 2.0 * (yz - xw), pos.y,
+        2.0 * (xz - yw), 2.0 * (yz + xw), 1.0 - 2.0 * (xx + yy), pos.z,
+        0.0, 0.0, 0.0, 1.0
+    );
+}
+
+[numthreads(64,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= _MaxAgents)
+    {
+        return;
+    }
+    
+    AgentSourceData agent = _AllAgentDataSource[id.x];
+    
+    // BẬT LẠI LOGIC CULLING
+    if (IsVisible(agent.position)) 
+    {
+        uint appendIndex;
+        InterlockedAdd(_IndirectArgsBuffer[1], 1, appendIndex);
+        
+        float4 animData = _AllAgentAnimationSource[id.x];
+        float4 rotationQuat = _AllAgentRotationSource[id.x];
+        float4x4 worldMatrix = BuildMatrixFromTRS(agent.position, rotationQuat);
+
+        AgentRenderData renderData;
+        renderData.objectToWorld = worldMatrix;
+        renderData.animationData = animData;
+        
+        _VisibleAgentDataOutput[appendIndex] = renderData;
+    }
+}

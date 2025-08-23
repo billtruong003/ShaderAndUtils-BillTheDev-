@@ -10,8 +10,8 @@ Shader "BillTheDev/VAT/Optimized_VAT_Instanced"
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-        LOD 200
-        Cull Off
+        LOD 100
+        Cull Back
 
         Pass
         {
@@ -19,7 +19,7 @@ Shader "BillTheDev/VAT/Optimized_VAT_Instanced"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
-            #pragma target 4.5
+            #pragma target 3.0
 
             #include "UnityCG.cginc"
 
@@ -41,9 +41,8 @@ Shader "BillTheDev/VAT/Optimized_VAT_Instanced"
             float4 _PositionMin;
             float4 _PositionMax;
             
-            // Dữ liệu animation được truyền vào qua một mảng Vector4
             UNITY_INSTANCING_BUFFER_START(Props)
-                UNITY_DEFINE_INSTANCED_PROP(float4, _AnimationData) // x: currentV, y: previousV, z: blendWeight
+                UNITY_DEFINE_INSTANCED_PROP(float4, _AnimationData)
             UNITY_INSTANCING_BUFFER_END(Props)
 
             float3 DecodeLocalPosition(float vertexU, float timeV)
@@ -82,8 +81,7 @@ Shader "BillTheDev/VAT/Optimized_VAT_Instanced"
 
             fixed4 frag (VertexToFragment i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
-                return col;
+                return tex2D(_MainTex, i.uv);
             }
             ENDHLSL
         }
