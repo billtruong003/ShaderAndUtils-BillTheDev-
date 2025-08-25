@@ -2824,6 +2824,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1195374612628124382, guid: 8472a9cdac198684a9b2426ac2dd66c3, type: 3}
+      propertyPath: roofCheckDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1195374612628124382, guid: 8472a9cdac198684a9b2426ac2dd66c3, type: 3}
       propertyPath: wallMinimumHeight
       value: 1
       objectReference: {fileID: 0}
@@ -3726,6 +3730,10 @@ PrefabInstance:
     - target: {fileID: 6305137777344916406, guid: 8472a9cdac198684a9b2426ac2dd66c3, type: 3}
       propertyPath: applyBreathingRotation
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306791113689274579, guid: 8472a9cdac198684a9b2426ac2dd66c3, type: 3}
+      propertyPath: m_Height
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6306791113689274579, guid: 8472a9cdac198684a9b2426ac2dd66c3, type: 3}
       propertyPath: m_Radius
@@ -31233,16 +31241,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c99a10545eb34c042a03b96d1fc4bcca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPool: []
-  spawnZones: []
-  totalItemsToSpawn: 50
-  itemClearanceRadius: 1.5
-  obstructionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  maxPlacementAttempts: 20
-  gunToAmmoMaxDistance: 5
-  ammoPacksPerGun: 2
 --- !u!4 &800562899
 Transform:
   m_ObjectHideFlags: 0

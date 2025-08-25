@@ -97,9 +97,9 @@ namespace cowsins
 
         [Tooltip("Enable this to instantly run without needing to press the sprint button down."), SerializeField] private bool autoRun;
 
-        [Tooltip("If false, hold to sprint, and release to stop sprinting."), SerializeField]private bool alternateSprint;
+        [Tooltip("If false, hold to sprint, and release to stop sprinting."), SerializeField] private bool alternateSprint;
 
-        [Tooltip("If false, hold to crouch, and release to uncrouch."), SerializeField]private bool alternateCrouch;
+        [Tooltip("If false, hold to crouch, and release to uncrouch."), SerializeField] private bool alternateCrouch;
 
         [Tooltip("If true: Speed while running backwards = runSpeed." +
         "       if false: Speed while running backwards = walkSpeed")]
@@ -462,7 +462,7 @@ namespace cowsins
 
         // Stairs
         private bool isSteppingStairs;
-        public bool showStairsDebugInfo = false; 
+        public bool showStairsDebugInfo = false;
 
         //Crouch & Slide
         public Vector3 crouchScale { get; private set; } = new Vector3(1, 0.5f, 1);
@@ -748,7 +748,7 @@ namespace cowsins
 
                     if (forwardAllowed && sidewaysAllowed && shootingAllowed)
                     {
-      
+
                         if (currentSpeed != runSpeed && !wallRunning && rb.linearVelocity.magnitude > .1f)
                             cameraFOVManager.SetFOV(runningFOV);
 
@@ -786,7 +786,7 @@ namespace cowsins
             if (!grounded || InputManager.jumping || hasJumped) return;
 
             float friction = IsSliding() ? slideFrictionForceAmount : controlsResponsiveness;
-            
+
             // Counter movement ( Friction while moving )
             // Prevent from sliding not on purpose
             if (Math.Abs(mag.x) > frictionThreshold && Math.Abs(x) < 0.5f || (mag.x < -frictionThreshold && x > 0) || (mag.x > frictionThreshold && x < 0))
@@ -869,15 +869,15 @@ namespace cowsins
                 moveDirection = (orientation.Forward * InputManager.y + orientation.Right * InputManager.x).normalized;
             }
 
-            if(moveDirection.magnitude > .1f) userEvents.OnMove.Invoke();
-            
+            if (moveDirection.magnitude > .1f) userEvents.OnMove.Invoke();
+
             rb.AddForce(moveDirection * movementMultipliers);
         }
         public void HandleStairs(Vector3 moveDirection)
         {
             if (!grounded || moveDirection == Vector3.zero || IsPlayerOnSlope() || isClimbing || hasJumped)
             {
-                if(moveDirection == Vector3.zero && rb.linearVelocity.y < 0 && grounded)
+                if (moveDirection == Vector3.zero && rb.linearVelocity.y < 0 && grounded)
                 {
                     rb.linearVelocity = Vector3.zero;
                 }
@@ -919,7 +919,7 @@ namespace cowsins
                     vel.y = 0;
                     rb.linearVelocity = vel;
                 }
-                else if(!isCrouching)
+                else if (!isCrouching)
                 {
                     Vector3 origin = playerCapsuleCollider.bounds.center;
 
@@ -970,7 +970,7 @@ namespace cowsins
             // Calculate new yaw rotation ( around the y axis )
             cameraYaw = playerCam.transform.localRotation.eulerAngles.y + mouseX + weaponRecoil.RecoilYawOffset * Time.deltaTime;
             //Rotate Camera Pitch ( around x axis )
-            cameraPitch -= mouseY - weaponRecoil.RecoilPitchOffset * Time.deltaTime; 
+            cameraPitch -= mouseY - weaponRecoil.RecoilPitchOffset * Time.deltaTime;
             // Make sure we dont over- or under-rotate.
             // The reason why the value is 89.7 instead of 90 is to prevent errors with the wallrun
             cameraPitch = Mathf.Clamp(cameraPitch, -maxCameraAngle, maxCameraAngle);
@@ -1028,7 +1028,7 @@ namespace cowsins
             if (rb.linearVelocity.magnitude >= walkSpeed && grounded && allowSliding && !hasJumped)
             { // Handle sliding
                 userEvents.OnSlide.Invoke(); // Invoke your own method on the moment you slid NOT WHILE YOU ARE SLIDING
-                                         // Add the force on slide
+                                             // Add the force on slide
                 rb.AddForce(orientation.Forward * slideForce);
                 //staminaLoss
                 if (usesStamina) stamina -= staminaLossOnSlide;
@@ -1231,7 +1231,7 @@ namespace cowsins
 
             if (rb.linearVelocity.y < 0)
             {
-                if(useGravity)
+                if (useGravity)
                     rb.AddForce(transform.up * wallrunGravityCounterForce, ForceMode.Force);
                 else rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
             }
@@ -1357,7 +1357,7 @@ namespace cowsins
 
                 rb.AddForce(force, ForceMode.Force);
             }
-            else if(grapplingHookMethod == GrapplingHookMethod.Combined)
+            else if (grapplingHookMethod == GrapplingHookMethod.Combined)
             {
                 Vector3 cameraDir = playerCam.forward;
 
@@ -1568,9 +1568,9 @@ namespace cowsins
         /// </summary>
         private void CheckGrounded()
         {
-            if(isSteppingStairs)
+            if (isSteppingStairs)
             {
-                ResetGroundingState(); 
+                ResetGroundingState();
                 return;
             }
 
@@ -1599,7 +1599,7 @@ namespace cowsins
                     OnLand?.Invoke(); // Used for Internal Events
                 }
 
-                ResetGroundingState(); 
+                ResetGroundingState();
             }
             else
             {
@@ -1756,7 +1756,7 @@ namespace cowsins
                 stepTimer = 1 - footstepSpeed;
                 _audio.pitch = UnityEngine.Random.Range(.7f, 1.3f); // Add variety to avoid boring and repetitive sounds while walking
                                                                     // Remember that you can also add a few more sounds to each of the layers to add even more variety to your sfx.
-                Vector3 footstepCheckDirection = !wallRunning ? Vector3.down : 
+                Vector3 footstepCheckDirection = !wallRunning ? Vector3.down :
                     (wallLeft ? -orientation.Right : orientation.Right) * 2;
 
                 if (Physics.Raycast(playerCam.position, footstepCheckDirection, out RaycastHit hit, 2.5f, whatIsGround))
@@ -1820,8 +1820,8 @@ namespace cowsins
             rb.position = position;
             playerCam.rotation = rotation;
 
-            if(resetStamina) ResetStamina();
-            if(resetDashes) ResetDashes();
+            if (resetStamina) ResetStamina();
+            if (resetDashes) ResetDashes();
 
 
             playerStates.ForceChangeState(playerStates._States.Default());
