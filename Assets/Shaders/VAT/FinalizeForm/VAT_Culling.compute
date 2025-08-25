@@ -80,7 +80,7 @@ void CSMain (uint3 id : SV_DispatchThreadID)
         AgentRenderData renderData;
         renderData.objectToWorld = worldMatrix;
         renderData.animationData = animData;
-        
+            
         _VisibleAgentDataOutput[appendIndex] = renderData;
     }
 }

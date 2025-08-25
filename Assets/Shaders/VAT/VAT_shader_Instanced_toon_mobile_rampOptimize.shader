@@ -9,7 +9,10 @@ Shader "BillTheDev/VAT/URP_VAT_Toon_Instanced_GPU_Driven_Final"
 
         [Header(Toon Properties)]
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        [NoScaleOffset] _RampTex ("Toon Ramp (LUT)", 2D) = "white" {}
+        _LightColor ("Light Color", Color) = (1,1,1,1)
+        _ShadowColor ("Shadow Color", Color) = (0.2, 0.2, 0.2, 1)
+        _ShadowThreshold ("Shadow Threshold", Range(0, 1)) = 0.5
+        _Smoothness ("Transition Smoothness", Range(0.001, 1)) = 0.05
 
         [Header(Fake Light Properties)]
         _FakeLightDirection ("Fake Light Direction", Vector) = (0.5, 0.5, 0, 0)
@@ -57,10 +60,13 @@ Shader "BillTheDev/VAT/URP_VAT_Toon_Instanced_GPU_Driven_Final"
 
             TEXTURE2D(_PositionTexture); SAMPLER(sampler_PositionTexture);
             TEXTURE2D(_MainTex);         SAMPLER(sampler_MainTex);
-            TEXTURE2D(_RampTex);         SAMPLER(sampler_RampTex);
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _PositionMin, _PositionMax;
+                half4 _LightColor;
+                half4 _ShadowColor;
+                half _ShadowThreshold;
+                half _Smoothness;
                 float3 _FakeLightDirection;
                 half _LightIntensity;
             CBUFFER_END
@@ -104,7 +110,10 @@ Shader "BillTheDev/VAT/URP_VAT_Toon_Instanced_GPU_Driven_Final"
                 half3 worldNormal = normalize(i.worldNormal);
                 half NdotL = saturate(dot(worldNormal, lightDirection));
                 
-                half3 rampColor = SAMPLE_TEXTURE2D(_RampTex, sampler_RampTex, float2(NdotL, 0.5h)).rgb;
+                half smoothnessFactor = _Smoothness * 0.5h;
+                half lightingFactor = smoothstep(_ShadowThreshold - smoothnessFactor, _ShadowThreshold + smoothnessFactor, NdotL);
+                
+                half3 rampColor = lerp(_ShadowColor.rgb, _LightColor.rgb, lightingFactor);
 
                 half3 finalColor = rampColor * albedo.rgb * _LightIntensity;
                 return half4(finalColor, albedo.a);

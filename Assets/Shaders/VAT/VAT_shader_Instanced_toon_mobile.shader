@@ -15,14 +15,14 @@ Shader "BillTheDev/VAT/URP_VAT_Toon_Instanced_FakeLight_Mobile"
         _ShadowColor ("Shadow Color", Color) = (0.2, 0.2, 0.2, 1)
         
         [Space(10)]
-        _HighlightThreshold ("Highlight Threshold", Float, Range(0, 1)) = 0.8
-        _MidtoneThreshold ("Midtone Threshold", Float, Range(0, 1)) = 0.6
-        _ShadowThreshold ("Shadow Threshold", Float, Range(0, 1)) = 0.4
-        _Smoothness ("Transition Smoothness", Float, Range(0.001, 1)) = 0.05
+        _HighlightThreshold ("Highlight Threshold", Range(0, 1)) = 0.8
+        _MidtoneThreshold ("Midtone Threshold", Range(0, 1)) = 0.6
+        _ShadowThreshold ("Shadow Threshold", Range(0, 1)) = 0.4
+        _Smoothness ("Transition Smoothness", Range(0.001, 1)) = 0.05
 
         [Header(Fake Light Properties)]
         _FakeLightDirection ("Fake Light Direction", Vector) = (0.5, 0.5, 0, 0)
-        _LightIntensity ("Light Intensity", Float, Range(0, 5)) = 1.0
+        _LightIntensity ("Light Intensity", Range(0, 5)) = 1.0
     }
     SubShader
     {
@@ -32,7 +32,7 @@ Shader "BillTheDev/VAT/URP_VAT_Toon_Instanced_FakeLight_Mobile"
             "RenderType"="Opaque" 
         }
         LOD 200
-        Cull Back // SỬA LỖI: Luôn bật culling để tối ưu
+        Cull Back
 
         Pass
         {
@@ -40,7 +40,7 @@ Shader "BillTheDev/VAT/URP_VAT_Toon_Instanced_FakeLight_Mobile"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
-            #pragma target 3.0 // SỬA LỖI: Giảm target xuống mức tương thích mobile
+            #pragma target 3.0
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
@@ -56,7 +56,7 @@ Shader "BillTheDev/VAT/URP_VAT_Toon_Instanced_FakeLight_Mobile"
             struct Varyings
             {
                 float2 uv           : TEXCOORD0;
-                half3 worldNormal   : TEXCOORD1; // TỐI ƯU: Sử dụng half precision trên mobile
+                half3 worldNormal   : TEXCOORD1;
                 float4 positionCS   : SV_POSITION;
             };
 

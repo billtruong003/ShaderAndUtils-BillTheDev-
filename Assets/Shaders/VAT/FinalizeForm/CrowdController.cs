@@ -39,6 +39,7 @@ namespace OptimizeVariousVAT
         private enum AgentBehaviorState { Idle, Walking, Running }
 
         [TitleGroup("Performance & Mode")]
+        [SerializeField] private int targetFrame = 240;
         [SerializeField] private UpdateMode _updateMode = UpdateMode.EveryFrame;
         [SerializeField] private SimulationMode _simulationMode = SimulationMode.JobSystem;
         [SerializeField, ShowIf("_updateMode", UpdateMode.ViaCoroutine)]
@@ -118,7 +119,7 @@ namespace OptimizeVariousVAT
 
         private void Awake()
         {
-            Application.targetFrameRate = 120;
+            Application.targetFrameRate = targetFrame;
         }
 
         private void Start()
