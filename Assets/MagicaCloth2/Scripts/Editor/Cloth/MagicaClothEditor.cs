@@ -369,7 +369,6 @@ namespace MagicaCloth2
                         if (paintMode.enumValueIndex != 0)
                         {
                             EditorGUILayout.PropertyField(serializedObject.FindProperty("serializeData.paintMaps"));
-                            EditorGUILayout.PropertyField(serializedObject.FindProperty("serializeData.paintMapUvChannel"));
                         }
                     }
                 }

@@ -512,9 +512,6 @@ namespace MagicaCloth2
                     transformPositionArray = bm.positionArray.GetNativeArray(),
                     transformRotationArray = bm.rotationArray.GetNativeArray(),
                     transformScaleArray = bm.scaleArray.GetNativeArray(),
-                    transformLocalPositionArray = bm.localPositionArray.GetNativeArray(),
-                    transformLocalRotationArray = bm.localRotationArray.GetNativeArray(),
-                    transformLocalScaleArray = bm.localScaleArray.GetNativeArray(),
 
                     // vmesh
                     positions = vm.positions.GetNativeArray(),
@@ -549,7 +546,6 @@ namespace MagicaCloth2
                     colliderNowRotations = cm.nowRotations.GetNativeArray(),
                     colliderOldPositions = cm.oldPositions.GetNativeArray(),
                     colliderOldRotations = cm.oldRotations.GetNativeArray(),
-                    colliderMainColliderIndices = cm.mainColliderIndices.GetNativeArray(),
                 };
                 splitClothJobHandle = splitPre_C_Job.Schedule(splitClothTeamCount * workerCount, 1, splitClothJobHandle);
 
@@ -1287,7 +1283,6 @@ namespace MagicaCloth2
                     transformLocalToWorldMatrixArray = bm.localToWorldMatrixArray.GetNativeArray(),
                     transformLocalPositionArray = bm.localPositionArray.GetNativeArray(),
                     transformLocalRotationArray = bm.localRotationArray.GetNativeArray(),
-                    transformLocalScaleArray = bm.localScaleArray.GetNativeArray(),
 
                     // vmesh
                     attributes = vm.attributes.GetNativeArray(),
@@ -1351,7 +1346,6 @@ namespace MagicaCloth2
                     colliderOldPositions = cm.oldPositions.GetNativeArray(),
                     colliderOldRotations = cm.oldRotations.GetNativeArray(),
                     colliderWorkDataArray = cm.workDataArray.GetNativeArray(),
-                    colliderMainColliderIndices = cm.mainColliderIndices.GetNativeArray(),
 
                     // inertia
                     fixedArray = inertiaConstraint.fixedArray.GetNativeArray(),

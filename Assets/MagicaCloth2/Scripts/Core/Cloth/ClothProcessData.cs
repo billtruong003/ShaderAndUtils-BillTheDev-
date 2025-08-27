@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Unity.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace MagicaCloth2
@@ -143,12 +142,15 @@ namespace MagicaCloth2
         public VirtualMeshContainer ProxyMeshContainer { get; private set; } = null;
 
         /// <summary>
-        /// 登録中のコライダー
-        /// int2 (メインコライダー・ローカルインデックス, シンメトリーコライダー・ローカルインデックス)
-        /// メインコライダーのインデックス０はあり得る
-        /// シンメトリーコライダーのインデックス０はシンメトリーが存在しないことを示す
+        /// コライダーリスト
+        /// コライダーが格納されるインデックスは他のデータのインデックスと一致している
         /// </summary>
-        internal Dictionary<ColliderComponent, int2> colliderDict = new Dictionary<ColliderComponent, int2>();
+        internal List<ColliderComponent> colliderList = new List<ColliderComponent>();
+
+        /// <summary>
+        /// コライダー配列数
+        /// </summary>
+        internal int ColliderCapacity => colliderList.Count;
 
         //=========================================================================================
         /// <summary>
@@ -356,7 +358,7 @@ namespace MagicaCloth2
                 ProxyMeshContainer?.Dispose();
                 ProxyMeshContainer = null;
 
-                colliderDict.Clear();
+                colliderList.Clear();
 
                 interlockingAnimator = null;
                 interlockingAnimatorRenderers.Clear();
@@ -367,10 +369,10 @@ namespace MagicaCloth2
                 // 作業バッファ破棄
                 SyncTopCloth = null;
                 int compId = cloth.GetInstanceID();
-                MagicaManager.Team?.comp2SuspendCounterMap.Remove(compId);
-                MagicaManager.Team?.comp2TeamIdMap.Remove(compId);
-                MagicaManager.Team?.comp2SyncPartnerCompMap.Remove(compId);
-                MagicaManager.Team?.comp2SyncTopCompMap.Remove(compId);
+                MagicaManager.Team.comp2SuspendCounterMap.Remove(compId);
+                MagicaManager.Team.comp2TeamIdMap.Remove(compId);
+                MagicaManager.Team.comp2SyncPartnerCompMap.Remove(compId);
+                MagicaManager.Team.comp2SyncTopCompMap.Remove(compId);
 
                 // 完全破棄フラグ
                 isDestoryInternal = true;
@@ -378,7 +380,7 @@ namespace MagicaCloth2
             Develop.DebugLog($"Cloth dispose internal.");
 
             // 破棄監視リストから削除する
-            MagicaManager.Team?.RemoveMonitoringProcess(this);
+            MagicaManager.Team.RemoveMonitoringProcess(this);
         }
 
         internal void IncrementSuspendCounter()

@@ -19,7 +19,7 @@ namespace MagicaCloth2
         /// <param name="rsetup"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        public void ImportFrom(RenderSetupData rsetup, int uvChannel)
+        public void ImportFrom(RenderSetupData rsetup)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace MagicaCloth2
                     // メッシュタイプ
                     meshType = MeshType.NormalMesh;
                     isBoneCloth = false;
-                    ImportMeshType(rsetup, indices, uvChannel);
+                    ImportMeshType(rsetup, indices);
 
                     // スキニングメッシュでは１回スキニングを行いクロスローカル空間に姿勢を変換する
                     if (rsetup.hasBoneWeight)
@@ -129,7 +129,7 @@ namespace MagicaCloth2
         /// </summary>
         /// <param name="rsetup"></param>
         /// <param name="transformIndices"></param>
-        void ImportMeshType(RenderSetupData rsetup, int[] transformIndices, int uvChannel)
+        void ImportMeshType(RenderSetupData rsetup, int[] transformIndices)
         {
             // root bone
             skinRootIndex = transformIndices[rsetup.skinRootBoneIndex];
@@ -176,19 +176,11 @@ namespace MagicaCloth2
             }
             if (meshData.HasVertexAttribute(UnityEngine.Rendering.VertexAttribute.TexCoord0))
             {
-                uvChannel = Mathf.Clamp(uvChannel, 0, 7);
-                UnityEngine.Rendering.VertexAttribute useTexCoord = UnityEngine.Rendering.VertexAttribute.TexCoord0 + uvChannel;
-                if (meshData.HasVertexAttribute(useTexCoord) == false)
-                {
-                    Develop.LogWarning($"[{name}] UV{uvChannel} not found! => Use UV0.");
-                    uvChannel = 0;
-                }
-                //Debug.Log($"Fetch UV:{uvChannel}");
-                meshData.GetUVs(uvChannel, uv.GetNativeArray<Vector2>());
+                meshData.GetUVs(0, uv.GetNativeArray<Vector2>());
             }
             else
             {
-                Develop.LogWarning($"[{name}] UV0 not found!");
+                Debug.LogWarning($"[{name}] UV not found!");
             }
 
             // 属性
@@ -942,7 +934,7 @@ namespace MagicaCloth2
         /// レンダーデータからインポートする
         /// </summary>
         /// <param name="renderData"></param>
-        public void ImportFrom(RenderData renderData, int uvChannel)
+        public void ImportFrom(RenderData renderData)
         {
             try
             {
@@ -952,7 +944,7 @@ namespace MagicaCloth2
                     throw new MagicaClothProcessingException();
                 }
 
-                ImportFrom(renderData.setupData, uvChannel);
+                ImportFrom(renderData.setupData);
             }
             catch (MagicaClothProcessingException)
             {

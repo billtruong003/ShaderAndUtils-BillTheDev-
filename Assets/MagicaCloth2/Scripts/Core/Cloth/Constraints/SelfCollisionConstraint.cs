@@ -1129,7 +1129,6 @@ namespace MagicaCloth2
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static int3 GetGrid(float3 pos, float gridSize)
         {
-            //Debug.Assert(gridSize > 0.0f);
             return new int3(math.floor(pos / gridSize));
         }
 
@@ -2068,10 +2067,6 @@ namespace MagicaCloth2
             }
             float maxPrimitiveSize = targetTeam.selfMaxPrimitiveSize;
             float gridSize = targetTeam.selfGridSize;
-
-            // 初回の交差判定はグリッドサイズ更新前に到達するので除外する
-            if (maxPrimitiveSize <= Define.System.Epsilon || gridSize <= Define.System.Epsilon)
-                return;
 
             //Debug.Log($"edgeTeamId:{edgeTeamId}, triangleTeamId:{triangleTeamId}, gridBufferStart:{gridBufferStart}, gridBufferIndex:{gridBufferIndex}, gridBufferCount:{gridBufferCount}");
             //Debug.Log($"edgeTeamId:{edgeTeamId}, maxPrimitiveSize:{maxPrimitiveSize}, gridSize:{gridSize}");

@@ -111,11 +111,6 @@ namespace MagicaCloth2
 
             public void GetUsedTransform(HashSet<Transform> transformSet)
             {
-                colliderList.ForEach(x =>
-                {
-                    if (x)
-                        x.GetUsedTransform(transformSet);
-                });
                 foreach (var t in collisionBones)
                 {
                     if (t)
@@ -125,11 +120,6 @@ namespace MagicaCloth2
 
             public void ReplaceTransform(Dictionary<int, Transform> replaceDict)
             {
-                colliderList.ForEach(x =>
-                {
-                    if (x)
-                        x.ReplaceTransform(replaceDict);
-                });
                 for (int i = 0; i < collisionBones.Count; i++)
                 {
                     var t = collisionBones[i];
@@ -227,11 +217,11 @@ namespace MagicaCloth2
             ref NativeArray<float3> velocityPosArray,
             ref NativeArray<float3> basePosArray,
             // collider
-            ref NativeArray<ExBitFlag16> colliderFlagArray,
+            ref NativeArray<ExBitFlag8> colliderFlagArray,
             ref NativeArray<ColliderManager.WorkData> colliderWorkDataArray
             )
         {
-            if (tdata.UseColliderCount == 0)
+            if (tdata.ColliderCount == 0)
                 return;
             if (param.colliderCollisionConstraint.mode != Mode.Point)
                 return;
@@ -554,7 +544,7 @@ namespace MagicaCloth2
             // particle
             ref NativeArray<float3> nextPosArray,
             // collider
-            ref NativeArray<ExBitFlag16> colliderFlagArray,
+            ref NativeArray<ExBitFlag8> colliderFlagArray,
             ref NativeArray<ColliderManager.WorkData> colliderWorkDataArray,
             // buffer2
             ref NativeArray<float3> tempVectorBufferA,
@@ -563,7 +553,7 @@ namespace MagicaCloth2
             ref NativeArray<float> tempFloatBufferA
             )
         {
-            if (tdata.UseColliderCount == 0)
+            if (tdata.ColliderCount == 0)
                 return;
             if (param.colliderCollisionConstraint.mode != Mode.Edge)
                 return;
@@ -735,7 +725,7 @@ namespace MagicaCloth2
             ref NativeArray<float> tempFloatBufferA
             )
         {
-            if (tdata.UseColliderCount == 0)
+            if (tdata.ColliderCount == 0)
                 return;
             if (param.colliderCollisionConstraint.mode != Mode.Edge)
                 return;

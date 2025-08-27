@@ -63,14 +63,6 @@ namespace MagicaCloth2
         public List<Texture2D> paintMaps = new List<Texture2D>();
 
         /// <summary>
-        /// The UV channel that references the paint map.
-        /// [NG] Runtime changes.
-        /// [NG] Export/Import with Presets
-        /// </summary>
-        [Range(0, 7)]
-        public int paintMapUvChannel = 0;
-
-        /// <summary>
         /// Root bone list used in BoneCloth.
         /// [NG] Runtime changes.
         /// [NG] Export/Import with Presets

@@ -1,7 +1,6 @@
 ﻿// Magica Cloth 2.
 // Copyright (c) 2023 MagicaSoft.
 // https://magicasoft.jp
-using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +10,6 @@ namespace MagicaCloth2
     {
         // ギズモカラー定義
         public static readonly Color ColorCollider = new Color(0.0f, 1.0f, 0.0f);
-        public static readonly Color ColorSymmetryCollider = new Color(0.0f, 1.0f, 1.0f);
         public static readonly Color ColorNonSelectedCollider = new Color(0.5f, 0.3f, 0.0f);
         public static readonly Color ColorSkinningBone = new Color(1.0f, 0.5f, 0.0f);
         public static readonly Color ColorWindZone = new Color(1f, 1f, 1f);
@@ -164,142 +162,51 @@ namespace MagicaCloth2
         }
 
         //=========================================================================================
-        public static void DrawCollider(ColliderComponent collider, Quaternion camRot, bool selected)
+        public static void DrawCollider(ColliderComponent collider, Quaternion camRot, bool useHandles, bool selected)
         {
             if (collider == null)
                 return;
 
-            Handles.color = selected ? ColorCollider : ColorCollider * 0.5f;
+            var cpos = collider.transform.TransformPoint(collider.center);
+            var crot = collider.transform.rotation;
+            //var cscl = Vector3.one * collider.GetScale(); // スケールはx軸のみ（つまり一様スケールのみ）
 
-            // Main
-            var ct = collider.transform;
-            //var cpos = ct.TransformPoint(collider.center);
-            float3 cpos = ct.position;
-            quaternion crot = ct.rotation;
-            float3 cscl = ct.lossyScale;
             // マイナススケール
-            float3 sclSign = math.sign(cscl);
-            // オフセット
-            cpos += math.mul(crot, collider.center * sclSign) * cscl * sclSign;
+            var cscl = collider.transform.lossyScale;
+            //var cscl = Vector3.one * Mathf.Abs(collider.GetScale()); // スケールはx軸のみ（つまり一様スケールのみ）
+
             // カメラ回転をコライダーのローカル回転に変換
-            var camRotN = Quaternion.Inverse(crot) * camRot;
-            DrawColliderInternal(collider, camRotN, cpos, crot, cscl, 1.0f);
+            camRot = Quaternion.Inverse(crot) * camRot;
 
-            // Symmetry
-            // 実行時と同じ計算をして表示
-            ColliderSymmetryMode? smode = ColliderSymmetryMode.None;
-            Transform symmetryParent = null;
-            if (EditorApplication.isPlaying)
-            {
-                smode = collider.ActiveSymmetryMode;
-                symmetryParent = collider.ActiveSymmetryTarget;
-            }
-            if (smode.HasValue == false || smode == ColliderSymmetryMode.None)
-                smode = collider.CalcSymmetryMode(out symmetryParent);
-            if (smode != ColliderSymmetryMode.None && symmetryParent)
-            {
-                float3 lpos = ct.localPosition;
-                //float3 lerot = ct.localEulerAngles;
-                float3 lerot = MathUtility.ToEuler(ct.localRotation);
-                float3 lscl = ct.localScale;
-                float3 center = collider.center;
-                switch (smode)
-                {
-                    case ColliderSymmetryMode.X_Symmetry:
-                        lpos.x = -lpos.x;
-                        center.x = -center.x;
-                        lerot.y = -lerot.y;
-                        lerot.z = -lerot.z;
-                        break;
-                    case ColliderSymmetryMode.Y_Symmetry:
-                        lpos.y = -lpos.y;
-                        center.y = -center.y;
-                        lerot.x = -lerot.x;
-                        lerot.z = -lerot.z;
-                        break;
-                    case ColliderSymmetryMode.Z_Symmetry:
-                        lpos.z = -lpos.z;
-                        center.z = -center.z;
-                        lerot.x = -lerot.x;
-                        lerot.y = -lerot.y;
-                        break;
-                    case ColliderSymmetryMode.XYZ_Symmetry:
-                        lpos = -lpos;
-                        center = -center;
-                        break;
-                    default:
-                        return;
-                }
+            // サイズ
+            var size = collider.GetSize();
 
-                // 方向性
-                float direction = 1.0f;
-                if (collider is MagicaCapsuleCollider)
+            if (useHandles)
+            {
+                Handles.matrix = Matrix4x4.TRS(cpos, crot, cscl);
+
+                Handles.color = selected ? ColorCollider : ColorCollider * 0.5f;
+
+                if (collider is MagicaSphereCollider)
                 {
-                    var ccol = collider as MagicaCapsuleCollider;
-                    if (smode == ColliderSymmetryMode.X_Symmetry && ccol.direction == MagicaCapsuleCollider.Direction.X)
-                        direction = -1.0f;
-                    else if (smode == ColliderSymmetryMode.Y_Symmetry && ccol.direction == MagicaCapsuleCollider.Direction.Y)
-                        direction = -1.0f;
-                    else if (smode == ColliderSymmetryMode.Z_Symmetry && ccol.direction == MagicaCapsuleCollider.Direction.Z)
-                        direction = -1.0f;
-                    else if (smode == ColliderSymmetryMode.XYZ_Symmetry)
-                        direction = -1.0f;
+                    DrawWireSphere(Vector3.zero, Quaternion.identity, size.x, camRot, true);
                 }
                 else if (collider is MagicaPlaneCollider)
                 {
-                    switch (smode)
-                    {
-                        case ColliderSymmetryMode.Y_Symmetry:
-                        case ColliderSymmetryMode.XYZ_Symmetry:
-                            direction = -1.0f;
-                            break;
-                    }
+                    DrawWireCube(Vector3.zero, Quaternion.identity, new Vector3(1.0f, 0.0f, 1.0f) * 1.0f, true);
+                    DrawLine(Vector3.zero, Vector3.up * 0.25f, true);
                 }
-
-                // シンメトリーの親
-                float3 ppos = symmetryParent.position;
-                quaternion prot = symmetryParent.rotation;
-                float3 pscl = symmetryParent.lossyScale;
-
-                // マイナススケール
-                sclSign = math.sign(pscl);
-                float3 sclEulerSign = 1;
-                if (pscl.x < 0 || pscl.y < 0 || pscl.z < 0)
-                    sclEulerSign = sclSign * -1;
-
-                // シンメトリーコライダーの姿勢
-                float3 wpos = MathUtility.TransformPoint(lpos, ppos, prot, pscl);
-                quaternion wrot = math.mul(prot, quaternion.Euler(math.radians(lerot * sclEulerSign)));
-                float3 wscl = pscl * lscl;
-                wpos += math.mul(wrot, center * sclSign) * wscl * sclSign;
-
-                // カメラ回転をコライダーのローカル回転に変換
-                var camRotS = Quaternion.Inverse(wrot) * camRot;
-
-                Handles.color = selected ? ColorSymmetryCollider : ColorSymmetryCollider * 0.5f;
-                DrawColliderInternal(collider, camRotS, wpos, wrot, wscl, direction);
+                else if (collider is MagicaCapsuleCollider)
+                {
+                    var c = collider as MagicaCapsuleCollider;
+                    var ldir = c.GetLocalDir();
+                    var lup = c.GetLocalUp();
+                    DrawWireCapsule(Vector3.zero, Quaternion.identity, ldir, lup, size.x, size.y, size.z, c.alignedOnCenter, camRot, true);
+                }
             }
-        }
+            else
+            {
 
-        static void DrawColliderInternal(ColliderComponent collider, Quaternion camRot, Vector3 cpos, Quaternion crot, Vector3 cscl, float direction)
-        {
-            var size = collider.GetSize();
-            Handles.matrix = Matrix4x4.TRS(cpos, crot, cscl);
-            if (collider is MagicaSphereCollider)
-            {
-                DrawWireSphere(Vector3.zero, Quaternion.identity, size.x, camRot, true);
-            }
-            else if (collider is MagicaPlaneCollider)
-            {
-                DrawWireCube(Vector3.zero, Quaternion.identity, new Vector3(1.0f, 0.0f, 1.0f) * 1.0f, true);
-                DrawLine(Vector3.zero, Vector3.up * 0.25f * direction, true);
-            }
-            else if (collider is MagicaCapsuleCollider)
-            {
-                var c = collider as MagicaCapsuleCollider;
-                var ldir = c.GetLocalDir() * direction;
-                var lup = c.GetLocalUp();
-                DrawWireCapsule(Vector3.zero, Quaternion.identity, ldir, lup, size.x, size.y, size.z, c.alignedOnCenter, camRot, true);
             }
         }
 

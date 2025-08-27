@@ -453,51 +453,27 @@ namespace MagicaCloth2
 
         //=========================================================================================
         /// <summary>
-        /// 16bitフラグにコライダータイプを設定する
+        /// 8bitフラグからコライダータイプを取得する
+        /// </summary>
+        /// <param name="flag"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ColliderManager.ColliderType GetColliderType(in ExBitFlag8 flag)
+        {
+            return (ColliderManager.ColliderType)(flag.Value & 0x0f);
+        }
+
+        /// <summary>
+        /// 8bitフラグにコライダータイプを設定する
         /// </summary>
         /// <param name="flag"></param>
         /// <param name="ctype"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ExBitFlag16 SetColliderType(ExBitFlag16 flag, ColliderManager.ColliderType ctype)
+        public static ExBitFlag8 SetColliderType(ExBitFlag8 flag, ColliderManager.ColliderType ctype)
         {
-            flag.Value = (ushort)((flag.Value & 0xfff0) | (ushort)ctype);
+            flag.Value = (byte)(flag.Value & 0xf0 | (byte)ctype);
             return flag;
-        }
-
-        /// <summary>
-        /// 16bitフラグからコライダータイプを取得する
-        /// </summary>
-        /// <param name="flag"></param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ColliderManager.ColliderType GetColliderType(in ExBitFlag16 flag)
-        {
-            return (ColliderManager.ColliderType)(flag.Value & 0x000f);
-        }
-
-        /// <summary>
-        /// 16bitフラグにシンメトリータイプを設定する
-        /// </summary>
-        /// <param name="flag"></param>
-        /// <param name="stype"></param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ExBitFlag16 SetSymmetryType(ExBitFlag16 flag, ColliderManager.SymmetryType stype)
-        {
-            flag.Value = (ushort)((flag.Value & 0xff0f) | (((ushort)stype) << 4));
-            return flag;
-        }
-
-        /// <summary>
-        /// 16bitフラグからシンメトリータイプを取得する
-        /// </summary>
-        /// <param name="flag"></param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ColliderManager.SymmetryType GetSymmetryType(in ExBitFlag16 flag)
-        {
-            return (ColliderManager.SymmetryType)((flag.Value & 0x00f0) >> 4);
         }
 
         //=========================================================================================

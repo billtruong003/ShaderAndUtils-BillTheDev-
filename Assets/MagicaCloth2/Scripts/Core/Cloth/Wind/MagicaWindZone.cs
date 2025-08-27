@@ -127,12 +127,12 @@ namespace MagicaCloth2
 
         public void OnDisable()
         {
-            MagicaManager.Wind?.SetEnable(WindId, false);
+            MagicaManager.Wind.SetEnable(WindId, false);
         }
 
         public void OnDestroy()
         {
-            MagicaManager.Wind?.RemoveWind(WindId);
+            MagicaManager.Wind.RemoveWind(WindId);
             WindId = -1;
         }
 

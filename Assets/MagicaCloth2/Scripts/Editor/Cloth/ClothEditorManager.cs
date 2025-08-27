@@ -576,7 +576,7 @@ namespace MagicaCloth2
                                 renderMesh.result.SetProcess();
 
                                 // インポート
-                                renderMesh.ImportFrom(setup, sdata.GetUvChannel());
+                                renderMesh.ImportFrom(setup);
                                 //Debug.Log($"(IMPORT) {renderMesh}");
                                 if (renderMesh.IsError)
                                     continue;
@@ -617,7 +617,7 @@ namespace MagicaCloth2
                         else if (sdata.clothType == ClothProcess.ClothType.BoneCloth || sdata.clothType == ClothProcess.ClothType.BoneSpring)
                         {
                             // import
-                            editMesh.ImportFrom(setupList[0], 0);
+                            editMesh.ImportFrom(setupList[0]);
                             if (editMesh.IsError)
                             {
                                 result.Merge(editMesh.result);
@@ -989,7 +989,7 @@ namespace MagicaCloth2
                             if (selected == false && dist >= 20.0f)
                                 continue;
 
-                            GizmoUtility.DrawCollider(info.component as ColliderComponent, camRot, selected);
+                            GizmoUtility.DrawCollider(info.component as ColliderComponent, camRot, true, selected);
                         }
                         // MagicaCloth
                         else if (info.component is MagicaCloth)

@@ -233,7 +233,7 @@ namespace MagicaCloth2
                 }
 
                 // トランスフォーム情報の読み取り
-                ReadTransformInformation(includeChilds: false, referenceInitSetupData, ren.transform);
+                ReadTransformInformation(includeChilds: false, referenceInitSetupData);
 
                 // bindpose / weights
                 if (sren)
@@ -466,7 +466,7 @@ namespace MagicaCloth2
                 }
 
                 // トランスフォーム情報の読み取り
-                ReadTransformInformation(includeChilds: true, referenceInitSetupData, renderTransform);
+                ReadTransformInformation(includeChilds: true, referenceInitSetupData);
 
                 // 完了
                 result.SetSuccess();
@@ -488,7 +488,7 @@ namespace MagicaCloth2
         /// トランスフォーム情報の読み取り（メインスレッドのみ）
         /// この情報だけはキャラクターが動く前に取得する必要がある
         /// </summary>
-        void ReadTransformInformation(bool includeChilds, RenderSetupSerializeData referenceInitSetupData, Transform rendererTransform)
+        void ReadTransformInformation(bool includeChilds, RenderSetupSerializeData referenceInitSetupData)
         {
             readTransformProfiler.Begin();
 
@@ -550,19 +550,7 @@ namespace MagicaCloth2
             }
             else
             {
-                //using var transformArray = new TransformAccessArray(transformList.ToArray());
-                // Unity6.1対応
-                using var transformArray = new TransformAccessArray(transformList.Count);
-                int cnt = transformList.Count;
-                for (int i = 0; i < cnt; i++)
-                {
-                    var t = transformList[i];
-                    if (t == null)
-                        t = rendererTransform;
-                    //transformArray[i] = t;
-                    transformArray.Add(t);
-                }
-
+                using var transformArray = new TransformAccessArray(transformList.ToArray());
 
                 var job = new ReadTransformJob()
                 {

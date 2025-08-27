@@ -172,18 +172,6 @@ namespace MagicaCloth2
             Process.ReplaceTransform(replaceDict);
         }
 
-        /// <summary>
-        /// コンポーネントが保持するすべてのトランスフォームを取得します。
-        /// Gets all the transforms held by the component.
-        /// </summary>
-        /// <returns></returns>
-        public HashSet<Transform> GetUsedTransform()
-        {
-            var useTransformSet = new HashSet<Transform>();
-            Process.GetUsedTransform(useTransformSet);
-            return useTransformSet;
-        }
-
 
         /// <summary>
         /// パラメータの変更を通知

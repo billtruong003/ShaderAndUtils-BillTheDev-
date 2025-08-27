@@ -231,12 +231,6 @@ namespace MagicaCloth2
             public NativeArray<quaternion> transformRotationArray;
             [Unity.Collections.ReadOnly]
             public NativeArray<float3> transformScaleArray;
-            [Unity.Collections.ReadOnly]
-            public NativeArray<float3> transformLocalPositionArray;
-            [Unity.Collections.ReadOnly]
-            public NativeArray<quaternion> transformLocalRotationArray;
-            [Unity.Collections.ReadOnly]
-            public NativeArray<float3> transformLocalScaleArray;
 
             // vmesh
             [Unity.Collections.ReadOnly]
@@ -293,7 +287,7 @@ namespace MagicaCloth2
             // collider
             [NativeDisableParallelForRestriction]
             [NativeDisableContainerSafetyRestriction]
-            public NativeArray<ExBitFlag16> colliderFlagArray;
+            public NativeArray<ExBitFlag8> colliderFlagArray;
             [Unity.Collections.ReadOnly]
             public NativeArray<float3> colliderCenterArray;
             [NativeDisableParallelForRestriction]
@@ -323,8 +317,6 @@ namespace MagicaCloth2
             [NativeDisableParallelForRestriction]
             [NativeDisableContainerSafetyRestriction]
             public NativeArray<quaternion> colliderOldRotations;
-            [Unity.Collections.ReadOnly]
-            public NativeArray<int> colliderMainColliderIndices;
 
             // バッチ内のローカルチームインデックスごと
             public void Execute(int index)
@@ -404,14 +396,10 @@ namespace MagicaCloth2
                             ref colliderNowRotations,
                             ref colliderOldPositions,
                             ref colliderOldRotations,
-                            ref colliderMainColliderIndices,
                             // transform
                             ref transformPositionArray,
                             ref transformRotationArray,
-                            ref transformScaleArray,
-                            ref transformLocalPositionArray,
-                            ref transformLocalRotationArray,
-                            ref transformLocalScaleArray
+                            ref transformScaleArray
                             );
                     }
                 }
@@ -446,7 +434,7 @@ namespace MagicaCloth2
 
             // collider
             [Unity.Collections.ReadOnly]
-            public NativeArray<ExBitFlag16> colliderFlagArray;
+            public NativeArray<ExBitFlag8> colliderFlagArray;
             [Unity.Collections.ReadOnly]
             public NativeArray<float3> colliderSizeArray;
             [Unity.Collections.ReadOnly]
@@ -1171,7 +1159,7 @@ namespace MagicaCloth2
 
             // collider
             [Unity.Collections.ReadOnly]
-            public NativeArray<ExBitFlag16> colliderFlagArray;
+            public NativeArray<ExBitFlag8> colliderFlagArray;
             [Unity.Collections.ReadOnly]
             public NativeArray<ColliderManager.WorkData> colliderWorkDataArray;
 
@@ -1227,7 +1215,7 @@ namespace MagicaCloth2
                     );
 
                 // コライダーコリジョン
-                if (tdata.UseColliderCount > 0 && param.colliderCollisionConstraint.mode == ColliderCollisionConstraint.Mode.Point)
+                if (tdata.ColliderCount > 0 && param.colliderCollisionConstraint.mode == ColliderCollisionConstraint.Mode.Point)
                 {
                     // Pointコリジョン
                     ColliderCollisionConstraint.SolverPointConstraint(
@@ -1286,7 +1274,7 @@ namespace MagicaCloth2
 
             // collider
             [Unity.Collections.ReadOnly]
-            public NativeArray<ExBitFlag16> colliderFlagArray;
+            public NativeArray<ExBitFlag8> colliderFlagArray;
             [Unity.Collections.ReadOnly]
             public NativeArray<ColliderManager.WorkData> colliderWorkDataArray;
 
@@ -1328,7 +1316,7 @@ namespace MagicaCloth2
                     return;
 
                 // コライダーコリジョン
-                if (tdata.UseColliderCount > 0 && param.colliderCollisionConstraint.mode == ColliderCollisionConstraint.Mode.Edge)
+                if (tdata.ColliderCount > 0 && param.colliderCollisionConstraint.mode == ColliderCollisionConstraint.Mode.Edge)
                 {
                     // 範囲
                     var chunk = MathUtility.GetWorkerChunk(tdata.proxyEdgeChunk.dataLength, workerCount, workerIndex);
@@ -1457,7 +1445,7 @@ namespace MagicaCloth2
                     return;
 
                 // コライダーコリジョン
-                if (tdata.UseColliderCount > 0 && param.colliderCollisionConstraint.mode == ColliderCollisionConstraint.Mode.Edge)
+                if (tdata.ColliderCount > 0 && param.colliderCollisionConstraint.mode == ColliderCollisionConstraint.Mode.Edge)
                 {
                     // Edgeコリジョン集計
                     ColliderCollisionConstraint.SumEdgeConstraint(
@@ -1782,7 +1770,7 @@ namespace MagicaCloth2
                 if (chunk.IsValid)
                 {
                     // コライダーコリジョン
-                    if (tdata.UseColliderCount > 0 && param.colliderCollisionConstraint.mode == ColliderCollisionConstraint.Mode.Edge)
+                    if (tdata.ColliderCount > 0 && param.colliderCollisionConstraint.mode == ColliderCollisionConstraint.Mode.Edge)
                     {
                         // Edgeコリジョン集計
                         ColliderCollisionConstraint.SumEdgeConstraint(

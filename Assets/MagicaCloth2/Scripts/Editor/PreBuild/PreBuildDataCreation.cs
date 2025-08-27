@@ -224,7 +224,7 @@ namespace MagicaCloth2
                             renderMesh.result.SetProcess();
 
                             // import -------------------------------------------------
-                            renderMesh.ImportFrom(renderSetupData, sdata.GetUvChannel());
+                            renderMesh.ImportFrom(renderSetupData);
                             if (renderMesh.IsError)
                             {
                                 sharePreBuildData.buildResult.Merge(renderMesh.result);
@@ -317,7 +317,7 @@ namespace MagicaCloth2
                 {
                     // import
                     var boneClothSetupData = setupDataList[0];
-                    proxyMesh.ImportFrom(boneClothSetupData, 0);
+                    proxyMesh.ImportFrom(boneClothSetupData);
                     if (proxyMesh.IsError)
                     {
                         sharePreBuildData.buildResult.Merge(proxyMesh.result);

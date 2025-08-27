@@ -96,7 +96,7 @@ namespace MagicaCloth2
         //=========================================================================================
         void AfterFixedUpdate()
         {
-            //Debug.Log($"AfterFixedUpdate. F:{Time.frameCount}");
+            //Debug.Log($"AF. F:{Time.frameCount}");
             FixedUpdateCount++;
         }
 

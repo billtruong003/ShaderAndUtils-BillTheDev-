@@ -60,8 +60,6 @@ namespace MagicaCloth2
             [NativeDisableParallelForRestriction]
             [NativeDisableContainerSafetyRestriction]
             public NativeArray<quaternion> transformLocalRotationArray;
-            [Unity.Collections.ReadOnly]
-            public NativeArray<float3> transformLocalScaleArray;
 
             // vmesh
             [Unity.Collections.ReadOnly]
@@ -176,7 +174,7 @@ namespace MagicaCloth2
             // collider
             [NativeDisableParallelForRestriction]
             [NativeDisableContainerSafetyRestriction]
-            public NativeArray<ExBitFlag16> colliderFlagArray;
+            public NativeArray<ExBitFlag8> colliderFlagArray;
             [Unity.Collections.ReadOnly]
             public NativeArray<float3> colliderCenterArray;
             [Unity.Collections.ReadOnly]
@@ -211,8 +209,6 @@ namespace MagicaCloth2
             [NativeDisableParallelForRestriction]
             [NativeDisableContainerSafetyRestriction]
             public NativeArray<ColliderManager.WorkData> colliderWorkDataArray;
-            [Unity.Collections.ReadOnly]
-            public NativeArray<int> colliderMainColliderIndices;
 
             // inertia
             [Unity.Collections.ReadOnly]
@@ -307,7 +303,7 @@ namespace MagicaCloth2
                     transformLocalToWorldMatrixArray
                     );
 
-                // チームのセンター姿勢の決定とテレポート判定および慣性用の移動量計算
+                // チームのセンター姿勢の決定と慣性用の移動量計算
                 TeamManager.SimulationCalcCenterAndInertiaAndWind(
                     simulationDeltaTime,
                     // team
@@ -379,14 +375,10 @@ namespace MagicaCloth2
                         ref colliderNowRotations,
                         ref colliderOldPositions,
                         ref colliderOldRotations,
-                        ref colliderMainColliderIndices,
                         // transform
                         ref transformPositionArray,
                         ref transformRotationArray,
-                        ref transformScaleArray,
-                        ref transformLocalPositionArray,
-                        ref transformLocalRotationArray,
-                        ref transformLocalScaleArray
+                        ref transformScaleArray
                         );
                 }
 

@@ -97,13 +97,7 @@ namespace MagicaCloth2
                     // 初期化データ検証
                     InitDataResult = sdata2.initData.DataValidate(this);
                     useInitData = InitDataResult.IsSuccess();
-                    if (InitDataResult.IsSuccess())
-                        Develop.DebugLog($"InitData validation [{cloth.name}] : {InitDataResult.GetResultString()}");
-                    else
-                    {
-                        Develop.DebugLogWarning($"InitData validation [{cloth.name}] : {InitDataResult.GetResultString()}");
-                        Develop.DebugLogWarning("Do not use InitData.");
-                    }
+                    Develop.DebugLog($"InitData validation [{cloth.name}] : {InitDataResult.GetResultString()}");
                 }
 #endif
 
@@ -391,7 +385,7 @@ namespace MagicaCloth2
             cloth.serializeData2.DataValidate();
 
             // パラメータ変更（実行時のみ）
-            if (MagicaManager.IsPlaying())
+            if (Application.isPlaying)
             {
                 // ここでは変更フラグのみ立てる
                 //SetState(State_ParameterDirty, true);
@@ -614,7 +608,7 @@ namespace MagicaCloth2
                                 renderMesh.result.SetProcess();
 
                                 // import -------------------------------------------------
-                                renderMesh.ImportFrom(renderData, sdata.GetUvChannel());
+                                renderMesh.ImportFrom(renderData);
                                 if (renderMesh.IsError)
                                 {
                                     result.Merge(renderMesh.result);
@@ -701,7 +695,7 @@ namespace MagicaCloth2
                         {
                             // ■BoneCloth
                             // import
-                            proxyMesh.ImportFrom(boneClothSetupData, 0);
+                            proxyMesh.ImportFrom(boneClothSetupData);
                             if (proxyMesh.IsError)
                             {
                                 result.Merge(proxyMesh.result);
@@ -1548,6 +1542,18 @@ namespace MagicaCloth2
             preBuildProfiler.End();
 
             return result.IsSuccess();
+        }
+
+
+        //=========================================================================================
+        /// <summary>
+        /// コライダーの現在のローカルインデックスを返す
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns>(-1)存在しない</returns>
+        internal int GetColliderIndex(ColliderComponent col)
+        {
+            return colliderList.IndexOf(col);
         }
 
         //=========================================================================================

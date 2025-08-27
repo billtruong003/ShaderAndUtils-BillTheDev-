@@ -22,13 +22,6 @@ namespace MagicaCloth2
             // center
             EditorGUILayout.PropertyField(serializedObject.FindProperty("center"));
 
-            // Symmetry
-            EditorGUILayout.Space();
-            var symmetryModeProperty = serializedObject.FindProperty("symmetryMode");
-            EditorGUILayout.PropertyField(symmetryModeProperty);
-            if (symmetryModeProperty.enumValueIndex >= (int)ColliderSymmetryMode.AutomaticTarget)
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("symmetryTarget"));
-
             serializedObject.ApplyModifiedProperties();
         }
     }

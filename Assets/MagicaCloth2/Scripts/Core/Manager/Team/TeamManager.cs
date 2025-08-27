@@ -40,7 +40,6 @@ namespace MagicaCloth2
         public const int Flag_DistanceCullingInvisible = 19; // 距離カリングによる非表示状態
         public const int Flag_RestoreTransformOnlyOnec = 20; // Transform復元を一度のみ実行する(BoneClothのDisable時)
         public const int Flag_Tangent = 21; // 接線を計算する
-        public const int Flag_ScaleSuspent = 22; // 極小スケールによる機能停止
 
         // 以下セルフコリジョン
         // !これ以降の順番を変えないこと
@@ -440,7 +439,7 @@ namespace MagicaCloth2
             /// <summary>
             /// 処理状態
             /// </summary>
-            public bool IsProcess => IsEnable && flag.IsSet(Flag_SyncSuspend) == false && IsCullingInvisible == false && IsScaleSuspend == false;
+            public bool IsProcess => IsEnable && flag.IsSet(Flag_SyncSuspend) == false && IsCullingInvisible == false;
 
             /// <summary>
             /// 姿勢リセット有無
@@ -475,13 +474,12 @@ namespace MagicaCloth2
             public bool IsNegativeScale => flag.IsSet(Flag_NegativeScale);
             public bool IsNegativeScaleTeleport => flag.IsSet(Flag_NegativeScaleTeleport);
             public bool IsTangent => flag.IsSet(Flag_Tangent);
-            public bool IsScaleSuspend => flag.IsSet(Flag_ScaleSuspent);
             public int ParticleCount => particleChunk.dataLength;
 
             /// <summary>
             /// 現在有効なコライダー数
             /// </summary>
-            public int UseColliderCount => colliderCount;
+            public int ColliderCount => colliderCount;
             public int BaseLineCount => baseLineChunk.dataLength;
             public int TriangleCount => proxyTriangleChunk.dataLength;
             public int EdgeCount => proxyEdgeChunk.dataLength;
@@ -1377,7 +1375,6 @@ namespace MagicaCloth2
                     centerDataArray = centerDataArray.GetNativeArray(),
 
                     componentPositionArray = bm.componentPositionArray.GetNativeArray(),
-                    componentMinScaleArray = bm.componentMinScaleArray.GetNativeArray(),
                     hasMainCamera = hasMainCamera,
 
                     comp2TeamIdMap = comp2TeamIdMap,
@@ -1613,7 +1610,6 @@ namespace MagicaCloth2
             public NativeArray<InertiaConstraint.CenterData> centerDataArray;
 
             public NativeArray<float3> componentPositionArray;
-            public NativeArray<float> componentMinScaleArray;
             public bool hasMainCamera;
 
             // work
@@ -1647,14 +1643,9 @@ namespace MagicaCloth2
 
                     var param = parameterArray[teamId];
 
+
                     // 動作検証
-                    // 極小スケールによる機能停止
-                    tdata.flag.SetBits(Flag_ScaleSuspent, componentMinScaleArray[tdata.componentTransformIndex] < 1e-06f);
-                    if (tdata.flag.IsSet(Flag_ScaleSuspent))
-                    {
-                        teamDataArray[teamId] = tdata;
-                        continue;
-                    }
+                    // ★一旦停止
 
                     // アンカー
                     int anchorTransformIndex = teamAnchorTransformIndexArray[teamId];
@@ -1852,7 +1843,7 @@ namespace MagicaCloth2
                     }
 
                     // SplitチームのPoint/Edgeコリジョンの有無
-                    if (isSplitTeam && tdata.UseColliderCount > 0)
+                    if (isSplitTeam && tdata.ColliderCount > 0)
                     {
                         if (param.colliderCollisionConstraint.mode == ColliderCollisionConstraint.Mode.Point)
                             splitPointCollisionCount++;
@@ -2816,7 +2807,8 @@ namespace MagicaCloth2
                         continue;
                     }
 
-                    sb.AppendLine($"ID:{i} [{cprocess.Name}] state:0x{cprocess.GetStateFlag().Value:X}, Flag:0x{tdata.flag.Value:X}, Particle:{tdata.ParticleCount}, Collider:{cprocess.colliderDict.Count} Proxy:{tdata.proxyMeshType}, Mapping:{mappingList.Length}");
+                    //sb.AppendLine($"ID:{i} [{cprocess.Name}] state:0x{cprocess.GetStateFlag().Value:X}, Flag:0x{tdata.flag.Value:X}, Particle:{tdata.ParticleCount}, Collider:{cprocess.ColliderCapacity} Proxy:{tdata.proxyMeshType}, Mapping:{tdata.MappingCount}");
+                    sb.AppendLine($"ID:{i} [{cprocess.Name}] state:0x{cprocess.GetStateFlag().Value:X}, Flag:0x{tdata.flag.Value:X}, Particle:{tdata.ParticleCount}, Collider:{cprocess.ColliderCapacity} Proxy:{tdata.proxyMeshType}, Mapping:{mappingList.Length}");
                     sb.AppendLine($"  -centerTransformIndex {tdata.centerTransformIndex}");
                     sb.AppendLine($"  -initScale {tdata.initScale}");
                     sb.AppendLine($"  -scaleRatio {tdata.scaleRatio}");

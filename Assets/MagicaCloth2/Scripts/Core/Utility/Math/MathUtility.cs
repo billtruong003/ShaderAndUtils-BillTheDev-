@@ -444,45 +444,6 @@ namespace MagicaCloth2
         }
 
         /// <summary>
-        /// クォータニオンからオイラー角度を計算して返す
-        /// </summary>
-        /// <param name="q"></param>
-        /// <returns>(Deg)角度</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float3 ToEuler(in quaternion q)
-        {
-            float3 angles = 0;
-
-            // クォータニオンの成分
-            float qx = q.value.x;
-            float qy = q.value.y;
-            float qz = q.value.z;
-            float qw = q.value.w;
-
-            // ピッチ (x軸回転)
-            float sinX = 2f * (qw * qx - qz * qy);
-            if (math.abs(sinX) >= 0.99999f) // ジンバルロックの検出
-            {
-                angles.x = math.sign(sinX) * 90f; // ±90度(deg)
-                angles.y = math.atan2(2f * (qw * qy + qx * qz), 1f - 2f * (qx * qx + qy * qy));
-                angles.y = math.degrees(angles.y);
-                angles.z = 0f; // ジンバルロックでロールは不定
-            }
-            else
-            {
-                angles.x = math.asin(sinX);
-                // ヨー (y軸回転)
-                angles.y = math.atan2(2f * (qw * qy + qx * qz), 1f - 2f * (qx * qx + qy * qy));
-                // ロール (z軸回転)
-                //angles.z = math.atan2(2f * (qw * qz + qx * qy), 1f - 2f * (qy * qy + qz * qz));
-                angles.z = math.atan2(2f * (qw * qz + qx * qy), 1f - 2f * (qx * qx + qz * qz)); // どうやらこれっぽい
-                angles = math.degrees(angles);
-            }
-
-            return angles;
-        }
-
-        /// <summary>
         /// 与えられた線分abおよび点cに対して、ab上の最近接点t(0.0-1.0)を計算して返す
         /// </summary>
         /// <param name="c"></param>

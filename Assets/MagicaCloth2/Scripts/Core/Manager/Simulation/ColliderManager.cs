@@ -2,7 +2,6 @@
 // Copyright (c) 2023 MagicaSoft.
 // https://magicasoft.jp
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Unity.Collections;
 using Unity.Mathematics;
@@ -41,31 +40,15 @@ namespace MagicaCloth2
         }
 
         /// <summary>
-        /// シンメトリータイプ(最大15まで)
+        /// フラグ(8bit)
+        /// 下位4bitはコライダー種類
+        /// 上位4bitはフラグ
         /// </summary>
-        public enum SymmetryType : byte
-        {
-            None = 0,
-            X_Symmetry = 1,
-            Y_Symmetry = 2,
-            Z_Symmetry = 3,
-            XYZ_Symmetry = 4,
-        }
-
-        /// <summary>
-        /// フラグ(16bit)
-        /// (0~3:4bit)コライダー種類
-        /// (4~7:4bit)シンメトリータイプ
-        /// (8~15:8bit)フラグ
-        /// </summary>
-        public const ushort Flag_Valid = 0x0100;    // データの有無
-        public const ushort Flag_Enable = 0x0200;   // 有効状態
-        public const ushort Flag_Reset = 0x0400;    // 位置リセット
-        public const ushort Flag_Reverse = 0x0800;  // 方向逆転
-        public const ushort Flag_Symmetry = 0x1000; // シンメトリー
-        public const ushort Flag_SymmetryReverse = 0x2000;  // シンメトリーによる方向フリップ
-        public const ushort Flag_ScaleSuspend = 0x4000; // 極小スケールによる機能停止
-        public ExNativeArray<ExBitFlag16> flagArray;
+        public const byte Flag_Valid = 0x10; // データの有無
+        public const byte Flag_Enable = 0x20; // 有効状態
+        public const byte Flag_Reset = 0x40; // 位置リセット
+        public const byte Flag_Reverse = 0x80; // 方向逆転
+        public ExNativeArray<ExBitFlag8> flagArray;
 
         /// <summary>
         /// トランスフォームからの中心ローカルオフセット位置
@@ -82,7 +65,7 @@ namespace MagicaCloth2
 
         /// <summary>
         /// 現フレーム姿勢
-        /// トランスフォームからスナップされた姿勢（ワールド）
+        /// トランスフォームからスナップされたチームローカル姿勢
         /// センターオフセットも計算される
         /// </summary>
         public ExNativeArray<float3> framePositions;
@@ -90,33 +73,37 @@ namespace MagicaCloth2
         public ExNativeArray<float3> frameScales;
 
         /// <summary>
-        /// １つ前のフレーム姿勢（ワールド）
+        /// １つ前のフレーム姿勢
         /// </summary>
         public ExNativeArray<float3> oldFramePositions;
         public ExNativeArray<quaternion> oldFrameRotations;
+        //public ExNativeArray<float3> oldFrameScales;
 
         /// <summary>
-        /// 現ステップでの姿勢（ワールド）
+        /// 現ステップでの姿勢
         /// </summary>
         public ExNativeArray<float3> nowPositions;
         public ExNativeArray<quaternion> nowRotations;
+        //public ExNativeArray<float3> nowScales;
 
-        /// <summary>
-        /// 前ステップでの姿勢（ワールド）
-        /// </summary>
         public ExNativeArray<float3> oldPositions;
         public ExNativeArray<quaternion> oldRotations;
 
+
         /// <summary>
-        /// シンメトリー用のメインコライダーへのローカルインデックス配列
+        /// 有効なコライダーデータ数
         /// </summary>
-        public ExNativeArray<int> mainColliderIndices;
+        public int DataCount => teamIdArray?.Count ?? 0;
 
         /// <summary>
         /// 登録コライダーコンポーネント
-        /// 現在はデバッグ用
         /// </summary>
-        HashSet<ColliderComponent> colliderSet = new HashSet<ColliderComponent>();
+        public HashSet<ColliderComponent> colliderSet = new HashSet<ColliderComponent>();
+
+        /// <summary>
+        /// 登録コライダー数
+        /// </summary>
+        public int ColliderCount => colliderSet.Count;
 
         bool isValid = false;
 
@@ -150,12 +137,13 @@ namespace MagicaCloth2
             frameScales?.Dispose();
             nowPositions?.Dispose();
             nowRotations?.Dispose();
+            //nowScales?.Dispose();
             oldFramePositions?.Dispose();
             oldFrameRotations?.Dispose();
+            //oldFrameScales?.Dispose();
             oldPositions?.Dispose();
             oldRotations?.Dispose();
             workDataArray?.Dispose();
-            mainColliderIndices?.Dispose();
 
             teamIdArray = null;
             flagArray = null;
@@ -165,12 +153,13 @@ namespace MagicaCloth2
             frameScales = null;
             nowPositions = null;
             nowRotations = null;
+            //nowScales = null;
             oldFramePositions = null;
             oldFrameRotations = null;
+            //oldFrameScales = null;
             oldPositions = null;
             oldRotations = null;
             workDataArray = null;
-            mainColliderIndices = null;
 
             colliderSet.Clear();
         }
@@ -186,7 +175,7 @@ namespace MagicaCloth2
 
             const int capacity = 256;
             teamIdArray = new ExNativeArray<short>(capacity);
-            flagArray = new ExNativeArray<ExBitFlag16>(capacity);
+            flagArray = new ExNativeArray<ExBitFlag8>(capacity);
             centerArray = new ExNativeArray<float3>(capacity);
             sizeArray = new ExNativeArray<float3>(capacity);
             framePositions = new ExNativeArray<float3>(capacity);
@@ -194,12 +183,13 @@ namespace MagicaCloth2
             frameScales = new ExNativeArray<float3>(capacity);
             nowPositions = new ExNativeArray<float3>(capacity);
             nowRotations = new ExNativeArray<quaternion>(capacity);
+            //nowScales = new ExNativeArray<float3>(capacity);
             oldFramePositions = new ExNativeArray<float3>(capacity);
             oldFrameRotations = new ExNativeArray<quaternion>(capacity);
+            //oldFrameScales = new ExNativeArray<float3>(capacity);
             oldPositions = new ExNativeArray<float3>(capacity);
             oldRotations = new ExNativeArray<quaternion>(capacity);
             workDataArray = new ExNativeArray<WorkData>(capacity);
-            mainColliderIndices = new ExNativeArray<int>(capacity);
 
             isValid = true;
         }
@@ -224,45 +214,32 @@ namespace MagicaCloth2
             int cnt = cprocess.cloth.SerializeData.colliderCollisionConstraint.ColliderLength;
             if (cnt > 0)
             {
-                // シンメトリーも考慮した初期コライダーの数を算出する
-                var clist = cprocess.cloth.SerializeData.colliderCollisionConstraint.colliderList;
-                int activeCount = 0;
-                clist.ForEach(x =>
-                {
-                    if (x)
-                        activeCount += x.symmetryMode != ColliderSymmetryMode.None ? 2 : 1;
-                });
-                //Debug.Log($"[{cprocess.cloth.name}] ActiveColliderCount:{activeCount}");
-
-                // 初期コライダーの領域確保
                 int teamId = cprocess.TeamId;
                 ref var tdata = ref MagicaManager.Team.GetTeamDataRef(teamId);
-                tdata.colliderChunk = teamIdArray.AddRange(activeCount, (short)teamId);
-                flagArray.AddRange(activeCount, default);
-                centerArray.AddRange(activeCount);
-                sizeArray.AddRange(activeCount);
-                framePositions.AddRange(activeCount);
-                frameRotations.AddRange(activeCount);
-                frameScales.AddRange(activeCount);
-                nowPositions.AddRange(activeCount);
-                nowRotations.AddRange(activeCount);
-                oldFramePositions.AddRange(activeCount);
-                oldFrameRotations.AddRange(activeCount);
-                oldPositions.AddRange(activeCount);
-                oldRotations.AddRange(activeCount);
-                workDataArray.AddRange(activeCount);
-                mainColliderIndices.AddRange(activeCount);
-                Transform t = cprocess.cloth.ClothTransform;
-                tdata.colliderTransformChunk = MagicaManager.Bone.AddTransform(activeCount, teamId, t); // 領域のみ
+
+                // コライダー数で初期化
+                tdata.colliderChunk = teamIdArray.AddRange(cnt, (short)teamId);
+                flagArray.AddRange(cnt, default);
+                centerArray.AddRange(cnt);
+                sizeArray.AddRange(cnt);
+                framePositions.AddRange(cnt);
+                frameRotations.AddRange(cnt);
+                frameScales.AddRange(cnt);
+                nowPositions.AddRange(cnt);
+                nowRotations.AddRange(cnt);
+                //nowScales.AddRange(cnt);
+                oldFramePositions.AddRange(cnt);
+                oldFrameRotations.AddRange(cnt);
+                //oldFrameScales.AddRange(cnt);
+                oldPositions.AddRange(cnt);
+                oldRotations.AddRange(cnt);
+                workDataArray.AddRange(cnt);
+                tdata.colliderTransformChunk = MagicaManager.Bone.AddTransform(cnt, teamId); // 領域のみ
                 tdata.colliderCount = 0;
+                cprocess.colliderList.AddRange(new ColliderComponent[cnt]); // nullで領域確保
 
                 // 初期コライダー登録
-                for (int i = 0; i < clist.Count; i++)
-                {
-                    var col = clist[i];
-                    if (col && cprocess.colliderDict.ContainsKey(col) == false)
-                        AddCollider(cprocess, col);
-                }
+                InitColliders(cprocess);
             }
         }
 
@@ -278,18 +255,15 @@ namespace MagicaCloth2
             int teamId = cprocess.TeamId;
 
             // コライダー解除
-            foreach (var col in cprocess.colliderDict.Keys)
+            foreach (var col in cprocess.colliderList)
             {
                 if (col)
                 {
-                    if (col.Exit(teamId))
-                    {
-                        // 利用者０
-                        colliderSet.Remove(col);
-                    }
+                    col.Exit(teamId);
+                    colliderSet.Remove(col);
                 }
             }
-            cprocess.colliderDict.Clear();
+            cprocess.colliderList.Clear();
 
             ref var tdata = ref MagicaManager.Team.GetTeamDataRef(teamId);
 
@@ -303,12 +277,13 @@ namespace MagicaCloth2
             frameScales.Remove(c);
             nowPositions.Remove(c);
             nowRotations.Remove(c);
+            //nowScales.Remove(c);
             oldFramePositions.Remove(c);
             oldFrameRotations.Remove(c);
+            //oldFrameScales.Remove(c);
             oldPositions.Remove(c);
             oldRotations.Remove(c);
             workDataArray.Remove(c);
-            mainColliderIndices.Remove(c);
 
             tdata.colliderChunk.Clear();
             tdata.colliderCount = 0;
@@ -320,36 +295,60 @@ namespace MagicaCloth2
 
         //=========================================================================================
         /// <summary>
-        /// コライダーのリスト内容を更新する
-        /// これはMagicaClothコンポーネント側のコライダーリストが変更された場合
-        /// つまりパラメータの変更ではない
+        /// 初期コライダーの登録
+        /// </summary>
+        /// <param name="cprocess"></param>
+        internal void InitColliders(ClothProcess cprocess)
+        {
+            var clist = cprocess.cloth.SerializeData.colliderCollisionConstraint.colliderList;
+            if (clist.Count == 0)
+                return;
+
+            ref var tdata = ref MagicaManager.Team.GetTeamDataRef(cprocess.TeamId);
+            int index = 0;
+            for (int i = 0; i < clist.Count; i++)
+            {
+                var col = clist[i];
+                if (col && cprocess.colliderList.Contains(col) == false)
+                {
+                    AddColliderInternal(cprocess, col, index, tdata.colliderChunk.startIndex + index, tdata.colliderTransformChunk.startIndex + index);
+                    tdata.colliderCount++;
+                    index++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// コライダーの内容を更新する
         /// </summary>
         /// <param name="cprocess"></param>
         internal void UpdateColliders(ClothProcess cprocess)
         {
             if (isValid == false)
                 return;
-
-            // ここではコライダーリストへのコンポーネント追加削除だけで、シンメトリーなどの切り替えは考慮しなくていい
             var clist = cprocess.cloth.SerializeData.colliderCollisionConstraint.colliderList;
 
-            // 現在の登録コライダーと比較し不要なコライダーを削除する
-            var keys = cprocess.colliderDict.Keys.ToList();
-            foreach (ColliderComponent col in keys)
+            // 現在の登録コライダーと比較し削除と追加を行う
+            // 既存削除
+            for (int i = 0, cnt = cprocess.ColliderCapacity; i < cnt;)
             {
+                var col = cprocess.colliderList[i];
                 if (col && clist.Contains(col) == false)
                 {
-                    // コライダー削除
+                    // コライダー消滅
                     RemoveCollider(col, cprocess.TeamId);
                 }
+                else
+                    i++;
             }
 
-            // 現在の登録コライダーと比較し必要なコライダーを追加する
+            // 新規追加
             foreach (var col in clist)
             {
-                if (col && cprocess.colliderDict.ContainsKey(col) == false)
+                if (col && cprocess.GetColliderIndex(col) < 0)
                 {
                     AddCollider(cprocess, col);
+                    //Debug.Log($"コライダー追加:{col.name}");
                 }
             }
         }
@@ -365,38 +364,12 @@ namespace MagicaCloth2
                 return;
             if (col == null)
                 return;
-            if (cprocess.colliderDict.ContainsKey(col))
+            if (cprocess.GetColliderIndex(col) >= 0)
                 return; // すでに追加済み
 
             ref var tdata = ref MagicaManager.Team.GetTeamDataRef(cprocess.TeamId);
             Debug.Assert(tdata.IsValid);
 
-            // Main
-            AddColliderInternal(ref tdata, cprocess, col, false);
-            colliderSet.Add(col);
-
-            // Symmetry
-            col.SetActiveSymmetryMode(firstOnly: true); // シンメトリー情報更新
-            AddColliderInternal(ref tdata, cprocess, col, true);
-
-            // コライダーコンポーネント側にも登録する（紐づけ）
-            col.Register(cprocess.TeamId);
-        }
-
-        void AddColliderInternal(ref TeamManager.TeamData tdata, ClothProcess cprocess, ColliderComponent col, bool isSymmetry)
-        {
-            // シンメトリーの有効性
-            if (isSymmetry)
-            {
-                if (col.ActiveSymmetryMode == ColliderSymmetryMode.None)
-                    return;
-                if (col.ActiveSymmetryTarget == null)
-                    return;
-            }
-
-            int teamId = cprocess.TeamId;
-
-            // 領域拡張
             if (tdata.colliderChunk.IsValid == false)
             {
                 // 新規確保
@@ -415,12 +388,11 @@ namespace MagicaCloth2
                 oldPositions.AddRange(newCount);
                 oldRotations.AddRange(newCount);
                 workDataArray.AddRange(newCount);
-                mainColliderIndices.AddRange(newCount);
-                Transform t = cprocess.cloth.ClothTransform;
-                tdata.colliderTransformChunk = MagicaManager.Bone.AddTransform(newCount, cprocess.TeamId, t); // 領域のみ
+                tdata.colliderTransformChunk = MagicaManager.Bone.AddTransform(newCount, cprocess.TeamId); // 領域のみ
                 tdata.colliderCount = 0;
+                cprocess.colliderList.AddRange(new ColliderComponent[newCount]); // nullで領域確保
             }
-            else if (tdata.UseColliderCount == tdata.colliderChunk.dataLength)
+            else if (tdata.ColliderCount == tdata.colliderChunk.dataLength)
             {
                 // コライダー配列のキャパシティ上限なら拡張する
                 // 拡張
@@ -440,169 +412,34 @@ namespace MagicaCloth2
                 oldPositions.Expand(oldColliderChunk, newCount);
                 oldRotations.Expand(oldColliderChunk, newCount);
                 workDataArray.Expand(oldColliderChunk, newCount);
-                mainColliderIndices.Expand(oldColliderChunk, newCount);
 
                 // コライダートランスフォーム拡張
                 var oldColliderTransformChunk = tdata.colliderTransformChunk;
                 tdata.colliderTransformChunk = MagicaManager.Bone.Expand(oldColliderTransformChunk, newCount);
+
+                // コライダー配列拡張
+                cprocess.colliderList.AddRange(new ColliderComponent[Define.System.ExpandedColliderCount]);
             }
 
-            // 追加インデックス
-            int localIndex = tdata.UseColliderCount;
-            int arrayIndex = tdata.colliderChunk.startIndex + localIndex;
-            int transformIndex = tdata.colliderTransformChunk.startIndex + localIndex;
-
-            // フラグ
-            var flag = new ExBitFlag16();
-            flag = DataUtility.SetColliderType(flag, col.GetColliderType());
-            flag.SetFlag(Flag_Valid, true);
-            flag.SetFlag(Flag_Enable, col.isActiveAndEnabled);
-            flag.SetFlag(Flag_Reset, true);
-            flag.SetFlag(Flag_Reverse, col.IsReverseDirection());
-            // ワールド姿勢
-            var ct = col.transform;
-            float3 pos = float3.zero;
-            quaternion rot = quaternion.identity;
-            float3 scl = 1;
-            float3 center = col.center;
-            // 登録トランスフォーム
-            Transform target = ct;
-            if (isSymmetry)
-            {
-                // シンメトリー
-                // ここでは姿勢計算は不要。方向性のみでよい。
-                SymmetryType symType;
-                switch (col.ActiveSymmetryMode)
-                {
-                    case ColliderSymmetryMode.X_Symmetry:
-                        symType = SymmetryType.X_Symmetry;
-                        break;
-                    case ColliderSymmetryMode.Y_Symmetry:
-                        symType = SymmetryType.Y_Symmetry;
-                        break;
-                    case ColliderSymmetryMode.Z_Symmetry:
-                        symType = SymmetryType.Z_Symmetry;
-                        break;
-                    case ColliderSymmetryMode.XYZ_Symmetry:
-                        symType = SymmetryType.XYZ_Symmetry;
-                        break;
-                    default:
-                        Develop.LogError("Unknown active symmetry mode.");
-                        return;
-                }
-                flag = DataUtility.SetSymmetryType(flag, symType);
-
-                // 方向性
-                float direction = 1.0f;
-                if (col is MagicaCapsuleCollider)
-                {
-                    var ccol = col as MagicaCapsuleCollider;
-                    if (col.ActiveSymmetryMode == ColliderSymmetryMode.X_Symmetry && ccol.direction == MagicaCapsuleCollider.Direction.X)
-                        direction = -1.0f;
-                    else if (col.ActiveSymmetryMode == ColliderSymmetryMode.Y_Symmetry && ccol.direction == MagicaCapsuleCollider.Direction.Y)
-                        direction = -1.0f;
-                    else if (col.ActiveSymmetryMode == ColliderSymmetryMode.Z_Symmetry && ccol.direction == MagicaCapsuleCollider.Direction.Z)
-                        direction = -1.0f;
-                    else if (col.ActiveSymmetryMode == ColliderSymmetryMode.XYZ_Symmetry)
-                        direction = -1.0f;
-                }
-                else if (col is MagicaPlaneCollider)
-                {
-                    switch (col.ActiveSymmetryMode)
-                    {
-                        case ColliderSymmetryMode.Y_Symmetry:
-                        case ColliderSymmetryMode.XYZ_Symmetry:
-                            direction = -1.0f;
-                            break;
-                    }
-                }
-
-                // フラグ
-                flag.SetFlag(Flag_Symmetry, true);
-                flag.SetFlag(Flag_SymmetryReverse, direction < 0.0f);
-
-                // 登録トランスフォーム
-                target = col.ActiveSymmetryTarget;
-            }
-
-            // マネージャへ登録
-            teamIdArray[arrayIndex] = (short)teamId;
-            flagArray[arrayIndex] = flag;
-            centerArray[arrayIndex] = center;
-            sizeArray[arrayIndex] = math.max(col.GetSize(), 0.0001f); // 念のため
-            framePositions[arrayIndex] = pos;
-            frameRotations[arrayIndex] = rot;
-            frameScales[arrayIndex] = scl;
-            nowPositions[arrayIndex] = pos;
-            nowRotations[arrayIndex] = rot;
-            oldFramePositions[arrayIndex] = pos;
-            oldFrameRotations[arrayIndex] = rot;
-            oldPositions[arrayIndex] = pos;
-            oldRotations[arrayIndex] = rot;
-            mainColliderIndices[arrayIndex] = 0;
-
-            // ClothProcessにコライダーコンポーネントを登録
-            if (cprocess.colliderDict.ContainsKey(col))
-            {
-                int2 data = cprocess.colliderDict[col];
-                if (isSymmetry)
-                {
-                    data.y = localIndex;
-                    // メインコライダーローカルインデックスを記録
-                    mainColliderIndices[arrayIndex] = data.x;
-                }
-                else
-                    data.x = localIndex;
-                cprocess.colliderDict[col] = data;
-            }
-            else
-            {
-                Debug.Assert(isSymmetry == false);
-                cprocess.colliderDict.Add(col, new int2(localIndex, 0));
-            }
-
-            // トランスフォーム登録
-            bool t_enable = cprocess.IsEnable && flag.IsSet(Flag_Enable);
-            var tflag = new ExBitFlag8(TransformManager.Flag_Read);
-            tflag.SetFlag(TransformManager.Flag_Enable, t_enable);
-            MagicaManager.Bone.SetTransform(target, tflag, transformIndex, teamId);
+            // 最後に追加する
+            int index = tdata.colliderCount;
+            int arrayIndex = tdata.colliderChunk.startIndex + index;
+            int transformIndex = tdata.colliderTransformChunk.startIndex + index;
+            AddColliderInternal(cprocess, col, index, arrayIndex, transformIndex);
 
             tdata.colliderCount++;
         }
 
-
         /// <summary>
         /// コライダーを削除する
-        /// 削除領域は生存する最後尾のデータと入れ替えられる(SwapBack)
+        /// ここでは領域は削除せずにデータのみを無効化させる
+        /// 領域は生存する最後尾のデータと入れ替えられる(SwapBack)
         /// </summary>
         /// <param name="teamId"></param>
         /// <param name="localIndex"></param>
         internal void RemoveCollider(ColliderComponent col, int teamId)
         {
             if (isValid == false)
-                return;
-            if (col == null || teamId == 0)
-                return;
-
-            // Symmetry
-            RemoveColliderInternal(col, teamId, true);
-
-            // Main
-            RemoveColliderInternal(col, teamId, false);
-
-            // コライダーコンポーネント側からも削除登録する（紐づけ解除）
-            if (col.Exit(teamId))
-            {
-                // 利用者０
-                colliderSet.Remove(col);
-            }
-        }
-
-        void RemoveColliderInternal(ColliderComponent col, int teamId, bool isSymmetry)
-        {
-            if (isValid == false)
-                return;
-            if (col == null || teamId == 0)
                 return;
             ref var tdata = ref MagicaManager.Team.GetTeamDataRef(teamId);
             int ccnt = tdata.colliderCount;
@@ -611,23 +448,16 @@ namespace MagicaCloth2
             var cprocess = MagicaManager.Team.GetClothProcess(teamId);
             if (cprocess == null)
                 return;
-            if (cprocess.colliderDict.ContainsKey(col) == false)
+            int index = cprocess.GetColliderIndex(col);
+            if (index < 0)
                 return;
-            int2 data = cprocess.colliderDict[col];
-            int localIndex = data.x;
-            if (isSymmetry)
-            {
-                if (data.y == 0)
-                    return; // シンメトリーコライダーなし
-                localIndex = data.y;
-            }
 
-            int arrayIndex = tdata.colliderChunk.startIndex + localIndex;
-            int transformIndex = tdata.colliderTransformChunk.startIndex + localIndex;
+            int arrayIndex = tdata.colliderChunk.startIndex + index;
+            int transformIndex = tdata.colliderTransformChunk.startIndex + index;
 
-            int swapLocalIndex = ccnt - 1;
-            int swapArrayIndex = tdata.colliderChunk.startIndex + swapLocalIndex;
-            int swapTransformIndex = tdata.colliderTransformChunk.startIndex + swapLocalIndex;
+            int swapIndex = ccnt - 1;
+            int swapArrayIndex = tdata.colliderChunk.startIndex + swapIndex;
+            int swapTransformIndex = tdata.colliderTransformChunk.startIndex + swapIndex;
 
             if (arrayIndex < swapArrayIndex)
             {
@@ -641,11 +471,12 @@ namespace MagicaCloth2
                 frameScales[arrayIndex] = frameScales[swapArrayIndex];
                 nowPositions[arrayIndex] = nowPositions[swapArrayIndex];
                 nowRotations[arrayIndex] = nowRotations[swapArrayIndex];
+                //nowScales[arrayIndex] = nowScales[swapArrayIndex];
                 oldFramePositions[arrayIndex] = oldFramePositions[swapArrayIndex];
                 oldFrameRotations[arrayIndex] = oldFrameRotations[swapArrayIndex];
+                //oldFrameScales[arrayIndex] = oldFrameScales[swapArrayIndex];
                 oldPositions[arrayIndex] = oldPositions[swapArrayIndex];
                 oldRotations[arrayIndex] = oldRotations[swapArrayIndex];
-                mainColliderIndices[arrayIndex] = mainColliderIndices[swapArrayIndex];
 
                 flagArray[swapArrayIndex] = default;
                 teamIdArray[swapArrayIndex] = 0;
@@ -655,24 +486,8 @@ namespace MagicaCloth2
                 MagicaManager.Bone.SetTransform(null, default, swapTransformIndex, 0);
 
                 // cprocess
-                var ckeys = cprocess.colliderDict.Keys.ToList();
-                foreach (ColliderComponent kcol in ckeys)
-                {
-                    Debug.Assert(cprocess.colliderDict.ContainsKey(kcol));
-                    int2 data2 = cprocess.colliderDict[kcol];
-                    if (data2.x == swapLocalIndex)
-                    {
-                        data2.x = localIndex;
-                        cprocess.colliderDict[kcol] = data2;
-                        break;
-                    }
-                    if (data2.y == swapLocalIndex)
-                    {
-                        data2.y = localIndex;
-                        cprocess.colliderDict[kcol] = data2;
-                        break;
-                    }
-                }
+                cprocess.colliderList[index] = cprocess.colliderList[swapIndex];
+                cprocess.colliderList[swapIndex] = null;
             }
             else
             {
@@ -682,16 +497,59 @@ namespace MagicaCloth2
 
                 // transform
                 MagicaManager.Bone.SetTransform(null, default, transformIndex, 0);
+
+                // cprocess
+                cprocess.colliderList[index] = null;
             }
-            if (isSymmetry)
-                data.y = 0;
-            else
-                data.x = 0;
-            cprocess.colliderDict[col] = data;
-            if (data.x == 0 && data.y == 0 && isSymmetry == false)
-                cprocess.colliderDict.Remove(col); // コライダー削除
 
             tdata.colliderCount--;
+
+            colliderSet.Remove(col);
+        }
+
+        void AddColliderInternal(ClothProcess cprocess, ColliderComponent col, int index, int arrayIndex, int transformIndex)
+        {
+            int teamId = cprocess.TeamId;
+
+            // マネージャへ登録
+            teamIdArray[arrayIndex] = (short)teamId;
+            var flag = new ExBitFlag8();
+            flag = DataUtility.SetColliderType(flag, col.GetColliderType());
+            flag.SetFlag(Flag_Valid, true);
+            flag.SetFlag(Flag_Enable, col.isActiveAndEnabled);
+            flag.SetFlag(Flag_Reset, true);
+            flag.SetFlag(Flag_Reverse, col.IsReverseDirection());
+            flagArray[arrayIndex] = flag;
+            centerArray[arrayIndex] = col.center;
+            sizeArray[arrayIndex] = col.GetSize();
+            var pos = col.transform.position;
+            var rot = col.transform.rotation;
+            var scl = col.transform.localScale;
+            framePositions[arrayIndex] = pos;
+            frameRotations[arrayIndex] = rot;
+            frameScales[arrayIndex] = scl;
+            nowPositions[arrayIndex] = pos;
+            nowRotations[arrayIndex] = rot;
+            //nowScales[arrayIndex] = scl;
+            oldFramePositions[arrayIndex] = pos;
+            oldFrameRotations[arrayIndex] = rot;
+            //oldFrameScales[arrayIndex] = scl;
+            oldPositions[arrayIndex] = pos;
+            oldRotations[arrayIndex] = rot;
+
+            // チームにコライダーコンポーネントを登録
+            cprocess.colliderList[index] = col;
+
+            // コライダーコンポーネント側にも登録する
+            col.Register(teamId);
+
+            // トランスフォーム登録
+            bool t_enable = cprocess.IsEnable && flag.IsSet(Flag_Enable);
+            var tflag = new ExBitFlag8(TransformManager.Flag_Read);
+            tflag.SetFlag(TransformManager.Flag_Enable, t_enable);
+            MagicaManager.Bone.SetTransform(col.transform, tflag, transformIndex, teamId);
+
+            colliderSet.Add(col);
         }
 
         /// <summary>
@@ -708,29 +566,19 @@ namespace MagicaCloth2
             if (tdata.IsValid == false)
                 return;
             var cprocess = MagicaManager.Team.GetClothProcess(teamId);
-
-            if (cprocess.colliderDict.ContainsKey(col) == false)
+            int index = cprocess.GetColliderIndex(col);
+            if (index < 0)
                 return;
+            int arrayIndex = tdata.colliderChunk.startIndex + index;
+            var flag = flagArray[arrayIndex];
+            flag.SetFlag(Flag_Enable, sw);
+            flag.SetFlag(Flag_Reset, true); // Enable/Disableどちらでもリセット
+            flagArray[arrayIndex] = flag;
 
-            // メイン、シンメトリーの２つをチェック
-            int2 data = cprocess.colliderDict[col];
-            for (int i = 0; i < 2; i++)
-            {
-                int localIndex = data[i];
-                if (i == 1 && localIndex == 0)
-                    continue; // シンメトリーのindex0はデータなし
-
-                int arrayIndex = tdata.colliderChunk.startIndex + localIndex;
-                var flag = flagArray[arrayIndex];
-                flag.SetFlag(Flag_Enable, sw);
-                flag.SetFlag(Flag_Reset, true); // Enable/Disableどちらでもリセット
-                flagArray[arrayIndex] = flag;
-
-                // トランスフォーム有効状態
-                int transformIndex = tdata.colliderTransformChunk.startIndex + localIndex;
-                bool t_enable = cprocess.IsEnable && flag.IsSet(Flag_Enable);
-                MagicaManager.Bone.EnableTransform(transformIndex, t_enable);
-            }
+            // トランスフォーム有効状態
+            int transformIndex = tdata.colliderTransformChunk.startIndex + index;
+            bool t_enable = cprocess.IsEnable && flag.IsSet(Flag_Enable);
+            MagicaManager.Bone.EnableTransform(transformIndex, t_enable);
         }
 
         /// <summary>
@@ -745,7 +593,7 @@ namespace MagicaCloth2
             ref var tdata = ref MagicaManager.Team.GetTeamDataRef(teamId);
             if (tdata.IsValid == false)
                 return;
-            if (tdata.UseColliderCount == 0)
+            if (tdata.ColliderCount == 0)
                 return;
 
             bool teamEnable = tdata.IsEnable;
@@ -769,11 +617,10 @@ namespace MagicaCloth2
 
         /// <summary>
         /// コライダーコンポーネントのパラメータ変更を反映する
-        /// シンメトリーの変更なども反映させる
         /// </summary>
         /// <param name="col"></param>
         /// <param name="teamId"></param>
-        internal void UpdateParameters(ColliderComponent col, int teamId, bool changeSymmetry)
+        internal void UpdateParameters(ColliderComponent col, int teamId)
         {
             if (IsValid() == false)
                 return;
@@ -782,56 +629,17 @@ namespace MagicaCloth2
             if (tdata.IsValid == false)
                 return;
             var cprocess = MagicaManager.Team.GetClothProcess(teamId);
-            if (cprocess.colliderDict.ContainsKey(col) == false)
+            int index = cprocess.GetColliderIndex(col);
+            if (index < 0)
                 return;
-            int2 data = cprocess.colliderDict[col];
+            int arrayIndex = tdata.colliderChunk.startIndex + index;
 
-            // Main
-            // メインコライダーは変更のみ考える
-            // メインは削除されることはない。Transformの変更もない。
-            int localIndex = data.x;
-            int arrayIndex = tdata.colliderChunk.startIndex + localIndex;
             var flag = flagArray[arrayIndex];
             flag = DataUtility.SetColliderType(flag, col.GetColliderType());
             flag.SetFlag(Flag_Reverse, col.IsReverseDirection());
             flagArray[arrayIndex] = flag;
             centerArray[arrayIndex] = col.center;
             sizeArray[arrayIndex] = math.max(col.GetSize(), 0.0001f); // 念のため
-
-            // Symmetry
-            if (col.ActiveSymmetryMode != ColliderSymmetryMode.None && col.ActiveSymmetryTarget != null)
-            {
-                // シンメトリーあり
-                if (changeSymmetry)
-                {
-                    // シンメトリーのモードまたはターゲットの変更
-                    // 一旦削除して再度追加する
-                    RemoveColliderInternal(col, teamId, true);
-                    AddColliderInternal(ref tdata, cprocess, col, true);
-                    //Debug.Log($"remove and add symmetry.");
-                }
-                else if (data.y > 0)
-                {
-                    // シンメトリーのモードおよびターゲットは変更されていない
-                    // パラメータの変更のみ
-                    localIndex = data.y;
-                    arrayIndex = tdata.colliderChunk.startIndex + localIndex;
-                    flag = flagArray[arrayIndex];
-                    flag = DataUtility.SetColliderType(flag, col.GetColliderType());
-                    flag.SetFlag(Flag_Reverse, col.IsReverseDirection());
-                    flagArray[arrayIndex] = flag;
-                    centerArray[arrayIndex] = col.center;
-                    sizeArray[arrayIndex] = math.max(col.GetSize(), 0.0001f); // 念のため
-                    //Debug.Log($"modify symmetry parameter only.");
-                }
-            }
-            else
-            {
-                // シンメトリーなし
-                // 既存のシンメトリーコライダーが存在する場合は削除する
-                RemoveColliderInternal(col, teamId, true);
-                //Debug.Log($"remove symmetry.");
-            }
         }
 
         //=========================================================================================
@@ -847,7 +655,8 @@ namespace MagicaCloth2
             ref TeamManager.TeamData tdata,
             ref InertiaConstraint.CenterData cdata,
             // collider
-            ref NativeArray<ExBitFlag16> flagArray,
+            //public NativeArray<short> teamIdArray;
+            ref NativeArray<ExBitFlag8> flagArray,
             ref NativeArray<float3> centerArray,
             ref NativeArray<float3> framePositions,
             ref NativeArray<quaternion> frameRotations,
@@ -858,14 +667,10 @@ namespace MagicaCloth2
             ref NativeArray<quaternion> nowRotations,
             ref NativeArray<float3> oldPositions,
             ref NativeArray<quaternion> oldRotations,
-            ref NativeArray<int> mainColliderIndices,
-            // transform
+            // transform (ワールド姿勢)
             ref NativeArray<float3> transformPositionArray,
             ref NativeArray<quaternion> transformRotationArray,
-            ref NativeArray<float3> transformScaleArray,
-            ref NativeArray<float3> transformLocalPositionArray,
-            ref NativeArray<quaternion> transformLocalRotationArray,
-            ref NativeArray<float3> transformLocalScaleArray
+            ref NativeArray<float3> transformScaleArray
             )
         {
             // コライダーごと
@@ -882,110 +687,36 @@ namespace MagicaCloth2
                 int l_index = index - tdata.colliderChunk.startIndex;
                 int t_index = tdata.colliderTransformChunk.startIndex + l_index;
 
-                // ほぼ０スケールは極小スケールに変換し無効化させる
-                bool isZeroScale = false;
-                float3 pscl = transformScaleArray[t_index];
-                for (int j = 0; j < 3; j++)
-                {
-                    float s = pscl[j];
-                    if (s < 1e-06f && s > -1e-06f)
-                    {
-                        pscl[j] = 1e-06f;
-                        isZeroScale = true;
-                    }
-                }
-                flag.SetFlag(Flag_ScaleSuspend, isZeroScale);
+                // transform姿勢（ワールド）
+                var wpos = transformPositionArray[t_index];
+                var wrot = transformRotationArray[t_index];
+                var wscl = transformScaleArray[t_index];
 
-                // コライダー姿勢（ワールド）
-                float3 wpos;
-                quaternion wrot;
-                float3 wscl;
-                if (flag.IsSet(Flag_Symmetry))
-                {
-                    // Symmetry
-                    int mainLocalIndex = mainColliderIndices[index];
-                    int mainTransformIndex = tdata.colliderTransformChunk.startIndex + mainLocalIndex;
-                    float3 lpos = transformLocalPositionArray[mainTransformIndex];
-                    float3 lerot = MathUtility.ToEuler(transformLocalRotationArray[mainTransformIndex]);
-                    float3 lscl = transformLocalScaleArray[mainTransformIndex];
-
-                    var symmetryType = DataUtility.GetSymmetryType(flag);
-                    switch (symmetryType)
-                    {
-                        case SymmetryType.X_Symmetry:
-                            lpos.x = -lpos.x;
-                            center.x = -center.x;
-                            lerot.y = -lerot.y;
-                            lerot.z = -lerot.z;
-                            break;
-                        case SymmetryType.Y_Symmetry:
-                            lpos.y = -lpos.y;
-                            center.y = -center.y;
-                            lerot.x = -lerot.x;
-                            lerot.z = -lerot.z;
-                            break;
-                        case SymmetryType.Z_Symmetry:
-                            lpos.z = -lpos.z;
-                            center.z = -center.z;
-                            lerot.x = -lerot.x;
-                            lerot.y = -lerot.y;
-                            break;
-                        case SymmetryType.XYZ_Symmetry:
-                            lpos = -lpos;
-                            center = -center;
-                            break;
-                    }
-
-                    // シンメトリー先の親
-                    float3 ppos = transformPositionArray[t_index];
-                    quaternion prot = transformRotationArray[t_index];
-                    //float3 pscl = transformScaleArray[t_index];
-
-                    // マイナススケール
-                    float3 sclSign = math.sign(pscl);
-                    float3 sclEulerSign = 1;
-                    if (pscl.x < 0 || pscl.y < 0 || pscl.z < 0)
-                        sclEulerSign = sclSign * -1;
-
-                    // シンメトリーコライダーの姿勢
-                    wpos = MathUtility.TransformPoint(lpos, ppos, prot, pscl);
-                    wrot = math.mul(prot, quaternion.Euler(math.radians(lerot * sclEulerSign)));
-                    wscl = pscl * lscl;
-
-                    // オフセット
-                    wpos += math.mul(wrot, center * sclSign) * wscl * sclSign;
-                }
-                else
-                {
-                    // Main
-                    wpos = transformPositionArray[t_index];
-                    wrot = transformRotationArray[t_index];
-                    //wscl = transformScaleArray[t_index];
-                    wscl = pscl;
-
-                    // マイナススケール
-                    float3 sclSign = math.sign(wscl);
-
-                    // オフセット
-                    wpos += math.mul(wrot, center * sclSign) * wscl * sclSign;
-                }
+                // オフセット
+                wpos += math.mul(wrot, center) * wscl;
 
                 // 格納
                 framePositions[index] = wpos;
                 frameRotations[index] = wrot;
                 frameScales[index] = wscl;
 
+                //Debug.Log($"C wpos:{wpos}");
+                //Debug.Log($"C wrot:{wrot}");
+                //Debug.Log($"C wscl:{wscl}");
+
                 // リセット処理
-                if (tdata.IsReset || flag.IsSet(Flag_Reset) || isZeroScale)
+                if (tdata.IsReset || flag.IsSet(Flag_Reset))
                 {
                     oldFramePositions[index] = wpos;
                     oldFrameRotations[index] = wrot;
+                    //oldFrameScales[index] = lscl;
                     nowPositions[index] = wpos;
                     nowRotations[index] = wrot;
                     oldPositions[index] = wpos;
                     oldRotations[index] = wrot;
 
                     flag.SetFlag(Flag_Reset, false);
+                    flagArray[index] = flag;
                 }
                 else if (tdata.IsInertiaShift || tdata.IsNegativeScaleTeleport)
                 {
@@ -1042,9 +773,6 @@ namespace MagicaCloth2
                     oldPositions[index] = oldPosition;
                     oldRotations[index] = oldRotation;
                 }
-
-                // フラグ書き戻し
-                flagArray[index] = flag;
             }
         }
 
@@ -1053,7 +781,7 @@ namespace MagicaCloth2
             ref TeamManager.TeamData tdata,
             ref InertiaConstraint.CenterData cdata,
             // collider
-            ref NativeArray<ExBitFlag16> flagArray,
+            ref NativeArray<ExBitFlag8> flagArray,
             ref NativeArray<float3> sizeArray,
             ref NativeArray<float3> framePositions,
             ref NativeArray<quaternion> frameRotations,
@@ -1072,7 +800,7 @@ namespace MagicaCloth2
             for (int i = 0; i < tdata.colliderChunk.dataLength; i++, cindex++)
             {
                 var flag = flagArray[cindex];
-                if (flag.IsSet(Flag_Valid) == false || flag.IsSet(Flag_Enable) == false || flag.IsSet(Flag_ScaleSuspend))
+                if (flag.IsSet(Flag_Valid) == false || flag.IsSet(Flag_Enable) == false)
                     continue;
 
                 // 今回のシミュレーションステップでの姿勢を求める
@@ -1140,10 +868,6 @@ namespace MagicaCloth2
                     if (flag.IsSet(Flag_Reverse))
                         dir = -dir;
 
-                    // シンメトリーによる方向性
-                    if (flag.IsSet(Flag_Symmetry) && flag.IsSet(Flag_SymmetryReverse))
-                        dir = -dir;
-
                     // x = 始点半径
                     // y = 終点半径
                     // z = 長さ
@@ -1184,10 +908,6 @@ namespace MagicaCloth2
                     // マイナススケール
                     float3 dir = math.up();
                     dir *= math.sign(cscl.y); // Y反転時は逆にする
-
-                    // シンメトリーによる方向性
-                    if (flag.IsSet(Flag_Symmetry) && flag.IsSet(Flag_SymmetryReverse))
-                        dir = -dir;
 
                     float3 n = math.mul(rot, dir);
                     work.oldPos.c0 = n;
@@ -1262,9 +982,7 @@ namespace MagicaCloth2
             }
             else
             {
-                int cnt = teamIdArray?.Count ?? 0;
-
-                sb.AppendLine($"Use:{cnt}");
+                sb.AppendLine($"Collider Manager. Collider:{colliderSet.Count}");
                 sb.AppendLine($"  -flagArray:{flagArray.ToSummary()}");
                 sb.AppendLine($"  -centerArray:{centerArray.ToSummary()}");
                 sb.AppendLine($"  -sizeArray:{sizeArray.ToSummary()}");
@@ -1277,36 +995,23 @@ namespace MagicaCloth2
                 sb.AppendLine($"  -nowRotations:{nowRotations.ToSummary()}");
                 sb.AppendLine($"  -oldPositions:{oldPositions.ToSummary()}");
                 sb.AppendLine($"  -oldRotations:{oldRotations.ToSummary()}");
-                sb.AppendLine($"  -mainColliderIndices:{mainColliderIndices.ToSummary()}");
 
                 sb.AppendLine($"[Colliders]");
-                int useCnt = 0;
+                int cnt = teamIdArray?.Count ?? 0;
                 for (int i = 0; i < cnt; i++)
                 {
                     var flag = flagArray[i];
                     if (flag.IsSet(Flag_Valid) == false)
                         continue;
-                    useCnt++;
                     var ctype = DataUtility.GetColliderType(flag);
-                    string sym = flag.IsSet(Flag_Symmetry) ? "Symmetry" : "";
-                    sb.AppendLine($"  [{i}] tid:{teamIdArray[i]}, flag:0x{flag.Value:X}, type:{ctype}, size:{sizeArray[i]}, cen:{centerArray[i]}, {sym}");
+                    sb.AppendLine($"  [{i}] tid:{teamIdArray[i]}, flag:0x{flag.Value:X}, type:{ctype}, size:{sizeArray[i]}, cen:{centerArray[i]}");
                 }
-                sb.AppendLine($"  ActiveCount:{useCnt}");
 
-                sb.AppendLine($"[Collider Components:{colliderSet.Count}]");
+                sb.AppendLine($"[Collider Names]");
                 foreach (var col in colliderSet)
                 {
-                    if (col)
-                    {
-                        sb.Append($"({col.UseTeamCount})  {col.name}");
-                        if (col.ActiveSymmetryMode != ColliderSymmetryMode.None)
-                        {
-                            sb.Append($"  Symmetry:{col.ActiveSymmetryMode}");
-                        }
-                        sb.AppendLine();
-                    }
-                    else
-                        sb.AppendLine($"  (null!)");
+                    var name = col?.name ?? "(null)";
+                    sb.AppendLine($"  {name}");
                 }
             }
             sb.AppendLine();

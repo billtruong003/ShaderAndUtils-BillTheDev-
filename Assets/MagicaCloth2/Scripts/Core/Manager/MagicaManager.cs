@@ -57,11 +57,6 @@ namespace MagicaCloth2
         public static UpdateMethod afterFixedUpdateDelegate;
 
         /// <summary>
-        /// PreUpdate()の開始直後
-        /// </summary>
-        public static UpdateMethod firstPreUpdateDelegate;
-
-        /// <summary>
         /// Update()の後
         /// </summary>
         public static UpdateMethod afterUpdateDelegate;
@@ -132,9 +127,6 @@ namespace MagicaCloth2
 
             // カスタム更新ループ登録
             InitCustomGameLoop();
-
-            // アプリ終了イベント
-            Application.quitting += OnAppQuitting;
 
             isPlaying = true;
             //isValid = true;
@@ -257,14 +249,6 @@ namespace MagicaCloth2
         }
 #endif
 
-        /// <summary>
-        /// アプリ終了イベント
-        /// </summary>
-        static void OnAppQuitting()
-        {
-            Develop.DebugLog($"OnAppQuitting!");
-            Dispose();
-        }
 
         /// <summary>
         /// マネージャの破棄
@@ -283,10 +267,6 @@ namespace MagicaCloth2
             // clear static member.
             OnPreSimulation = null;
             OnPostSimulation = null;
-
-            Application.quitting -= OnAppQuitting;
-
-            isPlaying = false;
         }
 
         public static bool IsPlaying()
@@ -341,7 +321,7 @@ namespace MagicaCloth2
                 type = typeof(MagicaManager),
                 updateDelegate = () => afterEarlyUpdateDelegate?.Invoke()
             };
-            AddPlayerLoop(afterEarlyUpdate, ref playerLoop, "EarlyUpdate", string.Empty, firstLast: 1);
+            AddPlayerLoop(afterEarlyUpdate, ref playerLoop, "EarlyUpdate", string.Empty, last: true);
 
             // after fixed update 
             // FixedUpdate()の後
@@ -354,17 +334,6 @@ namespace MagicaCloth2
                 }
             };
             AddPlayerLoop(afterFixedUpdate, ref playerLoop, "FixedUpdate", "ScriptRunBehaviourFixedUpdate");
-
-            // first pre update
-            PlayerLoopSystem firstPreUpdate = new PlayerLoopSystem()
-            {
-                type = typeof(MagicaManager),
-                updateDelegate = () =>
-                {
-                    firstPreUpdateDelegate?.Invoke();
-                }
-            };
-            AddPlayerLoop(firstPreUpdate, ref playerLoop, "PreUpdate", string.Empty, firstLast: -1);
 
             // after update 
             // Update()の後
@@ -434,18 +403,13 @@ namespace MagicaCloth2
         /// <param name="playerLoop"></param>
         /// <param name="categoryName"></param>
         /// <param name="systemName"></param>
-        static void AddPlayerLoop(PlayerLoopSystem method, ref PlayerLoopSystem playerLoop, string categoryName, string systemName, int firstLast = 0, bool before = false)
+        static void AddPlayerLoop(PlayerLoopSystem method, ref PlayerLoopSystem playerLoop, string categoryName, string systemName, bool last = false, bool before = false)
         {
             int sysIndex = Array.FindIndex(playerLoop.subSystemList, (s) => s.type.Name == categoryName);
             PlayerLoopSystem category = playerLoop.subSystemList[sysIndex];
             var systemList = new List<PlayerLoopSystem>(category.subSystemList);
 
-            if (firstLast < 0)
-            {
-                // 最初に追加
-                systemList.Insert(0, method);
-            }
-            else if (firstLast > 0)
+            if (last)
             {
                 // 最後に追加
                 systemList.Add(method);

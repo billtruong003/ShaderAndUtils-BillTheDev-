@@ -157,7 +157,6 @@ namespace MagicaCloth2
                     hash += map.isReadable ? 1 : 0;
                 }
             }
-            hash += paintMapUvChannel * 123;
             hash += colliderCollisionConstraint.GetHashCode();
 
             return hash;
@@ -207,7 +206,6 @@ namespace MagicaCloth2
             ClothMeshWriteMode meshWriteMode;
             PaintMode paintMode;
             List<Texture2D> paintMaps;
-            int paintMapUvChannel;
             List<Transform> rootBones;
             RenderSetupData.BoneConnectionMode connectionMode;
             float rotationalInterpolation;
@@ -239,7 +237,6 @@ namespace MagicaCloth2
                 meshWriteMode = sdata.meshWriteMode;
                 paintMode = sdata.paintMode;
                 paintMaps = new List<Texture2D>(sdata.paintMaps);
-                paintMapUvChannel = sdata.paintMapUvChannel;
                 rootBones = new List<Transform>(sdata.rootBones);
                 connectionMode = sdata.connectionMode;
                 rotationalInterpolation = sdata.rotationalInterpolation;
@@ -267,7 +264,6 @@ namespace MagicaCloth2
                 sdata.meshWriteMode = meshWriteMode;
                 sdata.paintMode = paintMode;
                 sdata.paintMaps = paintMaps;
-                sdata.paintMapUvChannel = paintMapUvChannel;
                 sdata.rootBones = rootBones;
                 sdata.connectionMode = connectionMode;
                 sdata.rotationalInterpolation = rotationalInterpolation;
@@ -348,7 +344,6 @@ namespace MagicaCloth2
                 sourceRenderers = new List<Renderer>(sdata.sourceRenderers);
                 paintMode = sdata.paintMode;
                 paintMaps = new List<Texture2D>(sdata.paintMaps);
-                paintMapUvChannel = sdata.paintMapUvChannel;
                 rootBones = new List<Transform>(sdata.rootBones);
                 connectionMode = sdata.connectionMode;
                 rotationalInterpolation = sdata.rotationalInterpolation;
@@ -428,17 +423,5 @@ namespace MagicaCloth2
         /// </summary>
         /// <returns></returns>
         public bool IsBoneSpring() => clothType == ClothProcess.ClothType.BoneSpring;
-
-        public int GetUvChannel()
-        {
-            switch (paintMode)
-            {
-                case PaintMode.Texture_Fixed_Move:
-                case PaintMode.Texture_Fixed_Move_Limit:
-                    return paintMapUvChannel;
-                default:
-                    return 0;
-            }
-        }
     }
 }

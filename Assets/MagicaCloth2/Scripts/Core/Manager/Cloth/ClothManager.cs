@@ -50,7 +50,6 @@ namespace MagicaCloth2
 
             // 更新処理
             MagicaManager.afterEarlyUpdateDelegate -= OnEarlyClothUpdate;
-            MagicaManager.firstPreUpdateDelegate -= OnFirstPreUpdate;
             MagicaManager.afterLateUpdateDelegate -= OnAfterLateUpdate;
             MagicaManager.beforeLateUpdateDelegate -= OnBeforeLateUpdate;
         }
@@ -70,7 +69,6 @@ namespace MagicaCloth2
 
             // 更新処理
             MagicaManager.afterEarlyUpdateDelegate += OnEarlyClothUpdate;
-            MagicaManager.firstPreUpdateDelegate += OnFirstPreUpdate;
             MagicaManager.afterLateUpdateDelegate += OnAfterLateUpdate;
             MagicaManager.beforeLateUpdateDelegate += OnBeforeLateUpdate;
 
@@ -162,25 +160,6 @@ namespace MagicaCloth2
             }
         }
 
-        /// <summary>
-        /// PreUpdate開始時に実行される更新処理
-        /// </summary>
-        void OnFirstPreUpdate()
-        {
-            //Debug.Log($"OnFirstPreUpdate. F:{Time.frameCount}");
-            if (MagicaManager.Team.TrueTeamCount > 0) // カリング判定があるのでDisableチームもまわす必要がある
-            {
-                //Debug.Log($"existFixedTeam:{MagicaManager.Bone.existFixedTeam.Value}");
-                // FixedUpdateが０回かつFixedTeamが存在する場合のみ
-                if (MagicaManager.Time.FixedUpdateCount == 0 && MagicaManager.Bone.existFixedTeam.Value)
-                {
-                    ClearMasterJob();
-                    masterJob = MagicaManager.Bone.RestoreBaseTransform(masterJob);
-                    CompleteMasterJob();
-                }
-            }
-        }
-
         void OnBeforeLateUpdate()
         {
             if (MagicaManager.Time.updateLocation == TimeManager.UpdateLocation.BeforeLateUpdate)
@@ -207,16 +186,12 @@ namespace MagicaCloth2
             if (MagicaManager.IsPlaying() == false)
                 return;
 
-            // ■コンポーネント０なら終了
-            var tm = MagicaManager.Team;
-            if (tm.TrueTeamCount == 0)
-                return;
-
             //-----------------------------------------------------------------
             // シミュレーション開始イベント
             MagicaManager.OnPreSimulation?.Invoke();
 
             //-----------------------------------------------------------------
+            var tm = MagicaManager.Team;
             var sm = MagicaManager.Simulation;
             var bm = MagicaManager.Bone;
             var wm = MagicaManager.Wind;
@@ -237,7 +212,9 @@ namespace MagicaCloth2
 
             // ■ここで実行チーム数が０ならば終了
             if (tm.ActiveTeamCount == 0)
+            {
                 return;
+            }
 
             startClothUpdatePrePareProfiler.Begin();
 

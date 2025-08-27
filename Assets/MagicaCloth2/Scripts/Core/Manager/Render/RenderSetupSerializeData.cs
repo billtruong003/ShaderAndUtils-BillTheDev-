@@ -1,7 +1,6 @@
 ﻿// Magica Cloth 2.
 // Copyright (c) 2025 MagicaSoft.
 // https://magicasoft.jp
-using System;
 using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Collections;
@@ -48,9 +47,6 @@ namespace MagicaCloth2
             if (ren == null)
                 return false;
 
-            if (useTransformIndexArray == null || useTransformIndexArray.Length == 0)
-                return false;
-
             if (ren is SkinnedMeshRenderer)
             {
                 if (hasSkinnedMesh == false)
@@ -60,6 +56,9 @@ namespace MagicaCloth2
                 var smesh = sren.sharedMesh;
                 if (smesh == null)
                     return false;
+
+                //if (vertexCount != smesh.vertexCount)
+                //    return false;
 
                 // 重いか？
                 //int bcnt = smesh.bindposes?.Length ?? 0;
@@ -78,6 +77,9 @@ namespace MagicaCloth2
                 var smesh = filter.sharedMesh;
                 if (smesh == null)
                     return false;
+
+                //if (vertexCount != smesh.vertexCount)
+                //    return false;
             }
 
             if (DataValidateTransform() == false)
@@ -95,15 +97,21 @@ namespace MagicaCloth2
             if (hasBoneWeight)
                 return false;
 
-            if (DataValidateTransform() == false)
-                return false;
-
-            // root bone
+            /*
+            int bcnt = 0;
             foreach (var rootBone in sdata.rootBones)
             {
-                if (rootBone == null || Array.FindIndex(transformArray, x => x == rootBone) < 0)
-                    return false;
+                if (rootBone)
+                {
+                    bcnt += rootBone.GetComponentsInChildren<Transform>().Length;
+                }
             }
+            if (skinBoneCount != bcnt)
+                return false;
+            */
+
+            if (DataValidateTransform() == false)
+                return false;
 
             return true;
         }
@@ -120,8 +128,6 @@ namespace MagicaCloth2
             if (ucnt != (useTransformIndexArray?.Length ?? 0))
                 return false;
             if (ucnt != (transformArray?.Length ?? 0))
-                return false;
-            if (Array.FindIndex(transformArray, x => x == null) >= 0)
                 return false;
 
             if (ucnt != (transformPositions?.Length ?? 0))
