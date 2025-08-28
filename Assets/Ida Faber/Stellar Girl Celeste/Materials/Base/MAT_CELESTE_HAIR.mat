@@ -21,13 +21,18 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MAT_CELESTE_HAIR
-  m_Shader: {fileID: 4800000, guid: 2e018f0c3db4d4b5b8def33ccee4d3dd, type: 3}
+  m_Shader: {fileID: 4800000, guid: c0534d217a6fdef4cbea32b0135a0365, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ALPHACLIP_ON
-  m_InvalidKeywords:
+  - _ADDITIONAL_LIGHTS_ON
   - _ALPHATEST_ON
+  - _GRADIENT_AMBIENT_ON
+  - _MATCAP_ON
+  - _NORMALMAP_ON
+  - _SPECULAR_ON
+  m_InvalidKeywords:
+  - _ALPHACLIP_ON
   - _DETAIL_MULX2
   - _NORMALMAP
   - _OCCLUSIONMAP
@@ -66,8 +71,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _HatchingMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 2f70e81028bb7fc42877f8d337a4a51b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatcapMap:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -113,24 +126,34 @@ Material:
     m_Ints: []
     m_Floats:
     - _AddPrecomputedVelocity: 0
+    - _AdditionalLightInfluence: 1
     - _AlphaClip: 1
     - _AlphaClipMode: 1
     - _AlphaToMask: 1
+    - _AmbientGradientPower: 2.33
     - _Anisotropy: 0.484
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BumpScale: 1
+    - _BumpScale: 0.5
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 0
     - _CullMode: 0
-    - _Cutoff: 0.15
+    - _Cutoff: 0.1
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _Distortion: 1.19
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EmissionMode: 0
+    - _EnableAdditionalLights: 1
+    - _EnableAlphaClip: 1
+    - _EnableGradientAmbient: 1
+    - _EnableHatching: 0
+    - _EnableMatcap: 1
+    - _EnableNormalMap: 1
+    - _EnableRimLight: 0
+    - _EnableSpecular: 1
     - _EnvironmentReflections: 1
     - _FakeLightMode: 0
     - _Fresnel: 1.7
@@ -146,7 +169,11 @@ Material:
     - _GlossMapScale: 0.694
     - _Glossiness: 0.409
     - _GlossyReflections: 1
-    - _HighlightThreshold: 1
+    - _HatchingTiling: 1
+    - _HatchingVisibility: 1
+    - _HighlightThreshold: 0.801
+    - _MatcapBlendMode: 1
+    - _MatcapIntensity: 5
     - _Metallic: 0
     - _MetallicHotSpotThreshold: 0.95
     - _MetallicRampSmoothness: 0.05
@@ -158,22 +185,27 @@ Material:
     - _Parallax: 0.0066
     - _Power: 0.65
     - _QueueOffset: 0
-    - _RampSmoothness: 0.2
+    - _RampSmoothness: 0.001
     - _ReceiveShadows: 1
     - _RimPower: 6
+    - _RimThreshold: 0.5
     - _SSSConcentration: 0
     - _SSSScale: 0
     - _Scale: 1.2
-    - _ShadowThreshold: 0.5
+    - _ShadowThreshold: 0.298
+    - _ShadowTintInfluence: 0
     - _Smoothness: 0.409
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpecularSmoothness: 0.001
+    - _SpecularThreshold: 0.848
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _SurfaceType: 0
     - _TranslucencyStrength: 1
     - _UVSec: 0
+    - _UseFakeLight: 0
     - _WindAmplitude: 0.1
     - _WindFrequency: 2
     - _WorkflowMode: 1
@@ -183,21 +215,26 @@ Material:
     - _AmbientColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
     - _BaseColor: {r: 0.1509434, g: 0.1509434, b: 0.1509434, a: 1}
     - _Color: {r: 0.16037735, g: 0.08962204, b: 0.07943217, a: 1}
+    - _CustomShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FakeLightColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
     - _FakeLightDirection: {r: 0.5, g: 0.5, b: -0.5, a: 0}
     - _FresnelOutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _GlintColor: {r: 1, g: 1, b: 0.5, a: 1}
+    - _GroundColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
     - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MatcapTint: {r: 0.14675045, g: 0, b: 0.26415092, a: 1}
     - _MetallicBaseColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
     - _MetallicHotSpotColor: {r: 1.5, g: 1.5, b: 1.5, a: 1}
     - _MetallicReflectionColor: {r: 0.5, g: 0.45, b: 0.4, a: 1}
     - _MetallicSpecularColor: {r: 0.9, g: 0.7, b: 0.5, a: 1}
-    - _MidtoneColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 1}
+    - _MidtoneColor: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
     - _RimColor: {r: 1, g: 0.3, b: 0.3, a: 1}
     - _SSSColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ShadowColor: {r: 0.11320752, g: 0.11320752, b: 0.11320752, a: 1}
+    - _SkyColor: {r: 1, g: 1, b: 1, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _SpecularColor: {r: 0, g: 0, b: 0, a: 1}
     - _TranslucencyColor: {r: 0.7, g: 0.9, b: 0.3, a: 1}
     - _WindDirection: {r: 1, g: 0, b: 0.5, a: 0}
   m_BuildTextureStacks: []
