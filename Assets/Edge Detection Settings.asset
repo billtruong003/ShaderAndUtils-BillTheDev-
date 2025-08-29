@@ -16,11 +16,11 @@ MonoBehaviour:
   showInSceneView: 1
   debugView: 0
   debugSectionsRaw: 0
-  discontinuityInput: -1
+  discontinuityInput: 3
   depthSensitivity: 1
   depthDistanceModulation: 1
-  grazingAngleMaskPower: 0
-  grazingAngleMaskHardness: 1
+  grazingAngleMaskPower: 1
+  grazingAngleMaskHardness: 30
   normalSensitivity: 0.5
   luminanceSensitivity: 0
   objectId: 1
@@ -33,12 +33,12 @@ MonoBehaviour:
   kernel: 0
   outlineThickness: 1
   scaleWithResolution: 1
-  referenceResolution: 2
+  referenceResolution: 3
   customResolution: 2048
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}
-  outlineColor: {r: 0, g: 0, b: 0, a: 1}
-  overrideColorInShadow: 0
-  outlineColorShadow: {r: 1, g: 1, b: 1, a: 1}
+  outlineColor: {r: 0.011764706, g: 0.011764706, b: 0.011764706, a: 1}
+  overrideColorInShadow: 1
+  outlineColorShadow: {r: 0, g: 0, b: 0, a: 1}
   fillColor: {r: 0, g: 0, b: 0, a: 1}
   fadeByDistance: 0
   distanceFadeColor: {r: 0, g: 0, b: 0, a: 0}
