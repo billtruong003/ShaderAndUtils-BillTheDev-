@@ -21,7 +21,7 @@ MonoBehaviour:
   depthDistanceModulation: 1
   grazingAngleMaskPower: 0
   grazingAngleMaskHardness: 1
-  normalSensitivity: 0.565
+  normalSensitivity: 0.5
   luminanceSensitivity: 1
   objectId: 1
   particles: 0
@@ -33,12 +33,12 @@ MonoBehaviour:
   kernel: 0
   outlineThickness: 1
   scaleWithResolution: 1
-  referenceResolution: 2
+  referenceResolution: 3
   customResolution: 2048
   backgroundColor: {r: 0, g: 0, b: 0, a: 0}
-  outlineColor: {r: 0, g: 0, b: 0, a: 1}
-  overrideColorInShadow: 1
-  outlineColorShadow: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  overrideColorInShadow: 0
+  outlineColorShadow: {r: 0.3679245, g: 0.07108401, b: 0, a: 1}
   fillColor: {r: 0, g: 0, b: 0, a: 1}
   fadeByDistance: 1
   distanceFadeColor: {r: 0, g: 0, b: 0, a: 0}
@@ -54,7 +54,7 @@ MonoBehaviour:
   additionalSectionPasses:
   - RenderingLayer:
       serializedVersion: 0
-      m_Bits: 0
+      m_Bits: 4294967295
     customSectionMaterial: {fileID: 2100000, guid: 535a323f61c9baf42a56192700355f77, type: 2}
   SectionRenderingLayer:
     serializedVersion: 0
@@ -62,7 +62,7 @@ MonoBehaviour:
   SectionMaskRenderingLayer:
     serializedVersion: 0
     m_Bits: 4294967295
-  maskInfluence: 1
+  maskInfluence: 0
   showSectionMapSection: 1
   showDiscontinuitySection: 1
   showOutlineSection: 1

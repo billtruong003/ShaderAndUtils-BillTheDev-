@@ -3,14 +3,16 @@ Shader "Toon/Lit Studio Advanced"
     Properties
     {
         [Header(Surface Properties)]
+        [Enum(Opaque, 0, Cutout, 1, Transparent, 2)] _SurfaceType("Surface Type", Float) = 0
+        _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         _BaseMap("Base Map (Albedo)", 2D) = "white" {}
         [Toggle(_NORMALMAP_ON)] _EnableNormalMap("Enable Normal Map", Float) = 0
         [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
         _BumpScale("Normal Intensity", Range(0, 2)) = 1.0
-        [Toggle(_ALPHATEST_ON)] _EnableAlphaClip("Enable Alpha Clipping", Float) = 0
-        _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
-
+        
         [Header(Main Shading Ramp)]
+        [Toggle(_RAMP_TEXTURE_ON)] _EnableRampTexture("Use Ramp Texture", Float) = 0
+        _RampMap("Ramp Texture", 2D) = "white" {}
         _HighlightColor("Highlight Color", Color) = (1,1,1,1)
         _MidtoneColor("Midtone Color", Color) = (0.8, 0.8, 0.8, 1)
         _ShadowColor("Shadow Color", Color) = (0.4, 0.4, 0.4, 1)
@@ -43,7 +45,7 @@ Shader "Toon/Lit Studio Advanced"
         [Space(10)]
         [Toggle(_MATCAP_ON)] _EnableMatcap("Enable MatCap", Float) = 0
         _MatcapMap("MatCap Map", 2D) = "gray" {}
-        _MatcapBlendMode("MatCap Blend Mode", Float) = 0.0 // 0: Add, 1: Multiply, 2: Lerp
+        [Enum(Add, 0, Multiply, 1, Lerp, 2)] _MatcapBlendMode("MatCap Blend Mode", Float) = 0.0
         _MatcapTint("MatCap Tint", Color) = (1,1,1,1)
         _MatcapIntensity("MatCap Intensity", Range(0, 5)) = 1.0
 
@@ -57,10 +59,14 @@ Shader "Toon/Lit Studio Advanced"
         _RimColor("Rim Color", Color) = (1,1,1,1)
         _RimPower("Rim Power", Range(1, 10)) = 3.0
         _RimThreshold("Rim Threshold", Range(0, 1)) = 0.5
+        
+        [HideInInspector] _SrcBlend ("SrcBlend", Float) = 1.0
+        [HideInInspector] _DstBlend ("DstBlend", Float) = 0.0
+        [HideInInspector] _ZWrite ("ZWrite", Float) = 1.0
     }
     SubShader
     {
-        Tags { "RenderType"="TransparentCutout" "RenderPipeline"="UniversalPipeline" "Queue"="AlphaTest" }
+        Tags { "RenderPipeline"="UniversalPipeline" }
 
         HLSLINCLUDE
             #include "Assets\Shaders\Toon\URPToonPC\Includes\ToonLitStudioCore.hlsl"
@@ -70,7 +76,10 @@ Shader "Toon/Lit Studio Advanced"
         {
             Name "ForwardLit"
             Tags { "LightMode"="UniversalForward" }
-            Cull Off // Tắt Cull để render 2 mặt, hữu ích cho tóc
+            
+            Blend [_SrcBlend] [_DstBlend]
+            ZWrite [_ZWrite]
+            Cull Off
 
             HLSLPROGRAM
             #pragma vertex MainVert
@@ -85,6 +94,9 @@ Shader "Toon/Lit Studio Advanced"
             #pragma shader_feature_local_fragment _MATCAP_ON
             #pragma shader_feature_local_fragment _SPECULAR_ON
             #pragma shader_feature_local_fragment _RIM_LIGHT_ON
+            #pragma shader_feature_local_fragment _RAMP_TEXTURE_ON
+            
+            #pragma multi_compile_local_fragment _MATCAP_BLEND_ADD _MATCAP_BLEND_MULTIPLY _MATCAP_BLEND_LERP
 
             half4 Frag(Varyings input) : SV_TARGET
             {
@@ -145,9 +157,13 @@ Shader "Toon/Lit Studio Advanced"
                     float3 viewNormal = mul((float3x3)UNITY_MATRIX_V, normalWS);
                     float2 matcapUV = viewNormal.xy * 0.5 + 0.5;
                     half3 matcapColor = tex2D(_MatcapMap, matcapUV).rgb * _MatcapTint.rgb * _MatcapIntensity;
-                    if (_MatcapBlendMode < 0.5) finalColor += matcapColor;
-                    else if (_MatcapBlendMode < 1.5) finalColor *= matcapColor;
-                    else finalColor = lerp(finalColor, matcapColor, _MatcapTint.a);
+                    #if defined(_MATCAP_BLEND_ADD)
+                        finalColor += matcapColor;
+                    #elif defined(_MATCAP_BLEND_MULTIPLY)
+                        finalColor *= matcapColor;
+                    #elif defined(_MATCAP_BLEND_LERP)
+                        finalColor = lerp(finalColor, matcapColor, _MatcapTint.a);
+                    #endif
                 #endif
 
                 #if _RIM_LIGHT_ON
@@ -184,7 +200,8 @@ Shader "Toon/Lit Studio Advanced"
             {
                 ApplyAlphaClip(i.uv);
                 half3 normalWS = GetWorldNormal(i);
-                return float4(normalWS * 0.5 + 0.5, 1.0);
+                float3 packedNormal = PackNormal(normalWS, 0.5);
+                return float4(packedNormal, 0);
             }
             ENDHLSL
         }

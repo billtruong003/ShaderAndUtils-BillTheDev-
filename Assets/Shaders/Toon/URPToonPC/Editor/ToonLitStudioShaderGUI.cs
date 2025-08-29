@@ -6,6 +6,7 @@ public class ToonLitStudioShaderGUI : ShaderGUI
 {
     private MaterialEditor editor;
     private MaterialProperty[] properties;
+    private Material targetMat;
 
     private bool showSurfaceProps = true;
     private bool showMainRamp = true;
@@ -16,6 +17,7 @@ public class ToonLitStudioShaderGUI : ShaderGUI
     private GUIStyle headerStyle;
     private GUIStyle sectionStyle;
 
+    private enum SurfaceType { Opaque, Cutout, Transparent }
     private enum MatcapBlendMode { Add, Multiply, Lerp }
 
     private void InitializeStyles()
@@ -45,6 +47,7 @@ public class ToonLitStudioShaderGUI : ShaderGUI
     {
         this.editor = materialEditor;
         this.properties = properties;
+        this.targetMat = materialEditor.target as Material;
         InitializeStyles();
 
         DrawHeader("TOON LIT SHADER - STUDIO ADVANCED");
@@ -77,11 +80,64 @@ public class ToonLitStudioShaderGUI : ShaderGUI
 
     private MaterialProperty FindProp(string name) => FindProperty(name, properties);
 
+    private void SetKeyword(string keyword, bool enabled)
+    {
+        if (enabled) targetMat.EnableKeyword(keyword);
+        else targetMat.DisableKeyword(keyword);
+    }
+
+    private void SetupMaterialWithSurfaceType(SurfaceType surfaceType)
+    {
+        switch (surfaceType)
+        {
+            case SurfaceType.Opaque:
+                targetMat.SetOverrideTag("RenderType", "Opaque");
+                targetMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry;
+                targetMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                targetMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                targetMat.SetInt("_ZWrite", 1);
+                SetKeyword("_ALPHATEST_ON", false);
+                break;
+            case SurfaceType.Cutout:
+                targetMat.SetOverrideTag("RenderType", "TransparentCutout");
+                targetMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
+                targetMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                targetMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                targetMat.SetInt("_ZWrite", 1);
+                SetKeyword("_ALPHATEST_ON", true);
+                break;
+            case SurfaceType.Transparent:
+                targetMat.SetOverrideTag("RenderType", "Transparent");
+                targetMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                targetMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                targetMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                targetMat.SetInt("_ZWrite", 0);
+                SetKeyword("_ALPHATEST_ON", false);
+                break;
+        }
+    }
+
     private void DrawSurfacePropertiesSection()
     {
         DrawSectionToggle("Surface Properties", ref showSurfaceProps);
         if (showSurfaceProps)
         {
+            EditorGUILayout.Space();
+
+            var surfaceTypeProp = FindProp("_SurfaceType");
+            EditorGUI.BeginChangeCheck();
+            var newSurfaceType = (SurfaceType)EditorGUILayout.EnumPopup("Surface Type", (SurfaceType)surfaceTypeProp.floatValue);
+            if (EditorGUI.EndChangeCheck())
+            {
+                surfaceTypeProp.floatValue = (float)newSurfaceType;
+                SetupMaterialWithSurfaceType(newSurfaceType);
+            }
+
+            if ((SurfaceType)surfaceTypeProp.floatValue == SurfaceType.Cutout)
+            {
+                editor.ShaderProperty(FindProp("_Cutoff"), "Alpha Cutoff");
+            }
+
             EditorGUILayout.Space();
             editor.TexturePropertySingleLine(new GUIContent("Base Map (Albedo)"), FindProp("_BaseMap"));
 
@@ -91,15 +147,6 @@ public class ToonLitStudioShaderGUI : ShaderGUI
                 EditorGUI.indentLevel++;
                 editor.TexturePropertySingleLine(new GUIContent("Normal Map"), FindProp("_BumpMap"));
                 editor.ShaderProperty(FindProp("_BumpScale"), "Normal Intensity");
-                EditorGUI.indentLevel--;
-            }
-
-            EditorGUILayout.Space();
-            editor.ShaderProperty(FindProp("_EnableAlphaClip"), "Enable Alpha Clipping");
-            if (FindProp("_EnableAlphaClip").floatValue > 0.5f)
-            {
-                EditorGUI.indentLevel++;
-                editor.ShaderProperty(FindProp("_Cutoff"), "Alpha Cutoff");
                 EditorGUI.indentLevel--;
             }
             EditorGUILayout.Space();
@@ -112,30 +159,32 @@ public class ToonLitStudioShaderGUI : ShaderGUI
         if (showMainRamp)
         {
             EditorGUILayout.Space();
-            editor.ColorProperty(FindProp("_HighlightColor"), "Highlight Color");
-            editor.ColorProperty(FindProp("_MidtoneColor"), "Midtone Color");
-            editor.ColorProperty(FindProp("_ShadowColor"), "Shadow Color");
-            EditorGUILayout.Space();
+            editor.ShaderProperty(FindProp("_EnableRampTexture"), "Use Ramp Texture");
 
-            MaterialProperty shadowProp = FindProp("_ShadowThreshold");
-            MaterialProperty highlightProp = FindProp("_HighlightThreshold");
-
-            float oldShadowVal = shadowProp.floatValue;
-            float oldHighlightVal = highlightProp.floatValue;
-
-            editor.ShaderProperty(shadowProp, "Shadow Threshold");
-            editor.ShaderProperty(highlightProp, "Highlight Threshold");
-
-            if (shadowProp.floatValue != oldShadowVal && shadowProp.floatValue > highlightProp.floatValue)
+            if (FindProp("_EnableRampTexture").floatValue > 0.5f)
             {
-                highlightProp.floatValue = shadowProp.floatValue;
+                editor.TexturePropertySingleLine(new GUIContent("Ramp Texture"), FindProp("_RampMap"));
             }
-            if (highlightProp.floatValue != oldHighlightVal && highlightProp.floatValue < shadowProp.floatValue)
+            else
             {
-                shadowProp.floatValue = highlightProp.floatValue;
-            }
+                editor.ColorProperty(FindProp("_HighlightColor"), "Highlight Color");
+                editor.ColorProperty(FindProp("_MidtoneColor"), "Midtone Color");
+                editor.ColorProperty(FindProp("_ShadowColor"), "Shadow Color");
+                EditorGUILayout.Space();
 
-            editor.ShaderProperty(FindProp("_RampSmoothness"), "Ramp Smoothness");
+                MaterialProperty shadowProp = FindProp("_ShadowThreshold");
+                MaterialProperty highlightProp = FindProp("_HighlightThreshold");
+
+                EditorGUI.BeginChangeCheck();
+                editor.ShaderProperty(shadowProp, "Shadow Threshold");
+                editor.ShaderProperty(highlightProp, "Highlight Threshold");
+                if (EditorGUI.EndChangeCheck())
+                {
+                    highlightProp.floatValue = Mathf.Max(shadowProp.floatValue, highlightProp.floatValue);
+                }
+
+                editor.ShaderProperty(FindProp("_RampSmoothness"), "Ramp Smoothness");
+            }
             EditorGUILayout.Space();
         }
     }
@@ -203,10 +252,14 @@ public class ToonLitStudioShaderGUI : ShaderGUI
                 editor.TexturePropertySingleLine(new GUIContent("MatCap Map"), FindProp("_MatcapMap"));
 
                 var blendModeProp = FindProp("_MatcapBlendMode");
+                EditorGUI.BeginChangeCheck();
                 var newMode = (MatcapBlendMode)EditorGUILayout.EnumPopup("Blend Mode", (MatcapBlendMode)blendModeProp.floatValue);
-                if ((float)newMode != blendModeProp.floatValue)
+                if (EditorGUI.EndChangeCheck())
                 {
                     blendModeProp.floatValue = (float)newMode;
+                    SetKeyword("_MATCAP_BLEND_ADD", newMode == MatcapBlendMode.Add);
+                    SetKeyword("_MATCAP_BLEND_MULTIPLY", newMode == MatcapBlendMode.Multiply);
+                    SetKeyword("_MATCAP_BLEND_LERP", newMode == MatcapBlendMode.Lerp);
                 }
 
                 editor.ShaderProperty(FindProp("_MatcapTint"), new GUIContent("Tint & Lerp Alpha"));

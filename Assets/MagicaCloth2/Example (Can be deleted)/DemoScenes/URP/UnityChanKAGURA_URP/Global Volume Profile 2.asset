@@ -179,7 +179,7 @@ MonoBehaviour:
     m_Value: 0
   brightness:
     m_OverrideState: 1
-    m_Value: 1.07
+    m_Value: 1
   contrast:
     m_OverrideState: 1
     m_Value: 1
@@ -193,39 +193,39 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 0}
   colorTempBlend:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0.585
   colorTemp:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 8842
   lut:
     m_OverrideState: 0
     m_Value: 0
   lutIntensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   lutTexture:
     m_OverrideState: 0
     m_Value: {fileID: 0}
     dimension: 1
   bloomIntensity:
-    m_OverrideState: 0
-    m_Value: 0.21
+    m_OverrideState: 1
+    m_Value: 0.03
   bloomThreshold:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
   bloomConservativeThreshold:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   bloomSpread:
-    m_OverrideState: 0
-    m_Value: 0.043
+    m_OverrideState: 1
+    m_Value: 0.527
   bloomMaxBrightness:
-    m_OverrideState: 0
-    m_Value: 1001.06
+    m_OverrideState: 1
+    m_Value: 1000
   bloomTint:
     m_OverrideState: 0
-    m_Value: {r: 0.5, g: 0.5, b: 1, a: 0}
+    m_Value: {r: 1, g: 1, b: 1, a: 0}
   bloomDepthAtten:
     m_OverrideState: 0
     m_Value: 0.3
@@ -247,11 +247,11 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   bloomResolution:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 1
   bloomQuickerBlur:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 1
   bloomCustomize:
     m_OverrideState: 0
     m_Value: 0

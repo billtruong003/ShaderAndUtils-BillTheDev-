@@ -63930,7 +63930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97513fd4e5cdd41638df1a617fd93403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _baseInstancedMaterial: {fileID: 2100000, guid: 7c853c75da14be7469d76ee32fcdcd7e, type: 2}
+  _baseInstancedMaterial: {fileID: 2100000, guid: 8da10f561d883471ebdaf718d0043b66, type: 2}
   _cullingComputeShader: {fileID: 7200000, guid: 871f9900978bcf04393872f60e2c1378, type: 3}
   _agentTypes:
   - agentPrefab: {fileID: 416878318}
@@ -63961,10 +63961,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4edb6366ec627492baa6360b27c74822, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetFrame: 240
   _updateMode: 1
   _simulationMode: 0
   _coroutineUpdateInterval: 0.1
-  _initialAgentCount: 1000
+  _initialAgentCount: 11270
   _instanceManager: {fileID: 1323459556}
   _spawnBounds: {x: 1000, y: 0, z: 1000}
   _walkSpeed: 2

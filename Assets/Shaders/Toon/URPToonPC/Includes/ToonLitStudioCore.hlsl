@@ -3,7 +3,6 @@
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
-// --- STRUCTS ---
 struct Attributes
 {
     float4 positionOS   : POSITION;
@@ -23,38 +22,29 @@ struct Varyings
     float3 bitangentWS  : TEXCOORD5;
 };
 
-// --- PROPERTIES BUFFER ---
 CBUFFER_START(UnityPerMaterial)
-    // Surface
     sampler2D _BaseMap; float4 _BaseMap_ST;
     sampler2D _BumpMap; float4 _BumpMap_ST;
     half _BumpScale;
     half _Cutoff;
 
-    // Main Ramp
     half4 _HighlightColor, _MidtoneColor, _ShadowColor;
     half _HighlightThreshold, _ShadowThreshold, _RampSmoothness;
+    sampler2D _RampMap;
 
-    // Lighting
     half4 _FakeLightDirection;
     half4 _CustomShadowColor; half _ShadowTintInfluence;
     
-    // Ambient
     half4 _SkyColor, _GroundColor; half _AmbientGradientPower;
     
-    // Additional Lights
     half _AdditionalLightInfluence;
 
-    // Artistic
     sampler2D _HatchingMap; half _HatchingTiling; half _HatchingVisibility;
     sampler2D _MatcapMap; half _MatcapBlendMode; half4 _MatcapTint; half _MatcapIntensity;
     
-    // Surface Effects
     half4 _SpecularColor; half _SpecularThreshold, _SpecularSmoothness;
     half4 _RimColor; half _RimPower, _RimThreshold;
 CBUFFER_END
-
-// --- HELPER FUNCTIONS ---
 
 void ApplyAlphaClip(float2 uv)
 {
@@ -78,11 +68,16 @@ half3 GetWorldNormal(Varyings input)
 
 half3 CalculateToonRamp(half NdotL, half3 lightColor)
 {
-    half smoothness = _RampSmoothness * 0.5;
-    half highlightFactor = smoothstep(_HighlightThreshold - smoothness, _HighlightThreshold + smoothness, NdotL);
-    half shadowFactor = smoothstep(_ShadowThreshold - smoothness, _ShadowThreshold + smoothness, NdotL);
-    half3 rampColor = lerp(_ShadowColor.rgb, _MidtoneColor.rgb, shadowFactor);
-    rampColor = lerp(rampColor, _HighlightColor.rgb, highlightFactor);
+    #if _RAMP_TEXTURE_ON
+        half3 rampColor = tex2D(_RampMap, float2(NdotL, 0.5)).rgb;
+    #else
+        half smoothness = _RampSmoothness * 0.5;
+        half highlightFactor = smoothstep(_HighlightThreshold - smoothness, _HighlightThreshold + smoothness, NdotL);
+        half shadowFactor = smoothstep(_ShadowThreshold - smoothness, _ShadowThreshold + smoothness, NdotL);
+        half3 rampColor = lerp(_ShadowColor.rgb, _MidtoneColor.rgb, shadowFactor);
+        rampColor = lerp(rampColor, _HighlightColor.rgb, highlightFactor);
+    #endif
+    
     return rampColor * lightColor;
 }
 

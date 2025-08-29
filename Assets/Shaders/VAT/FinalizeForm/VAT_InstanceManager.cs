@@ -122,7 +122,7 @@ namespace OptimizeVariousVAT
 
                 visibleAgentDataOutputBuffer.SetCounterValue(0);
 
-                cullingShader.SetBuffer(_cullingKernel, "_AllAgentDataSource", allAgentDataSourceBuffer);
+                cullingShader.SetBuffer(_cullingKernel, "", allAgentDataSourceBuffer);
                 cullingShader.SetBuffer(_cullingKernel, "_AllAgentRotationSource", allAgentRotationSourceBuffer);
                 cullingShader.SetBuffer(_cullingKernel, "_AllAgentAnimationSource", allAgentAnimationSourceBuffer);
                 cullingShader.SetBuffer(_cullingKernel, "_VisibleAgentDataOutput", visibleAgentDataOutputBuffer);
