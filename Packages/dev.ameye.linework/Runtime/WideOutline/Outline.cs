@@ -15,7 +15,7 @@ namespace Linework.WideOutline
         [SerializeField, HideInInspector] private bool isActive = true;
         [SerializeField, HideInInspector] private bool customDepthEnabled = true;
         [SerializeField, HideInInspector] private bool disableWidthControl = true;
-
+        
 #if UNITY_6000_0_OR_NEWER
         public RenderingLayerMask RenderingLayer = RenderingLayerMask.defaultRenderingLayerMask;
 #else
@@ -33,10 +33,10 @@ namespace Linework.WideOutline
         public Vector4 alphaCutoutUVTransform = Vector4.zero;
         public bool gpuInstancing;
         public bool vertexAnimation;
-
+        
         [ColorUsage(true, true)] public Color color = Color.green;
         [Range(0.0f, 100.0f)] public float width = 20.0f;
-
+        
         private void OnEnable()
         {
             EnsureMaterialsAreInitialized();
@@ -55,7 +55,7 @@ namespace Linework.WideOutline
                     };
                 }
             }
-
+            
             if (silhouetteMaterialInstanced == null)
             {
                 var shader = Shader.Find(ShaderPath.SilhouetteInstanced);
@@ -68,7 +68,7 @@ namespace Linework.WideOutline
                     };
                 }
             }
-
+            
             if (informationMaterial == null)
             {
                 var shader = Shader.Find(ShaderPath.Silhouette);
@@ -80,7 +80,7 @@ namespace Linework.WideOutline
                     };
                 }
             }
-
+            
             if (informationMaterialInstanced == null)
             {
                 var shader = Shader.Find(ShaderPath.SilhouetteInstanced);
@@ -98,7 +98,7 @@ namespace Linework.WideOutline
         public void AssignMaterials(Material source, Material sourceInstanced)
         {
             EnsureMaterialsAreInitialized();
-
+            
             silhouetteMaterial.CopyPropertiesFromMaterial(source);
             silhouetteMaterialInstanced.CopyPropertiesFromMaterial(sourceInstanced);
             silhouetteMaterialInstanced.enableInstancing = gpuInstancing;
@@ -106,7 +106,7 @@ namespace Linework.WideOutline
             informationMaterialInstanced.CopyPropertiesFromMaterial(sourceInstanced);
             informationMaterialInstanced.enableInstancing = gpuInstancing;
         }
-
+        
         public bool IsActive()
         {
             return isActive;
@@ -126,7 +126,7 @@ namespace Linework.WideOutline
         {
             disableWidthControl = control == WidthControl.Shared;
         }
-
+        
         public void Cleanup()
         {
             if (silhouetteMaterial != null)
@@ -134,19 +134,19 @@ namespace Linework.WideOutline
                 DestroyImmediate(silhouetteMaterial);
                 silhouetteMaterial = null;
             }
-
+            
             if (silhouetteMaterialInstanced != null)
             {
                 DestroyImmediate(silhouetteMaterialInstanced);
                 silhouetteMaterialInstanced = null;
             }
-
+            
             if (informationMaterial != null)
             {
                 DestroyImmediate(informationMaterial);
                 informationMaterial = null;
             }
-
+            
             if (informationMaterialInstanced != null)
             {
                 DestroyImmediate(informationMaterialInstanced);
