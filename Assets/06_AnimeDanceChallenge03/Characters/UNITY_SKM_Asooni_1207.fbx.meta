@@ -1,0 +1,950 @@
+fileFormatVersion: 2
+guid: 37c513c4939e4f24c96a012144bbae04
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bini.001
+    second: {fileID: 2100000, guid: 432f6cf5025b1c84ab2a851b63036685, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Body.001
+    second: {fileID: 2100000, guid: e3c418eb4dcc3ca4a993d653594db8d3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Eearing
+    second: {fileID: 2100000, guid: 58cdfdb8098705a4e839ef913a7472c2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hair
+    second: {fileID: 2100000, guid: 6ececfc435ea81842a756ae4c882e2d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hair_pin.002
+    second: {fileID: 2100000, guid: 2f194afea0bda5b47990840c7d4200e8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hair_pin.003
+    second: {fileID: 2100000, guid: fa934b8593a48974497530e4f705350f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: f104102652b95294998c1ca5db0652bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Nail
+    second: {fileID: 2100000, guid: 12fc8ef88310dd345a3d230010a435f6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Shoes_body.002
+    second: {fileID: 2100000, guid: 17f08844fd0af464c929f533529105bf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Shoes_deco.002
+    second: {fileID: 2100000, guid: 945e1b02d30b4e948a1ddc1a783d3973, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Shoes_strap.002
+    second: {fileID: 2100000, guid: 1f412eb1925dca1418b494c21b07a96b, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human:
+    - boneName: ACHID:Hips
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftUpLeg
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightUpLeg
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftLeg
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightLeg
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftFoot
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightFoot
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:Spine
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:Spine1
+      humanName: Chest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:Neck
+      humanName: Neck
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:Head
+      humanName: Head
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftShoulder
+      humanName: LeftShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightShoulder
+      humanName: RightShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftArm
+      humanName: LeftUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightArm
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftForeArm
+      humanName: LeftLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightForeArm
+      humanName: RightLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHand
+      humanName: LeftHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHand
+      humanName: RightHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftToeBase
+      humanName: LeftToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightToeBase
+      humanName: RightToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandThumb1
+      humanName: Left Thumb Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandThumb2
+      humanName: Left Thumb Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandThumb3
+      humanName: Left Thumb Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandIndex1
+      humanName: Left Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandIndex2
+      humanName: Left Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandIndex3
+      humanName: Left Index Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandMiddle1
+      humanName: Left Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandMiddle2
+      humanName: Left Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandMiddle3
+      humanName: Left Middle Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandRing1
+      humanName: Left Ring Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandRing2
+      humanName: Left Ring Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandRing3
+      humanName: Left Ring Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandPinky1
+      humanName: Left Little Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandPinky2
+      humanName: Left Little Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:LeftHandPinky3
+      humanName: Left Little Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandThumb1
+      humanName: Right Thumb Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandThumb2
+      humanName: Right Thumb Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandThumb3
+      humanName: Right Thumb Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandIndex1
+      humanName: Right Index Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandIndex2
+      humanName: Right Index Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandIndex3
+      humanName: Right Index Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandMiddle1
+      humanName: Right Middle Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandMiddle2
+      humanName: Right Middle Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandMiddle3
+      humanName: Right Middle Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandRing1
+      humanName: Right Ring Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandRing2
+      humanName: Right Ring Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandRing3
+      humanName: Right Ring Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandPinky1
+      humanName: Right Little Proximal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandPinky2
+      humanName: Right Little Intermediate
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:RightHandPinky3
+      humanName: Right Little Distal
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: ACHID:Spine2
+      humanName: UpperChest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: UNITY_SKM_Asooni_1207(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Armature
+      parentName: UNITY_SKM_Asooni_1207(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.000000081460335, y: 0, z: -0, w: 1}
+      scale: {x: 0.01, y: 0.01, z: 0.01}
+    - name: ACHID:Hips
+      parentName: Armature
+      position: {x: 0.000116176976, y: 104.78107, z: 0.15034771}
+      rotation: {x: -0.00000008935333, y: 0.00000047469786, z: -0.000015025533, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ACHID:Spine
+      parentName: ACHID:Hips
+      position: {x: 9.129053e-11, y: 9.015533, z: -0.9665142}
+      rotation: {x: -0.05337342, y: -0.0000012759966, z: 0.000014978778, w: 0.9985746}
+      scale: {x: 1, y: 0.9999999, z: 0.9999999}
+    - name: ACHID:Spine1
+      parentName: ACHID:Spine
+      position: {x: 1.9699298e-11, y: 10.578397, z: 0.0000010728836}
+      rotation: {x: 0.000000022351736, y: -1.1510164e-13, z: 6.7369005e-13, w: 1}
+      scale: {x: 1, y: 1.0000002, z: 1.0000002}
+    - name: ACHID:Spine2
+      parentName: ACHID:Spine1
+      position: {x: 8.4492205e-12, y: 12.0895815, z: -0.0000021457672}
+      rotation: {x: -0.000000007450583, y: 1.2536085e-19, z: -2.7105064e-20, w: 1}
+      scale: {x: 1, y: 0.9999997, z: 0.9999997}
+    - name: ACHID:Neck
+      parentName: ACHID:Spine2
+      position: {x: -3.1106374e-11, y: 13.600771, z: 0.0000019073486}
+      rotation: {x: 0.053373497, y: 3.043583e-14, z: 2.2932497e-13, w: 0.9985746}
+      scale: {x: 1, y: 1.0000005, z: 1.0000002}
+    - name: ACHID:Head
+      parentName: ACHID:Neck
+      position: {x: -6.288533e-11, y: 7.6315765, z: 0.89556205}
+      rotation: {x: -0.00000000493507, y: -8.6714755e-19, z: 1.2624926e-20, w: 1}
+      scale: {x: 1, y: 0.99999976, z: 0.9999999}
+    - name: ACHID:HeadTop_End
+      parentName: ACHID:Head
+      position: {x: 4.665624e-11, y: 24.348938, z: 2.857344}
+      rotation: {x: -1.7763568e-15, y: 8.644902e-19, z: 1.7462426e-20, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: ACHID:LeftShoulder
+      parentName: ACHID:Spine2
+      position: {x: -5.185196, y: 12.04937, z: -0.14664602}
+      rotation: {x: 0.55790246, y: -0.4298766, z: 0.5735904, w: 0.4182643}
+      scale: {x: 1, y: 0.99999964, z: 1.0000004}
+    - name: ACHID:LeftArm
+      parentName: ACHID:LeftShoulder
+      position: {x: -0.0000005066395, y: 10.842566, z: -0.00000011920929}
+      rotation: {x: -0.14164478, y: 0.00007275379, z: -0.01395179, w: 0.9898192}
+      scale: {x: 0.99999994, y: 1.0000001, z: 0.9999999}
+    - name: ACHID:LeftForeArm
+      parentName: ACHID:LeftArm
+      position: {x: 0.000001952947, y: 27.11761, z: -0.000015410624}
+      rotation: {x: -0.0000010178047, y: 0.00018205127, z: -0.000000042473822, w: 1}
+      scale: {x: 0.9999998, y: 0.99999976, z: 0.9999997}
+    - name: ACHID:LeftHand
+      parentName: ACHID:LeftForeArm
+      position: {x: 0.000002043751, y: 26.115028, z: -0.000004390982}
+      rotation: {x: -0.006625105, y: -0.05630861, z: 0.05685647, w: 0.9967712}
+      scale: {x: 1.0000002, y: 0.9999998, z: 0.9999999}
+    - name: ACHID:LeftHandThumb1
+      parentName: ACHID:LeftHand
+      position: {x: 2.4824631, y: 2.8240786, z: 1.1343542}
+      rotation: {x: 0.06903929, y: -0.011218953, z: -0.38737625, w: 0.9192646}
+      scale: {x: 1, y: 1.0000001, z: 1.0000002}
+    - name: ACHID:LeftHandThumb2
+      parentName: ACHID:LeftHandThumb1
+      position: {x: 0.100853145, y: 3.1403327, z: -0.000013649464}
+      rotation: {x: 0.00007234784, y: 0.001308475, z: 0.022013685, w: 0.9997568}
+      scale: {x: 1.0000001, y: 0.9999999, z: 1.0000005}
+    - name: ACHID:LeftHandThumb3
+      parentName: ACHID:LeftHandThumb2
+      position: {x: 0.28333426, y: 3.7130916, z: 0.000020980835}
+      rotation: {x: -0.000004783355, y: 0.00017634881, z: -0.09673655, w: 0.99531}
+      scale: {x: 0.9999997, y: 1.0000001, z: 1}
+    - name: ACHID:LeftHandThumb4
+      parentName: ACHID:LeftHandThumb3
+      position: {x: -0.384184, y: 3.2512379, z: 0.000011712313}
+      rotation: {x: -0.000000044703498, y: 0.00000016717243, z: -0.000000013038519, w: 1}
+      scale: {x: 0.9999999, y: 0.99999964, z: 0.99999976}
+    - name: ACHID:LeftHandIndex1
+      parentName: ACHID:LeftHand
+      position: {x: 3.3165154, y: 9.706833, z: -0.038629342}
+      rotation: {x: 0.0034140886, y: 0.00010214815, z: -0.05713964, w: 0.9983604}
+      scale: {x: 0.99999964, y: 1.0000001, z: 1}
+    - name: ACHID:LeftHandIndex2
+      parentName: ACHID:LeftHandIndex1
+      position: {x: 0.00002859602, y: 3.2690978, z: -0.000010380027}
+      rotation: {x: -0.00000033247736, y: -0.000000004510998, z: 0.00000012720605, w: 1}
+      scale: {x: 1.0000002, y: 1.0000002, z: 1.0000002}
+    - name: ACHID:LeftHandIndex3
+      parentName: ACHID:LeftHandIndex2
+      position: {x: 0.000002705132, y: 3.0854716, z: 0.000028417591}
+      rotation: {x: 0.00000015296513, y: 0.00000003250883, z: -0.000000009049307, w: 1}
+      scale: {x: 0.9999998, y: 0.99999964, z: 0.99999976}
+    - name: ACHID:LeftHandIndex4
+      parentName: ACHID:LeftHandIndex3
+      position: {x: -0.00003121895, y: 2.6076667, z: -0.000027175643}
+      rotation: {x: 0.000000035680507, y: -1.4569185e-10, z: -0.000000002986587, w: 1}
+      scale: {x: 1.0000001, y: 1.0000004, z: 1.0000001}
+    - name: ACHID:LeftHandMiddle1
+      parentName: ACHID:LeftHand
+      position: {x: 1.1398067, y: 9.924678, z: 0.06796428}
+      rotation: {x: 0.0033852723, y: -0.000386008, z: -0.057112735, w: 0.99836195}
+      scale: {x: 0.9999997, y: 1, z: 1}
+    - name: ACHID:LeftHandMiddle2
+      parentName: ACHID:LeftHandMiddle1
+      position: {x: 0.00018796138, y: 3.5554068, z: 0.0000056967256}
+      rotation: {x: 0.0000002078976, y: 0.00000050852356, z: -0.000012892282, w: 1}
+      scale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
+    - name: ACHID:LeftHandMiddle3
+      parentName: ACHID:LeftHandMiddle2
+      position: {x: 0.00012391689, y: 3.292577, z: -0.0000022661698}
+      rotation: {x: 0.000001168198, y: -0.0000035655107, z: -0.00006969155, w: 1}
+      scale: {x: 1.0000002, y: 1.0000001, z: 1.0000004}
+    - name: ACHID:LeftHandMiddle4
+      parentName: ACHID:LeftHandMiddle3
+      position: {x: -0.00031332485, y: 2.756332, z: 0.000025132962}
+      rotation: {x: 0.00000011396628, y: -0.000000058891665, z: 4.832592e-10, w: 1}
+      scale: {x: 0.9999999, y: 1, z: 0.9999996}
+    - name: ACHID:LeftHandRing1
+      parentName: ACHID:LeftHand
+      position: {x: -1.1766891, y: 9.989087, z: 0.014263792}
+      rotation: {x: 0.0033918722, y: -0.00026398385, z: -0.05712439, w: 0.9983613}
+      scale: {x: 0.99999976, y: 0.9999998, z: 1.0000001}
+    - name: ACHID:LeftHandRing2
+      parentName: ACHID:LeftHandRing1
+      position: {x: 0.000091995345, y: 3.1325905, z: -0.000002196466}
+      rotation: {x: -0.00000006135819, y: 0.000000045315787, z: -0.000016009199, w: 1}
+      scale: {x: 1, y: 1.0000002, z: 1.0000002}
+    - name: ACHID:LeftHandRing3
+      parentName: ACHID:LeftHandRing2
+      position: {x: 0.000041062878, y: 2.8395228, z: 0.00007444419}
+      rotation: {x: 0.0000004165767, y: -0.0000012662249, z: -0.000021056778, w: 1}
+      scale: {x: 0.99999994, y: 0.9999997, z: 0.99999976}
+    - name: ACHID:LeftHandRing4
+      parentName: ACHID:LeftHandRing3
+      position: {x: -0.000134259, y: 2.3617864, z: -0.0000023007742}
+      rotation: {x: 0.000000009878226, y: 3.5289854e-10, z: -7.177802e-10, w: 1}
+      scale: {x: 1, y: 1.0000001, z: 0.9999999}
+    - name: ACHID:LeftHandPinky1
+      parentName: ACHID:LeftHand
+      position: {x: -3.2796304, y: 9.572668, z: -0.008733541}
+      rotation: {x: 0.0033975132, y: -0.00019219621, z: -0.057179645, w: 0.99835813}
+      scale: {x: 1.0000001, y: 1.0000001, z: 1.0000002}
+    - name: ACHID:LeftHandPinky2
+      parentName: ACHID:LeftHandPinky1
+      position: {x: -0.00024410896, y: 2.5716217, z: 0.0000055168057}
+      rotation: {x: -0.0000003206759, y: -0.00000036778516, z: 0.00003878441, w: 1}
+      scale: {x: 0.9999999, y: 0.99999994, z: 1.0000001}
+    - name: ACHID:LeftHandPinky3
+      parentName: ACHID:LeftHandPinky2
+      position: {x: -0.00002290697, y: 2.2150557, z: 0.00005108965}
+      rotation: {x: -0.0000004965586, y: -0.0000022405623, z: 0.00008060546, w: 1}
+      scale: {x: 1.0000001, y: 1.0000001, z: 0.99999976}
+    - name: ACHID:LeftHandPinky4
+      parentName: ACHID:LeftHandPinky3
+      position: {x: 0.00026751217, y: 1.8623729, z: 0.00001200501}
+      rotation: {x: -3.9049292e-10, y: -0.000000004029501, z: -0.00000012697251, w: 1}
+      scale: {x: 1.0000001, y: 1, z: 1.0000004}
+    - name: ACHID:RightShoulder
+      parentName: ACHID:Spine2
+      position: {x: 5.1851964, y: 12.053539, z: -0.18554068}
+      rotation: {x: -0.55557144, y: -0.43165705, z: 0.57551074, w: -0.41689327}
+      scale: {x: 1.0000004, y: 0.99999994, z: 1.0000004}
+    - name: ACHID:RightArm
+      parentName: ACHID:RightShoulder
+      position: {x: -0.000001013279, y: 10.842571, z: -0.00000029802322}
+      rotation: {x: -0.14119975, y: -0.0010728588, z: 0.017873496, w: 0.98981917}
+      scale: {x: 0.9999995, y: 0.9999998, z: 0.9999996}
+    - name: ACHID:RightForeArm
+      parentName: ACHID:RightArm
+      position: {x: 0.0000011966367, y: 27.116716, z: -0.000017182727}
+      rotation: {x: -0.0000012839015, y: -0.00016212839, z: -0.000000044705303, w: 1}
+      scale: {x: 0.9999997, y: 0.9999996, z: 1}
+    - name: ACHID:RightHand
+      parentName: ACHID:RightForeArm
+      position: {x: -0.00000013049794, y: 26.114414, z: -0.0000023972825}
+      rotation: {x: 0.0018813468, y: 0.061224785, z: -0.06146856, w: 0.9962277}
+      scale: {x: 1, y: 1, z: 0.9999998}
+    - name: ACHID:RightHandThumb1
+      parentName: ACHID:RightHand
+      position: {x: -2.5398207, y: 2.904123, z: 1.1493379}
+      rotation: {x: 0.0628756, y: 0.0047441022, z: 0.37897116, w: 0.9232579}
+      scale: {x: 0.99999976, y: 0.9999996, z: 1}
+    - name: ACHID:RightHandThumb2
+      parentName: ACHID:RightHandThumb1
+      position: {x: -0.18612981, y: 3.2151356, z: 0.000010550022}
+      rotation: {x: 0.00018147385, y: -0.0024559458, z: -0.015508196, w: 0.99987674}
+      scale: {x: 1.0000004, y: 1.0000004, z: 0.99999964}
+    - name: ACHID:RightHandThumb3
+      parentName: ACHID:RightHandThumb2
+      position: {x: -0.32873031, y: 3.690424, z: -0.000010110438}
+      rotation: {x: -0.00011847653, y: -0.0031872455, z: 0.12604572, w: 0.9920193}
+      scale: {x: 1, y: 0.9999999, z: 1.0000002}
+    - name: ACHID:RightHandThumb4
+      parentName: ACHID:RightHandThumb3
+      position: {x: 0.51485825, y: 3.1128259, z: 0.000027269125}
+      rotation: {x: -0.000000007450582, y: 0.000000007450582, z: -0.000000049360107, w: 1}
+      scale: {x: 0.9999999, y: 0.99999976, z: 0.9999998}
+    - name: ACHID:RightHandIndex1
+      parentName: ACHID:RightHand
+      position: {x: -3.2192492, y: 9.662903, z: 0.049875803}
+      rotation: {x: -0.00565371, y: 0.00006601713, z: 0.060699653, w: 0.9981401}
+      scale: {x: 0.9999999, y: 0.9999997, z: 1.0000001}
+    - name: ACHID:RightHandIndex2
+      parentName: ACHID:RightHandIndex1
+      position: {x: -0.0034311637, y: 3.1613681, z: -0.000036837206}
+      rotation: {x: 0.00000006779255, y: -0.000004202151, z: 0.00016711932, w: 1}
+      scale: {x: 1.0000002, y: 1.0000002, z: 0.99999994}
+    - name: ACHID:RightHandIndex3
+      parentName: ACHID:RightHandIndex2
+      position: {x: -0.002277702, y: 3.1021614, z: -0.000013698591}
+      rotation: {x: 0.00000084469974, y: 0.00003190441, z: 0.001435417, w: 0.999999}
+      scale: {x: 0.9999999, y: 0.99999946, z: 0.9999997}
+    - name: ACHID:RightHandIndex4
+      parentName: ACHID:RightHandIndex3
+      position: {x: 0.0057106465, y: 2.6766071, z: 0.000011339202}
+      rotation: {x: 0.000000083596746, y: -0.000000056770794, z: -3.474162e-10, w: 1}
+      scale: {x: 1.0000002, y: 1.0000005, z: 1.0000001}
+    - name: ACHID:RightHandMiddle1
+      parentName: ACHID:RightHand
+      position: {x: -1.1980643, y: 9.726874, z: -0.110541046}
+      rotation: {x: -0.0055944636, y: -0.0008754974, z: 0.06149161, w: 0.9980916}
+      scale: {x: 1.0000002, y: 0.99999964, z: 1.0000001}
+    - name: ACHID:RightHandMiddle2
+      parentName: ACHID:RightHandMiddle1
+      position: {x: 0.0018409044, y: 3.6002312, z: 0.000012165052}
+      rotation: {x: 0.0000004953996, y: 0.0000011029987, z: -0.0005572576, w: 0.9999999}
+      scale: {x: 1.0000001, y: 1.0000004, z: 1}
+    - name: ACHID:RightHandMiddle3
+      parentName: ACHID:RightHandMiddle2
+      position: {x: -0.0020900927, y: 3.4171958, z: 0.00000012869714}
+      rotation: {x: 0.0000011725482, y: -0.000003234956, z: 0.00034049925, w: 0.99999994}
+      scale: {x: 0.9999999, y: 0.9999997, z: 0.99999994}
+    - name: ACHID:RightHandMiddle4
+      parentName: ACHID:RightHandMiddle3
+      position: {x: 0.00024826638, y: 3.0151813, z: -0.000009445241}
+      rotation: {x: 0.000000075018406, y: -3.5540304e-10, z: -0.000000003061165, w: 1}
+      scale: {x: 1, y: 1.0000004, z: 1.0000002}
+    - name: ACHID:RightHandRing1
+      parentName: ACHID:RightHand
+      position: {x: 1.2160734, y: 10.0243225, z: 0.04847163}
+      rotation: {x: -0.00565383, y: 0.00007782697, z: 0.060702704, w: 0.9981399}
+      scale: {x: 1.0000001, y: 0.9999995, z: 1}
+    - name: ACHID:RightHandRing2
+      parentName: ACHID:RightHandRing1
+      position: {x: -0.0032344684, y: 2.9913628, z: 0.000008995266}
+      rotation: {x: 0.0000010852552, y: -0.000009397311, z: 0.00037827154, w: 0.99999994}
+      scale: {x: 1.0000001, y: 1.0000002, z: 0.99999994}
+    - name: ACHID:RightHandRing3
+      parentName: ACHID:RightHandRing2
+      position: {x: -0.00087634847, y: 2.8733785, z: 0.00000499218}
+      rotation: {x: -0.00000017009855, y: 0.000024532788, z: 0.0010194578, w: 0.9999995}
+      scale: {x: 1.0000001, y: 1, z: 1.0000001}
+    - name: ACHID:RightHandRing4
+      parentName: ACHID:RightHandRing3
+      position: {x: 0.0041133314, y: 2.3756304, z: 0.000012121396}
+      rotation: {x: -0.00000023180897, y: -0.000000057167227, z: 0.0000000025701008, w: 1}
+      scale: {x: 0.99999976, y: 1.0000001, z: 0.9999997}
+    - name: ACHID:RightHandPinky1
+      parentName: ACHID:RightHand
+      position: {x: 3.2012434, y: 9.599147, z: 0.047878668}
+      rotation: {x: -0.0056738015, y: 0.00041272823, z: 0.060405582, w: 0.99815774}
+      scale: {x: 0.9999997, y: 0.99999946, z: 0.99999994}
+    - name: ACHID:RightHandPinky2
+      parentName: ACHID:RightHandPinky1
+      position: {x: -0.0043382794, y: 2.5873618, z: -0.000022525259}
+      rotation: {x: 0.0000009748676, y: -0.00002425136, z: 0.000554872, w: 0.9999999}
+      scale: {x: 1.0000001, y: 1, z: 0.9999999}
+    - name: ACHID:RightHandPinky3
+      parentName: ACHID:RightHandPinky2
+      position: {x: -0.001203347, y: 2.1737359, z: -0.00001969788}
+      rotation: {x: 0.0000019126967, y: 0.00007692556, z: 0.0017851287, w: 0.9999984}
+      scale: {x: 1, y: 0.99999976, z: 1.0000001}
+    - name: ACHID:RightHandPinky4
+      parentName: ACHID:RightHandPinky3
+      position: {x: 0.0055420697, y: 1.8222511, z: 0.0000072534895}
+      rotation: {x: 0.000000037072372, y: 4.840901e-10, z: 0.0000000015535876, w: 1}
+      scale: {x: 1, y: 0.99999994, z: 0.99999994}
+    - name: ACHID:LeftUpLeg
+      parentName: ACHID:Hips
+      position: {x: -8.693806, y: -5.0019703, z: -0.15225358}
+      rotation: {x: 0.0001863677, y: -0.01001086, z: 0.99994653, w: 0.0025821147}
+      scale: {x: 1.0000001, y: 1.0000005, z: 1.0000004}
+    - name: ACHID:LeftLeg
+      parentName: ACHID:LeftUpLeg
+      position: {x: 0.000000027037458, y: 47.834793, z: 0.0000000018626451}
+      rotation: {x: -0.01168274, y: -0.000030080988, z: 0.0055115214, w: 0.99991655}
+      scale: {x: 0.9999998, y: 0.99999994, z: 1.0000001}
+    - name: ACHID:LeftFoot
+      parentName: ACHID:LeftLeg
+      position: {x: 0.0000002871384, y: 42.72308, z: -0.00000037252903}
+      rotation: {x: 0.46584672, y: 0.00199855, z: -0.006649994, w: 0.88483816}
+      scale: {x: 0.99999976, y: 0.99999976, z: 0.9999998}
+    - name: ACHID:LeftToeBase
+      parentName: ACHID:LeftFoot
+      position: {x: -0.00000071828254, y: 14.289751, z: -0.0000009071082}
+      rotation: {x: 0.32272828, y: -0.08014759, z: 0.027438385, w: 0.94269294}
+      scale: {x: 0.9999998, y: 0.9999997, z: 1.0000004}
+    - name: ACHID:LeftToe_End
+      parentName: ACHID:LeftToeBase
+      position: {x: 0.00000013411045, y: 6.025827, z: 0.00000017881393}
+      rotation: {x: 0.00000003818422, y: -0.000000024214383, z: -0.0000000061700103, w: 1}
+      scale: {x: 1.0000004, y: 1.0000004, z: 0.9999999}
+    - name: ACHID:RightUpLeg
+      parentName: ACHID:Hips
+      position: {x: 8.693806, y: -5.0019665, z: -0.2557234}
+      rotation: {x: -0.00017629209, y: -0.011184487, z: 0.999934, w: -0.002613487}
+      scale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
+    - name: ACHID:RightLeg
+      parentName: ACHID:RightUpLeg
+      position: {x: 0.00000004726462, y: 47.830574, z: -0.00000012014061}
+      rotation: {x: -0.00798587, y: 0.000022512488, z: -0.005510806, w: 0.999953}
+      scale: {x: 0.99999994, y: 0.99999976, z: 0.9999997}
+    - name: ACHID:RightFoot
+      parentName: ACHID:RightLeg
+      position: {x: -0.00000020343577, y: 42.720345, z: 0.00000001094304}
+      rotation: {x: 0.46321827, y: -0.0019933612, z: 0.0066490504, w: 0.88621706}
+      scale: {x: 1.0000001, y: 0.99999994, z: 1}
+    - name: ACHID:RightToeBase
+      parentName: ACHID:RightFoot
+      position: {x: 0.0000015536789, y: 14.272916, z: 0.0000016707927}
+      rotation: {x: 0.3231049, y: 0.07968686, z: -0.027314909, w: 0.94260657}
+      scale: {x: 1.0000001, y: 0.9999999, z: 1.0000004}
+    - name: ACHID:RightToe_End
+      parentName: ACHID:RightToeBase
+      position: {x: -0.00000048428774, y: 6.0580587, z: -0.0000003874302}
+      rotation: {x: -0.000000051571988, y: -0.0000000014260872, z: -0.000000013096725, w: 1}
+      scale: {x: 1, y: 0.99999994, z: 1.0000001}
+    - name: Hair
+      parentName: UNITY_SKM_Asooni_1207(Clone)
+      position: {x: -0.000000035761243, y: -0.0000003051762, z: 0.000000009417413}
+      rotation: {x: 0.00000008091688, y: -0.000000002520734, z: -0.000000010391016, w: 1}
+      scale: {x: 0.010391207, y: 0.010391206, z: 0.010391206}
+    - name: Body
+      parentName: UNITY_SKM_Asooni_1207(Clone)
+      position: {x: 0.000000044498442, y: -3.7893102e-13, z: -0.00000017925737}
+      rotation: {x: 0.0000001392893, y: 0.0000000013443896, z: 0.000000013331867, w: 1}
+      scale: {x: 0.010391211, y: 0.01039121, z: 0.01039121}
+    - name: Bini
+      parentName: UNITY_SKM_Asooni_1207(Clone)
+      position: {x: -0.00000001874486, y: -0.00000028610225, z: -0.00000022917988}
+      rotation: {x: 0.00000014106499, y: -0.000000002359191, z: -0.0000000071610744, w: 1}
+      scale: {x: 0.010391209, y: 0.01039121, z: 0.01039121}
+    - name: Eyelash
+      parentName: UNITY_SKM_Asooni_1207(Clone)
+      position: {x: -0.000000039506, y: -0.0000001525882, z: 0.0000000069470047}
+      rotation: {x: 0.00000008091688, y: -0.000000002520734, z: -0.000000010391016, w: 1}
+      scale: {x: 0.010391207, y: 0.010391206, z: 0.010391206}
+    - name: Earings
+      parentName: UNITY_SKM_Asooni_1207(Clone)
+      position: {x: -0.000000044978563, y: 0.0000002653575, z: -0.000000543054}
+      rotation: {x: 0.00000024537312, y: -0.0000000017577172, z: -0.000000008146037, w: 1}
+      scale: {x: 0.010391207, y: 0.010391207, z: 0.010391207}
+    - name: Hair_pin
+      parentName: UNITY_SKM_Asooni_1207(Clone)
+      position: {x: -0.0000000803724, y: -0.000000051296766, z: -0.000000005217049}
+      rotation: {x: 0.00000008091688, y: -0.000000002520734, z: -0.000000010391016, w: 1}
+      scale: {x: 0.010391207, y: 0.010391206, z: 0.010391206}
+    - name: Shoes
+      parentName: UNITY_SKM_Asooni_1207(Clone)
+      position: {x: 1.4901111e-10, y: 7.4505796e-10, z: 0.0000000023469318}
+      rotation: {x: 0.00000013951336, y: 0.0000000013443906, z: 0.0000000134438976, w: 1}
+      scale: {x: 0.010391211, y: 0.01039121, z: 0.01039121}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 3
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

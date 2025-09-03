@@ -68,10 +68,6 @@ Shader "Toon/Lit Studio Advanced"
     {
         Tags { "RenderPipeline"="UniversalPipeline" }
 
-        HLSLINCLUDE
-            #include "Assets\Shaders\Toon\URPToonPC\Includes\ToonLitStudioCore.hlsl"
-        ENDHLSL
-
         Pass
         {
             Name "ForwardLit"
@@ -84,6 +80,8 @@ Shader "Toon/Lit Studio Advanced"
             HLSLPROGRAM
             #pragma vertex MainVert
             #pragma fragment Frag
+            
+            #include "Assets/Shaders/Toon/URPToonPC/Includes/ToonLitStudioCore.hlsl"
 
             #pragma shader_feature_local_fragment _NORMALMAP_ON
             #pragma shader_feature_local_fragment _ALPHATEST_ON
@@ -192,6 +190,8 @@ Shader "Toon/Lit Studio Advanced"
             HLSLPROGRAM
             #pragma vertex MainVert
             #pragma fragment DepthNormalsFrag
+
+            #include "Includes/ToonLitStudioCore.hlsl"
             
             #pragma shader_feature_local_fragment _NORMALMAP_ON
             #pragma shader_feature_local_fragment _ALPHATEST_ON
@@ -200,8 +200,7 @@ Shader "Toon/Lit Studio Advanced"
             {
                 ApplyAlphaClip(i.uv);
                 half3 normalWS = GetWorldNormal(i);
-                float3 packedNormal = PackNormal(normalWS, 0.5);
-                return float4(packedNormal, 0);
+                return float4(EncodeNormal(normalWS), 0);
             }
             ENDHLSL
         }

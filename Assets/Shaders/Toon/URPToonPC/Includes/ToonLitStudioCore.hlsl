@@ -1,6 +1,7 @@
 #ifndef TOON_LIT_STUDIO_CORE_INCLUDED
 #define TOON_LIT_STUDIO_CORE_INCLUDED
 
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
 struct Attributes
@@ -64,6 +65,11 @@ half3 GetWorldNormal(Varyings input)
         normalWS = normalize(mul(tangentNormal, TBN));
     #endif
     return normalWS;
+}
+
+half3 EncodeNormal(half3 normalWS)
+{
+    return normalWS * 0.5 + 0.5;
 }
 
 half3 CalculateToonRamp(half NdotL, half3 lightColor)

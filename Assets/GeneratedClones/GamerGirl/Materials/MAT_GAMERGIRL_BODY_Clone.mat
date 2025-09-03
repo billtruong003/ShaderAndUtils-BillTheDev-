@@ -16,6 +16,7 @@ Material:
   - _GRADIENT_AMBIENT_ON
   - _MATCAP_BLEND_ADD
   - _MATCAP_ON
+  - _NORMALMAP_ON
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
   m_InvalidKeywords:
   - _NORMALMAP
@@ -104,7 +105,7 @@ Material:
     - _AdditionalLightInfluence: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _AmbientGradientPower: 5
+    - _AmbientGradientPower: 0.1
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -121,7 +122,7 @@ Material:
     - _EnableGradientAmbient: 1
     - _EnableHatching: 0
     - _EnableMatcap: 1
-    - _EnableNormalMap: 0
+    - _EnableNormalMap: 1
     - _EnableRampTexture: 0
     - _EnableRimLight: 0
     - _EnableSpecular: 0
@@ -139,7 +140,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueOffset: 0
-    - _RampSmoothness: 0.5
+    - _RampSmoothness: 0.001
     - _ReceiveShadows: 1
     - _RimPower: 3
     - _RimThreshold: 0.5

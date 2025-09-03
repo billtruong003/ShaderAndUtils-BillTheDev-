@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6026de89ac1fae2488e8e40f64cfb289, type: 3}
+  m_Name: NewPlayerData
+  m_EditorClassIdentifier: 
+  WalkSpeed: 7
+  RunSpeed: 12
+  RotationSmoothTime: 0.1
+  GroundLinearDamping: 6
+  AirAcceleration: 30
+  MaxAirSpeed: 10
+  AirDamping: 0.98
+  JumpForce: 15
+  WallJumpUpForce: 12
+  WallJumpSideForce: 20
+  CoyoteTime: 0.1
+  JumpBufferTime: 0.1
+  DashSpeed: 30
+  DashDuration: 0.2
+  DashCooldown: 1
+  SlideStartBoost: 10
+  SlideFriction: 0.985
+  SlopeSlideMultiplier: 2
+  SlideColliderHeight: 0.8
+  MaxSlideSpeed: 25
+  SlideSteeringControl: 5
+  WallRunSpeed: 15
+  WallStickForce: 100
+  WallRunGravity: 3
+  MaxWallRunTime: 2
+  GroundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  WallLayer:
+    serializedVersion: 2
+    m_Bits: 134217728
+  PlayerLayer: 6
+  InvincibleLayer: 7
+  GroundCheckDistance: 0.1
+  WallCheckDistance: 0.7
+  WallRunCameraTilt: 10
