@@ -10,6 +10,7 @@ namespace ZombieAI.VAT
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class VAT_Animator_Instanced : MonoBehaviour
     {
+        public Material instancedMaterial;
         public VAT_AnimationData animationData;
         public float playbackSpeed = 1.0f;
         [Tooltip("Animation clip to play on Start.")]
@@ -53,7 +54,7 @@ namespace ZombieAI.VAT
             if (animationData == null || !animationData.IsValid()) return;
 
             GetComponent<MeshFilter>().sharedMesh = animationData.bakedMesh;
-            GetComponent<MeshRenderer>().sharedMaterial = animationData.instancedMaterial;
+            GetComponent<MeshRenderer>().sharedMaterial = instancedMaterial;
 
             if (animationData.animationClips.Count > 0)
             {

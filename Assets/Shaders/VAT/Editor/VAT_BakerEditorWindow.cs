@@ -6,93 +6,181 @@ using System.Linq;
 
 public class VAT_BakerEditorWindow : EditorWindow
 {
-    private GameObject _sourceObject;
+    private List<GameObject> _sourceObjects = new List<GameObject>();
+    private Vector2 _scrollPosition;
     private const int FRAMERATE_OVERRIDE = 30;
 
-    [MenuItem("Tools/BillTheDev/VAT Baker")]
+    [MenuItem("Tools/BillTheDev/VAT Baker (Batch)")]
     public static void ShowWindow()
     {
-        GetWindow<VAT_BakerEditorWindow>("VAT Baker");
+        GetWindow<VAT_BakerEditorWindow>("VAT Baker (Batch)");
     }
 
     private void OnGUI()
     {
-        GUILayout.Label("Vertex Animation Texture Baker", EditorStyles.boldLabel);
-        _sourceObject = EditorGUILayout.ObjectField("Source GameObject (Prefab/Scene)", _sourceObject, typeof(GameObject), true) as GameObject;
+        GUILayout.Label("Vertex Animation Texture Baker (Batch Mode)", EditorStyles.boldLabel);
+        DrawDragAndDropArea();
+        DrawSourceObjectsList();
 
-        if (GUILayout.Button("Bake Animations") && IsSourceValid())
+        using (new EditorGUI.DisabledScope(_sourceObjects.Count == 0))
         {
-            BakeAnimationData();
+            if (GUILayout.Button("Bake All Selected Animations", GUILayout.Height(30)))
+            {
+                BakeAllSelectedObjects();
+            }
         }
     }
 
-    private bool IsSourceValid()
+    private void DrawDragAndDropArea()
     {
-        if (_sourceObject == null)
+        var dropAreaRect = GUILayoutUtility.GetRect(0.0f, 50.0f, GUILayout.ExpandWidth(true));
+        var style = new GUIStyle(GUI.skin.box)
         {
-            EditorUtility.DisplayDialog("Bake Error", "Please assign a source GameObject.", "OK");
-            return false;
-        }
-        if (_sourceObject.GetComponentInChildren<SkinnedMeshRenderer>() == null)
-        {
-            EditorUtility.DisplayDialog("Bake Error", "Source GameObject must have a SkinnedMeshRenderer.", "OK");
-            return false;
-        }
-        var animator = _sourceObject.GetComponentInChildren<Animator>();
-        if (animator == null || animator.runtimeAnimatorController == null || animator.runtimeAnimatorController.animationClips.Length == 0)
-        {
-            EditorUtility.DisplayDialog("Bake Error", "Source GameObject must have an Animator with clips.", "OK");
-            return false;
-        }
-        return true;
+            alignment = TextAnchor.MiddleCenter,
+            fontStyle = FontStyle.Italic,
+            normal = { textColor = Color.gray }
+        };
+        GUI.Box(dropAreaRect, "Drag & Drop GameObjects (Prefabs/Scene) Here", style);
+        ProcessDragAndDropEvents(dropAreaRect);
     }
 
-    private void BakeAnimationData()
+    private void ProcessDragAndDropEvents(Rect dropArea)
     {
-        string savePath = EditorUtility.SaveFilePanelInProject("Save Baked Assets", _sourceObject.name + "_VAT", "", "Enter a base name for baked assets");
-        if (string.IsNullOrEmpty(savePath)) return;
+        var currentEvent = Event.current;
+        if (!dropArea.Contains(currentEvent.mousePosition)) return;
 
-        string directory = Path.GetDirectoryName(savePath);
-        string baseName = Path.GetFileNameWithoutExtension(savePath);
-
-        var sourceSkinnedRenderer = _sourceObject.GetComponentInChildren<SkinnedMeshRenderer>();
-        var animationClips = _sourceObject.GetComponentInChildren<Animator>().runtimeAnimatorController.animationClips.Where(c => !c.legacy && c.length > 0).Distinct().ToArray();
-
-        if (animationClips.Length == 0)
+        switch (currentEvent.type)
         {
-            EditorUtility.DisplayDialog("Bake Error", "No valid animation clips found in the Animator Controller.", "OK");
-            return;
+            case EventType.DragUpdated:
+            case EventType.DragPerform:
+                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                if (currentEvent.type == EventType.DragPerform)
+                {
+                    DragAndDrop.AcceptDrag();
+                    AddDraggedObjects();
+                }
+                currentEvent.Use();
+                break;
+        }
+    }
+
+    private void AddDraggedObjects()
+    {
+        var draggedObjects = DragAndDrop.objectReferences
+            .OfType<GameObject>()
+            .Where(go => !_sourceObjects.Contains(go));
+
+        _sourceObjects.AddRange(draggedObjects);
+    }
+
+    private void DrawSourceObjectsList()
+    {
+        EditorGUILayout.LabelField("Objects to Bake:", EditorStyles.boldLabel);
+        using (var scrollView = new EditorGUILayout.ScrollViewScope(_scrollPosition, GUILayout.MinHeight(100), GUILayout.MaxHeight(300)))
+        {
+            _scrollPosition = scrollView.scrollPosition;
+            for (int i = _sourceObjects.Count - 1; i >= 0; i--)
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    _sourceObjects[i] = EditorGUILayout.ObjectField(_sourceObjects[i], typeof(GameObject), true) as GameObject;
+                    if (GUILayout.Button("X", GUILayout.Width(25)))
+                    {
+                        _sourceObjects.RemoveAt(i);
+                    }
+                }
+            }
         }
 
-        var tempInstance = Instantiate(_sourceObject);
+        if (_sourceObjects.Count > 0 && GUILayout.Button("Clear List"))
+        {
+            _sourceObjects.Clear();
+        }
+    }
+
+    private void BakeAllSelectedObjects()
+    {
+        string outputPath = EditorUtility.OpenFolderPanel("Select Output Folder for Baked Assets", "Assets", "");
+        if (string.IsNullOrEmpty(outputPath)) return;
+
+        // Chuyển đổi đường dẫn tuyệt đối thành đường dẫn tương đối trong project
+        string projectRelativePath = "Assets" + outputPath.Substring(Application.dataPath.Length);
+
+        int bakedCount = 0;
+        try
+        {
+            for (int i = 0; i < _sourceObjects.Count; i++)
+            {
+                var sourceObject = _sourceObjects[i];
+                if (sourceObject == null) continue;
+
+                string progressBarTitle = $"VAT Baker ({i + 1}/{_sourceObjects.Count})";
+                string progressBarInfo = $"Processing: {sourceObject.name}";
+                EditorUtility.DisplayProgressBar(progressBarTitle, progressBarInfo, (float)i / _sourceObjects.Count);
+
+                if (BakeSingleObject(sourceObject, projectRelativePath))
+                {
+                    bakedCount++;
+                }
+            }
+        }
+        finally
+        {
+            EditorUtility.ClearProgressBar();
+            EditorUtility.DisplayDialog("Bake Complete", $"Successfully baked {bakedCount} out of {_sourceObjects.Count} objects.\nAssets saved in: {projectRelativePath}", "OK");
+            AssetDatabase.Refresh();
+        }
+    }
+
+    private bool BakeSingleObject(GameObject sourceObject, string directory)
+    {
+        if (!IsSourceValid(sourceObject))
+        {
+            Debug.LogWarning($"Skipping '{sourceObject.name}': Source is not valid. Check SkinnedMeshRenderer and Animator clips.", sourceObject);
+            return false;
+        }
+
+        string baseName = sourceObject.name;
+        var tempInstance = Instantiate(sourceObject);
         tempInstance.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         tempInstance.transform.localScale = Vector3.one;
 
         try
         {
-            EditorUtility.DisplayProgressBar("VAT Baker", "1/4: Calculating Total Animation Bounds...", 0.1f);
-            var totalAnimationBounds = CalculateTotalLocalSpaceBounds(tempInstance, animationClips);
+            var sourceSkinnedRenderer = tempInstance.GetComponentInChildren<SkinnedMeshRenderer>();
+            var animationClips = tempInstance.GetComponentInChildren<Animator>().runtimeAnimatorController.animationClips.Where(c => !c.legacy && c.length > 0).Distinct().ToArray();
 
-            EditorUtility.DisplayProgressBar("VAT Baker", "2/4: Baking Animations to Texture...", 0.4f);
+            if (animationClips.Length == 0)
+            {
+                Debug.LogWarning($"Skipping '{sourceObject.name}': No valid animation clips found.", sourceObject);
+                return false;
+            }
+
+            var totalAnimationBounds = CalculateTotalLocalSpaceBounds(tempInstance, animationClips);
             var (positionTexture, clipInfos) = BakeAnimationsToTexture(tempInstance, animationClips, totalAnimationBounds);
 
-            EditorUtility.DisplayProgressBar("VAT Baker", "3/4: Creating Final Assets...", 0.8f);
-            var bakedMesh = CreateMeshWithVertexIdUVs(sourceSkinnedRenderer.sharedMesh, totalAnimationBounds, baseName);
+            var originalMesh = sourceObject.GetComponentInChildren<SkinnedMeshRenderer>().sharedMesh;
+            var bakedMesh = CreateMeshWithVertexIdUVs(originalMesh, totalAnimationBounds, baseName);
             var animationData = CreateAnimationDataAsset(bakedMesh, positionTexture, totalAnimationBounds, clipInfos, baseName);
             var material = CreateOptimizedMaterial(baseName);
 
-            EditorUtility.DisplayProgressBar("VAT Baker", "4/4: Saving Assets to Disk...", 0.95f);
             SaveAllAssets(directory, baseName, animationData, bakedMesh, positionTexture, material);
-
-            EditorUtility.DisplayDialog("Success", $"VAT assets for '{baseName}' baked successfully at {directory}", "OK");
-            Selection.activeObject = animationData;
-            EditorGUIUtility.PingObject(animationData);
         }
         finally
         {
             if (tempInstance != null) DestroyImmediate(tempInstance);
-            EditorUtility.ClearProgressBar();
         }
+        return true;
+    }
+
+    private bool IsSourceValid(GameObject sourceObject)
+    {
+        if (sourceObject.GetComponentInChildren<SkinnedMeshRenderer>() == null) return false;
+
+        var animator = sourceObject.GetComponentInChildren<Animator>();
+        if (animator == null || animator.runtimeAnimatorController == null) return false;
+
+        return true;
     }
 
     private Bounds CalculateTotalLocalSpaceBounds(GameObject instance, AnimationClip[] clips)
@@ -122,7 +210,7 @@ public class VAT_BakerEditorWindow : EditorWindow
                 }
             }
         }
-        totalBounds.Expand(0.01f); // Thêm một vùng đệm nhỏ để đảm bảo an toàn
+        totalBounds.Expand(0.01f);
         DestroyImmediate(tempBakedMesh);
         return totalBounds;
     }
@@ -138,7 +226,7 @@ public class VAT_BakerEditorWindow : EditorWindow
 
         foreach (var clip in clips)
         {
-            int frameCount = Mathf.Max(2, Mathf.CeilToInt(clip.length * FRAMERATE_OVERRIDE)); // Luôn có ít nhất 2 frame
+            int frameCount = Mathf.Max(2, Mathf.CeilToInt(clip.length * FRAMERATE_OVERRIDE));
             clipInfos.Add(new VAT_AnimationData.ClipInfo { name = clip.name, startFrame = totalFrames, frameCount = frameCount, duration = clip.length, wrapMode = clip.wrapMode });
 
             for (int frame = 0; frame < frameCount; frame++)
@@ -162,7 +250,7 @@ public class VAT_BakerEditorWindow : EditorWindow
 
         var positionTexture = new Texture2D(vertexCount, totalFrames, TextureFormat.RGBAHalf, false)
         {
-            name = "VAT_PositionTexture",
+            name = $"{instance.name}_VAT_PositionTexture",
             filterMode = FilterMode.Bilinear,
             wrapMode = TextureWrapMode.Clamp
         };
@@ -170,24 +258,20 @@ public class VAT_BakerEditorWindow : EditorWindow
         {
             positionTexture.SetPixels(0, y, vertexCount, 1, allFramesData[y]);
         }
-        positionTexture.Apply(false, true); // No mips, non-readable
+        positionTexture.Apply(false, true);
         return (positionTexture, clipInfos);
     }
 
-    // ĐÂY LÀ HÀM SỬA LỖI QUAN TRỌNG NHẤT
     private Mesh CreateMeshWithVertexIdUVs(Mesh originalMesh, Bounds animationBounds, string baseName)
     {
         var newMesh = new Mesh
         {
             name = $"{baseName}_Mesh",
-            // Giữ lại dữ liệu gốc, vì vị trí thực sự sẽ được tính trong shader
             vertices = originalMesh.vertices,
             normals = originalMesh.normals,
             tangents = originalMesh.tangents,
             uv = originalMesh.uv,
             triangles = originalMesh.triangles,
-            // SỬA LỖI CHÍ MẠNG: Gán bounds bao trọn toàn bộ animation
-            // Điều này ngăn Unity culling đối tượng một cách sai lầm.
             bounds = animationBounds
         };
 
@@ -198,14 +282,11 @@ public class VAT_BakerEditorWindow : EditorWindow
 
         for (int i = 0; i < vertexCount; i++)
         {
-            // Tọa độ U được chuẩn hóa và dịch nửa texel để sample chính xác vào giữa pixel
-            // Tránh lỗi bilinear filtering theo chiều ngang
             vertexIdUVs[i] = new Vector2(i * invTexWidth + halfTexel, 0);
         }
 
-        // Gán mảng tọa độ U vào kênh UV thứ hai (TEXCOORD1)
         newMesh.SetUVs(1, vertexIdUVs);
-        newMesh.UploadMeshData(true); // Đánh dấu không thể đọc từ script để tăng hiệu năng
+        newMesh.UploadMeshData(true);
         return newMesh;
     }
 
@@ -234,7 +315,7 @@ public class VAT_BakerEditorWindow : EditorWindow
         var shader = Shader.Find("BillTheDev/VAT/Optimized_VAT");
         if (shader == null)
         {
-            Debug.LogError("Shader 'BillTheDev/VAT/Optimized_VAT' not found. Ensure it is compiled.");
+            Debug.LogError("Shader 'BillTheDev/VAT/Optimized_VAT' not found. Ensure it is compiled and included in the build.");
             return null;
         }
         var material = new Material(shader) { name = $"{baseName}_Mat" };
@@ -244,15 +325,13 @@ public class VAT_BakerEditorWindow : EditorWindow
 
     private void SaveAllAssets(string dir, string name, VAT_AnimationData data, Mesh mesh, Texture2D tex, Material mat)
     {
-        string dataPath = Path.Combine(dir, $"{name}_Data.asset");
+        string dataPath = Path.Combine(dir, $"{name}_VAT_Data.asset");
         AssetDatabase.CreateAsset(data, dataPath);
 
-        // Lưu các asset khác như là sub-asset của Data asset để gọn gàng hơn
-        AssetDatabase.AddObjectToAsset(mesh, data);
-        AssetDatabase.AddObjectToAsset(tex, data);
-        AssetDatabase.AddObjectToAsset(mat, data);
+        if (mesh != null) AssetDatabase.AddObjectToAsset(mesh, data);
+        if (tex != null) AssetDatabase.AddObjectToAsset(tex, data);
+        if (mat != null) AssetDatabase.AddObjectToAsset(mat, data);
 
         AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
     }
 }

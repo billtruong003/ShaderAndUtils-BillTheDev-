@@ -17,12 +17,6 @@ public class VAT_AnimationData : ScriptableObject
 
     public Mesh bakedMesh;
     public Texture2D positionTexture;
-
-    // THÊM DÒNG NÀY:
-    // Tham chiếu trực tiếp đến Material sử dụng shader instanced.
-    [Tooltip("Material that uses the 'Optimized_VAT_Instanced' shader.")]
-    public Material instancedMaterial;
-
     public Vector3 positionMinBounds;
     public Vector3 positionMaxBounds;
     public List<ClipInfo> animationClips = new List<ClipInfo>();
@@ -42,7 +36,7 @@ public class VAT_AnimationData : ScriptableObject
 
     public bool IsValid()
     {
-        return bakedMesh != null && positionTexture != null && instancedMaterial != null && animationClips.Count > 0;
+        return bakedMesh != null && positionTexture != null && animationClips.Count > 0;
     }
 
     private void InitializeLookup()

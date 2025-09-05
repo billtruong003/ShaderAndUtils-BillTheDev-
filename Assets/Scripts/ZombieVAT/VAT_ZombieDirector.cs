@@ -3,10 +3,6 @@ using System.Collections.Generic;
 
 namespace ZombieAI.VAT
 {
-    /// <summary>
-    /// Quản lý, culling và render tất cả các VAT_Zombie bằng GPU Instancing.
-    /// Đây là thành phần cốt lõi để tối ưu hóa hiệu suất.
-    /// </summary>
     [RequireComponent(typeof(Camera))]
     public class VAT_ZombieDirector : MonoBehaviour
     {
@@ -28,7 +24,7 @@ namespace ZombieAI.VAT
                 return _instance;
             }
         }
-
+        private Material instancedMaterial;
         private Camera _cullingCamera;
         private readonly List<ZombieInstance> _allActiveZombies = new List<ZombieInstance>(1024);
         private readonly Plane[] _frustumPlanes = new Plane[6];
@@ -111,7 +107,7 @@ namespace ZombieAI.VAT
                 var animationDataAsset = pair.Key;
                 var visibleInstances = pair.Value;
 
-                if (visibleInstances.Count == 0 || animationDataAsset.instancedMaterial == null) continue;
+                if (visibleInstances.Count == 0 || instancedMaterial == null) continue;
 
                 int drawnCount = 0;
                 while (drawnCount < visibleInstances.Count)
@@ -132,7 +128,7 @@ namespace ZombieAI.VAT
                         animationDataAsset.bakedMesh,
                         0,
                         // SỬA LỖI CS1061: Lấy material từ data asset, không phải từ mesh
-                        animationDataAsset.instancedMaterial,
+                        instancedMaterial,
                         _instanceMatrices,
                         batchSize,
                         _propertyBlock

@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67fa42c8932c444987f987ea1e2f4fcb, type: 3}
   m_Name: Edge Detection Settings
   m_EditorClassIdentifier: 
-  injectionPoint: 600
+  injectionPoint: 450
   showInSceneView: 1
   debugView: 0
   debugSectionsRaw: 0
-  discontinuityInput: -1
+  discontinuityInput: 3
   depthSensitivity: 1
-  depthDistanceModulation: 0.1
-  grazingAngleMaskPower: 1
+  depthDistanceModulation: 1
+  grazingAngleMaskPower: 0
   grazingAngleMaskHardness: 1
-  normalSensitivity: 0.5
-  luminanceSensitivity: 1
+  normalSensitivity: 0.2
+  luminanceSensitivity: 0
   objectId: 1
   particles: 1
   sectionMapInput: 0
@@ -31,26 +31,26 @@ MonoBehaviour:
   sectionTextureChannel: 0
   vertexColorChannel: 0
   kernel: 0
-  outlineThickness: 0
+  outlineThickness: 2
   scaleWithResolution: 1
-  referenceResolution: 3
-  customResolution: 1024
-  backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+  referenceResolution: 2
+  customResolution: 2048
+  backgroundColor: {r: 0, g: 0.081095934, b: 1, a: 0.05882353}
   outlineColor: {r: 0, g: 0, b: 0, a: 1}
   overrideColorInShadow: 0
-  outlineColorShadow: {r: 0.3679245, g: 0.07108401, b: 0, a: 1}
+  outlineColorShadow: {r: 0, g: 0.40600348, b: 1, a: 1}
   fillColor: {r: 0, g: 0, b: 0, a: 1}
   fadeByDistance: 0
-  distanceFadeColor: {r: 1367.1202, g: 1367.1202, b: 1367.1202, a: 1}
-  distanceFadeStart: 200
-  distanceFadeDistance: 15.9
+  distanceFadeColor: {r: 0, g: 0.038821645, b: 0.46226418, a: 1}
+  distanceFadeStart: 73.6
+  distanceFadeDistance: 0.1
   fadeByHeight: 0
   heightFadeColor: {r: 0, g: 0, b: 0, a: 0}
-  heightFadeStart: 0
-  heightFadeDistance: 0.01
+  heightFadeStart: 2
+  heightFadeDistance: 2
   blendMode: 0
   sectionMapPrecision: 1
-  sectionMapClearValue: 256
+  sectionMapClearValue: 23
   additionalSectionPasses: []
   SectionRenderingLayer:
     serializedVersion: 0
@@ -58,7 +58,7 @@ MonoBehaviour:
   SectionMaskRenderingLayer:
     serializedVersion: 0
     m_Bits: 4294967295
-  maskInfluence: 9
+  maskInfluence: 0
   showSectionMapSection: 1
   showDiscontinuitySection: 1
   showOutlineSection: 1

@@ -23,6 +23,7 @@ namespace OptimizeVariousVAT
         {
             public readonly VAT_AnimationData animationData;
             public readonly Material instanceMaterial;
+            public readonly Material depthNormalMaterial;
             public readonly ComputeShader cullingShader;
             public readonly List<ManagedAgent> agents = new List<ManagedAgent>(50000);
             public readonly Mesh bakedMesh;
@@ -41,16 +42,18 @@ namespace OptimizeVariousVAT
             private float4[] _rotationDataArray;
             private Vector4[] _animationDataArray;
 
-            public RenderBatch(Material sourceMaterial, ComputeShader computeShader, VAT_AnimationData animData, Texture2D albedo)
+            public RenderBatch(Material sourceMaterial, Shader depthNormalShader, ComputeShader computeShader, VAT_AnimationData animData, Texture2D albedo)
             {
                 animationData = animData;
                 bakedMesh = animData.bakedMesh;
                 cullingShader = Instantiate(computeShader);
                 instanceMaterial = new Material(sourceMaterial) { enableInstancing = true };
-                instanceMaterial.SetTexture("_PositionTexture", animData.positionTexture);
-                instanceMaterial.SetVector("_PositionMin", animData.positionMinBounds);
-                instanceMaterial.SetVector("_PositionMax", animData.positionMaxBounds);
+                depthNormalMaterial = new Material(depthNormalShader) { enableInstancing = true };
+
                 instanceMaterial.SetTexture("_MainTex", albedo);
+
+                SetCommonMaterialProperties(instanceMaterial, animData);
+                SetCommonMaterialProperties(depthNormalMaterial, animData);
 
                 if (bakedMesh != null)
                 {
@@ -61,12 +64,17 @@ namespace OptimizeVariousVAT
                 _cullingKernel = cullingShader.FindKernel("CSMain");
             }
 
+            private void SetCommonMaterialProperties(Material mat, VAT_AnimationData animData)
+            {
+                mat.SetTexture("_PositionTexture", animData.positionTexture);
+                mat.SetVector("_PositionMin", animData.positionMinBounds);
+                mat.SetVector("_PositionMax", animData.positionMaxBounds);
+            }
+
             public void EnsureBufferCapacity()
             {
                 int requiredCapacity = agents.Count > 0 ? agents.Count : 1;
-                int currentCapacity = allAgentDataSourceBuffer?.count ?? 0;
-
-                if (currentCapacity >= requiredCapacity) return;
+                if ((allAgentDataSourceBuffer?.count ?? 0) >= requiredCapacity) return;
 
                 ReleaseBuffers();
 
@@ -83,6 +91,7 @@ namespace OptimizeVariousVAT
                 _animationDataArray = new Vector4[capacity];
 
                 instanceMaterial.SetBuffer("_AgentDataBuffer", visibleAgentDataOutputBuffer);
+                depthNormalMaterial.SetBuffer("_AgentDataBuffer", visibleAgentDataOutputBuffer);
             }
 
             public void UpdateGpuData()
@@ -116,13 +125,11 @@ namespace OptimizeVariousVAT
 
             public void DispatchCulling(Plane[] planes, float agentBoundsRadius)
             {
-                // SỬA LỖI: Reset số lượng instance về 0 một cách an toàn
                 _indirectArgs[1] = 0;
                 indirectArgsBuffer.SetData(_indirectArgs);
-
                 visibleAgentDataOutputBuffer.SetCounterValue(0);
 
-                cullingShader.SetBuffer(_cullingKernel, "", allAgentDataSourceBuffer);
+                cullingShader.SetBuffer(_cullingKernel, "_AllAgentDataSource", allAgentDataSourceBuffer);
                 cullingShader.SetBuffer(_cullingKernel, "_AllAgentRotationSource", allAgentRotationSourceBuffer);
                 cullingShader.SetBuffer(_cullingKernel, "_AllAgentAnimationSource", allAgentAnimationSourceBuffer);
                 cullingShader.SetBuffer(_cullingKernel, "_VisibleAgentDataOutput", visibleAgentDataOutputBuffer);
@@ -148,11 +155,6 @@ namespace OptimizeVariousVAT
                 allAgentAnimationSourceBuffer?.Release();
                 visibleAgentDataOutputBuffer?.Release();
                 indirectArgsBuffer?.Release();
-                allAgentDataSourceBuffer = null;
-                allAgentRotationSourceBuffer = null;
-                allAgentAnimationSourceBuffer = null;
-                visibleAgentDataOutputBuffer = null;
-                indirectArgsBuffer = null;
             }
         }
 
@@ -174,16 +176,20 @@ namespace OptimizeVariousVAT
 
         [Title("Configuration")]
         [SerializeField, Required] private Material _baseInstancedMaterial;
+        [SerializeField, Required] private Shader _depthNormalShader;
         [SerializeField, Required] private ComputeShader _cullingComputeShader;
-        [SerializeField, ListDrawerSettings(Expanded = true)] private List<AgentTypeDefinition> _agentTypes;
+        [SerializeField, ListDrawerSettings] private List<AgentTypeDefinition> _agentTypes;
         [SerializeField] private float _agentBoundsRadius = 1.0f;
+
+        [Title("Outline Configuration")]
+        [SerializeField, Range(-0.1f, 1f)] private float _outlineDepthOffset = 0.0f;
 
         private readonly List<RenderBatch> _renderBatches = new List<RenderBatch>();
         private Camera _mainCamera;
         private readonly Plane[] _frustumPlanes = new Plane[6];
         private readonly Bounds _renderBounds = new Bounds(Vector3.zero, Vector3.one * 10000f);
 
-        public bool IsInitialized { get; private set; } = false;
+        public bool IsInitialized { get; private set; }
 
         public int GetAgentTypeCount() => _agentTypes.Count;
         public VAT_BoidsAgent GetAgentPrefab(int typeIndex) => (typeIndex >= 0 && typeIndex < _agentTypes.Count) ? _agentTypes[typeIndex].agentPrefab : null;
@@ -207,20 +213,19 @@ namespace OptimizeVariousVAT
             if (!IsInitialized || _mainCamera == null) return;
 
             GeometryUtility.CalculateFrustumPlanes(_mainCamera, _frustumPlanes);
-            float deltaTime = Time.deltaTime;
 
             foreach (var batch in _renderBatches)
             {
-                // TỐI ƯU HÓA: Chỉ xử lý và vẽ nếu có agent trong batch
                 if (batch.agents.Count > 0)
                 {
-                    UpdateAndRenderBatchGPU(batch, deltaTime);
+                    UpdateAndRenderBatchGPU(batch);
                 }
             }
         }
 
-        private void UpdateAndRenderBatchGPU(RenderBatch batch, float deltaTime)
+        private void UpdateAndRenderBatchGPU(RenderBatch batch)
         {
+            float deltaTime = Time.deltaTime;
             for (int i = 0; i < batch.agents.Count; i++)
             {
                 var agent = batch.agents[i];
@@ -230,6 +235,13 @@ namespace OptimizeVariousVAT
 
             batch.UpdateGpuData();
             batch.DispatchCulling(_frustumPlanes, _agentBoundsRadius);
+
+            batch.depthNormalMaterial.SetFloat("_OutlineDepthOffset", _outlineDepthOffset);
+
+            Graphics.DrawMeshInstancedIndirect(
+                batch.bakedMesh, 0, batch.depthNormalMaterial,
+                _renderBounds, batch.indirectArgsBuffer
+            );
 
             Graphics.DrawMeshInstancedIndirect(
                 batch.bakedMesh, 0, batch.instanceMaterial,
@@ -241,10 +253,13 @@ namespace OptimizeVariousVAT
         public void Register(VAT_BoidsAgent agent, int agentTypeIndex)
         {
             if (!IsInitialized || agent.StateIndex != -1 || agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count) return;
+
             var batch = _renderBatches[agentTypeIndex];
             agent.StateIndex = batch.agents.Count;
+
             var newManagedAgent = new ManagedAgent { transform = agent.transform, agentComponent = agent };
             PlayDefaultClip(ref newManagedAgent, batch.animationData);
+
             batch.agents.Add(newManagedAgent);
             batch.EnsureBufferCapacity();
         }
@@ -252,9 +267,12 @@ namespace OptimizeVariousVAT
         public void Unregister(VAT_BoidsAgent agent, int agentTypeIndex)
         {
             if (!IsInitialized || agent.StateIndex == -1 || agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count) return;
+
             var batch = _renderBatches[agentTypeIndex];
             int indexToRemove = agent.StateIndex;
+
             if (indexToRemove < 0 || indexToRemove >= batch.agents.Count || batch.agents[indexToRemove].agentComponent != agent) return;
+
             int lastIndex = batch.agents.Count - 1;
             if (indexToRemove == lastIndex)
             {
@@ -273,11 +291,14 @@ namespace OptimizeVariousVAT
         public void SetAnimationState(int stateIndex, int agentTypeIndex, string clipName, float duration)
         {
             if (!IsInitialized || agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count) return;
+
             var batch = _renderBatches[agentTypeIndex];
             if (stateIndex < 0 || stateIndex >= batch.agents.Count) return;
             if (!batch.animationData.TryGetClipInfo(clipName, out var newClip)) return;
+
             var currentState = batch.agents[stateIndex];
             if (currentState.currentClip != null && currentState.currentClip.name == newClip.name) return;
+
             currentState.previousClip = currentState.currentClip;
             currentState.previousTimeSeconds = currentState.currentTimeSeconds;
             currentState.currentClip = newClip;
@@ -285,6 +306,7 @@ namespace OptimizeVariousVAT
             currentState.crossFadeDuration = Mathf.Max(0, duration);
             currentState.crossFadeTimer = 0;
             currentState.isBlending = duration > 0.001f && currentState.previousClip != null;
+
             batch.agents[stateIndex] = currentState;
         }
         #endregion
@@ -292,18 +314,23 @@ namespace OptimizeVariousVAT
         #region Initialization and Helpers
         private void Initialize()
         {
-            IsInitialized = false;
-            if (_baseInstancedMaterial == null || _cullingComputeShader == null || _agentTypes == null) return;
+            if (_baseInstancedMaterial == null || _depthNormalShader == null || _cullingComputeShader == null || _agentTypes == null)
+            {
+                IsInitialized = false;
+                return;
+            }
+
             _renderBatches.Clear();
             foreach (var agentType in _agentTypes)
             {
                 if (agentType.agentPrefab == null || agentType.animationData == null || !agentType.animationData.IsValid() || agentType.albedoTexture == null) continue;
+
                 agentType.agentPrefab.gameObject.SetActive(false);
-                var newBatch = new RenderBatch(_baseInstancedMaterial, _cullingComputeShader, agentType.animationData, agentType.albedoTexture);
+                var newBatch = new RenderBatch(_baseInstancedMaterial, _depthNormalShader, _cullingComputeShader, agentType.animationData, agentType.albedoTexture);
                 newBatch.EnsureBufferCapacity();
                 _renderBatches.Add(newBatch);
             }
-            if (_renderBatches.Count > 0) IsInitialized = true;
+            IsInitialized = _renderBatches.Count > 0;
         }
 
         private void UpdateTimers(ref ManagedAgent agent, float deltaTime)
@@ -320,6 +347,7 @@ namespace OptimizeVariousVAT
                     agent.isBlending = false;
                     agent.previousClip = null;
                 }
+
                 if (agent.previousClip != null)
                 {
                     agent.previousTimeSeconds += deltaTime;
@@ -332,6 +360,7 @@ namespace OptimizeVariousVAT
         private static float CalculateNormalizedV(VAT_AnimationData data, VAT_AnimationData.ClipInfo clip, float timeSeconds)
         {
             if (clip == null || data.positionTexture.height <= 1) return 0f;
+
             float progress = 0;
             if (clip.duration > 0)
             {
@@ -342,6 +371,7 @@ namespace OptimizeVariousVAT
                     default: progress = Mathf.Clamp01(timeSeconds / clip.duration); break;
                 }
             }
+
             float frameIndex = progress * (clip.frameCount - 1);
             float absoluteFrame = clip.startFrame + frameIndex;
             return (absoluteFrame + 0.5f) / data.positionTexture.height;
