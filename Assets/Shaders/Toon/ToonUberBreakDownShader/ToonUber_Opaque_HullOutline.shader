@@ -19,23 +19,23 @@ Shader "Bill's Toon/Opaque (Hull Outline)"
 
         [Header(Lighting)]
         [Toggle(_FAKELIGHT_ON)] _FakeLightMode("Enable Fake Light", Float) = 1
-        _FakeLightColor("Fake Light Color", Color) = (0.8, 0.8, 0.8, 1)
-        _FakeLightDirection("Fake Light Direction", Vector) = (0.5, 0.5, -0.5, 0)
+        [HDR] _FakeLightColor("Fake Light Color", Color) = (0.8, 0.8, 0.8, 1)
+        [HDR] _FakeLightDirection("Fake Light Direction", Vector) = (0.5, 0.5, -0.5, 0)
 
         [Header(Toon Shading)]
         _ToonRampOffset("Ramp Offset", Range(0.0, 1.0)) = 0.5
         _ToonRampSmoothness("Ramp Smoothness", Range(0.001, 1.0)) = 0.05
-        _ShadowTint("Shadow Tint", Color) = (0.1, 0.1, 0.2, 1.0)
-        _AmbientColor("Ambient Color", Color) = (0.5, 0.5, 0.5, 0) // <-- THÊM MỚI
+        [HDR] _ShadowTint("Shadow Tint", Color) = (0.1, 0.1, 0.2, 1.0)
+        [HDR] _AmbientColor("Ambient Color", Color) = (0.5, 0.5, 0.5, 0) // <-- THÊM MỚI
 
         [Header(Stylized Metal)]
         _Ramp("Toon Ramp (RGB)", 2D) = "white" {} 
         _Brightness("Specular Brightness", Range(0, 2)) = 1.3  
         _Offset("Specular Size", Range(0, 1)) = 0.8
-        _SpecuColor("Specular Color", Color) = (0.8,0.45,0.2,1)
+        [HDR] _SpecuColor("Specular Color", Color) = (0.8,0.45,0.2,1)
         _HighlightOffset("Highlight Size", Range(0, 1)) = 0.9  
-        _HiColor("Highlight Color", Color) = (1,1,1,1)
-        _RimColor("Rim Color", Color) = (1,0.3,0.3,1)
+        [HDR] _HiColor("Highlight Color", Color) = (1,1,1,1)
+        [HDR] _RimColor("Rim Color", Color) = (1,0.3,0.3,1)
         _RimPower("Rim Power", Range(0, 20)) = 6
         
         [Header(Foliage)]
@@ -46,7 +46,7 @@ Shader "Bill's Toon/Opaque (Hull Outline)"
         _TranslucencyStrength("Translucency Strength", Range(0, 5)) = 1.0
         
         [Header(Outline Properties (Inverted Hull))]
-        _OutlineColor("Color", Color) = (0, 0, 0, 1)
+        [HDR] _OutlineColor("Color", Color) = (0, 0, 0, 1)
         _OutlineWidth("Width", Range(0.0, 10)) = 1.0
         [Toggle(_OUTLINE_SCALE_WITH_DISTANCE)] _OutlineScaleWithDistance("Screen-Space Scaling", Float) = 1
         _DistanceFadeStart("Distance Fade Start", Float) = 20

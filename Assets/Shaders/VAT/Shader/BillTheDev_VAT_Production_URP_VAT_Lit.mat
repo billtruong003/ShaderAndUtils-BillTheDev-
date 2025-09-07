@@ -8,15 +8,25 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BillTheDev_VAT_Production_URP_VAT_Lit
-  m_Shader: {fileID: 4800000, guid: 3eb4fe475ed791f439d7769965c5d743, type: 3}
+  m_Shader: {fileID: 4800000, guid: ae5e49e6623dc3240a6081eb38307c6f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ValidKeywords:
+  - _FAKELIGHT_ON
+  - _GALAXY_RIM_RAMP_ON
+  - _OUTLINEMODE_INVERTEDHULL
+  - _OUTLINE_SCALE_WITH_DISTANCE
+  - _SURFACETYPE_GALAXY
+  - _VAT_ON
+  m_InvalidKeywords:
+  - _ADDITIONAL_LIGHTS_ON
+  - _GRADIENT_AMBIENT_ON
+  - _NORMALMAP_ON
+  - _OUTLINESCALEWITHDISTANCE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses: []
@@ -25,7 +35,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 9a6d48b7200e0da4daaa0de92b7e5ba1, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -36,8 +46,24 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _FresnelRampTexture:
+        m_Texture: {fileID: 2800000, guid: 069332733d7093b44a39824f248d175b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GalaxyRimRampTexture:
+        m_Texture: {fileID: 2800000, guid: c755faa3a4b9cd34694d54c650952df5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 52475fb4afae07b4384becbad96a4bee, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseMap:
+        m_Texture: {fileID: 2800000, guid: d50a21dbb2fabe340852f39b10dc7dc1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalTexture:
@@ -52,33 +78,124 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Ramp:
+        m_Texture: {fileID: 2800000, guid: 6f4c4473520df1d45b1726c9881bcc84, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarfieldMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
+    - _AlphaClipMode: 0
+    - _AnimationBlendWeight: 0
     - _Blend: 0
+    - _BlendWeight: 0
+    - _BlingIntensity: 1
+    - _BlingScale: 1
+    - _BlingSpeed: 1
+    - _BlingThreshold: 0.95
+    - _Brightness: 1
     - _BumpScale: 1
     - _Cull: 2
+    - _CurrentAnimNormalizedTime: 0
+    - _CurrentAnimV: 0
     - _Cutoff: 0.5
+    - _DistanceFadeEnd: 50
+    - _DistanceFadeStart: -75
     - _DstBlend: 0
+    - _EmissionMode: 0
+    - _EnableRimLight: 0
+    - _EnableVatInstancing: 0
+    - _FakeLightMode: 1
+    - _FresnelOutlinePower: 20
+    - _FresnelOutlineSharpness: 10
+    - _FresnelOutlineWidth: 0.95
+    - _FresnelPower: 0.7
+    - _FresnelRampToggle: 0
+    - _GalaxyRimPower: 3.71
+    - _GalaxyRimRampToggle: 1
+    - _GlassSpecularIntensity: 1.37
+    - _GlassSpecularPower: 4
+    - _GlintScale: 1
+    - _GlintSpeed: 1
+    - _GlintThreshold: 0.9
+    - _HighlightOffset: 0.903
+    - _HighlightThreshold: 0.431
+    - _LightIntensity: 1
     - _Metallic: 0
+    - _MidtoneThreshold: 0.6
+    - _NoiseScale: 35
+    - _NoiseSpeed: 0.1
+    - _NoiseSpeed1: 0.5
+    - _NoiseSpeed2: 0.5
     - _OcclusionStrength: 1
+    - _Offset: 0.696
+    - _OutlineGlint: 0
+    - _OutlineGlintEnable: 0
+    - _OutlineMode: 1
+    - _OutlineScaleWithDistance: 1
+    - _OutlineWidth: 0.5
+    - _ParallaxStrength: 0.0668
+    - _PreviousAnimNormalizedTime: 0
+    - _PreviousAnimV: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 1
+    - _RefractionStrength: 0.0033
+    - _RimPower: 20
+    - _RimThreshold: 0.5
+    - _ShadowThreshold: 0.318
+    - _Smoothness: 0.5
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _StarfieldScale: 2.25
     - _Surface: 0
+    - _SurfaceType: 4
+    - _ToonRampOffset: 0.55
+    - _ToonRampSmoothness: 0
+    - _TranslucencyStrength: 1
+    - _VatMode: 1
+    - _WindAmplitude: 0.1
+    - _WindFrequency: 2
     - _WorkflowMode: 1
+    - _ZTest: 4
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _AmbientColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _BaseColor: {r: 0.3959179, g: 0, b: 1, a: 1}
+    - _BlingColor: {r: 1, g: 0.8, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DustColor1: {r: 0.22222233, g: 0, b: 1, a: 1}
+    - _DustColor2: {r: 0.036112916, g: 0, b: 0.43015438, a: 1}
+    - _DustColor3: {r: 0.06711211, g: 0, b: 0.1254902, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FakeLightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FakeLightDirection: {r: 5, g: 5, b: 0, a: 0}
+    - _FresnelColor: {r: 0, g: 0.1901753, b: 1, a: 1}
+    - _FresnelOutlineColor: {r: 0, g: 0, b: 0, a: 0.4117647}
+    - _GalaxyRimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlassColor: {r: 0, g: 35.912205, b: 39.297318, a: 0.5}
+    - _GlintColor: {r: 1, g: 1, b: 0.5, a: 1}
+    - _HiColor: {r: 0.4811321, g: 0.1748085, b: 0.12936097, a: 1}
+    - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MidtoneColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _OutlineColor: {r: 1.4142135, g: 1.4142135, b: 1.4142135, a: 1}
     - _PositionMax: {r: 0, g: 0, b: 0, a: 0}
     - _PositionMin: {r: 0, g: 0, b: 0, a: 0}
+    - _RimColor: {r: 103.96829, g: 69.166466, b: 0, a: 1}
+    - _ShadowColor: {r: 0.4, g: 0.4, b: 0.4, a: 1}
+    - _ShadowTint: {r: 0.11062656, g: 0.11062656, b: 0.20754719, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _SpecuColor: {r: 0.27512679, g: 0.24407266, b: 0.105119206, a: 1}
+    - _StarfieldColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TranslucencyColor: {r: 0.7, g: 0.9, b: 0.3, a: 1}
+    - _WindDirection: {r: 1, g: 0, b: 0.5, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

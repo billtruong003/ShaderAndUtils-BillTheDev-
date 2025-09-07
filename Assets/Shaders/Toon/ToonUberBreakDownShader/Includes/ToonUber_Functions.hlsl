@@ -82,6 +82,7 @@ float3 CalculateFoliageLighting(float3 normalWS, float3 worldPos, Light mainLigh
     return totalLight;
 }
 
+#ifndef SHADER_PASS_SHADOWCASTER
 half3 CalculateGlassLighting(Varyings i, Light mainLight, float3 viewDir, half3 ambient)
 {
     float2 screenUV = i.screenPos.xy / i.screenPos.w;
@@ -101,6 +102,7 @@ half3 CalculateGlassLighting(Varyings i, Light mainLight, float3 viewDir, half3 
 
     return finalColor;
 }
+#endif // SHADER_PASS_SHADOWCASTER
 
 void ApplyWind(inout float3 positionOS, float4 vertexColor)
 {

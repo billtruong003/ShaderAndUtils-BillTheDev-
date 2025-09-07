@@ -24,6 +24,7 @@ namespace OptimizeVariousVAT
         [SerializeField] private Button _showStatsButton;
 
         [Header("Stats Display")]
+        [SerializeField, Range(60, 240)] private int _targetFrameRate = 120;
         [SerializeField] private TextMeshProUGUI _fpsText;
         [SerializeField] private TextMeshProUGUI _drawCallsText;
         [SerializeField] private TextMeshProUGUI _trisText;
@@ -74,6 +75,7 @@ namespace OptimizeVariousVAT
         private void Awake()
         {
             _allPanels = new List<GameObject> { _simulationGroup, _boidsBehaviorGroup, _statsGroup };
+            Application.targetFrameRate = _targetFrameRate;
         }
 
         private void Start()

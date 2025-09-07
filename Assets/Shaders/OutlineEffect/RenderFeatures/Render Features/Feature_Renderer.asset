@@ -35,7 +35,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9377bada70366419aa6301068e988aa4, type: 3}
   m_Name: EdgeDetection
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings: {fileID: 11400000, guid: f11fd00e6dc914184b69a52801a201a8, type: 2}
   shaders:
     section: {fileID: 4800000, guid: 555b69c4bab64af2aab316a4335ad6be, type: 3}
@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cbabd8e2cb2e4f8a930752453adf79a, type: 3}
   m_Name: Beautify
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   shader: {fileID: 4800000, guid: 55d70ca4ea7504a38b66170bbe587b2f, type: 3}
   renderPassEvent: 500
   ignorePostProcessingOption: 0
@@ -177,7 +177,8 @@ MonoBehaviour:
   - {fileID: 3655316745887417030}
   - {fileID: -6678181259552612364}
   - {fileID: -8699492271097353593}
-  m_RendererFeatureMap: bc1223069a5227d3c60228b4364bba32f41fb2e6865552a3876afc0edf314587
+  - {fileID: 4995492205815364293}
+  m_RendererFeatureMap: bc1223069a5227d3c60228b4364bba32f41fb2e6865552a3876afc0edf314587c57adba5b18d5345
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -269,6 +270,67 @@ MonoBehaviour:
   m_Active: 1
   settings: {viewSpaceNormalMaterial: {fileID: 2100000, guid: 662e7b3a65e81d94dbb9c77c053aa8a6, type: 2}, screenSpaceOutlineMaterial: {fileID: 2100000, guid: ccd06407f781c3e499fb0eac9886ea35, type: 2}, renderPassEvent: 300}
   cleanOutlineVolume: {fileID: 0}
+--- !u!114 &4995492205815364293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e110547dcf715004dbd808d078bd1d6a, type: 3}
+  m_Name: AdvancedEdgeDetectionFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    Event: 450
+    _CustomDataLayerMask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    _DepthMaskLayerMask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    _UseCustomData: 1
+    _UseDepthMask: 1
+    _UseCustomTexture: 1
+    _CustomTexture: {fileID: 0}
+    _CustomTextureLayerMask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    _Thickness: 3.23
+    _ResolutionAdjust: 1
+    _UseDepthFade: 0
+    _FadeStart: 20
+    _FadeEnd: 40
+    _NormalsEdgeDetection: 1
+    _NormalsOffset: 0.182
+    _NormalsHardness: 0.99
+    _NormalsPower: 2.6
+    _DepthEdgeDetection: 1
+    _AcuteAngleFix: 0
+    _ViewDirThreshold: 1
+    _ViewDirThresholdScale: 50
+    _DepthThreshold: 1
+    _DepthHardness: 0.9
+    _DepthPower: 5
+    _EdgeColor: {r: 0, g: 0, b: 0, a: 1}
+    _UseEdgeBlendDepthFade: 0
+    _EdgeBlendFadeStart: 10
+    _EdgeBlendFadeEnd: 20
+    _UseSketchEdges: 0
+    _Amplitude: 0.005
+    _Frequency: 40
+    _ChangesPerSecond: 0
+    _UseGrain: 0
+    _GrainTexture: {fileID: 0}
+    _GrainStrength: 1
+    _GrainScale: 1
+    _UseUvOffset: 0
+    _OffsetNoise: {fileID: 0}
+    _OffsetNoiseScale: 0.4
+    _OffsetChangesPerSecond: 0
+    _OffsetStrength: 0.005
 --- !u!114 &5851262326826874197
 MonoBehaviour:
   m_ObjectHideFlags: 0

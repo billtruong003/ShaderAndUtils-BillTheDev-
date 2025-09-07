@@ -1,0 +1,245 @@
+// File: Assets/Shaders/VAT/FinalizeForm/ComputeShader/CrowdSim_VAT.compute
+#pragma kernel ClearGrid
+#pragma kernel UpdateGrid
+#pragma kernel Simulation
+#pragma kernel Integration
+#pragma kernel PrepareDraw
+
+#define MAX_AGENT_TYPES 4
+#define STATE_IDLE 0
+#define STATE_WALKING 1
+#define STATE_RUNNING 2
+#define STATE_FLOCKING 3
+
+#define WRAP_MODE_ONCE 0
+#define WRAP_MODE_LOOP 1
+#define WRAP_MODE_PINGPONG 2
+
+struct Agent {
+    float3 position; float3 velocity; float3 forward; float3 targetPosition;
+    int currentState; float stateTimer; uint randomSeed; int typeIndex;
+    int currentClipIndex; int previousClipIndex; float currentTimeSeconds; float previousTimeSeconds; // THÊM previousTimeSeconds
+    float crossFadeTimer;
+};
+
+struct ClipInfoGPU { int startFrame; int frameCount; float duration; int wrapMode; };
+struct AgentTypeInfo { ClipInfoGPU clip0; ClipInfoGPU clip1; ClipInfoGPU clip2; int textureHeight; };
+struct AgentRenderData { float4x4 objectToWorld; float4 animationData; };
+
+RWStructuredBuffer<Agent> _AgentsRW;
+StructuredBuffer<Agent> _AgentsRO;
+
+StructuredBuffer<AgentTypeInfo> _AgentTypeInfo;
+RWStructuredBuffer<uint> _Grid;
+RWStructuredBuffer<uint> _GridIndices;
+
+RWStructuredBuffer<AgentRenderData> _VisibleAgentDataOutput0; RWBuffer<uint> _IndirectArgsBuffer0;
+#if MAX_AGENT_TYPES > 1
+RWStructuredBuffer<AgentRenderData> _VisibleAgentDataOutput1; RWBuffer<uint> _IndirectArgsBuffer1;
+#endif
+#if MAX_AGENT_TYPES > 2
+RWStructuredBuffer<AgentRenderData> _VisibleAgentDataOutput2; RWBuffer<uint> _IndirectArgsBuffer2;
+#endif
+#if MAX_AGENT_TYPES > 3
+RWStructuredBuffer<AgentRenderData> _VisibleAgentDataOutput3; RWBuffer<uint> _IndirectArgsBuffer3;
+#endif
+
+int _MaxAgents, _GridSide;
+float _DeltaTime, _Time, _InverseCellSize;
+float4 _SpawnBounds;
+float _WalkSpeed, _RunSpeed, _MaxSteerForce, _DestinationReachedThreshold;
+float _SeparationRadiusSq, _SeparationWeight, _CohesionWeight, _AlignmentWeight, _GoalSeekingWeight;
+float2 _IdleDurationRange, _FlockingDurationRange;
+float _ChanceToRun, _ChanceToFlock, _AnimationFadeDuration, _AgentBoundsRadius;
+float4 _FrustumPlanes[6];
+
+uint GetCellHash(float3 pos) { int cellX = floor(pos.x * _InverseCellSize + (_GridSide / 2.0f)); int cellZ = floor(pos.z * _InverseCellSize + (_GridSide / 2.0f)); return max(0, min(_GridSide * _GridSide - 1, cellX + cellZ * _GridSide)); }
+float rand(inout uint seed) { seed = seed * 747796405 + 2891336453; uint result = ((seed >> ((seed >> 28) + 4)) ^ seed) * 277803737; result = (result >> 22) ^ result; return result / 4294967295.0; }
+float3 Steer(float3 desired, float3 current, float maxForce) { float3 steer = desired - current; float lenSq = dot(steer, steer); if (lenSq > maxForce * maxForce) { steer = rsqrt(lenSq) * steer * maxForce; } return steer; }
+float4x4 BuildMatrixFromForwardUp(float3 pos, float3 fwd, float3 up) { fwd = normalize(fwd); float3 right = normalize(cross(up, fwd)); up = cross(fwd, right); return float4x4(right.x, up.x, fwd.x, pos.x, right.y, up.y, fwd.y, pos.y, right.z, up.z, fwd.z, pos.z, 0, 0, 0, 1); }
+bool IsVisible(float3 worldPos) { for (int i = 0; i < 6; i++) { if (dot(float4(worldPos, 1.0), _FrustumPlanes[i]) < -_AgentBoundsRadius) return false; } return true; }
+
+float CalculateNormalizedV(ClipInfoGPU clip, int textureHeight, float timeSeconds) {
+    if (textureHeight <= 1 || clip.duration <= 0.0) return 0.0f;
+    float progress = 0.0f;
+    switch (clip.wrapMode) {
+        case WRAP_MODE_LOOP: progress = frac(timeSeconds / clip.duration); break;
+        case WRAP_MODE_PINGPONG: progress = 1.0 - abs(fmod(timeSeconds / clip.duration, 2.0) - 1.0); break;
+        default: progress = saturate(timeSeconds / clip.duration); break;
+    }
+    float frameIndex = progress * (clip.frameCount - 1);
+    float absoluteFrame = clip.startFrame + frameIndex;
+    return (absoluteFrame + 0.5f) / textureHeight;
+}
+
+[numthreads(256, 1, 1)]
+void ClearGrid(uint3 id : SV_DispatchThreadID) { if (id.x < _GridSide * _GridSide) { _Grid[id.x] = 0xFFFFFFFF; } }
+
+[numthreads(256, 1, 1)]
+void UpdateGrid(uint3 id : SV_DispatchThreadID) {
+    if (id.x >= _MaxAgents) return;
+    uint hash = GetCellHash(_AgentsRO[id.x].position);
+    uint head;
+    InterlockedExchange(_Grid[hash], id.x, head);
+    _GridIndices[id.x] = head;
+}
+
+[numthreads(256, 1, 1)]
+void Simulation(uint3 id : SV_DispatchThreadID) {
+    if (id.x >= _MaxAgents) return;
+    Agent agent = _AgentsRW[id.x];
+    if (agent.currentState == STATE_IDLE) { return; }
+    
+    float3 separation = 0, alignment = 0, cohesion = 0; uint neighborsCount = 0;
+    int cellX = floor(agent.position.x * _InverseCellSize + (_GridSide / 2.0f)); int cellZ = floor(agent.position.z * _InverseCellSize + (_GridSide / 2.0f));
+    for (int z = -1; z <= 1; z++) { for (int x = -1; x <= 1; x++) {
+        uint hash = max(0, min(_GridSide * _GridSide - 1, (cellX + x) + (cellZ + z) * _GridSide));
+        uint currentIndex = _Grid[hash];
+        while (currentIndex != 0xFFFFFFFF) {
+            if (currentIndex != id.x) {
+                Agent neighbor = _AgentsRO[currentIndex];
+                float3 offset = neighbor.position - agent.position; float distSq = dot(offset, offset);
+                if (distSq > 0.0001f && distSq < _SeparationRadiusSq) {
+                    separation -= offset * rsqrt(distSq);
+                    alignment += neighbor.forward;
+                    cohesion += neighbor.position;
+                    neighborsCount++;
+                }
+            }
+            currentIndex = _GridIndices[currentIndex];
+        }
+    } }
+    
+    float3 acceleration = 0;
+    float speed = agent.currentState == STATE_RUNNING ? _RunSpeed : _WalkSpeed;
+    
+    if (neighborsCount > 0) {
+        cohesion = cohesion / neighborsCount - agent.position;
+        acceleration += Steer(normalize(separation) * speed, agent.velocity, _MaxSteerForce) * _SeparationWeight;
+        acceleration += Steer(normalize(alignment) * speed, agent.velocity, _MaxSteerForce) * _AlignmentWeight;
+        acceleration += Steer(normalize(cohesion) * speed, agent.velocity, _MaxSteerForce) * _CohesionWeight;
+    }
+    
+    if (agent.currentState != STATE_FLOCKING) {
+        float3 goalForce = normalize(agent.targetPosition - agent.position) * speed;
+        acceleration += Steer(goalForce, agent.velocity, _MaxSteerForce) * _GoalSeekingWeight;
+    }
+    
+    agent.velocity += acceleration * _DeltaTime;
+    _AgentsRW[id.x] = agent;
+}
+
+[numthreads(256, 1, 1)]
+void Integration(uint3 id : SV_DispatchThreadID) {
+    if (id.x >= _MaxAgents) return;
+    Agent agent = _AgentsRW[id.x];
+    agent.stateTimer -= _DeltaTime;
+    
+    bool shouldTransition = agent.stateTimer <= 0 ||
+        (agent.currentState == STATE_WALKING && distance(agent.position, agent.targetPosition) < _DestinationReachedThreshold) ||
+        (agent.currentState == STATE_RUNNING && distance(agent.position, agent.targetPosition) < _DestinationReachedThreshold);
+    
+    if (shouldTransition) {
+        agent.previousClipIndex = agent.currentClipIndex;
+        agent.previousTimeSeconds = agent.currentTimeSeconds; // LƯU LẠI THỜI GIAN CŨ
+        
+        if (agent.currentState != STATE_IDLE) {
+            agent.currentState = STATE_IDLE;
+            agent.currentClipIndex = 0;
+            agent.stateTimer = lerp(_IdleDurationRange.x, _IdleDurationRange.y, rand(agent.randomSeed));
+        } else {
+            float stateRoll = rand(agent.randomSeed);
+            if (stateRoll < _ChanceToFlock) {
+                agent.currentState = STATE_FLOCKING;
+                agent.currentClipIndex = 1;
+                agent.stateTimer = lerp(_FlockingDurationRange.x, _FlockingDurationRange.y, rand(agent.randomSeed));
+            } else {
+                bool isRunning = rand(agent.randomSeed) < _ChanceToRun;
+                agent.currentState = isRunning ? STATE_RUNNING : STATE_WALKING;
+                agent.currentClipIndex = isRunning ? 2 : 1;
+                float spawnCenterX = _SpawnBounds.x * 0.5; float spawnCenterZ = _SpawnBounds.z * 0.5;
+                agent.targetPosition = float3(lerp(-spawnCenterX, spawnCenterX, rand(agent.randomSeed)), 0, lerp(-spawnCenterZ, spawnCenterZ, rand(agent.randomSeed)));
+                agent.stateTimer = 999.0f;
+            }
+        }
+        agent.currentTimeSeconds = 0; // RESET THỜI GIAN MỚI
+        agent.crossFadeTimer = 0;
+    }
+    
+    agent.currentTimeSeconds += _DeltaTime;
+    agent.crossFadeTimer += _DeltaTime;
+
+    // TỐI ƯU HÓA: WRAP LẠI THỜI GIAN ĐỂ TRÁNH VẤN ĐỀ PRECISION
+    AgentTypeInfo typeInfo = _AgentTypeInfo[agent.typeIndex];
+    ClipInfoGPU currentClip;
+    switch (agent.currentClipIndex) {
+        case 0: currentClip = typeInfo.clip0; break;
+        case 1: currentClip = typeInfo.clip1; break;
+        case 2: currentClip = typeInfo.clip2; break;
+    }
+    if (currentClip.wrapMode == WRAP_MODE_LOOP && currentClip.duration > 0) {
+        agent.currentTimeSeconds = fmod(agent.currentTimeSeconds, currentClip.duration);
+    }
+    
+    float targetSpeed = (agent.currentState == STATE_IDLE) ? 0 : (agent.currentState == STATE_RUNNING ? _RunSpeed : _WalkSpeed);
+    
+    if (agent.currentState == STATE_IDLE) {
+        agent.velocity = lerp(agent.velocity, 0, _DeltaTime * 5.0f);
+    } else {
+        float speedSq = dot(agent.velocity, agent.velocity);
+        if (speedSq > targetSpeed * targetSpeed) {
+            agent.velocity = agent.velocity * rsqrt(speedSq) * targetSpeed;
+        }
+    }
+    
+    agent.position += agent.velocity * _DeltaTime;
+    agent.position.y = 0;
+    
+    if (length(agent.velocity) > 0.1f) {
+        agent.forward = normalize(lerp(agent.forward, agent.velocity, _DeltaTime * 10.0f));
+    }
+    
+    _AgentsRW[id.x] = agent;
+}
+
+[numthreads(256, 1, 1)]
+void PrepareDraw(uint3 id : SV_DispatchThreadID) {
+    if (id.x >= _MaxAgents) return;
+    Agent agent = _AgentsRO[id.x];
+    if (IsVisible(agent.position)) {
+        AgentTypeInfo typeInfo = _AgentTypeInfo[agent.typeIndex];
+        AgentRenderData renderData;
+        renderData.objectToWorld = BuildMatrixFromForwardUp(agent.position, agent.forward, float3(0, 1, 0));
+        
+        ClipInfoGPU currentClip;
+        switch (agent.currentClipIndex) { case 0: currentClip = typeInfo.clip0; break; case 1: currentClip = typeInfo.clip1; break; case 2: currentClip = typeInfo.clip2; break; }
+        float currentV = CalculateNormalizedV(currentClip, typeInfo.textureHeight, agent.currentTimeSeconds);
+        
+        float previousV = 0.0f;
+        float blendWeight = 1.0f;
+        
+        if (agent.crossFadeTimer < _AnimationFadeDuration && agent.previousClipIndex != -1) {
+            ClipInfoGPU previousClip;
+            switch (agent.previousClipIndex) { case 0: previousClip = typeInfo.clip0; break; case 1: previousClip = typeInfo.clip1; break; case 2: previousClip = typeInfo.clip2; break; }
+            
+            // SỬA LẠI LOGIC TÍNH TOÁN V CHO ANIMATION TRƯỚC ĐÓ
+            previousV = CalculateNormalizedV(previousClip, typeInfo.textureHeight, agent.previousTimeSeconds + agent.crossFadeTimer);
+            blendWeight = saturate(agent.crossFadeTimer / _AnimationFadeDuration);
+        }
+        
+        renderData.animationData = float4(currentV, previousV, blendWeight, 0);
+        uint appendIndex;
+        switch (agent.typeIndex) {
+            case 0: InterlockedAdd(_IndirectArgsBuffer0[1], 1, appendIndex); _VisibleAgentDataOutput0[appendIndex] = renderData; break;
+        #if MAX_AGENT_TYPES > 1
+            case 1: InterlockedAdd(_IndirectArgsBuffer1[1], 1, appendIndex); _VisibleAgentDataOutput1[appendIndex] = renderData; break;
+        #endif
+        #if MAX_AGENT_TYPES > 2
+            case 2: InterlockedAdd(_IndirectArgsBuffer2[1], 1, appendIndex); _VisibleAgentDataOutput2[appendIndex] = renderData; break;
+        #endif
+        #if MAX_AGENT_TYPES > 3
+            case 3: InterlockedAdd(_IndirectArgsBuffer3[1], 1, appendIndex); _VisibleAgentDataOutput3[appendIndex] = renderData; break;
+        #endif
+        }
+    }
+}
