@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c081f067eeb4d638e1d2a6ddc12fd5, type: 3}
+  m_Name: EP_NewExpression 1
+  m_EditorClassIdentifier: 
+  ShapeSettings:
+  - BlendShapeName: eyeBlinkLeft
+    Weight: 25
+  - BlendShapeName: eyeBlinkRight
+    Weight: 25
+  - BlendShapeName: mouthFunnel
+    Weight: 50
+  - BlendShapeName: mouthSmileRight
+    Weight: 50
+  - BlendShapeName: mouthSmileLeft
+    Weight: 25
+  - BlendShapeName: cheekPuff
+    Weight: 25
+  - BlendShapeName: browInnerUp
+    Weight: 50

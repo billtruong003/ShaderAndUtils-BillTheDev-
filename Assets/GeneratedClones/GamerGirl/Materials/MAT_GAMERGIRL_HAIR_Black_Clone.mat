@@ -28,9 +28,10 @@ Material:
   - _ADDITIONAL_LIGHTS_ON
   - _ALPHATEST_ON
   - _GRADIENT_AMBIENT_ON
-  - _MATCAP_BLEND_MULTIPLY
+  - _MATCAP_BLEND_LERP
   - _MATCAP_ON
   - _NORMALMAP_ON
+  - _SPECULAR_ON
   m_InvalidKeywords:
   - _DETAIL_MULX2
   - _NORMALMAP
@@ -123,14 +124,14 @@ Material:
     - _AmbientGradientPower: 5
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BumpScale: 2
+    - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 0
-    - _Cutoff: 0.05
+    - _Cutoff: 0.04
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _DstBlendAlpha: 0
     - _EnableAdditionalLights: 1
     - _EnableAlphaClip: 1
@@ -140,33 +141,33 @@ Material:
     - _EnableNormalMap: 1
     - _EnableRampTexture: 0
     - _EnableRimLight: 0
-    - _EnableSpecular: 0
+    - _EnableSpecular: 1
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0.046
     - _Glossiness: 0.231
     - _GlossyReflections: 1
     - _HatchingTiling: 1
     - _HatchingVisibility: 1
-    - _HighlightThreshold: 0.3
-    - _MatcapBlendMode: 1
+    - _HighlightThreshold: 0.8
+    - _MatcapBlendMode: 2
     - _MatcapIntensity: 5
     - _Metallic: 0.633
     - _Mode: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueOffset: 0
-    - _RampSmoothness: 0.001
+    - _RampSmoothness: 0.3
     - _ReceiveShadows: 1
-    - _RimPower: 3
-    - _RimThreshold: 0.5
-    - _ShadowThreshold: 0
-    - _ShadowTintInfluence: 0
+    - _RimPower: 1
+    - _RimThreshold: 0
+    - _ShadowThreshold: 0.2
+    - _ShadowTintInfluence: 1
     - _Smoothness: 0.338
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularSmoothness: 1
-    - _SpecularThreshold: 1
-    - _SrcBlend: 1
+    - _SpecularSmoothness: 0.9
+    - _SpecularThreshold: 0.576
+    - _SrcBlend: 5
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _SurfaceType: 1
@@ -174,21 +175,22 @@ Material:
     - _UseFakeLight: 0
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
+    - _ZTest: 4
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.082352914, g: 0.082352914, b: 0.08627448, a: 1}
     - _Color: {r: 0.082352914, g: 0.082352914, b: 0.08627448, a: 1}
     - _CustomShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0.019236634, g: 0.019236634, b: 0.019236634, a: 1}
-    - _FakeLightDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _FakeLightDirection: {r: 1.47, g: 0.16, b: 1.17, a: 0}
     - _GroundColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
-    - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
-    - _MatcapTint: {r: 1, g: 0.2216981, b: 0.43534967, a: 1}
-    - _MidtoneColor: {r: 0.5754717, g: 0.5754717, b: 0.5754717, a: 1}
-    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowColor: {r: 0.254717, g: 0.254717, b: 0.254717, a: 1}
+    - _HighlightColor: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
+    - _MatcapTint: {r: 0.2830189, g: 0.09478463, b: 0.18031739, a: 1}
+    - _MidtoneColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 1}
+    - _RimColor: {r: 1, g: 0, b: 0.047002792, a: 1}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _SkyColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _SpecularColor: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
+    - _SpecularColor: {r: 0.4009434, g: 0.8439335, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

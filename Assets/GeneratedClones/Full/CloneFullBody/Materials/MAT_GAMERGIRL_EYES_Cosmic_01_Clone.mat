@@ -26,9 +26,8 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ADDITIONAL_LIGHTS_ON
+  - _GRADIENT_AMBIENT_ON
   - _NORMALMAP_ON
-  - _RIM_LIGHT_ON
-  - _SPECULAR_ON
   m_InvalidKeywords:
   - _EMISSION
   - _NORMALMAP
@@ -133,20 +132,20 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnableAdditionalLights: 1
-    - _EnableGradientAmbient: 0
+    - _EnableGradientAmbient: 1
     - _EnableHatching: 0
     - _EnableMatcap: 0
     - _EnableNormalMap: 1
     - _EnableRampTexture: 0
-    - _EnableRimLight: 1
-    - _EnableSpecular: 1
+    - _EnableRimLight: 0
+    - _EnableSpecular: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.932
     - _GlossyReflections: 1
     - _HatchingTiling: 1
     - _HatchingVisibility: 1
-    - _HighlightThreshold: 0.022
+    - _HighlightThreshold: 0.474
     - _MatcapBlendMode: 0
     - _MatcapIntensity: 1
     - _Metallic: 0
@@ -154,11 +153,11 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.0117
     - _QueueOffset: 0
-    - _RampSmoothness: 0.001
+    - _RampSmoothness: 1
     - _ReceiveShadows: 1
     - _RimPower: 10
     - _RimThreshold: 0.899
-    - _ShadowThreshold: 0
+    - _ShadowThreshold: 0.099
     - _ShadowTintInfluence: 0.2
     - _Smoothness: 0.932
     - _SmoothnessTextureChannel: 0
@@ -185,7 +184,7 @@ Material:
     - _MatcapTint: {r: 1, g: 1, b: 1, a: 1}
     - _MidtoneColor: {r: 0.6509434, g: 0.6509434, b: 0.6509434, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShadowColor: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
+    - _ShadowColor: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
     - _SkyColor: {r: 0.2, g: 0.3, b: 0.4, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularColor: {r: 0.5218673, g: 0.28773582, b: 1, a: 1}

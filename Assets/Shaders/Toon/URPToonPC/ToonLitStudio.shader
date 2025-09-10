@@ -9,6 +9,13 @@ Shader "Toon/Lit Studio Advanced"
         [Toggle(_NORMALMAP_ON)] _EnableNormalMap("Enable Normal Map", Float) = 0
         [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
         _BumpScale("Normal Intensity", Range(0, 2)) = 1.0
+
+        [Header(Advanced Rendering States)]
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull("Culling Mode", Float) = 2.0 // Back
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("Depth Test", Float) = 4.0 // LEqual
+        [Enum(Off, 0, On, 1)] _ZWrite("Depth Write", Float) = 1.0 // On
+        [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("Source Blend", Float) = 1.0 // One
+        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("Destination Blend", Float) = 0.0 // Zero
         
         [Header(Main Shading Ramp)]
         [Toggle(_RAMP_TEXTURE_ON)] _EnableRampTexture("Use Ramp Texture", Float) = 0
@@ -59,10 +66,6 @@ Shader "Toon/Lit Studio Advanced"
         _RimColor("Rim Color", Color) = (1,1,1,1)
         _RimPower("Rim Power", Range(1, 10)) = 3.0
         _RimThreshold("Rim Threshold", Range(0, 1)) = 0.5
-        
-        [HideInInspector] _SrcBlend ("SrcBlend", Float) = 1.0
-        [HideInInspector] _DstBlend ("DstBlend", Float) = 0.0
-        [HideInInspector] _ZWrite ("ZWrite", Float) = 1.0
     }
     SubShader
     {
@@ -73,9 +76,10 @@ Shader "Toon/Lit Studio Advanced"
             Name "ForwardLit"
             Tags { "LightMode"="UniversalForward" }
             
-            Blend [_SrcBlend] [_DstBlend]
+            Cull [_Cull]
+            ZTest [_ZTest]
             ZWrite [_ZWrite]
-            Cull Off
+            Blend [_SrcBlend] [_DstBlend]
 
             HLSLPROGRAM
             #pragma vertex MainVert
@@ -185,13 +189,13 @@ Shader "Toon/Lit Studio Advanced"
             Tags { "LightMode"="DepthNormals" }
 
             ZWrite On
-            Cull Off
+            Cull [_Cull]
 
             HLSLPROGRAM
             #pragma vertex MainVert
             #pragma fragment DepthNormalsFrag
 
-            #include "Includes/ToonLitStudioCore.hlsl"
+            #include "Assets/Shaders/Toon/URPToonPC/Includes/ToonLitStudioCore.hlsl"
             
             #pragma shader_feature_local_fragment _NORMALMAP_ON
             #pragma shader_feature_local_fragment _ALPHATEST_ON

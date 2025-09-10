@@ -8,26 +8,17 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ColorC
-  m_Shader: {fileID: 4800000, guid: c0534d217a6fdef4cbea32b0135a0365, type: 3}
+  m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _ADDITIONAL_LIGHTS_ON
-  - _GRADIENT_AMBIENT_ON
-  - _RIM_LIGHT_ON
-  - _SPECULAR_ON
-  m_InvalidKeywords:
-  - _AURA_ON
-  - _EMISSION_ON
-  - _FAKELIGHT_ON
-  - _OUTLINE_SCALE_WITH_DISTANCE
-  - _SURFACETYPE_OPAQUE
-  - _SURFACETYPE_TOON
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
@@ -86,6 +77,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RampMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -112,6 +107,7 @@ Material:
     - _AmbientGradientPower: 5
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _BlendOp: 0
     - _Brightness: 1.3
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -135,8 +131,10 @@ Material:
     - _EnableGradientAmbient: 1
     - _EnableHatching: 0
     - _EnableMatcap: 0
-    - _EnableRimLight: 1
-    - _EnableSpecular: 1
+    - _EnableNormalMap: 0
+    - _EnableRampTexture: 0
+    - _EnableRimLight: 0
+    - _EnableSpecular: 0
     - _EnvironmentReflections: 1
     - _FakeLightMode: 1
     - _FresnelOutlinePower: 100
@@ -156,7 +154,7 @@ Material:
     - _HatchingTiling: 1000
     - _HatchingVisibility: 0.285
     - _HighlightOffset: 0.9
-    - _HighlightThreshold: 0.9
+    - _HighlightThreshold: 0.553
     - _MatcapBlendMode: 0
     - _MatcapIntensity: 0.6
     - _Metallic: 0
@@ -168,12 +166,13 @@ Material:
     - _OutlineWidth: 0.01
     - _Parallax: 0.02
     - _QueueOffset: 0
-    - _RampSmoothness: 0.389
+    - _RampSmoothness: 0.438
     - _ReceiveShadows: 1
     - _RefractionStrength: 0.01
     - _RimPower: 10
     - _RimThreshold: 1
-    - _ShadowThreshold: 0.335
+    - _SampleGI: 0
+    - _ShadowThreshold: 0.236
     - _ShadowTintInfluence: 0.2
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
@@ -195,11 +194,13 @@ Material:
     - _WindToggle: 0
     - _Workflow: 0
     - _WorkflowMode: 1
+    - _XRMotionVectorsPass: 1
+    - _ZTest: 4
     - _ZWrite: 1
     m_Colors:
     - _AmbientColor: {r: 0.10586506, g: 0.1120312, b: 0.3679245, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _CustomShadowColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
     - _DissolveCenter: {r: 0, g: 0, b: 0, a: 0}
     - _DissolveEdgeColor: {r: 1, g: 0.5820617, b: 0, a: 1}

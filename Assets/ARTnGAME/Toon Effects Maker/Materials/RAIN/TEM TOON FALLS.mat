@@ -98,6 +98,7 @@ Material:
     m_Ints: []
     m_Floats:
     - PixelSnap: 0
+    - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Blend: 0
@@ -135,10 +136,11 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _WorkflowMode: 1
+    - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.7490566, g: 0.9772223, b: 1, a: 1}
-    - _Color: {r: 0.7490565, g: 0.97722226, b: 1, a: 1}
+    - _Color: {r: 0.7490566, g: 0.9772223, b: 1, a: 1}
     - _Drop1: {r: 0, g: 0, b: 1124.0441, a: 0}
     - _Drop2: {r: 0, g: 0, b: 1124.0441, a: 0}
     - _Drop3: {r: 0, g: 0, b: 1124.0441, a: 0}

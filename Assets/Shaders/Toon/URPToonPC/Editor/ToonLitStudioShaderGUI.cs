@@ -8,7 +8,9 @@ public class ToonLitStudioShaderGUI : ShaderGUI
     private MaterialProperty[] properties;
     private Material targetMat;
 
+    // Thêm cờ cho section mới
     private bool showSurfaceProps = true;
+    private bool showAdvancedStates = true;
     private bool showMainRamp = true;
     private bool showLighting = true;
     private bool showArtistic = true;
@@ -53,6 +55,7 @@ public class ToonLitStudioShaderGUI : ShaderGUI
         DrawHeader("TOON LIT SHADER - STUDIO ADVANCED");
 
         DrawSurfacePropertiesSection();
+        DrawAdvancedStatesSection(); // Thêm section mới vào đây
         DrawMainRampSection();
         DrawLightingSection();
         DrawArtisticSection();
@@ -86,6 +89,7 @@ public class ToonLitStudioShaderGUI : ShaderGUI
         else targetMat.DisableKeyword(keyword);
     }
 
+    // Tái cấu trúc để sử dụng MaterialProperty cho tính nhất quán
     private void SetupMaterialWithSurfaceType(SurfaceType surfaceType)
     {
         switch (surfaceType)
@@ -93,25 +97,25 @@ public class ToonLitStudioShaderGUI : ShaderGUI
             case SurfaceType.Opaque:
                 targetMat.SetOverrideTag("RenderType", "Opaque");
                 targetMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry;
-                targetMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                targetMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-                targetMat.SetInt("_ZWrite", 1);
+                FindProp("_SrcBlend").floatValue = (float)UnityEngine.Rendering.BlendMode.One;
+                FindProp("_DstBlend").floatValue = (float)UnityEngine.Rendering.BlendMode.Zero;
+                FindProp("_ZWrite").floatValue = 1;
                 SetKeyword("_ALPHATEST_ON", false);
                 break;
             case SurfaceType.Cutout:
                 targetMat.SetOverrideTag("RenderType", "TransparentCutout");
                 targetMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
-                targetMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                targetMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-                targetMat.SetInt("_ZWrite", 1);
+                FindProp("_SrcBlend").floatValue = (float)UnityEngine.Rendering.BlendMode.One;
+                FindProp("_DstBlend").floatValue = (float)UnityEngine.Rendering.BlendMode.Zero;
+                FindProp("_ZWrite").floatValue = 1;
                 SetKeyword("_ALPHATEST_ON", true);
                 break;
             case SurfaceType.Transparent:
                 targetMat.SetOverrideTag("RenderType", "Transparent");
                 targetMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-                targetMat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                targetMat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                targetMat.SetInt("_ZWrite", 0);
+                FindProp("_SrcBlend").floatValue = (float)UnityEngine.Rendering.BlendMode.SrcAlpha;
+                FindProp("_DstBlend").floatValue = (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha;
+                FindProp("_ZWrite").floatValue = 0;
                 SetKeyword("_ALPHATEST_ON", false);
                 break;
         }
@@ -149,6 +153,28 @@ public class ToonLitStudioShaderGUI : ShaderGUI
                 editor.ShaderProperty(FindProp("_BumpScale"), "Normal Intensity");
                 EditorGUI.indentLevel--;
             }
+            EditorGUILayout.Space();
+        }
+    }
+
+    // Hàm vẽ cho section mới
+    private void DrawAdvancedStatesSection()
+    {
+        DrawSectionToggle("Advanced Rendering States", ref showAdvancedStates);
+        if (showAdvancedStates)
+        {
+            EditorGUILayout.Space();
+
+            // Sử dụng editor.ShaderProperty để tự động tạo dropdowns từ [Enum]
+            editor.ShaderProperty(FindProp("_Cull"), "Culling Mode");
+            editor.ShaderProperty(FindProp("_ZTest"), "Depth Test");
+            editor.ShaderProperty(FindProp("_ZWrite"), "Depth Write");
+
+            EditorGUILayout.Space();
+
+            editor.ShaderProperty(FindProp("_SrcBlend"), "Source Blend");
+            editor.ShaderProperty(FindProp("_DstBlend"), "Destination Blend");
+
             EditorGUILayout.Space();
         }
     }
