@@ -11,7 +11,7 @@ Shader "BillTheDev/VAT/Optimized_VAT"
     {
         Tags { "RenderType"="Opaque" }
         LOD 200
-        Cull Off // Tắt Cull để tránh lỗi render mặt sau, hữu ích cho các animation phức tạp
+        Cull Back // Tắt Cull để tránh lỗi render mặt sau, hữu ích cho các animation phức tạp
 
         Pass
         {

@@ -14,7 +14,7 @@ public class VAT_InstanceManager : MonoBehaviour
     private Material _sourceMaterial;
 
     [Title("Live Debugging State")]
-    [ShowInInspector, ReadOnly, ListDrawerSettings(IsReadOnly = true, Expanded = true)]
+    [ShowInInspector, ReadOnly, ListDrawerSettings(IsReadOnly = true, ShowFoldout = true)]
     private List<ManagedAgent> _agents = new List<ManagedAgent>(25000);
 
     private struct ManagedAgent

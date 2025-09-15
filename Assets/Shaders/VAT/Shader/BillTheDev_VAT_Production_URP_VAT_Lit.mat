@@ -8,27 +8,26 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BillTheDev_VAT_Production_URP_VAT_Lit
-  m_Shader: {fileID: 4800000, guid: ae5e49e6623dc3240a6081eb38307c6f, type: 3}
+  m_Shader: {fileID: 4800000, guid: 7522e3b349fe58749858917717a617fe, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _ADDITIONAL_LIGHTS_ON
   - _FAKELIGHT_ON
   - _GALAXY_RIM_RAMP_ON
+  - _GRADIENT_AMBIENT_ON
+  - _NORMALMAP_ON
   - _OUTLINEMODE_INVERTEDHULL
+  - _OUTLINESCALEWITHDISTANCE_ON
   - _OUTLINE_SCALE_WITH_DISTANCE
   - _SURFACETYPE_GALAXY
   - _VAT_ON
-  m_InvalidKeywords:
-  - _ADDITIONAL_LIGHTS_ON
-  - _GRADIENT_AMBIENT_ON
-  - _NORMALMAP_ON
-  - _OUTLINESCALEWITHDISTANCE_ON
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:

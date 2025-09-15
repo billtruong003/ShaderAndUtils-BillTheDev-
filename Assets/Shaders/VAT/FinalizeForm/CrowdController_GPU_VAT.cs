@@ -55,7 +55,7 @@ namespace OptimizeVariousVAT
 
         [TitleGroup("Agent Types & Rendering")]
         [SerializeField, Required] private Material _baseInstancedMaterial;
-        [SerializeField, ListDrawerSettings(Expanded = true)] private List<AgentTypeDefinition> _agentTypes;
+        [SerializeField, ListDrawerSettings(ShowFoldout = true)] private List<AgentTypeDefinition> _agentTypes;
         [SerializeField] private float _agentBoundsRadius = 1.0f;
 
         [TitleGroup("Movement Settings")]

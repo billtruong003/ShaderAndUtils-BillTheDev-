@@ -4,7 +4,8 @@ using TMPro;
 using System.Linq;
 using System.Globalization;
 using System.Collections.Generic;
-using Unity.Profiling; // Thêm namespace để sử dụng ProfilerRecorder
+using Unity.Profiling;
+using System.Text;
 
 namespace OptimizeVariousVAT
 {
@@ -17,13 +18,13 @@ namespace OptimizeVariousVAT
         [SerializeField] private GameObject _spawningGroup;
         [SerializeField] private GameObject _movementGroup;
         [SerializeField] private GameObject _performanceGroup;
-        [SerializeField] private GameObject _statsGroup; // Panel mới
+        [SerializeField] private GameObject _statsGroup;
 
         [Header("UI Panel Buttons")]
         [SerializeField] private Button _showSpawningButton;
         [SerializeField] private Button _showMovementButton;
         [SerializeField] private Button _showPerformanceButton;
-        [SerializeField] private Button _showStatsButton; // Nút mới
+        [SerializeField] private Button _showStatsButton;
 
         [Header("Stats Display")]
         [SerializeField] private TextMeshProUGUI _fpsText;
@@ -32,7 +33,6 @@ namespace OptimizeVariousVAT
         [SerializeField] private TextMeshProUGUI _vertsText;
         [SerializeField, Range(0.1f, 2f)] private float _statsUpdateInterval = 0.5f;
 
-        // --- Các trường UI khác giữ nguyên ---
         [Header("Spawning Controls")]
         [SerializeField] private Slider _agentCountSlider;
         [SerializeField] private TextMeshProUGUI _agentCountText;
@@ -55,19 +55,17 @@ namespace OptimizeVariousVAT
         [SerializeField] private TMP_InputField _coroutineIntervalInput;
 
         private List<GameObject> _allPanels;
+        private readonly StringBuilder _stringBuilder = new StringBuilder(128);
 
-        // FPS Counter
         private float _fpsAccumulator;
         private int _fpsFrameCount;
 
-        // Profiler Recorders for stats
         private ProfilerRecorder _drawCallsRecorder;
         private ProfilerRecorder _trisRecorder;
         private ProfilerRecorder _vertsRecorder;
 
         private void OnEnable()
         {
-            // Khởi tạo các recorder để bắt đầu thu thập dữ liệu
             _drawCallsRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Draw Calls Count");
             _trisRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Triangles Count");
             _vertsRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Vertices Count");
@@ -75,7 +73,6 @@ namespace OptimizeVariousVAT
 
         private void OnDisable()
         {
-            // Giải phóng các recorder khi không cần thiết để tránh memory leak
             _drawCallsRecorder.Dispose();
             _trisRecorder.Dispose();
             _vertsRecorder.Dispose();
@@ -90,7 +87,7 @@ namespace OptimizeVariousVAT
         {
             if (!ValidateReferences())
             {
-                this.enabled = false;
+                enabled = false;
                 return;
             }
 
@@ -101,7 +98,6 @@ namespace OptimizeVariousVAT
 
         private void Update()
         {
-            // Cập nhật thông số FPS và rendering
             _fpsFrameCount++;
             _fpsAccumulator += Time.unscaledDeltaTime;
 
@@ -121,11 +117,18 @@ namespace OptimizeVariousVAT
         private void UpdateStatsDisplay()
         {
             float fps = _fpsFrameCount / _fpsAccumulator;
-            _fpsText.text = $"FPS: {fps:F1}";
+            _fpsText.SetText("FPS: {0:F1}", fps);
+            _drawCallsText.SetText("Draw Calls: {0}", _drawCallsRecorder.LastValue);
 
-            _drawCallsText.text = $"Draw Calls: {_drawCallsRecorder.LastValue}";
-            _trisText.text = $"Tris: {FormatNumber(_trisRecorder.LastValue)}";
-            _vertsText.text = $"Verts: {FormatNumber(_vertsRecorder.LastValue)}";
+            _stringBuilder.Clear();
+            _stringBuilder.Append("Tris: ");
+            FormatNumberIntoBuilder(_stringBuilder, _trisRecorder.LastValue);
+            _trisText.SetText(_stringBuilder);
+
+            _stringBuilder.Clear();
+            _stringBuilder.Append("Verts: ");
+            FormatNumberIntoBuilder(_stringBuilder, _vertsRecorder.LastValue);
+            _vertsText.SetText(_stringBuilder);
         }
 
         public void SetActivePanel(GameObject panelToShow)
@@ -141,24 +144,20 @@ namespace OptimizeVariousVAT
 
         private void AddListeners()
         {
-            // Panel Buttons
             _showSpawningButton.onClick.AddListener(() => SetActivePanel(_spawningGroup));
             _showMovementButton.onClick.AddListener(() => SetActivePanel(_movementGroup));
             _showPerformanceButton.onClick.AddListener(() => SetActivePanel(_performanceGroup));
             _showStatsButton.onClick.AddListener(() => SetActivePanel(_statsGroup));
 
-            // Spawning
             _agentCountSlider.onValueChanged.AddListener(OnAgentCountSliderChanged);
             _spawnBoundsXInput.onEndEdit.AddListener(OnSpawnBoundsChanged);
             _spawnBoundsZInput.onEndEdit.AddListener(OnSpawnBoundsChanged);
             _respawnButton.onClick.AddListener(OnRespawnButtonClicked);
 
-            // Movement
             _walkSpeedSlider.onValueChanged.AddListener(OnWalkSpeedChanged);
             _runSpeedSlider.onValueChanged.AddListener(OnRunSpeedChanged);
             _destinationThresholdSlider.onValueChanged.AddListener(OnDestinationThresholdChanged);
 
-            // Performance
             _updateModeDropdown.onValueChanged.AddListener(OnUpdateModeChanged);
             _simulationModeDropdown.onValueChanged.AddListener(OnSimulationModeChanged);
             _coroutineIntervalInput.onEndEdit.AddListener(OnCoroutineIntervalChanged);
@@ -166,13 +165,11 @@ namespace OptimizeVariousVAT
 
         private void RemoveListeners()
         {
-            // Panel Buttons
             _showSpawningButton.onClick.RemoveAllListeners();
             _showMovementButton.onClick.RemoveAllListeners();
             _showPerformanceButton.onClick.RemoveAllListeners();
             _showStatsButton.onClick.RemoveAllListeners();
 
-            // Other controls
             _agentCountSlider.onValueChanged.RemoveAllListeners();
             _spawnBoundsXInput.onEndEdit.RemoveAllListeners();
             _spawnBoundsZInput.onEndEdit.RemoveAllListeners();
@@ -185,9 +182,7 @@ namespace OptimizeVariousVAT
             _coroutineIntervalInput.onEndEdit.RemoveAllListeners();
         }
 
-        #region Callback Methods
-
-        private void OnAgentCountSliderChanged(float value) => UpdateText(_agentCountText, "Agents", value);
+        private void OnAgentCountSliderChanged(float value) => UpdateAgentCountText(value);
         private void OnRespawnButtonClicked()
         {
             int newCount = Mathf.RoundToInt(_agentCountSlider.value);
@@ -202,17 +197,17 @@ namespace OptimizeVariousVAT
         private void OnWalkSpeedChanged(float value)
         {
             _crowdController.WalkSpeed = value;
-            UpdateText(_walkSpeedText, "Walk Speed", value);
+            _walkSpeedText.SetText("Walk Speed: {0:F2}", value);
         }
         private void OnRunSpeedChanged(float value)
         {
             _crowdController.RunSpeed = value;
-            UpdateText(_runSpeedText, "Run Speed", value);
+            _runSpeedText.SetText("Run Speed: {0:F2}", value);
         }
         private void OnDestinationThresholdChanged(float value)
         {
             _crowdController.DestinationReachedThreshold = value;
-            UpdateText(_destinationThresholdText, "Threshold", value);
+            _destinationThresholdText.SetText("Threshold: {0:F2}", value);
         }
         private void OnUpdateModeChanged(int index)
         {
@@ -231,44 +226,51 @@ namespace OptimizeVariousVAT
             }
         }
 
-        #endregion
-
-        #region Helper Methods
-
-        private string FormatNumber(long num)
+        private void FormatNumberIntoBuilder(StringBuilder builder, long num)
         {
             if (num >= 1000000)
-                return (num / 1000000.0f).ToString("F1", CultureInfo.InvariantCulture) + "M";
-            if (num >= 1000)
-                return (num / 1000.0f).ToString("F1", CultureInfo.InvariantCulture) + "k";
-            return num.ToString();
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "{0:F1}M", num / 1000000.0f);
+            }
+            else if (num >= 1000)
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "{0:F1}k", num / 1000.0f);
+            }
+            else
+            {
+                builder.Append(num);
+            }
+        }
+
+        private void UpdateAgentCountText(float value)
+        {
+            _agentCountText.SetText("Agents: {0}", Mathf.RoundToInt(value));
         }
 
         private void SetupInitialValues()
         {
-            // Spawning
             _agentCountSlider.minValue = 0;
             _agentCountSlider.maxValue = _crowdController.MaxAgentCount;
             _agentCountSlider.value = _crowdController.CurrentAgentCount;
-            UpdateText(_agentCountText, "Agents", _crowdController.CurrentAgentCount);
+            UpdateAgentCountText(_crowdController.CurrentAgentCount);
             _spawnBoundsXInput.text = _crowdController.SpawnBounds.x.ToString(CultureInfo.InvariantCulture);
             _spawnBoundsZInput.text = _crowdController.SpawnBounds.z.ToString(CultureInfo.InvariantCulture);
 
-            // Movement
             _walkSpeedSlider.minValue = 1f;
             _walkSpeedSlider.maxValue = 10f;
             _walkSpeedSlider.value = _crowdController.WalkSpeed;
-            UpdateText(_walkSpeedText, "Walk Speed", _crowdController.WalkSpeed);
+            OnWalkSpeedChanged(_crowdController.WalkSpeed);
+
             _runSpeedSlider.minValue = 5f;
             _runSpeedSlider.maxValue = 20f;
             _runSpeedSlider.value = _crowdController.RunSpeed;
-            UpdateText(_runSpeedText, "Run Speed", _crowdController.RunSpeed);
+            OnRunSpeedChanged(_crowdController.RunSpeed);
+
             _destinationThresholdSlider.minValue = 0.1f;
             _destinationThresholdSlider.maxValue = 10f;
             _destinationThresholdSlider.value = _crowdController.DestinationReachedThreshold;
-            UpdateText(_destinationThresholdText, "Threshold", _crowdController.DestinationReachedThreshold);
+            OnDestinationThresholdChanged(_crowdController.DestinationReachedThreshold);
 
-            // Performance
             PopulateDropdown(_updateModeDropdown, typeof(CrowdController.UpdateMode));
             _updateModeDropdown.value = (int)_crowdController.CurrentUpdateMode;
             PopulateDropdown(_simulationModeDropdown, typeof(CrowdController.SimulationMode));
@@ -283,11 +285,6 @@ namespace OptimizeVariousVAT
             _coroutineIntervalContainer.SetActive(isCoroutineMode);
         }
 
-        private void UpdateText(TextMeshProUGUI textElement, string prefix, float value, string format = "F2")
-        {
-            textElement.text = $"{prefix}: {Mathf.RoundToInt(value)}";
-        }
-
         private void PopulateDropdown(TMP_Dropdown dropdown, System.Type enumType)
         {
             var names = System.Enum.GetNames(enumType).ToList();
@@ -298,20 +295,13 @@ namespace OptimizeVariousVAT
         private bool ValidateReferences()
         {
             if (_crowdController == null) { Debug.LogError("CrowdController is not assigned.", this); return false; }
-            // Panel Containers and Buttons
             if (_spawningGroup == null || _movementGroup == null || _performanceGroup == null || _statsGroup == null) { Debug.LogError("One or more UI Panel Containers are not assigned.", this); return false; }
             if (_showSpawningButton == null || _showMovementButton == null || _showPerformanceButton == null || _showStatsButton == null) { Debug.LogError("One or more UI Panel Buttons are not assigned.", this); return false; }
-            // Stats
             if (_fpsText == null || _drawCallsText == null || _trisText == null || _vertsText == null) { Debug.LogError("A Stats display control is not assigned.", this); return false; }
-            // Spawning Controls
             if (_agentCountSlider == null || _agentCountText == null || _spawnBoundsXInput == null || _spawnBoundsZInput == null || _respawnButton == null) { Debug.LogError("A Spawning control is not assigned.", this); return false; }
-            // Movement Controls
             if (_walkSpeedSlider == null || _walkSpeedText == null || _runSpeedSlider == null || _runSpeedText == null || _destinationThresholdSlider == null || _destinationThresholdText == null) { Debug.LogError("A Movement control is not assigned.", this); return false; }
-            // Performance Controls
             if (_updateModeDropdown == null || _simulationModeDropdown == null || _coroutineIntervalContainer == null || _coroutineIntervalInput == null) { Debug.LogError("A Performance control is not assigned.", this); return false; }
             return true;
         }
-
-        #endregion
     }
 }

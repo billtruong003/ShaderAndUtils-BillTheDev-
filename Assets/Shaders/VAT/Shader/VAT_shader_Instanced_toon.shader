@@ -93,5 +93,4 @@ Shader "BillTheDev/VAT/URP_VAT_Toon_Instanced_Advanced"
             ENDHLSL
         }
     }
-    CustomEditor "BillTheDev.Editor.ToonVATInstancedShaderGUI"
 }

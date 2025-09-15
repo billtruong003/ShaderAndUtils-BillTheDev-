@@ -12,17 +12,8 @@ namespace OptimizeVariousVAT
 {
     public class CrowdController : MonoBehaviour
     {
-        public enum UpdateMode
-        {
-            EveryFrame,
-            ViaCoroutine
-        }
-
-        public enum SimulationMode
-        {
-            JobSystem,
-            Managed
-        }
+        public enum UpdateMode { EveryFrame, ViaCoroutine }
+        public enum SimulationMode { JobSystem, Managed }
 
         [BurstCompile]
         private struct AgentData
@@ -42,8 +33,8 @@ namespace OptimizeVariousVAT
         [SerializeField] private int targetFrame = 240;
         [SerializeField] private UpdateMode _updateMode = UpdateMode.EveryFrame;
         [SerializeField] private SimulationMode _simulationMode = SimulationMode.JobSystem;
-        [SerializeField, ShowIf("_updateMode", UpdateMode.ViaCoroutine)]
-        [Range(0.01f, 1f)] private float _coroutineUpdateInterval = 0.033f;
+        [SerializeField, ShowIf("_updateMode", UpdateMode.ViaCoroutine), Range(0.01f, 1f)]
+        private float _coroutineUpdateInterval = 0.033f;
 
         [TitleGroup("Spawning")]
         [SerializeField, Range(1, 50000)] private int _initialAgentCount = 500;
@@ -76,24 +67,12 @@ namespace OptimizeVariousVAT
         public UpdateMode CurrentUpdateMode
         {
             get => _updateMode;
-            set
-            {
-                if (_updateMode == value) return;
-                OnDisable();
-                _updateMode = value;
-                OnEnable();
-            }
+            set { if (_updateMode == value) return; OnDisable(); _updateMode = value; OnEnable(); }
         }
         public SimulationMode CurrentSimulationMode
         {
             get => _simulationMode;
-            set
-            {
-                if (_simulationMode == value) return;
-                _simulationJobHandle.Complete();
-                _simulationMode = value;
-                ApplyAgentCount(CurrentAgentCount, true);
-            }
+            set { if (_simulationMode == value) return; _simulationJobHandle.Complete(); _simulationMode = value; ApplyAgentCount(CurrentAgentCount, true); }
         }
         public float CoroutineUpdateInterval { get => _coroutineUpdateInterval; set => _coroutineUpdateInterval = value; }
         public Vector3 SpawnBounds { get => _spawnBounds; set => _spawnBounds = value; }
@@ -106,7 +85,10 @@ namespace OptimizeVariousVAT
         private float _planeYPosition;
         private Coroutine _simulationCoroutine;
 
-        private readonly List<AgentData> _managedAgents = new List<AgentData>();
+        private List<AgentData> _managedAgentsBufferA;
+        private List<AgentData> _managedAgentsBufferB;
+        private List<AgentData> _currentManagedAgents;
+        private List<AgentData> _nextManagedAgents;
         private SpatialGridManaged _managedGrid;
 
         private NativeArray<AgentData> _jobAgents;
@@ -124,7 +106,7 @@ namespace OptimizeVariousVAT
 
         private void Start()
         {
-            _planeYPosition = this.transform.position.y;
+            _planeYPosition = transform.position.y;
             StartCoroutine(InitializeCrowd());
         }
 
@@ -191,8 +173,7 @@ namespace OptimizeVariousVAT
             }
             else
             {
-                _managedGrid ??= new SpatialGridManaged(_separationRadius, MaxAgentCount);
-                if (_activeAgentCount > _managedAgents.Capacity) _managedAgents.Capacity = _activeAgentCount;
+                EnsureManagedBufferCapacity(_activeAgentCount);
             }
 
             EnsurePoolCapacity(_activeAgentCount);
@@ -209,6 +190,24 @@ namespace OptimizeVariousVAT
             {
                 _agentPool[i].gameObject.SetActive(false);
             }
+
+            if (_simulationMode == SimulationMode.Managed)
+            {
+                _currentManagedAgents.RemoveRange(_activeAgentCount, _currentManagedAgents.Count - _activeAgentCount);
+            }
+        }
+
+        private void EnsureManagedBufferCapacity(int capacity)
+        {
+            _managedGrid ??= new SpatialGridManaged(_separationRadius, MaxAgentCount);
+
+            if (_managedAgentsBufferA == null || _managedAgentsBufferA.Capacity < capacity)
+            {
+                _managedAgentsBufferA = new List<AgentData>(capacity);
+                _managedAgentsBufferB = new List<AgentData>(capacity);
+                _currentManagedAgents = _managedAgentsBufferA;
+                _nextManagedAgents = _managedAgentsBufferB;
+            }
         }
 
         private void EnsurePoolCapacity(int capacity)
@@ -218,7 +217,7 @@ namespace OptimizeVariousVAT
             {
                 int randomTypeIndex = Random.Range(0, agentTypeCount);
                 VAT_BoidsAgent prefab = _instanceManager.GetAgentPrefab(randomTypeIndex);
-                var newAgentGO = Instantiate(prefab, Vector3.zero, Quaternion.identity, this.transform);
+                var newAgentGO = Instantiate(prefab, Vector3.zero, Quaternion.identity, transform);
                 var agentComponent = newAgentGO.GetComponent<VAT_BoidsAgent>();
                 agentComponent.Initialize(_instanceManager);
                 agentComponent.AgentTypeIndex = randomTypeIndex;
@@ -249,8 +248,8 @@ namespace OptimizeVariousVAT
             }
             else
             {
-                if (agentIndex < _managedAgents.Count) _managedAgents[agentIndex] = agentData;
-                else _managedAgents.Add(agentData);
+                if (agentIndex < _currentManagedAgents.Count) _currentManagedAgents[agentIndex] = agentData;
+                else _currentManagedAgents.Add(agentData);
             }
         }
 
@@ -317,8 +316,8 @@ namespace OptimizeVariousVAT
             if (_simulationMode == SimulationMode.JobSystem)
             {
                 _simulationJobHandle.Complete();
-                _simulationJobHandle = ScheduleJobSystemSimulation(deltaTime);
                 ApplyJobSystemResults(deltaTime);
+                _simulationJobHandle = ScheduleJobSystemSimulation(deltaTime);
             }
             else
             {
@@ -336,7 +335,6 @@ namespace OptimizeVariousVAT
 
             private readonly float _inverseCellSize;
             private readonly List<int> _queryResultCache = new List<int>(100);
-
             private readonly Dictionary<int, int> _gridBuckets;
             private readonly int[] _nextAgentIndices;
 
@@ -350,7 +348,6 @@ namespace OptimizeVariousVAT
             public void ClearAndBuild(IReadOnlyList<AgentData> agents, int agentCount)
             {
                 _gridBuckets.Clear();
-
                 for (int i = 0; i < agentCount; i++)
                 {
                     var hash = GetCellHash(agents[i].position);
@@ -366,12 +363,7 @@ namespace OptimizeVariousVAT
                 }
             }
 
-            private int GetCellHash(float3 position)
-            {
-                int x = (int)(position.x * _inverseCellSize);
-                int z = (int)(position.z * _inverseCellSize);
-                return (x * HASH_P1) ^ (z * HASH_P2);
-            }
+            private int GetCellHash(float3 position) => (int)(position.x * _inverseCellSize) * HASH_P1 ^ (int)(position.z * _inverseCellSize) * HASH_P2;
 
             public List<int> Query(float3 position)
             {
@@ -383,10 +375,7 @@ namespace OptimizeVariousVAT
                 {
                     for (int z = -1; z <= 1; z++)
                     {
-                        int bucketX = centerX + x;
-                        int bucketZ = centerZ + z;
-                        var hash = (bucketX * HASH_P1) ^ (bucketZ * HASH_P2);
-
+                        var hash = (centerX + x) * HASH_P1 ^ (centerZ + z) * HASH_P2;
                         if (_gridBuckets.TryGetValue(hash, out int agentIndex))
                         {
                             while (agentIndex != NO_AGENT)
@@ -403,21 +392,21 @@ namespace OptimizeVariousVAT
 
         private void UpdateManagedSimulation(float deltaTime)
         {
-            _managedGrid.ClearAndBuild(_managedAgents, _activeAgentCount);
-
-            var updatedAgents = new List<AgentData>(_managedAgents);
+            _managedGrid.ClearAndBuild(_currentManagedAgents, _activeAgentCount);
+            _nextManagedAgents.Clear();
 
             for (int i = 0; i < _activeAgentCount; i++)
             {
-                var data = updatedAgents[i];
+                var data = _currentManagedAgents[i];
                 UpdateAgentState(ref data, i, deltaTime);
                 UpdateAgentPhysics(ref data, deltaTime);
-                updatedAgents[i] = data;
+                _nextManagedAgents.Add(data);
                 ApplyTransform(data, i);
             }
 
-            _managedAgents.Clear();
-            _managedAgents.AddRange(updatedAgents);
+            var temp = _currentManagedAgents;
+            _currentManagedAgents = _nextManagedAgents;
+            _nextManagedAgents = temp;
         }
 
         private void UpdateAgentState(ref AgentData data, int agentIndex, float deltaTime)
@@ -459,7 +448,7 @@ namespace OptimizeVariousVAT
             {
                 if (agentIndex == j) continue;
 
-                float3 offset = _managedAgents[j].position - data.position;
+                float3 offset = _currentManagedAgents[j].position - data.position;
                 float sqrDistance = math.lengthsq(offset);
                 if (sqrDistance > 0 && sqrDistance < separationSqr)
                 {
@@ -554,10 +543,7 @@ namespace OptimizeVariousVAT
             [WriteOnly] public NativeArray<int> gridNext;
             public float inverseCellSize;
 
-            private int GetCellHash(float3 pos)
-            {
-                return (int)(math.floor(pos.x * inverseCellSize) * HASH_P1) ^ (int)(math.floor(pos.z * inverseCellSize) * HASH_P2);
-            }
+            private int GetCellHash(float3 pos) => (int)(math.floor(pos.x * inverseCellSize) * HASH_P1) ^ (int)(math.floor(pos.z * inverseCellSize) * HASH_P2);
 
             public void Execute()
             {
@@ -602,8 +588,7 @@ namespace OptimizeVariousVAT
                 var agent = agents[index];
                 agent.acceleration = float3.zero;
 
-                if (agent.currentState == AgentBehaviorState.Idle ||
-                    math.distancesq(agent.targetPosition, agent.position) < destinationReachedThresholdSqr)
+                if (agent.currentState == AgentBehaviorState.Idle || math.distancesq(agent.targetPosition, agent.position) < destinationReachedThresholdSqr)
                 {
                     agents[index] = agent;
                     return;
@@ -629,8 +614,7 @@ namespace OptimizeVariousVAT
                 {
                     for (int z = -1; z <= 1; z++)
                     {
-                        var hash = ((centerX + x) * HASH_P1) ^ ((centerZ + z) * HASH_P2);
-
+                        var hash = (centerX + x) * HASH_P1 ^ (centerZ + z) * HASH_P2;
                         if (gridMap.TryGetValue(hash, out int current))
                         {
                             while (current != NO_AGENT)
@@ -696,15 +680,12 @@ namespace OptimizeVariousVAT
                 agent.position += agent.velocity * deltaTime;
                 agent.position.y = planeYPosition;
                 agent.velocity.y = 0;
-
                 agents[index] = agent;
             }
         }
-
         #endregion
 
         #region Common Logic and Helpers
-
         private void UpdateAgentPhysics(ref AgentData data, float deltaTime)
         {
             if (data.currentState == AgentBehaviorState.Idle)
@@ -766,19 +747,15 @@ namespace OptimizeVariousVAT
             return steer;
         }
 
-        private float3 GetRandomPositionInBounds()
-        {
-            return (float3)this.transform.position + new float3(
+        private float3 GetRandomPositionInBounds() => (float3)transform.position + new float3(
                 Random.Range(-_spawnBounds.x * 0.5f, _spawnBounds.x * 0.5f), 0,
                 Random.Range(-_spawnBounds.z * 0.5f, _spawnBounds.z * 0.5f));
-        }
 
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = new Color(0.2f, 1f, 0.5f, 0.4f);
             Gizmos.DrawWireCube(transform.position, new Vector3(_spawnBounds.x, 0.1f, _spawnBounds.z));
         }
-
         #endregion
     }
 }

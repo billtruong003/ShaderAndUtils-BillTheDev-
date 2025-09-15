@@ -1,5 +1,3 @@
-// File: Assets/Shaders/VAT/FinalizeForm/VAT_InstanceManager.cs
-
 using UnityEngine;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
@@ -49,7 +47,6 @@ namespace OptimizeVariousVAT
                 cullingShader = Instantiate(computeShader);
                 instanceMaterial = new Material(sourceMaterial) { enableInstancing = true };
                 depthNormalMaterial = new Material(depthNormalShader) { enableInstancing = true };
-
                 instanceMaterial.SetTexture("_MainTex", albedo);
 
                 SetCommonMaterialProperties(instanceMaterial, animData);
@@ -60,7 +57,6 @@ namespace OptimizeVariousVAT
                     _indirectArgs[0] = bakedMesh.GetIndexCount(0);
                     _indirectArgs[2] = bakedMesh.GetBaseVertex(0);
                 }
-
                 _cullingKernel = cullingShader.FindKernel("CSMain");
             }
 
@@ -77,7 +73,6 @@ namespace OptimizeVariousVAT
                 if ((allAgentDataSourceBuffer?.count ?? 0) >= requiredCapacity) return;
 
                 ReleaseBuffers();
-
                 int capacity = Mathf.NextPowerOfTwo(requiredCapacity);
 
                 allAgentDataSourceBuffer = new ComputeBuffer(capacity, sizeof(float) * 3);
@@ -140,7 +135,6 @@ namespace OptimizeVariousVAT
                     FrustumPlanesV4[i] = new Vector4(planes[i].normal.x, planes[i].normal.y, planes[i].normal.z, planes[i].distance);
                 }
                 cullingShader.SetVectorArray("_FrustumPlanes", FrustumPlanesV4);
-
                 cullingShader.SetFloat("_AgentBoundsRadius", agentBoundsRadius);
                 cullingShader.SetInt("_MaxAgents", agents.Count);
 
@@ -235,31 +229,19 @@ namespace OptimizeVariousVAT
 
             batch.UpdateGpuData();
             batch.DispatchCulling(_frustumPlanes, _agentBoundsRadius);
-
             batch.depthNormalMaterial.SetFloat("_OutlineDepthOffset", _outlineDepthOffset);
 
-            Graphics.DrawMeshInstancedIndirect(
-                batch.bakedMesh, 0, batch.depthNormalMaterial,
-                _renderBounds, batch.indirectArgsBuffer
-            );
-
-            Graphics.DrawMeshInstancedIndirect(
-                batch.bakedMesh, 0, batch.instanceMaterial,
-                _renderBounds, batch.indirectArgsBuffer
-            );
+            Graphics.DrawMeshInstancedIndirect(batch.bakedMesh, 0, batch.depthNormalMaterial, _renderBounds, batch.indirectArgsBuffer);
+            Graphics.DrawMeshInstancedIndirect(batch.bakedMesh, 0, batch.instanceMaterial, _renderBounds, batch.indirectArgsBuffer);
         }
 
-        #region Public API
         public void Register(VAT_BoidsAgent agent, int agentTypeIndex)
         {
             if (!IsInitialized || agent.StateIndex != -1 || agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count) return;
-
             var batch = _renderBatches[agentTypeIndex];
             agent.StateIndex = batch.agents.Count;
-
             var newManagedAgent = new ManagedAgent { transform = agent.transform, agentComponent = agent };
             PlayDefaultClip(ref newManagedAgent, batch.animationData);
-
             batch.agents.Add(newManagedAgent);
             batch.EnsureBufferCapacity();
         }
@@ -270,7 +252,6 @@ namespace OptimizeVariousVAT
 
             var batch = _renderBatches[agentTypeIndex];
             int indexToRemove = agent.StateIndex;
-
             if (indexToRemove < 0 || indexToRemove >= batch.agents.Count || batch.agents[indexToRemove].agentComponent != agent) return;
 
             int lastIndex = batch.agents.Count - 1;
@@ -291,7 +272,6 @@ namespace OptimizeVariousVAT
         public void SetAnimationState(int stateIndex, int agentTypeIndex, string clipName, float duration)
         {
             if (!IsInitialized || agentTypeIndex < 0 || agentTypeIndex >= _renderBatches.Count) return;
-
             var batch = _renderBatches[agentTypeIndex];
             if (stateIndex < 0 || stateIndex >= batch.agents.Count) return;
             if (!batch.animationData.TryGetClipInfo(clipName, out var newClip)) return;
@@ -306,12 +286,9 @@ namespace OptimizeVariousVAT
             currentState.crossFadeDuration = Mathf.Max(0, duration);
             currentState.crossFadeTimer = 0;
             currentState.isBlending = duration > 0.001f && currentState.previousClip != null;
-
             batch.agents[stateIndex] = currentState;
         }
-        #endregion
 
-        #region Initialization and Helpers
         private void Initialize()
         {
             if (_baseInstancedMaterial == null || _depthNormalShader == null || _cullingComputeShader == null || _agentTypes == null)
@@ -324,7 +301,6 @@ namespace OptimizeVariousVAT
             foreach (var agentType in _agentTypes)
             {
                 if (agentType.agentPrefab == null || agentType.animationData == null || !agentType.animationData.IsValid() || agentType.albedoTexture == null) continue;
-
                 agentType.agentPrefab.gameObject.SetActive(false);
                 var newBatch = new RenderBatch(_baseInstancedMaterial, _depthNormalShader, _cullingComputeShader, agentType.animationData, agentType.albedoTexture);
                 newBatch.EnsureBufferCapacity();
@@ -360,7 +336,6 @@ namespace OptimizeVariousVAT
         private static float CalculateNormalizedV(VAT_AnimationData data, VAT_AnimationData.ClipInfo clip, float timeSeconds)
         {
             if (clip == null || data.positionTexture.height <= 1) return 0f;
-
             float progress = 0;
             if (clip.duration > 0)
             {
@@ -371,7 +346,6 @@ namespace OptimizeVariousVAT
                     default: progress = Mathf.Clamp01(timeSeconds / clip.duration); break;
                 }
             }
-
             float frameIndex = progress * (clip.frameCount - 1);
             float absoluteFrame = clip.startFrame + frameIndex;
             return (absoluteFrame + 0.5f) / data.positionTexture.height;
@@ -385,6 +359,5 @@ namespace OptimizeVariousVAT
                 agent.agentComponent.UpdateCurrentAnimationName(agent.currentClip.name);
             }
         }
-        #endregion
     }
 }
