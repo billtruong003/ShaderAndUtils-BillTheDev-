@@ -36,15 +36,15 @@ Material:
     m_Floats:
     - _Cull: 2
     - _DissolveEdgeWidth: 0.5
-    - _DistortionStrength: 0.05
+    - _DistortionStrength: 0.1
     - _EnableDistortion: 1
-    - _Fade: 0.08
-    - _RimIntensity: 0
+    - _Fade: -1
+    - _RimIntensity: 2.29
     - _RimPower: 100
-    - _RimPulseSpeed: 0
+    - _RimPulseSpeed: 3.8
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 1}
-    - _DissolveEdgeColor: {r: 0.0933614, g: 0.0933614, b: 0.0933614, a: 1}
+    - _Color: {r: 1, g: 0, b: 0, a: 0.60784316}
+    - _DissolveEdgeColor: {r: 1, g: 0, b: 0, a: 1}
     - _NoiseScrollSpeed: {r: 0.1, g: 0.1, b: 0, a: 0.1}
     - _RimColor: {r: 26.609123, g: 26.609123, b: 26.609123, a: 1}
   m_BuildTextureStacks: []
